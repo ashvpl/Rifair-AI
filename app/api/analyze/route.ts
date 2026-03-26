@@ -21,12 +21,20 @@ export async function POST(req: Request) {
     console.log("Analysis complete.");
 
     // 2. Map Standardized Response to Supabase Schema
-    // Scale bias_score 0-10 to 0-100 for existing UI compatibility if needed
-    const normalizedScore = aiResponse.bias_score * 10;
+    // Scale overall_bias_score (0-10) to 0-100 for UI compatibility
+    const normalizedScore = Math.round(aiResponse.overall_bias_score * 10);
     
-    let riskLevel = "Low";
-    if (normalizedScore > 7) riskLevel = "High";
-    else if (normalizedScore > 4) riskLevel = "Medium";
+    // Risk label for DB (Low, Medium, High)
+    const riskLevel = aiResponse.risk_level.charAt(0).toUpperCase() + aiResponse.risk_level.slice(1);
+
+    const questions = aiResponse.questions;
+    const totalQuestions = questions.length || 1;
+
+    // Rule 3: Occurrence-based percentage calculation
+    const getCategoryPercent = (cat: string) => {
+      const count = questions.filter(q => q.bias_type.includes(cat)).length;
+      return Math.round((count / totalQuestions) * 100);
+    };
 
     const { data, error } = await supabase
       .from("analysis_reports")
@@ -37,18 +45,30 @@ export async function POST(req: Request) {
           bias_score: normalizedScore,
           risk_level: riskLevel,
           categories: { 
-            explanation: aiResponse.explanation,
+            explanation: aiResponse.summary,
             is_fallback: aiResponse.is_fallback || false,
-            // Mock empty categories for structure compatibility
-            gender_bias: 0, age_bias: 0, cultural_bias: 0, tone_bias: 0
+            detailed_analysis: questions,
+            top_risk_insights: aiResponse.top_insights,
+            // Accurate category percentages
+            gender_bias: getCategoryPercent("gender"),
+            age_bias: getCategoryPercent("age"),
+            cultural_bias: getCategoryPercent("cultural"),
+            tone_bias: getCategoryPercent("tone"),
+            work_life_bias: getCategoryPercent("work_life"),
+            socioeconomic_bias: getCategoryPercent("socioeconomic"),
+            health_bias: getCategoryPercent("health")
           },
-          flagged_phrases: aiResponse.flagged_issues.map(issue => ({
-            text: "Issue Detected",
-            reason: issue,
-            severity: normalizedScore > 70 ? "high" : "medium"
-          })),
-          rewritten_output: aiResponse.improved_questions,
-          diversity_impact: aiResponse.explanation,
+          flagged_phrases: questions
+            .filter(q => q.bias_score > 2 && q.issue !== "No strong bias detected")
+            .map(item => ({
+              text: item.issue,
+              reason: item.explanation,
+              severity: item.bias_score > 7 ? "high" : "medium",
+              impact: item.impact,
+              fix: item.rewrite
+            })),
+          rewritten_output: questions.map(q => q.rewrite),
+          diversity_impact: aiResponse.top_insights.join(" "),
         },
       ])
       .select()

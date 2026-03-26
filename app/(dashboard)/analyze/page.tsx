@@ -79,7 +79,10 @@ export default function AnalyzePage() {
                   <h4 className="text-xs font-semibold text-slate-400 uppercase mb-3">Category Breakdown</h4>
                   <div className="space-y-3">
                     {Object.entries(report.categories || {})
-                      .filter(([key]) => !['is_fallback', 'explanation'].includes(key))
+                      .filter(([key, value]) => 
+                        !['is_fallback', 'explanation', 'detailed_analysis', 'top_risk_insights'].includes(key) && 
+                        typeof value === 'number'
+                      )
                       .map(([key, value]) => (
                       <div key={key} className="space-y-1.5">
                         <div className="flex justify-between text-xs">
@@ -109,39 +112,63 @@ export default function AnalyzePage() {
         </div>
       </div>
 
-      {isLoading && <LoadingState />}
+      {isLoading ? (
+        <div className="pt-8 mb-12">
+          <LoadingState />
+        </div>
+      ) : report ? (
+        <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-700">
+          {/* Top Risk Insights - PREMIUM FEATURE */}
+          {report.categories?.top_risk_insights && report.categories.top_risk_insights.length > 0 && (
+            <div className="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-2xl p-6 text-white shadow-xl shadow-indigo-100/50">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                  <ShieldCheck className="h-5 w-5 text-white" />
+                </div>
+                <h3 className="text-lg font-bold">Top Risk Insights</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {report.categories.top_risk_insights.map((insight: string, idx: number) => (
+                  <div key={idx} className="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/10 flex gap-3">
+                    <span className="text-indigo-200 font-bold">0{idx + 1}</span>
+                    <p className="text-sm font-medium leading-relaxed">{insight}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
-      {report && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-in slide-in-from-bottom-4 duration-700">
-          <div className="space-y-4">
-            <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-              Original with Risk Highlights
-              <Info className="h-4 w-4 text-slate-400" />
-            </h3>
-            <HighlightedText 
-              originalText={report.input_text} 
-              flaggedPhrases={report.flagged_phrases} 
-            />
-            
-            <Card className="border-none bg-indigo-50 shadow-none mt-6">
-              <CardContent className="p-6">
-                <h4 className="text-indigo-900 font-bold mb-2">Diversity Impact</h4>
-                <p className="text-indigo-800 text-sm leading-relaxed">
-                  {report.diversity_impact}
-                </p>
-              </CardContent>
-            </Card>
-          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                Original with Risk Highlights
+                <Info className="h-4 w-4 text-slate-400" />
+              </h3>
+              <HighlightedText 
+                originalText={report.input_text} 
+                flaggedPhrases={report.flagged_phrases} 
+              />
+              
+              <Card className="border-none bg-indigo-50 shadow-none mt-6">
+                <CardContent className="p-6">
+                  <h4 className="text-indigo-900 font-bold mb-2">Diversity Impact</h4>
+                  <p className="text-indigo-800 text-sm leading-relaxed">
+                    {report.diversity_impact}
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
 
-          <div className="space-y-4">
-            <h3 className="text-lg font-bold text-slate-900">Improved Versions</h3>
-            <RewritePanel 
-              original={report.input_text} 
-              rewritten={report.rewritten_output} 
-            />
+            <div className="space-y-4">
+              <h3 className="text-lg font-bold text-slate-900">Improved Versions</h3>
+              <RewritePanel 
+                original={report.input_text} 
+                rewritten={report.rewritten_output} 
+              />
+            </div>
           </div>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

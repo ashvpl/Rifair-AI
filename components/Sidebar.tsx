@@ -2,11 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { History, Settings, ShieldAlert } from "lucide-react";
+import { History, Settings, ShieldAlert, LayoutDashboard, FileText, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navigation = [
-  { name: "Analyze", href: "/dashboard", icon: ShieldAlert },
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Analyze", href: "/analyze", icon: ShieldAlert },
+  { name: "Kit Generator", href: "/kit", icon: FileText },
+  { name: "Simulation", href: "/simulate", icon: Zap },
   { name: "History", href: "/history", icon: History },
   { name: "Settings", href: "/settings", icon: Settings },
 ];

@@ -13,17 +13,17 @@ export function RiskIndicator({ level }: RiskIndicatorProps) {
     Low: {
       color: "bg-emerald-100 text-emerald-700 hover:bg-emerald-100",
       icon: ShieldCheck,
-      label: "Low Risk",
+      label: "Low bias risk",
     },
     Medium: {
       color: "bg-amber-100 text-amber-700 hover:bg-amber-100",
       icon: AlertCircle,
-      label: "Medium Risk",
+      label: "Potential bias detected",
     },
     High: {
       color: "bg-red-100 text-red-700 hover:bg-red-100",
       icon: AlertTriangle,
-      label: "High Risk",
+      label: "High bias risk in interview design",
     },
   };
 
