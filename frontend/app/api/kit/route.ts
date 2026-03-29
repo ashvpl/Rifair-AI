@@ -1,60 +1,47 @@
 import { NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import { runBiasPipeline } from "@/lib/engine";
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+import { auth } from "@clerk/nextjs/server";
 
 export async function POST(req: Request) {
   try {
-    const { role, experience_level, company_type, diversity_goals } = await req.json();
+    const { userId, getToken } = auth();
+    console.log(`[FRONTEND KIT] User: ${userId}`);
 
-    if (!role || !experience_level) {
-      return NextResponse.json({ error: "Role and experience level are required." }, { status: 400 });
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const sysPrompt = `You are an expert HR instructional designer. Create a highly professional, entirely bias-free interview kit.
-DO NOT use terms like 'ninja', 'rockstar', 'culture fit', 'young', or aggressive metaphors.
-Return strict JSON:
-{
-  "job_description_snippet": "1 paragraph inclusive summary",
-  "questions": [
-    "Question 1...",
-    "Question 2...",
-    "Question 3...",
-    "Question 4...",
-    "Question 5..."
-  ],
-  "evaluation_rubric": [
-    {
-      "criteria": "e.g. Communication",
-      "look_for": "what to score highly",
-      "avoid": "what biases to avoid"
-    }
-  ]
-}`;
-
-    const prompt = `Role: ${role}\\nExperience: ${experience_level}\\nCompany type: ${company_type}\\nDiversity goals: ${diversity_goals || "Standard inclusive hiring"}`;
+    const body = await req.json();
+    const token = await getToken();
     
-    console.log("Generating Interview Kit...");
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-2.0-flash", 
-      generationConfig: { responseMimeType: "application/json", temperature: 0.6 }
+    if (!token) {
+      console.error("[FRONTEND KIT] Failed to retrieve Clerk token.");
+      return NextResponse.json({ error: "Failed to authenticate with backend." }, { status: 401 });
+    }
+
+    // Proxy to Backend Express Server
+    const backendUrl = process.env.BACKEND_URL || "http://localhost:5001";
+    console.log(`[FRONTEND KIT] Proxying to: ${backendUrl}/api/kit`);
+
+    const response = await fetch(`${backendUrl}/api/kit`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify(body),
     });
-    
-    const result = await model.generateContent(`${sysPrompt}\\n\\nUSER:\\n${prompt}`);
-    const generated = JSON.parse(await result.response.text());
 
-    // Run the generated questions through the bias pipeline to double check!
-    const questionsText = generated.questions.join("\\n");
-    const biasCheck = await runBiasPipeline(questionsText);
+    const data = await response.json();
 
-    return NextResponse.json({ 
-      kit: generated, 
-      bias_validation: biasCheck 
-    }, { status: 200 });
-    
+    if (!response.ok) {
+      console.error("[FRONTEND KIT] Backend Error:", data);
+      return NextResponse.json({ error: data.error || "Failed... backend responded with error" }, { status: response.status });
+    }
+
+    console.log("[FRONTEND KIT] Success!");
+    return NextResponse.json(data, { status: 200 });
   } catch (error: any) {
-    console.error("Kit Generation Error:", error);
-    return NextResponse.json({ error: "Failed to generate kit." }, { status: 500 });
+    console.error("[FRONTEND KIT] Proxy error:", error.message || error);
+    return NextResponse.json({ error: "Internal processing error occurred." }, { status: 500 });
   }
 }

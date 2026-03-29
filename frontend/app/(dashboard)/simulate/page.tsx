@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "@clerk/nextjs";
+import { simulateBias } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Zap, AlertTriangle, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function SimulatePage() {
+  const { getToken } = useAuth();
   const [question, setQuestion] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [simulation, setSimulation] = useState<any>(null);
@@ -19,18 +22,11 @@ export default function SimulatePage() {
     setSimulation(null);
 
     try {
-      const response = await fetch("/api/simulate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ neutral_question: question }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Simulation failed");
-
+      const token = await getToken();
+      const data = await simulateBias(question, token);
       setSimulation(data.simulation);
     } catch (err: any) {
-      setError(err.message || "Failed to run simulation");
+      setError(err.message || "AI service temporarily unavailable");
     } finally {
       setIsLoading(false);
     }

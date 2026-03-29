@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useAuth } from "@clerk/nextjs";
+import { getReports, deleteReports, deleteReportById } from "@/lib/api";
 import Link from "next/link";
-import { Sidebar } from "@/components/Sidebar";
-import { Header } from "@/components/Header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, ChevronRight, Loader2, Trash2, AlertTriangle } from "lucide-react";
 import { RiskIndicator } from "@/components/RiskIndicator";
@@ -19,23 +19,33 @@ import {
 } from "@/components/ui/dialog";
 
 export default function HistoryPage() {
+  const { getToken } = useAuth();
   const [history, setHistory] = useState<Record<string, any>[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [targetId, setTargetId] = useState<string | null>(null);
 
-  const fetchHistory = () => {
-    fetch("/api/history")
-      .then((res) => res.json())
-      .then((data) => {
-        setHistory(data.history || []);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setIsLoading(false);
-      });
+  const fetchHistory = async () => {
+    try {
+      const token = await getToken();
+      const data = await getReports(token);
+      if (Array.isArray(data)) {
+        const uniqueMap = new Map();
+        data.forEach((item) => {
+          if (!uniqueMap.has(item.input_text)) {
+            uniqueMap.set(item.input_text, item);
+          }
+        });
+        setHistory(Array.from(uniqueMap.values()));
+      } else {
+        setHistory([]);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -52,19 +62,31 @@ export default function HistoryPage() {
   const confirmDelete = async () => {
     if (!targetId) return;
 
+    const token = await getToken();
+    if (targetId === "ALL") {
+      setDeletingId("ALL");
+      setShowConfirmModal(false);
+      try {
+        await deleteReports(token);
+        setHistory([]);
+      } catch (err: any) {
+        console.error(err);
+        alert(err.message || "Failed to delete all reports");
+      } finally {
+        setDeletingId(null);
+        setTargetId(null);
+      }
+      return;
+    }
+
     setDeletingId(targetId);
     setShowConfirmModal(false);
     try {
-      const res = await fetch(`/api/report/${targetId}`, { method: "DELETE" });
-      if (res.ok) {
-        setHistory((prev) => prev.filter((r) => r.id !== targetId));
-      } else {
-        const data = await res.json();
-        alert(data.error || "Failed to delete report");
-      }
-    } catch (err) {
+      await deleteReportById(targetId, token);
+      setHistory((prev) => prev.filter((r) => r.id !== targetId));
+    } catch (err: any) {
       console.error(err);
-      alert("An error occurred while deleting the report");
+      alert(err.message || "Failed to delete report");
     } finally {
       setDeletingId(null);
       setTargetId(null);
@@ -78,8 +100,29 @@ export default function HistoryPage() {
           <h2 className="text-2xl font-bold text-slate-900">Analysis History</h2>
           <p className="text-slate-500">Track and review all previous interview question analyses.</p>
         </div>
-        <div className="text-sm font-medium text-slate-400 bg-white px-3 py-1 rounded-full border border-slate-200">
-          {history.length} Reports Total
+        <div className="flex items-center gap-3">
+          <div className="text-sm font-medium text-slate-400 bg-white px-3 py-1 rounded-full border border-slate-200">
+            {history.length} Reports Total
+          </div>
+          {history.length > 0 && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-red-500 border-red-200 hover:bg-red-50 hover:text-red-600 shadow-sm"
+              onClick={() => {
+                setTargetId("ALL");
+                setShowConfirmModal(true);
+              }}
+              disabled={deletingId === "ALL"}
+            >
+              {deletingId === "ALL" ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Trash2 className="h-4 w-4 mr-2" />
+              )}
+              Delete All
+            </Button>
+          )}
         </div>
       </div>
 
@@ -97,7 +140,7 @@ export default function HistoryPage() {
               <h3 className="text-lg font-semibold text-slate-900">No reports found</h3>
               <p className="text-slate-500 max-w-xs mx-auto">Start by analyzing your first set of interview questions in the dashboard.</p>
             </div>
-            <Link href="/dashboard" className="text-indigo-600 font-semibold hover:underline inline-block pt-2">
+            <Link href="/analyze" className="text-indigo-600 font-semibold hover:underline inline-block pt-2">
               Go to Analyze →
             </Link>
           </div>
@@ -160,9 +203,11 @@ export default function HistoryPage() {
             <div className="mx-auto w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
               <AlertTriangle className="h-6 w-6 text-red-600" />
             </div>
-            <DialogTitle className="text-center text-xl text-slate-900">Delete Analysis Report?</DialogTitle>
+            <DialogTitle className="text-center text-xl text-slate-900">
+              {targetId === "ALL" ? "Delete All Analysis Reports?" : "Delete Analysis Report?"}
+            </DialogTitle>
             <DialogDescription className="text-center pt-2">
-              This action is permanent and cannot be undone. Are you sure you want to remove this report from your history?
+              This action is permanent and cannot be undone. Are you sure you want to remove {targetId === "ALL" ? "all reports" : "this report"} from your history?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex flex-row gap-3 mt-6">

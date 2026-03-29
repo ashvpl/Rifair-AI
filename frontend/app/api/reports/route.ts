@@ -3,21 +3,19 @@ import { auth } from "@clerk/nextjs/server";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET() {
   try {
     const { userId, getToken } = auth();
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { id } = params;
     const token = await getToken();
     const backendUrl = process.env.BACKEND_URL || "http://localhost:5001";
+    
+    console.log(`Proxying history request to: ${backendUrl}/api/reports`);
 
-    const response = await fetch(`${backendUrl}/api/reports/${id}`, {
+    const response = await fetch(`${backendUrl}/api/reports`, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`
@@ -28,32 +26,31 @@ export async function GET(
     const data = await response.json();
 
     if (!response.ok) {
-      console.error("Backend single report fetch error:", data);
-      return NextResponse.json({ error: data.error || "Report not found" }, { status: response.status });
+      console.error("Backend history error:", data);
+      return NextResponse.json({ error: data.error || "Failed to fetch reports" }, { status: response.status });
     }
 
-    return NextResponse.json({ report: data }, { status: 200 });
+    return NextResponse.json(data);
   } catch (error: unknown) {
-    console.error("Report API Proxy error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
+    console.error("Reports API Proxy error:", error);
+    return NextResponse.json({ error: "Internal processing error occurred." }, { status: 500 });
   }
 }
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE() {
   try {
     const { userId, getToken } = auth();
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { id } = params;
     const token = await getToken();
     const backendUrl = process.env.BACKEND_URL || "http://localhost:5001";
 
-    const response = await fetch(`${backendUrl}/api/reports/${id}`, {
+    console.log(`Proxying delete reports request to: ${backendUrl}/api/reports`);
+
+    const response = await fetch(`${backendUrl}/api/reports`, {
       method: "DELETE",
       headers: {
         "Authorization": `Bearer ${token}`
@@ -63,13 +60,13 @@ export async function DELETE(
     const data = await response.json();
 
     if (!response.ok) {
-      console.error("Backend report delete error:", data);
-      return NextResponse.json({ error: data.error || "Failed to delete report" }, { status: response.status });
+      console.error("Backend delete history error:", data);
+      return NextResponse.json({ error: data.error || "Failed to delete reports" }, { status: response.status });
     }
 
-    return NextResponse.json({ message: "Report deleted successfully" }, { status: 200 });
+    return NextResponse.json({ message: "All reports deleted successfully" }, { status: 200 });
   } catch (error: unknown) {
-    console.error("Report Delete Proxy API error:", error);
+    console.error("Reports Delete API error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

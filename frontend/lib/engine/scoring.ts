@@ -11,29 +11,22 @@ export function calculateFinalScore(questions: QuestionAnalysis[]): { score: num
   // Convert AI 0-10 scores to 0-100 internally for calculation
   const scaledScores = questions.map(q => q.bias_score * 10);
   
-  // Weights: We use a non-linear power function to heavily weight severe bias.
-  // Formula: sum(score^p) / sum(max_score^(p-1) * 1) -> scaled back to 100
-  // Simplification: We take the average of squared scores, then take the square root.
-  // This heavily biases the outcome towards the maximum score.
-  
-  const power = 2; // Square
-  let sumPowerScores = 0;
-  let hasCriticalBias = false;
+  const maxScore = Math.max(...scaledScores);
+  const biasedCount = scaledScores.filter(s => s > 20).length;
+  const biasRatio = biasedCount / questions.length;
 
-  for (const score of scaledScores) {
-    sumPowerScores += Math.pow(score, power);
-    if (score >= 70) {
-      hasCriticalBias = true;
-    }
-  }
+  // Accurate Mathematical Allocation:
+  // (Intensity * Prevalence Factor)
+  // Prevalence factor of 0.5 floor ensures a base risk is recognized,
+  // but allows clean questions to dilute the impact of an isolated issue.
+  const prevalenceFactor = 0.5 + (0.5 * biasRatio);
+  let finalScore = maxScore * prevalenceFactor;
 
-  const denominator = questions.length;
-  let finalScore = Math.pow(sumPowerScores / denominator, 1 / power);
-
-  // Confidence Boost / Penalty
-  // If there's at least one critical bias, the score should not fall below a certain threshold (e.g. 60).
-  if (hasCriticalBias && finalScore < 60) {
-    finalScore = 60 + (finalScore * 0.4); // Scale the remaining up
+  // Critical Escalation: Only force high risk if score > 90 OR widespread
+  if (maxScore >= 90) {
+    finalScore = Math.max(finalScore, 75);
+  } else if (biasRatio > 0.4 && maxScore >= 70) {
+    finalScore = Math.max(finalScore, 80);
   }
 
   finalScore = Math.min(100, Math.max(0, Math.round(finalScore)));

@@ -1,53 +1,53 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useAuth } from "@clerk/nextjs";
+import { getReports } from "@/lib/api";
 import { Sidebar } from "@/components/Sidebar";
 import { Header } from "@/components/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, TrendingDown, TrendingUp, AlertTriangle, CheckCircle2 } from "lucide-react";
 
 export default function DashboardPage() {
+  const { getToken } = useAuth();
   const [history, setHistory] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/history")
-      .then(res => res.json())
-      .then(data => {
-        setHistory(data.history || []);
+    const fetchDashboardHistory = async () => {
+      try {
+        const token = await getToken();
+        const data = await getReports(token);
+        setHistory(data || []);
+      } catch (err) {
+        console.error("Dashboard history error:", err);
+      } finally {
         setIsLoading(false);
-      });
-  }, []);
+      }
+    };
+    fetchDashboardHistory();
+  }, [getToken]);
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center py-20">
+      <div className="flex flex-col justify-center items-center py-40 space-y-4">
         <Loader2 className="w-10 h-10 animate-spin text-indigo-600" />
+        <p className="text-slate-400 font-medium animate-pulse">Loading dashboard insights...</p>
       </div>
     );
   }
 
-  // Calculate Metrics
-  const totalScans = history.length;
-  const avgScore = totalScans ? Math.round(history.reduce((sum, r) => sum + r.bias_score, 0) / totalScans) : 0;
-  const highRiskScans = history.filter(r => r.risk_level.toLowerCase() === "high").length;
-  const cleanScans = history.filter(r => r.risk_level.toLowerCase() === "low").length;
+  // Deduplicate history by input_text to ensure unique counts and results
+  const uniqueHistory = Array.from(new Map(history.map(item => [item.input_text, item])).values());
 
-  // Aggregate Category Bias
-  const categoryCounts: Record<string, number> = {
-    Gender: 0, Age: 0, Cultural: 0, "Work Life": 0, Tone: 0
-  };
+  // Calculate Metrics safely using uniqueHistory
+  const totalScans = uniqueHistory.length;
+  const avgScore = totalScans ? Math.round(uniqueHistory.reduce((sum, r) => sum + (r.bias_score || 0), 0) / totalScans) : 0;
+  const highRiskScans = uniqueHistory.filter(r => r.risk_level?.toLowerCase() === "high").length;
+  const cleanScans = uniqueHistory.filter(r => r.risk_level?.toLowerCase() === "low").length;
 
-  history.forEach(r => {
-    const cats = r.categories || {};
-    if (cats.gender_bias > 0) categoryCounts.Gender++;
-    if (cats.age_bias > 0) categoryCounts.Age++;
-    if (cats.cultural_bias > 0) categoryCounts.Cultural++;
-    if (cats.work_life_bias > 0) categoryCounts["Work Life"]++;
-    if (cats.tone_bias > 0) categoryCounts.Tone++;
-  });
+  // Aggregate Category Bias is no longer needed since Heatmap is removed
 
-  const maxCatCount = Math.max(...Object.values(categoryCounts), 1);
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
@@ -90,35 +90,7 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Category Heatmap */}
-        <Card className="shadow-sm border-slate-200">
-          <CardHeader>
-            <CardTitle>Bias Category Heatmap</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6 pt-4">
-              {Object.entries(categoryCounts).map(([cat, count]) => {
-                const perc = Math.round((count / maxCatCount) * 100);
-                return (
-                  <div key={cat} className="space-y-2">
-                    <div className="flex justify-between text-sm font-medium">
-                      <span className="text-slate-700">{cat} Bias</span>
-                      <span className="text-slate-500">{count} occurrences</span>
-                    </div>
-                    <div className="h-4 w-full bg-slate-100 rounded-full overflow-hidden flex">
-                      <div 
-                        className="h-full bg-gradient-to-r from-amber-400 to-rose-500 transition-all duration-1000 rounded-full" 
-                        style={{ width: `${perc}%` }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
-
+      <div className="grid grid-cols-1 gap-8">
         {/* Recent Activity List */}
         <Card className="shadow-sm border-slate-200">
           <CardHeader>
@@ -126,9 +98,9 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {history.slice(0, 5).map(report => (
+              {uniqueHistory.slice(0, 10).map(report => (
                 <div key={report.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100 hover:bg-slate-100 transition-colors cursor-pointer" onClick={() => window.location.href = `/report/${report.id}`}>
-                  <div className="truncate max-w-[250px] font-medium text-slate-700">
+                  <div className="truncate max-w-[500px] font-medium text-slate-700">
                     {report.input_text}
                   </div>
                   <div className="flex items-center gap-4">

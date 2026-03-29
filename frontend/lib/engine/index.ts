@@ -24,7 +24,7 @@ export async function runBiasPipeline(text: string) {
   
   // Create hints for the LLM
   const hints = aggregated.map(a => 
-    `[\${a.bias_type.join(',')}] "\${a.issue}" -> \${a.explanation}`
+    `[${a.bias_type.join(',')}] "${a.issue}" -> ${a.explanation}`
   );
 
   let aiResult;
@@ -59,21 +59,34 @@ export async function runBiasPipeline(text: string) {
   return formatOutput(aiResult);
 }
 
-/**
- * Fast Rule-Based Only Pipeline for Real-Time Checking
- * Skips LLM for <150ms response times.
- */
 export function runRealTimePipeline(text: string) {
   const sentences = preprocessText(text);
   const matches = extractRuleMatches(text);
   const aggregated = aggregateSignals(sentences, matches);
 
-  // For real-time we don't scale or score as heavily, just provide quick signals
+  const scores = aggregated.map(a => a.bias_score || 0);
+  const maxScore = scores.length > 0 ? Math.max(...scores) : 0;
+  
+  // Real-time scoring simulation (using similar logic to backend calculateFinalScore)
+  let finalScore = Math.min(100, Math.round(Math.pow(maxScore / 10, 1.1) * 100));
+
+  // TONE AND STRUCTURE DETECTION (Real-time sync)
+  const tonePatterns = /(punishment|penalty|consequences|must|strictly|mandatory)/i;
+  const structurePatterns = /(do you think you can really|given your background|how would you manage despite)/i;
+  
+  if (tonePatterns.test(text) || structurePatterns.test(text)) {
+    finalScore = Math.min(100, finalScore + 10);
+  }
+
+  let riskLevel: "low" | "medium" | "high" = "low";
+  if (finalScore >= 75) riskLevel = "high";
+  else if (finalScore >= 40) riskLevel = "medium";
+
   const fastResult = {
-    overall_bias_score: aggregated.reduce((sum, item) => sum + item.bias_score, 0) / (aggregated.length || 1),
-    risk_level: aggregated.length > 0 ? "medium" as const : "low" as const,
-    summary: aggregated.length > 0 ? "Potential signals detected." : "Looks good.",
-    top_insights: [],
+    overall_bias_score: finalScore,
+    risk_level: riskLevel,
+    summary: aggregated.length > 0 ? "Potential linguistic bias detected." : "No explicit bias patterns found.",
+    top_insights: aggregated.length > 0 ? ["Linguistic patterns matched known bias lexicons."] : [],
     questions: aggregated,
     is_fallback: true
   };

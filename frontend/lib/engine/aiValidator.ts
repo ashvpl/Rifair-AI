@@ -2,39 +2,37 @@ import OpenAI from "openai";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { AnalysisResponse, QuestionAnalysis } from "./types";
 
-const SYSTEM_PROMPT = `You are a senior AI fairness auditor for EquiHire AI. Perform strict, evidence-based bias detection on interview questions using BOTH the provided lexicon (keywords) and contextual tone analysis. NO HALLUCINATIONS ALLOWED.
+const SYSTEM_PROMPT = `You are an AI system designed to deeply detect bias in interview questions.
+DO NOT rely on keywords. Instead, analyze:
+1. Intent of the question
+2. Tone (neutral, doubtful, judgmental, exclusionary, aggressive, coercive)
+3. Hidden assumptions (e.g., about personal life or limitations)
+4. Whether the question evaluates skill OR personal circumstances
 
-CORE CATEGORIES:
-1. gender
-2. age
-3. cultural
-4. work_life
-5. socioeconomic
-6. health
-7. tone (Exclusion, Dominance, Personal Intrusion)
+CLASSIFICATION & SCORING:
+- A question is biased if it:
+  - Assumes limitations based on personal life
+  - Questions capability without evidence
+  - Implies exclusion (“fit”, “belong”, “adjust”)
+  - Pressures lifestyle choices (hours, family, availability)
+- A question is NOT biased if it evaluates skills, decisions, or experience directly.
+- Score 0-10: 0 for clean evaluation of skills, 1-4 for subtle assumptions, 5-7 for tone/pressure bias, 8-10 for explicit exclusion or harassment.
 
-CORE RULES:
-1. PER-QUESTION ANALYSIS: Analyze EACH question independently.
-2. EVIDENCE REQUIREMENT: Always quote the EXACT word/phrase causing bias. 
-3. SCORING (0-10): 0-2 (None), 3-4 (Mild), 5-6 (Moderate), 7-10 (Strong/Critical).
-4. VALIDATION: If hints are provided, validate them. Do not makeup issues if none exist.
-5. TOP INSIGHTS: Generate 1-3 high-level risk insights summarizing the overall analysis.
-
-RETURN ONLY THIS JSON STRUCTURE:
+STRICT JSON OUTPUT FORMAT MUST MATCH EXACTLY:
 {
-  "overall_bias_score": number, // average of all question scores (0-10)
+  "overall_bias_score": number, // 0-10
   "risk_level": "low" | "medium" | "high",
-  "summary": "1-2 line factual summary",
-  "top_insights": string[], // max 3 insights
+  "summary": "1-2 line factual summary based on intent and assumptions",
+  "top_insights": string[], // max 3 insights on meaning/tone
   "questions": [
     {
-      "question": "original text",
+      "question": "exact sentence from input",
       "bias_score": number,
-      "bias_type": string[],
-      "issue": "exact phrase OR tone description",
-      "explanation": "concise factual reasoning",
-      "impact": "diversity/fairness effect",
-      "rewrite": "neutral professional version"
+      "bias_type": string[], // from [gender, age, cultural, work_life, socioeconomic, health, tone, harassment]
+      "issue": "The underlying implication or tone detected (e.g. 'Doubtful tone', 'Aggressive pressure', 'Not skill-related')",
+      "explanation": "Explain WHY this is biased based on implication, tone, and hidden assumptions, NOT words.",
+      "impact": "impact on diversity and fairness",
+      "rewrite": "complete, professional, and natural-sounding bias-free rewrite evaluating skills only"
     }
   ]
 }`;
@@ -121,7 +119,7 @@ async function callOpenAI(text: string): Promise<AnalysisResponse> {
 
 function cleanAIResponse(data: any, originalText: string): AnalysisResponse {
   const rawQuestions = Array.isArray(data.questions) ? data.questions : [];
-  const approvedCategories = ["gender", "age", "cultural", "work_life", "socioeconomic", "health", "tone"];
+  const approvedCategories = ["gender", "age", "cultural", "work_life", "socioeconomic", "health", "tone", "harassment"];
 
   const cleanedQuestions = rawQuestions.map((q: any) => {
     const isClean = q.bias_score <= 2 || q.issue === "No strong bias detected";

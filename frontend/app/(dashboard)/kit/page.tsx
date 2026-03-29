@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "@clerk/nextjs";
+import { generateKit } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,6 +11,7 @@ import { Sparkles, Loader2, FileText, CheckCircle2, AlertCircle } from "lucide-r
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 export default function KitGeneratorPage() {
+  const { getToken } = useAuth();
   const [formData, setFormData] = useState({
     role: "Senior Frontend Engineer",
     experience_level: "5+ years",
@@ -28,19 +31,12 @@ export default function KitGeneratorPage() {
     setBiasValidation(null);
 
     try {
-      const response = await fetch("/api/kit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Generation failed");
-
+      const token = await getToken();
+      const data = await generateKit(formData, token);
       setKit(data.kit);
       setBiasValidation(data.bias_validation);
     } catch (err: any) {
-      setError(err.message || "Failed to generate kit");
+      setError(err.message || "AI service temporarily unavailable");
     } finally {
       setIsLoading(false);
     }
@@ -157,30 +153,6 @@ export default function KitGeneratorPage() {
                 </CardContent>
               </Card>
 
-              <Card className="border-slate-200 shadow-sm">
-                <CardHeader className="border-b border-slate-100 bg-slate-50">
-                  <CardTitle className="text-lg text-indigo-900">Evaluation Rubric</CardTitle>
-                </CardHeader>
-                <CardContent className="p-0">
-                  <div className="divide-y divide-slate-100">
-                    {kit.evaluation_rubric?.map((item: any, idx: number) => (
-                      <div key={idx} className="p-4 space-y-2">
-                        <h4 className="font-bold text-slate-900">{item.criteria}</h4>
-                        <div className="grid grid-cols-2 gap-4 text-sm mt-2">
-                          <div className="bg-emerald-50 text-emerald-800 p-3 rounded-lg">
-                            <span className="font-semibold block mb-1">✓ Look For</span>
-                            {item.look_for}
-                          </div>
-                          <div className="bg-rose-50 text-rose-800 p-3 rounded-lg">
-                            <span className="font-semibold block mb-1">⚠️ Avoid</span>
-                            {item.avoid}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
 
             </div>
           )}

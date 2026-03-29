@@ -1,45 +1,45 @@
 import { NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+import { auth } from "@clerk/nextjs/server";
 
 export async function POST(req: Request) {
   try {
+    const { userId, getToken } = auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { neutral_question } = await req.json();
 
     if (!neutral_question) {
       return NextResponse.json({ error: "neutral_question is required." }, { status: 400 });
     }
 
-    const sysPrompt = `You are EquiHire's Bias Simulator. The user provides a neutral professional interview question.
-Your job is to generate 3 biased variations of this exact question to demonstrate how bias sneaks in.
-Each variation must target a different category (e.g. gender, age, cultural, work_life, tone).
+    // Get the Clerk JWT token to pass to the backend
+    const token = await getToken();
+    const backendUrl = process.env.BACKEND_URL || "http://localhost:5001";
 
-Return strict JSON:
-{
-  "original": "the neutral question",
-  "variants": [
-    {
-      "biased_question": "the biased version",
-      "category": "e.g. gender",
-      "explanation": "why this is biased"
-    }
-  ]
-}`;
+    console.log(`[Proxy] Simulating bias via backend: ${backendUrl}/api/simulate`);
 
-    console.log("Running Bias Simulation...");
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-2.0-flash", 
-      generationConfig: { responseMimeType: "application/json", temperature: 0.7 }
+    const response = await fetch(`${backendUrl}/api/simulate`, {
+      method: "POST",
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({ neutral_question }),
     });
-    
-    const result = await model.generateContent(`${sysPrompt}\\n\\nUSER:\\n${neutral_question}`);
-    const simulation = JSON.parse(await result.response.text());
 
-    return NextResponse.json({ simulation }, { status: 200 });
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Backend Simulation Error:", data);
+      return NextResponse.json({ error: data.error || "Simulation failed" }, { status: response.status });
+    }
+
+    return NextResponse.json({ simulation: data.simulation }, { status: 200 });
     
   } catch (error: any) {
-    console.error("Simulation Error:", error);
+    console.error("Simulation API Error:", error);
     return NextResponse.json({ error: "Failed to run simulation." }, { status: 500 });
   }
 }

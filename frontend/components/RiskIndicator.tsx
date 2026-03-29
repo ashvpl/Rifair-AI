@@ -9,6 +9,9 @@ interface RiskIndicatorProps {
 }
 
 export function RiskIndicator({ level }: RiskIndicatorProps) {
+  // Normalize level to capitalized version for mapping
+  const normalizedLevel = (level?.charAt(0).toUpperCase() + level?.slice(1).toLowerCase()) as "Low" | "Medium" | "High";
+
   const configs = {
     Low: {
       color: "bg-emerald-100 text-emerald-700 hover:bg-emerald-100",
@@ -27,7 +30,7 @@ export function RiskIndicator({ level }: RiskIndicatorProps) {
     },
   };
 
-  const config = configs[level] || configs.Low;
+  const config = configs[normalizedLevel] || configs.Low;
   const Icon = config.icon;
 
   return (
