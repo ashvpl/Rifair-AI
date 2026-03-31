@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 
 export async function POST(req: Request) {
   try {
-    const { userId, getToken } = auth();
+    const { userId, getToken } = await auth();
     console.log(`[FRONTEND KIT] User: ${userId}`);
 
     if (!userId) {
