@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
+import { API_BASE_URL } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +16,7 @@ export async function GET(
 
     const { id } = params;
     const token = await getToken();
-    const backendUrl = process.env.BACKEND_URL || "http://localhost:5001";
+    const backendUrl = API_BASE_URL;
     console.log(`[Proxy] Fetching report ${id} from: ${backendUrl}/api/reports/${id}`);
 
     const response = await fetch(`${backendUrl}/api/reports/${id}`, {
@@ -52,7 +53,7 @@ export async function DELETE(
 
     const { id } = params;
     const token = await getToken();
-    const backendUrl = process.env.BACKEND_URL || "http://localhost:5001";
+    const backendUrl = API_BASE_URL;
     console.log(`[Proxy] Deleting report ${id} via: ${backendUrl}/api/reports/${id}`);
 
     const response = await fetch(`${backendUrl}/api/reports/${id}`, {

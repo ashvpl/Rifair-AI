@@ -1,6 +1,6 @@
-import { publicEnv } from "./env";
+import { API_BASE_URL } from "./config";
 
-export const API_BASE = publicEnv.NEXT_PUBLIC_BACKEND_URL || "/api";
+export const API_BASE = API_BASE_URL;
 
 async function fetchWithAuth(endpoint: string, options: RequestInit = {}, token?: string | null) {
   const headers = {

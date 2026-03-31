@@ -1,15 +1,18 @@
-import { SignedIn } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ShieldAlert, ArrowRight, CheckCircle, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const { userId } = await auth();
+
+  if (userId) {
+    redirect("/dashboard");
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      <SignedIn>
-        {redirect("/dashboard")}
-      </SignedIn>
       
       <header className="px-8 lg:px-16 h-20 flex items-center justify-between border-b border-slate-50">
         <div className="flex items-center gap-2">
