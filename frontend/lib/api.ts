@@ -31,7 +31,7 @@ export async function analyzeQuestions(text: string, token?: string | null) {
 }
 
 export async function generateKit(data: any, token?: string | null) {
-  return fetchWithAuth("/generate-kit", {
+  return fetchWithAuth("/kit", {
     method: "POST",
     body: JSON.stringify(data),
   }, token);

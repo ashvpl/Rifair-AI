@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { API_BASE_URL } from "@/lib/config";
+import { BACKEND_URL } from "@/lib/server-config";
 
 export async function POST(req: Request) {
   try {
@@ -16,11 +16,10 @@ export async function POST(req: Request) {
     }
 
     const token = await getToken();
-    const backendUrl = API_BASE_URL;
 
-    console.log(`[Proxy] Simulating bias via: ${backendUrl}/api/simulate`);
+    console.log(`[Proxy] Simulating bias via: ${BACKEND_URL}/api/simulate`);
 
-    const response = await fetch(`${backendUrl}/api/simulate`, {
+    const response = await fetch(`${BACKEND_URL}/api/simulate`, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",

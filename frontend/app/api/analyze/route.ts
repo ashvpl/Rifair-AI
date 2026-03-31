@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { API_BASE_URL } from "@/lib/config";
+import { BACKEND_URL } from "@/lib/server-config";
 
 export async function POST(req: Request) {
   try {
@@ -15,10 +15,9 @@ export async function POST(req: Request) {
     }
 
     const token = await getToken();
-    const backendUrl = API_BASE_URL;
-    console.log(`Proxying request to backend: ${backendUrl}/api/analyze`);
+    console.log(`Proxying request to backend: ${BACKEND_URL}/api/analyze`);
 
-    const response = await fetch(`${backendUrl}/api/analyze`, {
+    const response = await fetch(`${BACKEND_URL}/api/analyze`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

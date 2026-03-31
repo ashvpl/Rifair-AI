@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { API_BASE_URL } from "@/lib/config";
+import { BACKEND_URL } from "@/lib/server-config";
 
 export async function POST(req: Request) {
   try {
@@ -13,10 +13,9 @@ export async function POST(req: Request) {
 
     const body = await req.json();
     const token = await getToken();
-    const backendUrl = API_BASE_URL;
-    console.log(`[Proxy] Generating kit via: ${backendUrl}/api/generate-kit`);
+    console.log(`[Proxy] Generating kit via: ${BACKEND_URL}/api/generate-kit`);
 
-    const response = await fetch(`${backendUrl}/api/generate-kit`, {
+    const response = await fetch(`${BACKEND_URL}/api/generate-kit`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { API_BASE_URL } from "@/lib/config";
+import { BACKEND_URL } from "@/lib/server-config";
 
 export const dynamic = "force-dynamic";
 
@@ -12,11 +12,10 @@ export async function GET() {
     }
 
     const token = await getToken();
-    const backendUrl = API_BASE_URL;
     
-    console.log(`[Proxy] Fetching reports from: ${backendUrl}/api/reports`);
+    console.log(`[Proxy] Fetching reports from: ${BACKEND_URL}/api/reports`);
 
-    const response = await fetch(`${backendUrl}/api/reports`, {
+    const response = await fetch(`${BACKEND_URL}/api/reports`, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`
@@ -47,11 +46,10 @@ export async function DELETE() {
     }
 
     const token = await getToken();
-    const backendUrl = API_BASE_URL;
 
-    console.log(`[Proxy] Deleting all reports via: ${backendUrl}/api/reports`);
+    console.log(`[Proxy] Deleting all reports via: ${BACKEND_URL}/api/reports`);
 
-    const response = await fetch(`${backendUrl}/api/reports`, {
+    const response = await fetch(`${BACKEND_URL}/api/reports`, {
       method: "DELETE",
       headers: {
         "Authorization": `Bearer ${token}`
