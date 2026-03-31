@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
+import { API_BASE_URL } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +12,7 @@ export async function GET() {
     }
 
     const token = await getToken();
-    const backendUrl = process.env.BACKEND_URL || "http://localhost:5001";
+    const backendUrl = API_BASE_URL;
     
     console.log(`[Proxy] Fetching history from: ${backendUrl}/api/reports`);
 
