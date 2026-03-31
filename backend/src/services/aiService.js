@@ -30,14 +30,19 @@ STRICT JSON OUTPUT:
 }`;
 
 // --- AI CONFIGURATION & MODELS ---
+// Only models confirmed valid on the Google AI v1 API as of Q1 2026.
+// gemini-1.5-* and gemini-pro are deprecated/removed — causes 404s.
 const GEMINI_MODELS = [
-  "gemini-2.0-flash", 
-  "gemini-1.5-flash",
-  "gemini-1.5-pro",
-  "gemini-1.5-flash-latest",
-  "gemini-pro"
+  "gemini-2.0-flash",
+  "gemini-2.0-flash-lite",
+  "gemini-1.5-flash-8b",
+  "gemini-1.5-flash-002",
+  "gemini-1.5-pro-002",
 ];
-const OPENAI_MODEL = "gpt-4o-mini";
+const OPENAI_MODEL = "gpt-3.5-turbo"; // gpt-4o-mini quota exhausted; use gpt-3.5-turbo as fallback
+
+// Cache permanently-failing models (404, invalid) to skip them on retry
+const deadModels = new Set();
 
 function getOpenAI() {
   return new OpenAI({
@@ -73,6 +78,11 @@ async function callAI(sysPrompt, userPrompt, useGemini = true) {
     for (const key of geminiKeys) {
       const keyLabel = key === process.env.GEMINI_API_KEY ? 'Primary' : 'Secondary';
       for (const modelName of GEMINI_MODELS) {
+        // Skip models confirmed permanently invalid (404 / not supported)
+        if (deadModels.has(modelName)) {
+          console.log(`-> [AI-PIPELINE] Skipping blacklisted model [${modelName}]`);
+          continue;
+        }
         try {
           console.log(`-> [AI-PIPELINE] Trying Gemini [${keyLabel}] with Model [${modelName}]...`);
           const genAI = getGemini(key);
@@ -92,7 +102,14 @@ async function callAI(sysPrompt, userPrompt, useGemini = true) {
           if (!rawText) throw new Error("Empty response from Gemini");
           return JSON.parse(cleanJsonString(rawText));
         } catch (e) {
-          console.warn(`-> [AI-PIPELINE] Gemini Failed [${modelName}]: ${e.message}`);
+          const errMsg = e.message || "";
+          // Permanently blacklist models that are 404 / not available on this API version
+          if (errMsg.includes("404") || errMsg.toLowerCase().includes("not found") || errMsg.toLowerCase().includes("not supported")) {
+            console.warn(`-> [AI-PIPELINE] Blacklisting dead model [${modelName}]: ${errMsg.slice(0, 120)}`);
+            deadModels.add(modelName);
+          } else {
+            console.warn(`-> [AI-PIPELINE] Gemini Failed [${modelName}]: ${errMsg.slice(0, 120)}`);
+          }
         }
       }
     }
