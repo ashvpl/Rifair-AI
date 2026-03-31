@@ -9,24 +9,23 @@ interface RiskIndicatorProps {
 }
 
 export function RiskIndicator({ level }: RiskIndicatorProps) {
-  // Normalize level to capitalized version for mapping
   const normalizedLevel = (level?.charAt(0).toUpperCase() + level?.slice(1).toLowerCase()) as "Low" | "Medium" | "High";
 
   const configs = {
     Low: {
-      color: "bg-emerald-100 text-emerald-700 hover:bg-emerald-100",
+      color: "bg-success/20 text-success border-success/30 hover:bg-success/30",
       icon: ShieldCheck,
       label: "Low bias risk",
     },
     Medium: {
-      color: "bg-amber-100 text-amber-700 hover:bg-amber-100",
+      color: "bg-warning/20 text-warning border-warning/30 hover:bg-warning/30",
       icon: AlertCircle,
       label: "Potential bias detected",
     },
     High: {
-      color: "bg-red-100 text-red-700 hover:bg-red-100",
+      color: "bg-danger/20 text-danger border-danger/30 hover:bg-danger/30",
       icon: AlertTriangle,
-      label: "High bias risk in interview design",
+      label: "High bias risk in interview",
     },
   };
 
@@ -34,7 +33,7 @@ export function RiskIndicator({ level }: RiskIndicatorProps) {
   const Icon = config.icon;
 
   return (
-    <Badge className={cn("px-3 py-1 text-sm font-semibold flex items-center gap-1.5 rounded-full shadow-sm border-none", config.color)}>
+    <Badge className={cn("px-3 py-1 text-xs font-bold flex items-center gap-2 rounded-full border", config.color)}>
       <Icon className="h-4 w-4" />
       {config.label}
     </Badge>

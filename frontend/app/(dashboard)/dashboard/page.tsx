@@ -3,10 +3,8 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { getReports } from "@/lib/api";
-import { Sidebar } from "@/components/Sidebar";
-import { Header } from "@/components/Header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, TrendingDown, TrendingUp, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Loader2, AlertTriangle, CheckCircle2, Activity, BarChart3 } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function DashboardPage() {
   const { getToken } = useAuth();
@@ -30,94 +28,153 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col justify-center items-center py-40 space-y-4">
-        <Loader2 className="w-10 h-10 animate-spin text-indigo-600" />
-        <p className="text-slate-400 font-medium animate-pulse">Loading dashboard insights...</p>
+      <div className="flex flex-col justify-center items-center py-40 space-y-6">
+        <div className="relative">
+          <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
+          <Loader2 className="w-12 h-12 animate-spin text-primary relative z-10" />
+        </div>
+        <p className="text-muted-foreground font-medium tracking-wide">Synthesizing telemetry data...</p>
       </div>
     );
   }
 
-  // Deduplicate history by input_text to ensure unique counts and results
   const uniqueHistory = Array.from(new Map(history.map(item => [item.input_text, item])).values());
-
-  // Calculate Metrics safely using uniqueHistory
   const totalScans = uniqueHistory.length;
   const avgScore = totalScans ? Math.round(uniqueHistory.reduce((sum, r) => sum + (r.bias_score || 0), 0) / totalScans) : 0;
   const highRiskScans = uniqueHistory.filter(r => r.risk_level?.toLowerCase() === "high").length;
   const cleanScans = uniqueHistory.filter(r => r.risk_level?.toLowerCase() === "low").length;
 
-  // Aggregate Category Bias is no longer needed since Heatmap is removed
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
 
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 300, damping: 24 } }
+  };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      <div>
-        <h1 className="text-3xl font-bold text-slate-900">Dashboard Overview</h1>
-        <p className="text-slate-500 mt-1">High-level metrics and bias heatmaps across your hiring pipeline.</p>
+    <div className="space-y-10 animate-in fade-in duration-700 pb-20">
+      
+      {/* Header section */}
+      <div className="relative">
+        <div className="absolute top-0 right-10 w-64 h-64 bg-primary/10 rounded-full blur-[80px] -z-10" />
+        <div className="space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 bg-surface border border-border rounded-full">
+            <Activity className="h-3 w-3 text-primary" />
+            <span className="text-xs font-semibold text-primary uppercase tracking-wider">Telemetry</span>
+          </div>
+          <h1 className="text-3xl font-extrabold text-foreground tracking-tight">Dashboard Overview</h1>
+          <p className="text-muted-foreground max-w-2xl">
+            High-level metrics and aggregate analysis across your entire hiring pipeline.
+          </p>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="border-none shadow-sm shadow-indigo-100 bg-white">
-          <CardContent className="p-6 space-y-2">
-            <p className="text-sm font-semibold text-slate-400 uppercase tracking-wider">Total Scans</p>
-            <p className="text-4xl font-extrabold text-slate-900">{totalScans}</p>
-          </CardContent>
-        </Card>
-        <Card className="border-none shadow-sm shadow-indigo-100 bg-white">
-          <CardContent className="p-6 space-y-2">
-            <p className="text-sm font-semibold text-slate-400 uppercase tracking-wider">Avg Bias Score</p>
-            <div className="flex items-center gap-2">
-              <p className="text-4xl font-extrabold text-indigo-600">{avgScore}</p>
-              <span className="text-xs text-slate-400">/100</span>
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+      >
+        <motion.div variants={itemVariants} className="glass-panel p-6 relative overflow-hidden group hover:border-primary/50 transition-colors">
+          <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div className="space-y-4 relative z-10">
+            <p className="text-xs font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+              <BarChart3 className="w-4 h-4 text-primary" /> Total Scans
+            </p>
+            <p className="text-5xl font-black text-foreground">{totalScans}</p>
+          </div>
+        </motion.div>
+        
+        <motion.div variants={itemVariants} className="glass-panel p-6 relative overflow-hidden group hover:border-secondary/50 transition-colors">
+          <div className="absolute inset-0 bg-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div className="space-y-4 relative z-10">
+            <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">Avg Bias Score</p>
+            <div className="flex items-baseline gap-2">
+              <p className="text-5xl font-black text-secondary">{avgScore}</p>
+              <span className="text-sm font-bold text-muted-foreground">/100</span>
             </div>
-          </CardContent>
-        </Card>
-        <Card className="border-none shadow-sm shadow-red-100 bg-red-50">
-          <CardContent className="p-6 space-y-2">
-            <p className="text-sm font-semibold text-red-400 uppercase tracking-wider flex items-center gap-1">
+          </div>
+        </motion.div>
+        
+        <motion.div variants={itemVariants} className="glass-panel p-6 relative overflow-hidden group hover:border-danger/50 transition-colors">
+          <div className="absolute inset-0 bg-danger/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div className="space-y-4 relative z-10">
+            <p className="text-xs font-black text-danger uppercase tracking-widest flex items-center gap-2">
               <AlertTriangle className="w-4 h-4" /> High Risk
             </p>
-            <p className="text-4xl font-extrabold text-red-600">{highRiskScans}</p>
-          </CardContent>
-        </Card>
-        <Card className="border-none shadow-sm shadow-emerald-100 bg-emerald-50">
-          <CardContent className="p-6 space-y-2">
-            <p className="text-sm font-semibold text-emerald-500 uppercase tracking-wider flex items-center gap-1">
+            <p className="text-5xl font-black text-danger">{highRiskScans}</p>
+          </div>
+        </motion.div>
+        
+        <motion.div variants={itemVariants} className="glass-panel p-6 relative overflow-hidden group hover:border-success/50 transition-colors">
+          <div className="absolute inset-0 bg-success/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div className="space-y-4 relative z-10">
+            <p className="text-xs font-black text-success uppercase tracking-widest flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4" /> Clean
             </p>
-            <p className="text-4xl font-extrabold text-emerald-600">{cleanScans}</p>
-          </CardContent>
-        </Card>
-      </div>
+            <p className="text-5xl font-black text-success">{cleanScans}</p>
+          </div>
+        </motion.div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 gap-8">
-        {/* Recent Activity List */}
-        <Card className="shadow-sm border-slate-200">
-          <CardHeader>
-            <CardTitle>Recent Analyses</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {uniqueHistory.slice(0, 10).map(report => (
-                <div key={report.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100 hover:bg-slate-100 transition-colors cursor-pointer" onClick={() => window.location.href = `/report/${report.id}`}>
-                  <div className="truncate max-w-[500px] font-medium text-slate-700">
-                    {report.input_text}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, duration: 0.5 }}
+        className="space-y-6 pt-8"
+      >
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-bold text-foreground">Recent Analyses</h2>
+        </div>
+        
+        <div className="glass-panel overflow-hidden">
+          <div className="p-0">
+            <div className="flex flex-col">
+              {uniqueHistory.slice(0, 10).map((report, idx) => {
+                const isHigh = report.risk_level?.toLowerCase() === 'high';
+                const isMedium = report.risk_level?.toLowerCase() === 'medium';
+                const themeClass = isHigh ? 'text-danger bg-danger/10 border-danger/20' : 
+                                   isMedium ? 'text-warning bg-warning/10 border-warning/20' : 
+                                   'text-success bg-success/10 border-success/20';
+                
+                return (
+                  <div 
+                    key={report.id} 
+                    className={`flex items-center justify-between p-6 ${idx !== 0 ? 'border-t border-border' : ''} hover:bg-surface/50 transition-colors cursor-pointer group`} 
+                    onClick={() => window.location.href = `/report/${report.id}`}
+                  >
+                    <div className="truncate max-w-[60%] lg:max-w-[70%] font-medium text-foreground/90 group-hover:text-primary transition-colors">
+                      {report.input_text}
+                    </div>
+                    <div className="flex items-center gap-6">
+                      <span className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full border ${themeClass}`}>
+                        {report.risk_level}
+                      </span>
+                      <div className="flex flex-col items-end">
+                        <span className="font-black text-lg text-foreground">{report.bias_score}</span>
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Score</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <span className={`px-3 py-1 text-xs font-bold uppercase rounded-full ${report.risk_level.toLowerCase() === 'high' ? 'bg-red-100 text-red-600' : report.risk_level.toLowerCase() === 'medium' ? 'bg-amber-100 text-amber-600' : 'bg-emerald-100 text-emerald-600'}`}>
-                      {report.risk_level}
-                    </span>
-                    <span className="font-bold text-slate-900">{report.bias_score}</span>
-                  </div>
+                );
+              })}
+              {uniqueHistory.length === 0 && (
+                <div className="text-center text-muted-foreground py-16 flex flex-col items-center">
+                  <Activity className="h-10 w-10 mb-4 text-border" />
+                  <p className="font-medium">No recent activity found.</p>
+                  <p className="text-sm mt-1">Run an analysis to populate your dashboard.</p>
                 </div>
-              ))}
-              {history.length === 0 && (
-                <div className="text-center text-slate-500 py-8">No recent activity.</div>
               )}
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </div>
+      </motion.div>
     </div>
   );
 }
