@@ -1,4 +1,6 @@
-export const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api";
+import { publicEnv } from "./env";
+
+export const API_BASE = publicEnv.NEXT_PUBLIC_BACKEND_URL || "/api";
 
 async function fetchWithAuth(endpoint: string, options: RequestInit = {}, token?: string | null) {
   const headers = {

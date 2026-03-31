@@ -13,10 +13,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Input text is too short" }, { status: 400 });
     }
 
-    // Get the Clerk JWT token to pass to the backend
     const token = await getToken();
-
-    // Call the Backend Express Server
     const backendUrl = process.env.BACKEND_URL || "http://localhost:5001";
     console.log(`Proxying request to backend: ${backendUrl}/api/analyze`);
 

@@ -1,5 +1,5 @@
 {
-  "name": "equihire-ai",
+  "name": "equihire-monorepo",
   "private": true,
   "workspaces": [
     "frontend",

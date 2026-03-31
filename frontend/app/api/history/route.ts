@@ -13,7 +13,7 @@ export async function GET() {
     const token = await getToken();
     const backendUrl = process.env.BACKEND_URL || "http://localhost:5001";
     
-    console.log(`Proxying history request to: ${backendUrl}/api/reports`);
+    console.log(`[Proxy] Fetching history from: ${backendUrl}/api/reports`);
 
     const response = await fetch(`${backendUrl}/api/reports`, {
       method: "GET",

@@ -12,17 +12,10 @@ export async function POST(req: Request) {
 
     const body = await req.json();
     const token = await getToken();
-    
-    if (!token) {
-      console.error("[FRONTEND KIT] Failed to retrieve Clerk token.");
-      return NextResponse.json({ error: "Failed to authenticate with backend." }, { status: 401 });
-    }
-
-    // Proxy to Backend Express Server
     const backendUrl = process.env.BACKEND_URL || "http://localhost:5001";
-    console.log(`[FRONTEND KIT] Proxying to: ${backendUrl}/api/kit`);
+    console.log(`[Proxy] Generating kit via: ${backendUrl}/api/generate-kit`);
 
-    const response = await fetch(`${backendUrl}/api/kit`, {
+    const response = await fetch(`${backendUrl}/api/generate-kit`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

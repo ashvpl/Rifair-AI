@@ -14,11 +14,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "neutral_question is required." }, { status: 400 });
     }
 
-    // Get the Clerk JWT token to pass to the backend
     const token = await getToken();
     const backendUrl = process.env.BACKEND_URL || "http://localhost:5001";
 
-    console.log(`[Proxy] Simulating bias via backend: ${backendUrl}/api/simulate`);
+    console.log(`[Proxy] Simulating bias via: ${backendUrl}/api/simulate`);
 
     const response = await fetch(`${backendUrl}/api/simulate`, {
       method: "POST",

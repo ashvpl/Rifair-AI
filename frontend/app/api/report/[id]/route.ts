@@ -16,6 +16,7 @@ export async function GET(
     const { id } = params;
     const token = await getToken();
     const backendUrl = process.env.BACKEND_URL || "http://localhost:5001";
+    console.log(`[Proxy] Fetching report ${id} from: ${backendUrl}/api/reports/${id}`);
 
     const response = await fetch(`${backendUrl}/api/reports/${id}`, {
       method: "GET",
@@ -52,6 +53,7 @@ export async function DELETE(
     const { id } = params;
     const token = await getToken();
     const backendUrl = process.env.BACKEND_URL || "http://localhost:5001";
+    console.log(`[Proxy] Deleting report ${id} via: ${backendUrl}/api/reports/${id}`);
 
     const response = await fetch(`${backendUrl}/api/reports/${id}`, {
       method: "DELETE",
