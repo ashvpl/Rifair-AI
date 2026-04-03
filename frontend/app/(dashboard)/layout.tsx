@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { Sidebar } from "@/components/Sidebar";
+import SidebarWithSubmenu from "@/components/ui/sidebar-with-submenu";
 import { Header } from "@/components/Header";
 
 export default async function DashboardLayout({
@@ -17,15 +17,12 @@ export default async function DashboardLayout({
   return (
     <div className="flex h-screen bg-background overflow-hidden relative">
       {/* Sidebar - fixed width */}
-      <Sidebar />
+      <SidebarWithSubmenu />
       
       <div className="flex flex-col flex-1 relative min-w-0">
-        {/* We use a relative header here to not overlap the sidebar, or make the Header itself smart. 
-            Since Header is fixed in its component definition, we need to adjust or create a DashboardHeader.
-            For now, let's keep it but fix the layout. */}
         <Header />
         
-        <main className="flex-1 overflow-y-auto p-8 pt-24">
+        <main className="flex-1 overflow-y-auto p-8 pt-6">
           <div className="max-w-7xl mx-auto w-full">
             {children}
           </div>

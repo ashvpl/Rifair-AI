@@ -5,6 +5,8 @@ import { useAuth } from "@clerk/nextjs";
 import { getReports } from "@/lib/api";
 import { Loader2, AlertTriangle, CheckCircle2, Activity, BarChart3 } from "lucide-react";
 import { motion } from "framer-motion";
+import MountainVistaParallax from "@/components/ui/mountain-vista-bg";
+
 
 export default function DashboardPage() {
   const { getToken } = useAuth();
@@ -58,67 +60,54 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-700 pb-20">
+    <div className="space-y-12 animate-in fade-in duration-1000 pb-20">
       
-      {/* Header section */}
-      <div className="relative">
-        <div className="absolute top-0 right-10 w-64 h-64 bg-primary/10 rounded-full blur-[80px] -z-10" />
-        <div className="space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 bg-surface border border-border rounded-full">
-            <Activity className="h-3 w-3 text-primary" />
-            <span className="text-xs font-semibold text-primary uppercase tracking-wider">Telemetry</span>
-          </div>
-          <h1 className="text-3xl font-extrabold text-foreground tracking-tight">Dashboard Overview</h1>
-          <p className="text-muted-foreground max-w-2xl">
-            High-level metrics and aggregate analysis across your entire hiring pipeline.
-          </p>
-        </div>
-      </div>
+      {/* Header section with Parallax */}
+      <MountainVistaParallax 
+        title="Dashboard Overview" 
+        subtitle="Strategic insights and detailed telemetry from your automated hiring intelligence pipeline." 
+      />
 
       <motion.div 
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
       >
-        <motion.div variants={itemVariants} className="glass-panel p-6 relative overflow-hidden group hover:border-primary/50 transition-colors">
-          <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-          <div className="space-y-4 relative z-10">
-            <p className="text-xs font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-              <BarChart3 className="w-4 h-4 text-primary" /> Total Scans
+        <motion.div variants={itemVariants} className="bg-white border border-black/[0.05] p-8 rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.04)] transition-all duration-500 group">
+          <div className="space-y-5 relative z-10">
+            <p className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] flex items-center gap-2">
+              <BarChart3 className="w-4 h-4 text-primary" /> System Throughput
             </p>
-            <p className="text-5xl font-black text-foreground">{totalScans}</p>
+            <p className="text-6xl font-extrabold text-foreground tracking-tighter">{totalScans}</p>
           </div>
         </motion.div>
         
-        <motion.div variants={itemVariants} className="glass-panel p-6 relative overflow-hidden group hover:border-secondary/50 transition-colors">
-          <div className="absolute inset-0 bg-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-          <div className="space-y-4 relative z-10">
-            <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">Avg Bias Score</p>
+        <motion.div variants={itemVariants} className="bg-white border border-black/[0.05] p-8 rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.04)] transition-all duration-500 group">
+          <div className="space-y-5 relative z-10">
+            <p className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em]">Aggregate Bias Index</p>
             <div className="flex items-baseline gap-2">
-              <p className="text-5xl font-black text-secondary">{avgScore}</p>
-              <span className="text-sm font-bold text-muted-foreground">/100</span>
+              <p className="text-6xl font-extrabold text-[#0071E3] tracking-tighter">{avgScore}</p>
+              <span className="text-lg font-bold text-[#86868B]">/100</span>
             </div>
           </div>
         </motion.div>
         
-        <motion.div variants={itemVariants} className="glass-panel p-6 relative overflow-hidden group hover:border-danger/50 transition-colors">
-          <div className="absolute inset-0 bg-danger/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-          <div className="space-y-4 relative z-10">
-            <p className="text-xs font-black text-danger uppercase tracking-widest flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4" /> High Risk
+        <motion.div variants={itemVariants} className="bg-white border border-black/[0.05] p-8 rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.04)] transition-all duration-500 group">
+          <div className="space-y-5 relative z-10">
+            <p className="text-[10px] font-black text-danger uppercase tracking-[0.2em] flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4" /> Priority Alerts
             </p>
-            <p className="text-5xl font-black text-danger">{highRiskScans}</p>
+            <p className="text-6xl font-extrabold text-danger tracking-tighter">{highRiskScans}</p>
           </div>
         </motion.div>
         
-        <motion.div variants={itemVariants} className="glass-panel p-6 relative overflow-hidden group hover:border-success/50 transition-colors">
-          <div className="absolute inset-0 bg-success/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-          <div className="space-y-4 relative z-10">
-            <p className="text-xs font-black text-success uppercase tracking-widest flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4" /> Clean
+        <motion.div variants={itemVariants} className="bg-white border border-black/[0.05] p-8 rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_8_32px_rgba(0,0,0,0.04)] transition-all duration-500 group">
+          <div className="space-y-5 relative z-10">
+            <p className="text-[10px] font-black text-success uppercase tracking-[0.2em] flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4" /> Compliance Rate
             </p>
-            <p className="text-5xl font-black text-success">{cleanScans}</p>
+            <p className="text-6xl font-extrabold text-success tracking-tighter">{cleanScans}</p>
           </div>
         </motion.div>
       </motion.div>
@@ -126,49 +115,51 @@ export default function DashboardPage() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4, duration: 0.5 }}
-        className="space-y-6 pt-8"
+        transition={{ delay: 0.4, duration: 0.8 }}
+        className="space-y-8 pt-4"
       >
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold text-foreground">Recent Analyses</h2>
+          <h2 className="text-2xl font-extrabold text-foreground tracking-tight">Recent Activity Log</h2>
         </div>
         
-        <div className="glass-panel overflow-hidden">
+        <div className="bg-white border border-black/[0.05] rounded-[2rem] overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
           <div className="p-0">
             <div className="flex flex-col">
               {uniqueHistory.slice(0, 10).map((report, idx) => {
                 const isHigh = report.risk_level?.toLowerCase() === 'high';
                 const isMedium = report.risk_level?.toLowerCase() === 'medium';
-                const themeClass = isHigh ? 'text-danger bg-danger/10 border-danger/20' : 
-                                   isMedium ? 'text-warning bg-warning/10 border-warning/20' : 
-                                   'text-success bg-success/10 border-success/20';
+                const themeClass = isHigh ? 'text-danger bg-danger/5 border-danger/10' : 
+                                   isMedium ? 'text-warning bg-warning/5 border-warning/10' : 
+                                   'text-success bg-success/5 border-success/10';
                 
                 return (
                   <div 
                     key={report.id} 
-                    className={`flex items-center justify-between p-6 ${idx !== 0 ? 'border-t border-border' : ''} hover:bg-surface/50 transition-colors cursor-pointer group`} 
+                    className={`flex items-center justify-between p-8 ${idx !== 0 ? 'border-t border-black/[0.03]' : ''} hover:bg-black/[0.01] transition-all cursor-pointer group`} 
                     onClick={() => window.location.href = `/report/${report.id}`}
                   >
-                    <div className="truncate max-w-[60%] lg:max-w-[70%] font-medium text-foreground/90 group-hover:text-primary transition-colors">
+                    <div className="truncate max-w-[60%] lg:max-w-[70%] text-lg font-semibold text-foreground/80 group-hover:text-primary transition-colors">
                       {report.input_text}
                     </div>
-                    <div className="flex items-center gap-6">
-                      <span className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full border ${themeClass}`}>
+                    <div className="flex items-center gap-8">
+                      <span className={`px-5 py-2 text-[10px] font-black uppercase tracking-[0.15em] rounded-full border ${themeClass}`}>
                         {report.risk_level}
                       </span>
-                      <div className="flex flex-col items-end">
-                        <span className="font-black text-lg text-foreground">{report.bias_score}</span>
-                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Score</span>
+                      <div className="flex flex-col items-end min-w-[80px]">
+                        <span className="font-extrabold text-2xl text-foreground tracking-tighter">{report.bias_score}</span>
+                        <span className="text-[9px] font-bold text-[#86868B] uppercase tracking-[0.1em]">Score</span>
                       </div>
                     </div>
                   </div>
                 );
               })}
               {uniqueHistory.length === 0 && (
-                <div className="text-center text-muted-foreground py-16 flex flex-col items-center">
-                  <Activity className="h-10 w-10 mb-4 text-border" />
-                  <p className="font-medium">No recent activity found.</p>
-                  <p className="text-sm mt-1">Run an analysis to populate your dashboard.</p>
+                <div className="text-center text-[#86868B] py-24 flex flex-col items-center">
+                  <div className="bg-[#F5F5F7] p-8 rounded-full mb-6">
+                    <Activity className="h-12 w-12 text-black/10" />
+                  </div>
+                  <p className="text-xl font-bold text-foreground">No recent activity detected.</p>
+                  <p className="text-sm mt-2 font-medium">Initiate a broad analysis to populate your master dashboard.</p>
                 </div>
               )}
             </div>
@@ -176,5 +167,6 @@ export default function DashboardPage() {
         </div>
       </motion.div>
     </div>
+
   );
 }

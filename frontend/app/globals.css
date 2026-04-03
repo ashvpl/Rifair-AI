@@ -13,55 +13,157 @@
 
 @layer base {
   :root {
-    /* Base Colors matching prompt exactly */
-    --background: #0B0F19;
-    --foreground: #FFFFFF;
-    
-    --surface: rgba(255, 255, 255, 0.05);
-    --border: rgba(255, 255, 255, 0.1);
-    
-    --primary: #6366F1;
-    --primary-foreground: #FFFFFF;
-    
-    --secondary: #8B5CF6;
-    --secondary-foreground: #FFFFFF;
-    
-    --success: #22C55E;
-    --success-foreground: #FFFFFF;
-    
-    --warning: #F59E0B;
-    --warning-foreground: #FFFFFF;
-    
-    --danger: #EF4444;
-    --danger-foreground: #FFFFFF;
-    
-    /* Mapping essential shadcn vars if needed */
-    --card: rgba(255, 255, 255, 0.03);
-    --card-foreground: #FFFFFF;
-    
-    --popover: #0B0F19;
-    --popover-foreground: #FFFFFF;
-    
-    --muted: rgba(255, 255, 255, 0.1);
-    --muted-foreground: rgba(255, 255, 255, 0.6);
-    
-    --accent: rgba(255, 255, 255, 0.1);
-    --accent-foreground: #FFFFFF;
-    
-    --destructive: #EF4444;
-    --destructive-foreground: #FFFFFF;
-    
-    --input: rgba(255, 255, 255, 0.1);
-    --ring: #6366F1;
-    
-    --radius: 16px;
+    --card: #ffffff;
+    --ring: #a1a1a1;
+    --input: #e5e5e5;
+    --muted: #f5f5f5;
+    --accent: #f5f5f5;
+    --border: #e5e5e5;
+    --radius: 0rem;
+    --chart-1: #737373;
+    --chart-2: #737373;
+    --chart-3: #737373;
+    --chart-4: #737373;
+    --chart-5: #737373;
+    --popover: #ffffff;
+    --primary: #737373;
+    --sidebar: #fafafa;
+    --font-mono: Geist Mono, monospace;
+    --font-sans: Geist Mono, monospace;
+    --secondary: #f5f5f5;
+    --background: #ffffff;
+    --font-serif: Geist Mono, monospace;
+    --foreground: #0a0a0a;
+    --destructive: #e7000b;
+    --shadow-blur: 0px;
+    --shadow-color: hsl(0 0% 0%);
+    --sidebar-ring: #a1a1a1;
+    --shadow-spread: 0px;
+    --shadow-opacity: 0;
+    --sidebar-accent: #f5f5f5;
+    --sidebar-border: #e5e5e5;
+    --card-foreground: #0a0a0a;
+    --shadow-offset-x: 0px;
+    --shadow-offset-y: 1px;
+    --sidebar-primary: #171717;
+    --muted-foreground: #717171;
+    --accent-foreground: #171717;
+    --popover-foreground: #0a0a0a;
+    --primary-foreground: #fafafa;
+    --sidebar-foreground: #0a0a0a;
+    --secondary-foreground: #171717;
+    --destructive-foreground: #f5f5f5;
+    --sidebar-accent-foreground: #171717;
+    --sidebar-primary-foreground: #fafafa;
+    --surface: #f5f5f5;
+    --success: #171717;
+    --success-foreground: #ffffff;
+    --warning: #737373;
+    --warning-foreground: #ffffff;
+    --danger: #e7000b;
+    --danger-foreground: #ffffff;
   }
+
+  .dark {
+    --card: #191919;
+    --ring: #737373;
+    --input: #525252;
+    --muted: #262626;
+    --accent: #404040;
+    --border: #383838;
+    --chart-1: #737373;
+    --chart-2: #737373;
+    --chart-3: #737373;
+    --chart-4: #737373;
+    --chart-5: #737373;
+    --popover: #262626;
+    --primary: #737373;
+    --sidebar: #171717;
+    --secondary: #262626;
+    --background: #0a0a0a;
+    --foreground: #fafafa;
+    --destructive: #ff6467;
+    --sidebar-ring: #525252;
+    --sidebar-accent: #262626;
+    --sidebar-border: #ffffff;
+    --card-foreground: #fafafa;
+    --sidebar-primary: #fafafa;
+    --muted-foreground: #a1a1a1;
+    --accent-foreground: #fafafa;
+    --popover-foreground: #fafafa;
+    --primary-foreground: #fafafa;
+    --sidebar-foreground: #fafafa;
+    --secondary-foreground: #fafafa;
+    --destructive-foreground: #262626;
+    --sidebar-accent-foreground: #fafafa;
+    --sidebar-primary-foreground: #171717;
+    --surface: #262626;
+    --success: #fafafa;
+    --success-foreground: #262626;
+    --warning: #404040;
+    --warning-foreground: #fafafa;
+    --danger: #ff6467;
+    --danger-foreground: #262626;
+  }
+
+  @theme inline {
+    --color-card: var(--card);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-muted: var(--muted);
+    --color-accent: var(--accent);
+    --color-border: var(--border);
+    --color-radius: var(--radius);
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+    --color-popover: var(--popover);
+    --color-primary: var(--primary);
+    --color-sidebar: var(--sidebar);
+    --color-font-mono: var(--font-mono);
+    --color-font-sans: var(--font-sans);
+    --color-secondary: var(--secondary);
+    --color-background: var(--background);
+    --color-font-serif: var(--font-serif);
+    --color-foreground: var(--foreground);
+    --color-destructive: var(--destructive);
+    --color-shadow-blur: var(--shadow-blur);
+    --color-shadow-color: var(--shadow-color);
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-shadow-spread: var(--shadow-spread);
+    --color-shadow-opacity: var(--shadow-opacity);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-card-foreground: var(--card-foreground);
+    --color-shadow-offset-x: var(--shadow-offset-x);
+    --color-shadow-offset-y: var(--shadow-offset-y);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-destructive-foreground: var(--destructive-foreground);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  }
+
+
   
   * {
     @apply border-border;
   }
+  
+  html, body, :root {
+    font-family: "Geist Mono", Geist Mono, monospace !important;
+    scroll-behavior: smooth;
+  }
+  
   body {
-    @apply bg-background text-foreground antialiased selection:bg-indigo-500/30 min-h-screen relative;
+    @apply bg-background text-foreground antialiased selection:bg-primary min-h-screen relative;
   }
 }
 
@@ -99,4 +201,35 @@
 }
 .animation-delay-4000 {
   animation-delay: 4s;
+}
+
+/* Mountain Vista Parallax Styles */
+.hero-container {
+  background-color: #8fbcd4; /* Light sky blue background */
+}
+
+.parallax-layer {
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-name: parallax_fg;
+  background-position: bottom left;
+  background-repeat: repeat-x;
+}
+
+@keyframes parallax_fg {
+  0% {
+    background-position: 2765px 100%;
+  }
+  100% {
+    background-position: 550px 100%;
+  }
+}
+
+@keyframes parallax_bike {
+  0% {
+    background-position: -300px 100%;
+  }
+  100% {
+    background-position: 2000px 100%;
+  }
 }

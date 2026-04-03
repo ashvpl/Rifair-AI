@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { simulateBias } from "@/lib/api";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import RuixenPromptBox from "@/components/ui/ruixen-prompt-box";
 import { Loader2, Zap, AlertTriangle, ArrowRight, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -15,15 +14,18 @@ export default function SimulatePage() {
   const [simulation, setSimulation] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSimulate = async () => {
-    if (!question.trim()) return;
+  const handleSimulate = async (inputText: string, option: string | null) => {
+    if (!inputText.trim()) return;
     setIsLoading(true);
     setError(null);
     setSimulation(null);
 
+    // Optionally attach the selected option context for the backend
+    const finalQuestion = option ? `[${option}] ${inputText}` : inputText;
+
     try {
       const token = await getToken();
-      const data = await simulateBias(question, token);
+      const data = await simulateBias(finalQuestion, token);
       setSimulation(data.simulation);
     } catch (err: any) {
       setError(err.message || "AI service temporarily unavailable");
@@ -33,83 +35,39 @@ export default function SimulatePage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-12 animate-in fade-in duration-700 pb-20">
-      <div className="relative text-center space-y-6 max-w-3xl mx-auto py-10">
-        <div className="absolute inset-0 bg-primary/5 blur-[100px] -z-10 rounded-full" />
-        <div className="mx-auto w-16 h-16 bg-surface rounded-2xl flex items-center justify-center mb-6 border border-border shadow-2xl relative group overflow-hidden">
-          <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-          <Zap className="w-8 h-8 text-primary shadow-[0_0_15px_rgba(99,102,241,0.5)] relative z-10" />
-        </div>
-        <div className="space-y-4">
-           <div className="inline-flex items-center gap-2 px-3 py-1 bg-surface border border-border rounded-full">
-            <Sparkles className="h-3 w-3 text-secondary" />
-            <span className="text-[10px] font-black text-secondary uppercase tracking-widest">Injection Engine</span>
+    <div className="max-w-6xl mx-auto space-y-12 animate-in fade-in duration-1000 pb-24">
+      {/* Header section */}
+      <div className="relative pb-6 pt-4">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-8">
+          <div className="space-y-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 mb-2 bg-[#F5F5F7] border border-black/[0.03] rounded-full">
+              <Zap className="h-3 w-3 text-primary" />
+              <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Injection Engine</span>
+            </div>
+            <h1 className="text-4xl font-extrabold text-foreground tracking-tight">Stress-Test Simulation</h1>
+            <p className="text-[#86868B] max-w-xl text-lg font-medium">
+              Test the structural integrity of your hiring framework by injecting artificial bias vectors into professional queries.
+            </p>
           </div>
-          <h1 className="text-4xl lg:text-5xl font-black text-foreground tracking-tighter uppercase italic">
-            Bias <span className="text-primary">Simulator</span>
-          </h1>
-          <p className="text-lg text-muted-foreground font-medium max-w-2xl mx-auto">
-            Test the robustness of your recruiting process by injecting artificial bias vectors into neutral questions.
-          </p>
         </div>
       </div>
 
-      <div className="glass-panel p-1 rounded-3xl group overflow-hidden shadow-2xl transition-all hover:bg-surface/10">
-        <div className="p-8 space-y-6 bg-background/50 rounded-[inherit]">
+      <div className="bg-white border border-black/[0.05] p-6 md:p-8 rounded-[2.5rem] shadow-[0_4px_32px_rgba(0,0,0,0.02)] transition-all hover:shadow-lg">
+        <div className="space-y-6">
           <div className="space-y-4">
-            <div className="relative">
-              <Textarea 
-                placeholder="e.g. Can you describe a time you overcame a professional challenge?"
-                className="text-lg min-h-[160px] p-6 resize-none border-border bg-surface/30 focus:bg-surface/50 text-foreground transition-all rounded-2xl focus:ring-2 focus:ring-primary/20"
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-                disabled={isLoading}
-              />
-              <div className="absolute top-4 right-4 animate-pulse">
-                <Sparkles className="w-4 h-4 text-primary opacity-30" />
-              </div>
-            </div>
-            
-            <Button
-              onClick={handleSimulate}
-              disabled={isLoading || !question.trim()}
-              className="w-full h-16 bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white font-black text-lg rounded-2xl shadow-[0_10px_40px_rgba(99,102,241,0.3)] transition-all transform hover:scale-[1.01] active:scale-[0.99] group"
-            >
-              <AnimatePresence mode="wait">
-                {isLoading ? (
-                  <motion.div 
-                    key="loading"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="flex items-center justify-center gap-3"
-                  >
-                    <Loader2 className="w-6 h-6 animate-spin" /> 
-                    <span className="uppercase tracking-widest">Synthesizing Variants...</span>
-                  </motion.div>
-                ) : (
-                  <motion.div 
-                    key="idle"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="flex items-center justify-center gap-3"
-                  >
-                    <Zap className="w-6 h-6 group-hover:animate-pulse" /> 
-                    <span className="uppercase tracking-widest">Run Simulation</span>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </Button>
+            <RuixenPromptBox 
+              onSubmit={handleSimulate} 
+              isLoading={isLoading} 
+            />
             
             <AnimatePresence>
               {error && (
                 <motion.div 
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
-                  className="bg-danger/10 border border-danger/20 text-danger rounded-xl p-4 flex items-center gap-3 font-bold"
+                  className="bg-danger/5 border border-danger/10 text-danger rounded-2xl p-6 flex items-center gap-4 font-bold shadow-sm"
                 >
-                  <AlertTriangle className="w-5 h-5" /> {error}
+                  <AlertTriangle className="w-6 h-6" /> {error}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -120,44 +78,41 @@ export default function SimulatePage() {
       <AnimatePresence>
         {simulation && (
           <motion.div 
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-12 pt-10"
+            className="space-y-16 pt-16"
           >
-            <div className="glass-panel p-10 relative overflow-hidden bg-surface/20 border-border/50 group">
-              <div className="absolute right-0 top-0 h-full w-32 bg-primary/5 blur-[60px]" />
-              <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-4">Original Entry Point</h3>
-              <p className="text-2xl font-black text-foreground/90 tracking-tight leading-tight transition-colors group-hover:text-foreground">
+            <div className="bg-[#F5F5F7]/40 border border-black/[0.02] p-12 rounded-[3rem] relative overflow-hidden group shadow-inner">
+              <h3 className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.3em] mb-6">Master Reference Point</h3>
+              <p className="text-4xl font-extrabold text-[#1D1D1F] tracking-tight leading-tight transition-colors">
                 "{simulation.original}"
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative">
               {simulation.variants?.map((v: any, idx: number) => (
                 <motion.div 
                   key={idx}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: idx * 0.1 }}
-                  className="glass-panel p-6 flex flex-col gap-6 relative group overflow-hidden hover:border-danger/40 transition-all border-border/30 bg-surface/5"
+                  initial={{ opacity: 0, y: 40 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.15, duration: 0.8, ease: "circOut" }}
+                  className="bg-white p-10 flex flex-col gap-8 relative group overflow-hidden hover:border-danger/30 transition-all rounded-[3rem] border border-black/[0.05] shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_48px_rgba(0,0,0,0.06)]"
                 >
-                  <div className="absolute inset-0 bg-danger/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  
                   <div className="flex items-center justify-between relative z-10">
-                    <span className="px-3 py-1 bg-danger/10 text-danger rounded-full text-[10px] font-black uppercase tracking-widest border border-danger/20">
-                      {v.category} Injection
+                    <span className="px-5 py-2 bg-danger/[0.03] text-danger rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-danger/10 shadow-sm">
+                      {v.category} Probe
                     </span>
-                    <AlertTriangle className="h-4 w-4 text-danger opacity-40 group-hover:opacity-100 transition-opacity" />
+                    <AlertTriangle className="h-5 w-5 text-danger opacity-20 group-hover:opacity-100 transition-opacity" />
                   </div>
                   
-                  <p className="text-lg text-foreground font-bold leading-tight flex-1 relative z-10 transition-colors group-hover:text-white">
+                  <p className="text-2xl text-[#1D1D1F] font-bold leading-tight flex-1 relative z-10 tracking-tight">
                     "{v.biased_question}"
                   </p>
                   
-                  <div className="pt-6 border-t border-border/30 mt-auto relative z-10">
-                    <div className="flex gap-3">
-                      <ArrowRight className="w-4 h-4 shrink-0 text-primary mt-1" />
-                      <p className="text-xs font-semibold text-muted-foreground leading-relaxed italic">
+                  <div className="pt-8 border-t border-black/[0.03] mt-auto relative z-10">
+                    <div className="flex gap-4">
+                      <ArrowRight className="w-5 h-5 shrink-0 text-primary mt-1" />
+                      <p className="text-sm font-bold text-[#86868B] leading-relaxed italic pr-4">
                         {v.explanation}
                       </p>
                     </div>
@@ -169,5 +124,6 @@ export default function SimulatePage() {
         )}
       </AnimatePresence>
     </div>
+
   );
 }

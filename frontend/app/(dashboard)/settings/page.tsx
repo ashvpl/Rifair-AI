@@ -6,65 +6,69 @@ import { dark } from "@clerk/themes";
 
 export default function SettingsPage() {
   return (
-    <div className="max-w-5xl mx-auto space-y-12 animate-in fade-in duration-700 pb-20">
+    <div className="max-w-6xl mx-auto space-y-12 animate-in fade-in duration-1000 pb-20">
       
       {/* Header section */}
       <div className="relative">
-        <div className="absolute top-0 right-10 w-64 h-64 bg-primary/10 rounded-full blur-[80px] -z-10" />
-        <div className="space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 bg-surface border border-border rounded-full">
+        <div className="space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 mb-2 bg-[#F5F5F7] border border-black/[0.03] rounded-full">
             <User className="h-3 w-3 text-primary" />
-            <span className="text-[10px] font-black text-primary uppercase tracking-widest">Account Hub</span>
+            <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Account Dashboard</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-foreground tracking-tight">System Settings</h1>
-          <p className="text-muted-foreground max-w-2xl font-medium">
+          <h1 className="text-4xl font-extrabold text-foreground tracking-tight">System Settings</h1>
+          <p className="text-[#86868B] max-w-2xl text-lg font-medium">
             Manage your professional identity, security protocols, and platform preferences.
           </p>
         </div>
       </div>
 
-      <div className="grid gap-10">
+      <div className="grid gap-12">
         {/* Account Profile Card */}
-        <div className="glass-panel overflow-hidden transition-all duration-500 hover:border-primary/30">
-          <div className="p-8 border-b border-border/50 bg-surface/10 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-6">
-              <div className="h-16 w-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary border border-primary/20 shadow-inner">
-                <Shield className="h-8 w-8" />
+        <div className="bg-white border border-black/[0.05] rounded-[3rem] overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all duration-500 hover:shadow-[0_8px_48px_rgba(0,0,0,0.04)] hover:border-black/[0.08]">
+          <div className="p-10 border-b border-black/[0.03] bg-[#F5F5F7]/30 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="flex items-center gap-8">
+              <div className="h-20 w-20 bg-white rounded-3xl flex items-center justify-center text-primary border border-black/[0.05] shadow-[0_4px_12px_rgba(0,0,0,0.02)]">
+                <Shield className="h-10 w-10" />
               </div>
-              <div className="space-y-1">
-                <h2 className="text-xl font-bold text-foreground tracking-tight">Professional Identity</h2>
-                <p className="text-sm text-muted-foreground font-medium flex items-center gap-2">
-                  <Key className="w-3.5 h-3.5" /> Managed via Enterprise Authentication
+              <div className="space-y-2">
+                <h2 className="text-2xl font-extrabold text-foreground tracking-tight">Security Gateway</h2>
+                <p className="text-sm text-[#86868B] font-bold flex items-center gap-2 uppercase tracking-[0.05em]">
+                  <Key className="w-4 h-4" /> Enterprise Authentication Protocol
                 </p>
               </div>
             </div>
           </div>
           
-          <div className="p-4 md:p-8 overflow-hidden bg-background/30 shadow-inner">
-            <div className="max-w-full rounded-2xl overflow-hidden border border-border/50 bg-[#0B0F19]">
+          <div className="p-4 md:p-10 overflow-hidden bg-white">
+            <div className="max-w-full rounded-[2rem] overflow-hidden border border-black/[0.03] bg-[#F5F5F7]/10 p-2 md:p-6 shadow-inner">
               <UserProfile 
                  routing="hash"
                  appearance={{
-                   baseTheme: dark,
                    elements: {
                      rootBox: "w-full",
-                     card: "shadow-none border-none p-0 w-full bg-transparent",
-                     navbar: "hidden md:flex bg-surface/20 border-r border-border/50",
+                     card: "shadow-none border-none p-0 w-full bg-transparent mx-auto",
+                     navbar: "hidden md:flex bg-white border-r border-black/[0.03] rounded-l-[1.5rem] shadow-sm",
                      scrollBox: "shadow-none bg-transparent",
-                     pageScrollBox: "pt-4 px-8",
-                     headerTitle: "text-foreground font-bold",
-                     headerSubtitle: "text-muted-foreground",
+                     pageScrollBox: "pt-8 px-10 pb-12",
+                     headerTitle: "text-2xl font-extrabold tracking-tight text-foreground",
+                     headerSubtitle: "text-[#86868B] font-medium text-sm",
                      navbarMobileMenuButton: "text-primary",
-                     breadcrumbsItem: "text-muted-foreground",
-                     breadcrumbsSeparator: "text-muted-foreground/30",
-                     badge: "bg-primary/20 text-primary border-primary/30",
-                     profileSectionTitleText: "text-foreground font-bold uppercase tracking-widest text-xs",
-                     userPreviewSecondaryIdentifier: "text-muted-foreground",
-                     formButtonPrimary: "bg-primary hover:bg-primary/90 text-white font-bold h-11 rounded-xl shadow-lg shadow-primary/20",
-                     formFieldLabel: "text-muted-foreground font-bold text-[10px] uppercase tracking-widest",
-                     formFieldInput: "bg-surface/50 border-border text-foreground rounded-xl h-12 focus:ring-primary/20",
-                     input: "bg-surface border-border text-foreground",
-                     avatarBox: "border-2 border-primary/20 w-16 h-16"
+                     breadcrumbsItem: "text-[#86868B] font-bold text-[10px] uppercase tracking-widest",
+                     breadcrumbsSeparator: "text-black/10",
+                     badge: "bg-primary/5 text-primary border border-primary/10 font-bold",
+                     profileSectionTitleText: "text-foreground font-black uppercase tracking-[0.15em] text-[10px] mt-6 mb-4 pb-2 border-b border-black/[0.03]",
+                     avatarBox: "border-4 border-white shadow-xl w-24 h-24 rounded-3xl",
+                     userPreviewMainIdentifier: "text-foreground font-extrabold text-lg",
+                     userPreviewSecondaryIdentifier: "text-[#86868B] font-medium",
+                     formButtonPrimary: "bg-black hover:bg-black/90 text-white font-heavy h-12 px-8 rounded-full shadow-lg transition-all active:scale-95",
+                     formFieldLabel: "text-[#86868B] font-black text-[10px] uppercase tracking-[0.15em] mb-2",
+                     formFieldInput: "bg-white border-black/[0.06] text-foreground rounded-2xl h-14 px-5 focus:ring-4 focus:ring-black/5 focus:border-black/10 transition-all font-medium",
+                     footerActionText: "text-[#86868B] font-medium",
+                     footerActionLink: "text-primary font-bold hover:underline",
+                     identityPreviewText: "text-foreground font-bold",
+                     formFieldInputGroup: "gap-4",
+                     dividerRow: "border-black/[0.03]",
+                     profileSection: "mb-12"
                    }
                  }}
               />
@@ -72,23 +76,22 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        <div className="pt-10 flex flex-col items-center gap-6 text-center py-20 relative">
-           <div className="absolute inset-0 bg-primary/5 blur-3xl -z-10 rounded-full h-1/2" />
-           <div className="p-4 bg-surface rounded-full border border-border shadow-2xl relative group">
-              <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-full" />
-              <Bell className="w-6 h-6 text-muted-foreground relative z-10" />
+        <div className="pt-16 pb-24 flex flex-col items-center gap-8 text-center relative overflow-hidden rounded-[3rem] bg-[#F5F5F7]/30 border border-black/[0.02]">
+           <div className="p-6 bg-white rounded-full border border-black/[0.03] shadow-xl relative group transition-all duration-500 hover:scale-110">
+              <Bell className="w-8 h-8 text-[#86868B] group-hover:text-primary transition-colors" />
            </div>
-           <div className="space-y-2">
-              <p className="text-xl font-black text-foreground uppercase tracking-widest text-glow italic">
+           <div className="space-y-4 px-6">
+              <p className="text-2xl font-black text-foreground uppercase tracking-[0.2em] italic">
                 Advanced Features coming to <span className="text-primary italic">EquiHire Pro</span>
               </p>
-              <p className="text-sm text-muted-foreground font-medium max-w-sm">
-                Team management, custom bias thresholds, and API integration tools will be available in the next release.
+              <p className="text-lg text-[#86868B] font-medium max-w-lg mx-auto">
+                Next-gen team management, custom bias thresholds, and high-frequency API integration tools arriving in v2.0.
               </p>
            </div>
         </div>
       </div>
     </div>
+
   );
 }
 

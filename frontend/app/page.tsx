@@ -1,140 +1,254 @@
 "use client";
 
-import { useAuth } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, Sparkles, CheckCircle, ShieldAlert } from "lucide-react";
+import { ArrowRight, Sparkles, CheckCircle, ShieldAlert, Cpu, Layers, Scale, Zap, Search, Users, Briefcase, FileText, BookOpen, Activity, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { useEffect } from "react";
-import { Header } from "@/components/Header";
+import { NavBarDemo } from "@/components/ui/navbar-demo";
+import { cn } from "@/lib/utils";
+import SpotlightBackground from "@/components/ui/spotlight-background";
+import { BubbleText } from "@/components/ui/bubble-text";
+import { EquiHireCoreFeatures } from "@/components/ui/equihire-features";
+import FeatureCarousel from "@/components/ui/feature-carousel";
+import { InteractiveAccordion } from "@/components/ui/interactive-image-accordion";
+import { HeroSection, LogosSection } from "@/components/ui/hero-1";
+import { BlurTextAnimation } from "@/components/ui/blur-text-animation";
+import { HeroSection2 } from "@/components/ui/hero-section-2";
+import FooterSection from "@/components/ui/footer-section";
+import Image from "next/image";
 
 export default function LandingPage() {
-  const { userId, isLoaded } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (isLoaded && userId) {
-      router.push("/analyze");
-    }
-  }, [isLoaded, userId, router]);
-
   return (
-    <div className="flex flex-col min-h-screen bg-background relative overflow-hidden">
-      {/* Background Glow Blobs */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40rem] h-[40rem] bg-primary/20 rounded-full blur-[120px] animate-blob -z-10" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40rem] h-[40rem] bg-secondary/20 rounded-full blur-[120px] animate-blob animation-delay-4000 -z-10" />
+    <div className="flex flex-col min-h-screen bg-[#F5F5F7] relative overflow-hidden font-sans selection:bg-primary/20 selection:text-primary transition-colors duration-500">
+      {/* Background Effects */}
+      <SpotlightBackground />
+      <div className="relative z-50 w-full">
+        <NavBarDemo />
+      </div>
 
-      <Header />
+      <main className="flex-1 flex flex-col pt-4 pb-20 relative z-10 w-full">
+        <section className="relative w-full overflow-hidden">
+            <HeroSection />
+            <LogosSection />
+        </section>
 
-      <main className="flex-1 flex flex-col justify-center pt-24">
-        <section className="py-20 lg:py-32 px-6 lg:px-12 relative">
-          <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="space-y-8"
-            >
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-surface border border-border rounded-full backdrop-blur-md">
-                <Sparkles className="h-4 w-4 text-primary" />
-                <span className="text-sm font-semibold text-primary uppercase tracking-wider">Enterprise-Grade AI</span>
-              </div>
-              
-              <h1 className="text-5xl lg:text-7xl font-extrabold text-foreground leading-[1.1] tracking-tight">
-                Eliminate Hidden Bias in Hiring&nbsp;— <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Instantly with AI.</span>
-              </h1>
-              
-              <p className="text-xl text-muted-foreground leading-relaxed max-w-xl">
-                Analyze, correct, and generate bias-free interview questions with enterprise-grade AI. Create a fairer hiring process without sacrificing quality.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <Link href="/analyze">
-                  <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground font-bold h-14 px-8 rounded-xl shadow-[0_0_30px_rgba(99,102,241,0.4)] hover:shadow-[0_0_40px_rgba(99,102,241,0.6)] group transition-all hover:scale-105">
-                    Try Analyzer
-                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
-                <Link href="/kit">
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto border-border bg-surface hover:bg-surface/80 text-foreground font-bold h-14 px-8 rounded-xl backdrop-blur-md transition-all hover:scale-105">
-                    Generate Interview Kit
-                  </Button>
-                </Link>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-6 pt-10 border-t border-border/50">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-success" />
-                    <span className="font-bold text-foreground uppercase text-xs tracking-widest">Real-time Analysis</span>
-                  </div>
-                  <p className="text-muted-foreground text-sm">Detect risk instantly.</p>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-success" />
-                    <span className="font-bold text-foreground uppercase text-xs tracking-widest">Smart Improvements</span>
-                  </div>
-                  <p className="text-muted-foreground text-sm">Get bias-free alternatives.</p>
-                </div>
-              </div>
-            </motion.div>
+        {/* HOW IT WORKS SECTION */}
+        <section id="how-it-works" className="py-24 px-6 lg:px-12 relative overflow-hidden bg-[#F5F5F7]">
+          <div className="max-w-7xl mx-auto space-y-20">
+            <div className="text-center space-y-4">
+              <h2 className="text-4xl md:text-6xl font-black text-[#1D1D1F] tracking-tight">How It Works</h2>
+              <p className="text-xl text-[#86868B] font-medium">Eight steps to institutionalizing fairness.</p>
+            </div>
             
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-              className="relative"
-            >
-              <div className="glass-panel p-8 relative overflow-hidden group">
-                {/* Decorative UI elements representing the product */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-[50px]"></div>
-                
-                <div className="h-40 bg-surface rounded-xl border border-border flex flex-col items-center justify-center p-8 space-y-4 group-hover:border-primary/50 transition-colors">
-                  <div className="flex items-center gap-4 w-full">
-                    <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center">
-                      <ShieldAlert className="h-5 w-5 text-primary" />
-                    </div>
-                    <div className="flex-1 space-y-2">
-                      <div className="h-2 w-full bg-border rounded-full animate-shimmer"></div>
-                      <div className="h-2 w-3/4 bg-border rounded-full animate-shimmer"></div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="mt-8 space-y-4">
-                  <div className="flex justify-between items-center p-4 bg-background/50 rounded-xl border border-border">
-                    <span className="text-sm font-medium text-foreground">Cultural Bias Risk</span>
-                    <span className="text-sm font-bold text-warning">Medium</span>
-                  </div>
-                  <div className="flex justify-between items-center p-4 bg-background/50 rounded-xl border border-border">
-                    <span className="text-sm font-medium text-foreground">Gender Bias Risk</span>
-                    <span className="text-sm font-bold text-success">Low</span>
-                  </div>
-                  <div className="flex justify-between items-center p-4 bg-primary/10 rounded-xl border border-primary/20">
-                    <span className="text-sm font-medium text-primary">Overall Score</span>
-                    <span className="text-xl font-bold text-primary">92/100</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+            <FeatureCarousel />
           </div>
         </section>
+
+        {/* CORE FEATURES SECTION - ANIMATED */}
+        <EquiHireCoreFeatures />
+
+        {/* LIVE EXAMPLE SECTION */}
+        <section className="py-32 px-6 lg:px-12 bg-[#101012] text-white relative border-y border-black/[0.03]">
+            {/* Subtle glow behind the card */}
+            <div 
+                className="absolute top-1/2 left-3/4 -translate-y-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full pointer-events-none opacity-20 z-0 blur-[120px]"
+                style={{ background: 'radial-gradient(circle, #6366f1 0%, transparent 60%)' }}
+            />
+            
+            <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
+                <div className="space-y-10">
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight min-h-[1.2em]">
+                        <BlurTextAnimation 
+                            text="See the difference in real-time."
+                            fontSize="text-4xl md:text-5xl lg:text-6xl"
+                            textColor="text-white"
+                            className="font-black"
+                            containerClassName="justify-start"
+                            animationDelay={6000}
+                        />
+                    </h2>
+                    <div className="text-xl text-white/60 leading-relaxed font-medium min-h-[4em]">
+                        <BlurTextAnimation 
+                            text="Our engine doesn't just block bad questions. It fundamentally rebuilds them, cutting out subtle signals of bias while purely focusing on core competencies."
+                            fontSize="text-xl"
+                            textColor="text-white/60"
+                            className="font-medium"
+                            containerClassName="justify-start text-left"
+                            animationDelay={8000}
+                        />
+                    </div>
+                </div>
+
+                <div className="group relative w-full transition-all duration-500">
+                    {/* Skewed gradient panels from SkewCards */}
+                    <span
+                        className="absolute top-0 left-[30px] w-1/2 h-full rounded-3xl transform skew-x-[12deg] transition-all duration-500 group-hover:skew-x-0 group-hover:left-[10px] group-hover:w-[calc(100%-20px)]"
+                        style={{
+                            background: 'linear-gradient(315deg, #6366f1, #ec4899)',
+                        }}
+                    />
+                    <span
+                        className="absolute top-0 left-[30px] w-1/2 h-full rounded-3xl transform skew-x-[12deg] blur-[40px] transition-all duration-500 group-hover:skew-x-0 group-hover:left-[10px] group-hover:w-[calc(100%-20px)] opacity-50"
+                        style={{
+                            background: 'linear-gradient(315deg, #6366f1, #ec4899)',
+                        }}
+                    />
+
+                    {/* Animated blurs */}
+                    <span className="pointer-events-none absolute inset-0 z-10 overflow-hidden">
+                        <span className="absolute top-0 left-0 w-0 h-0 rounded-full opacity-0 bg-white/10 backdrop-blur-xl shadow-2xl transition-all duration-700 group-hover:-top-20 group-hover:left-20 group-hover:w-40 group-hover:h-40 group-hover:opacity-100 animate-pulse" />
+                        <span className="absolute bottom-0 right-0 w-0 h-0 rounded-full opacity-0 bg-white/5 backdrop-blur-xl shadow-2xl transition-all duration-700 delay-150 group-hover:-bottom-20 group-hover:right-20 group-hover:w-48 group-hover:h-48 group-hover:opacity-100 animate-pulse" />
+                    </span>
+
+                    {/* Main Content Container */}
+                    <div className="relative z-20 bg-black/40 backdrop-blur-3xl p-8 md:p-12 rounded-[3rem] border border-white/10 shadow-2xl space-y-10 transition-all duration-500 group-hover:left-[-10px]">
+                        <div className="space-y-4 relative z-10">
+                            <div className="flex items-center gap-3">
+                                <div className="h-8 w-8 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center border border-red-500/30">
+                                    <span className="font-bold">×</span>
+                                </div>
+                                <span className="text-sm font-bold text-red-400 uppercase tracking-widest">Biased Question</span>
+                            </div>
+                            <div className="p-6 bg-black/40 rounded-2xl border border-red-500/20 shadow-inner group-hover:border-red-500/40 transition-colors">
+                                <p className="text-xl font-medium text-white/90">"Can you handle long hours under pressure?"</p>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4 relative z-10">
+                            <div className="flex items-center gap-3">
+                                <ShieldAlert className="h-5 w-5 text-amber-400" />
+                                <span className="text-sm font-bold text-amber-400 uppercase tracking-widest">Detected Issues</span>
+                            </div>
+                            <div className="flex flex-wrap gap-3">
+                                <span className="px-5 py-2.5 bg-amber-500/10 text-amber-300 rounded-full text-sm font-bold border border-amber-500/20 hover:bg-amber-500/20 transition-all">Work-life bias</span>
+                                <span className="px-5 py-2.5 bg-amber-500/10 text-amber-300 rounded-full text-sm font-bold border border-amber-500/20 hover:bg-amber-500/20 transition-all">Cultural pressure</span>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4 pt-8 mt-4 border-t border-white/10 relative z-10">
+                            <div className="flex items-center gap-3">
+                                <div className="h-8 w-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+                                    <CheckCircle className="h-4 w-4" />
+                                </div>
+                                <span className="text-sm font-bold text-emerald-400 uppercase tracking-widest">AI Output</span>
+                            </div>
+                            <div className="p-8 bg-emerald-500/10 rounded-2xl border border-emerald-500/20 shadow-[inset_0_0_20px_rgba(0,0,0,0.4)] group-hover:border-emerald-500/40 transition-all min-h-[140px] flex items-center">
+                                <BlurTextAnimation 
+                                    text='"How do you prioritize tasks during tight deadlines?"'
+                                    fontSize="text-2xl md:text-3xl"
+                                    textColor="text-emerald-50"
+                                    className="font-bold drop-shadow-md"
+                                    containerClassName="justify-start"
+                                    animationDelay={5000}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        {/* WHY / WHO ADVANCED SECTIONS */}
+        <section id="about-us" className="py-32 px-6 lg:px-12 relative w-full bg-[#F5F5F7] border-y border-black/[0.05]">
+            <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-20">
+                <div className="space-y-12">
+                    <h2 className="text-4xl md:text-5xl font-black text-[#1D1D1F] tracking-tight">Why EquiHire AI</h2>
+                    <ul className="space-y-8">
+                        <li className="flex items-start gap-5">
+                            <div className="h-10 w-10 rounded-full bg-muted text-primary flex items-center justify-center shrink-0 mt-1">
+                                <CheckCircle className="h-5 w-5" />
+                            </div>
+                            <div>
+                                <h4 className="text-2xl font-bold text-[#1D1D1F]">Removes Unconscious Bias</h4>
+                                <p className="text-[#86868B] text-lg mt-2 leading-relaxed">Eliminate subtle biases that humans inherently miss.</p>
+                            </div>
+                        </li>
+                        <li className="flex items-start gap-5">
+                            <div className="h-10 w-10 rounded-full bg-muted text-primary flex items-center justify-center shrink-0 mt-1">
+                                <CheckCircle className="h-5 w-5" />
+                            </div>
+                            <div>
+                                <h4 className="text-2xl font-bold text-[#1D1D1F]">Improves Hiring Fairness</h4>
+                                <p className="text-[#86868B] text-lg mt-2 leading-relaxed">Create a perfectly level playing field for all candidates.</p>
+                            </div>
+                        </li>
+                        <li className="flex items-start gap-5">
+                            <div className="h-10 w-10 rounded-full bg-muted text-primary flex items-center justify-center shrink-0 mt-1">
+                                <CheckCircle className="h-5 w-5" />
+                            </div>
+                            <div>
+                                <h4 className="text-2xl font-bold text-[#1D1D1F]">Ensures Compliance</h4>
+                                <p className="text-[#86868B] text-lg mt-2 leading-relaxed">Stay seamlessly aligned with modern employment standards and ethical guidelines.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div className="space-y-12">
+                    <h2 className="text-4xl md:text-5xl font-black text-[#1D1D1F] tracking-tight">Who is it for</h2>
+                    <InteractiveAccordion 
+                        items={[
+                            {
+                                id: 1,
+                                title: 'HR Teams',
+                                imageUrl: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1974&auto=format&fit=crop',
+                                desc: 'Perfect for recruiting teams looking to remove unconscious bias from their workflow.'
+                            },
+                            {
+                                id: 2,
+                                title: 'Startups',
+                                imageUrl: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=2074&auto=format&fit=crop',
+                                desc: 'Agile teams ensuring cultural fairness and diversity from day one.'
+                            },
+                            {
+                                id: 3,
+                                title: 'Enterprises',
+                                imageUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop',
+                                desc: 'Scale fair hiring practices across thousands of employees and teams.'
+                            }
+                        ]}
+                    />
+                </div>
+            </div>
+        </section>
+
+        {/* TRUST SECTION & BOTTOM CTA */}
+        <section className="py-24 px-6 lg:px-12 relative w-full bg-[#F5F5F7] border-t border-black/[0.05]">
+            <div className="max-w-7xl mx-auto space-y-12">
+                {/* Trust / Authority Section inside the bottom CTA */}
+                <div className="flex flex-wrap justify-center gap-x-12 gap-y-6 pb-24 border-b border-black/[0.03]">
+                    <div className="flex items-center gap-3 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-500 cursor-default">
+                        <CheckCircle className="h-4 w-4" />
+                        <span className="text-[10px] font-black text-black uppercase tracking-[0.3em]">Made for modern hiring teams</span>
+                    </div>
+                    <div className="flex items-center gap-3 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-500 cursor-default">
+                        <CheckCircle className="h-4 w-4" />
+                        <span className="text-[10px] font-black text-black uppercase tracking-[0.3em]">Built for inclusive organizations</span>
+                    </div>
+                    <div className="flex items-center gap-3 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-500 cursor-default">
+                        <CheckCircle className="h-4 w-4" />
+                        <span className="text-[10px] font-black text-black uppercase tracking-[0.3em]">Ethical AI Principles</span>
+                    </div>
+                </div>
+
+                <HeroSection2 
+                    title={<>Ready to build <br/> fair hiring systems?</>}
+                    subtitle="Join a movement of world-class organizations building the future of unbiased, skills-first recruitment."
+                    callToAction={{
+                        text: "Start Free Audit",
+                        href: "/analyze",
+                        icon: <ArrowRight className="h-6 w-6" />
+                    }}
+                    backgroundImage="https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=2070&auto=format&fit=crop"
+                    className="shadow-[0_20px_100px_rgba(0,0,0,0.08)]"
+                />
+            </div>
+        </section>
+
       </main>
       
-      <footer className="py-8 px-6 lg:px-12 border-t border-border bg-background/80 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <p className="text-muted-foreground text-sm">
-            © 2026 EquiHire AI Platform. All rights reserved.
-          </p>
-          <div className="flex items-center gap-8">
-            <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Privacy</span>
-            <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Terms</span>
-          </div>
-        </div>
-      </footer>
+      <FooterSection />
     </div>
   );
 }

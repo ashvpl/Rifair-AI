@@ -107,31 +107,30 @@ export default function HistoryPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-10 animate-in fade-in duration-700 pb-20">
+    <div className="max-w-6xl mx-auto space-y-12 animate-in fade-in duration-1000 pb-20">
       
       {/* Header section */}
       <div className="relative">
-        <div className="absolute top-0 right-10 w-64 h-64 bg-secondary/10 rounded-full blur-[80px] -z-10" />
-        <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 bg-surface border border-border rounded-full">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-8">
+          <div className="space-y-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 mb-2 bg-[#F5F5F7] border border-black/[0.03] rounded-full">
               <FileText className="h-3 w-3 text-secondary" />
-              <span className="text-xs font-semibold text-secondary uppercase tracking-wider">Reports</span>
+              <span className="text-[10px] font-black text-secondary uppercase tracking-[0.2em]">Archive Hub</span>
             </div>
-            <h1 className="text-3xl font-extrabold text-foreground tracking-tight">Analysis History</h1>
-            <p className="text-muted-foreground max-w-xl">
-              Track, review, and manage all your past interview question bias analyses.
+            <h1 className="text-4xl font-extrabold text-foreground tracking-tight">Analysis History</h1>
+            <p className="text-[#86868B] max-w-xl text-lg font-medium">
+              Track, review, and manage all your past interview question bias analyses in a secure, unified ledger.
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground bg-surface px-4 py-2 rounded-full border border-border/50">
+            <div className="text-[10px] font-black uppercase tracking-[0.15em] text-[#86868B] bg-[#F5F5F7] px-6 py-2.5 rounded-full border border-black/[0.03]">
               {history.length} Reports Total
             </div>
             {history.length > 0 && (
               <Button
                 variant="outline"
                 size="sm"
-                className="text-danger border-danger/30 hover:bg-danger/10 hover:border-danger/50 shadow-sm transition-all h-9"
+                className="text-danger border-danger/10 bg-danger/5 hover:bg-danger/10 hover:border-danger/30 shadow-sm transition-all h-10 px-6 rounded-full font-bold"
                 onClick={() => {
                   setTargetId("ALL");
                   setShowConfirmModal(true);
@@ -143,7 +142,7 @@ export default function HistoryPage() {
                 ) : (
                   <Trash2 className="h-4 w-4 mr-2" />
                 )}
-                Delete All
+                Purge History
               </Button>
             )}
           </div>
@@ -151,28 +150,28 @@ export default function HistoryPage() {
       </div>
 
       {isLoading ? (
-        <div className="flex justify-center py-40">
+        <div className="flex justify-center py-48">
           <div className="relative">
-            <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
-            <Loader2 className="w-12 h-12 animate-spin text-primary relative z-10" />
+            <div className="absolute inset-0 bg-primary/10 rounded-full blur-2xl animate-pulse"></div>
+            <Loader2 className="w-16 h-16 animate-spin text-primary relative z-10" />
           </div>
         </div>
       ) : history.length === 0 ? (
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass-panel border-dashed border-2 p-16 text-center"
+          className="bg-[#F5F5F7]/30 border-2 border-dashed border-black/[0.05] p-24 text-center rounded-[3rem]"
         >
-          <div className="space-y-6">
-            <div className="mx-auto h-20 w-20 bg-surface rounded-full flex items-center justify-center border border-border shadow-inner">
-              <Calendar className="h-10 w-10 text-muted-foreground/50" />
+          <div className="space-y-8">
+            <div className="mx-auto h-24 w-24 bg-white rounded-full flex items-center justify-center border border-black/[0.03] shadow-[inset_0_4px_12px_rgba(0,0,0,0.01)]">
+              <Calendar className="h-10 w-10 text-black/10" />
             </div>
-            <div className="space-y-2">
-              <h3 className="text-xl font-bold text-foreground">No reports found</h3>
-              <p className="text-muted-foreground max-w-sm mx-auto">Start by analyzing your first set of interview questions in the analysis engine.</p>
+            <div className="space-y-3">
+              <h3 className="text-2xl font-extrabold text-foreground">Archive is Empty</h3>
+              <p className="text-[#86868B] max-w-sm mx-auto font-medium">Your historical intelligence log is currently blank. Initiate an analysis to build your database.</p>
             </div>
-            <Link href="/analyze" className="inline-flex items-center justify-center h-10 px-6 mt-4 rounded-full bg-primary/10 text-primary font-bold hover:bg-primary/20 transition-colors">
-              Go to Analyze <ChevronRight className="w-4 h-4 ml-1" />
+            <Link href="/analyze" className="inline-flex items-center justify-center h-12 px-8 mt-6 rounded-full bg-black text-white font-bold hover:bg-black/90 transition-all shadow-lg active:scale-95">
+              Launch Intelligence Engine <ChevronRight className="w-4 h-4 ml-1" />
             </Link>
           </div>
         </motion.div>
@@ -181,7 +180,7 @@ export default function HistoryPage() {
           variants={containerVariants}
           initial="hidden"
           animate="show"
-          className="grid gap-4"
+          className="grid gap-6"
         >
           <AnimatePresence>
             {history.map((report) => (
@@ -192,33 +191,34 @@ export default function HistoryPage() {
                 layout
               >
                 <Link href={`/report/${report.id}`} className="block">
-                  <div className="glass-panel p-5 group hover:border-primary/40 transition-all duration-300">
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+                  <div className="bg-white border border-black/[0.05] p-7 group hover:border-primary transition-all duration-500 rounded-[2rem] shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.06)] relative overflow-hidden">
+                    <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/[0.005] transition-colors" />
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-8 relative z-10">
                       
-                      <div className="flex-shrink-0 flex sm:flex-col items-center sm:w-20 sm:border-r border-border pr-0 sm:pr-6 gap-3 sm:gap-1">
-                        <span className="text-[10px] text-muted-foreground uppercase font-black tracking-widest sm:order-2">Score</span>
-                        <span className="text-3xl font-black text-foreground sm:order-1">{report.bias_score}</span>
+                      <div className="flex-shrink-0 flex sm:flex-col items-center sm:w-24 sm:border-r border-black/[0.03] pr-0 sm:pr-8 gap-4 sm:gap-1">
+                        <span className="text-[10px] text-[#86868B] uppercase font-black tracking-[0.2em] sm:order-2 leading-none mt-1">Index</span>
+                        <span className="text-4xl font-extrabold text-[#1D1D1F] sm:order-1 tracking-tighter">{report.bias_score}</span>
                       </div>
                       
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-foreground/90 font-medium truncate mb-2 group-hover:text-primary transition-colors text-lg">
-                          "{report.input_text.slice(0, 80)}..."
+                        <h4 className="text-[#1D1D1F] font-bold truncate mb-3 group-hover:text-primary transition-colors text-xl tracking-tight">
+                          "{report.input_text.slice(0, 90)}..."
                         </h4>
-                        <div className="flex items-center gap-4 text-xs font-semibold text-muted-foreground">
-                          <span className="flex items-center gap-1.5 px-3 py-1 bg-surface rounded-full border border-border/50">
-                            <Calendar className="h-3 w-3 opacity-50" />
+                        <div className="flex items-center gap-5 text-xs font-bold text-[#86868B]">
+                          <span className="flex items-center gap-2 px-4 py-1.5 bg-[#F5F5F7] rounded-full border border-black/[0.02]">
+                            <Calendar className="h-3.5 w-3.5 opacity-40" />
                             {format(new Date(report.created_at), "MMM d, yyyy • h:mm a")}
                           </span>
                           <RiskIndicator level={report.risk_level} />
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-3 mt-4 sm:mt-0 ml-auto sm:ml-0">
+                      <div className="flex items-center gap-4 mt-6 sm:mt-0 ml-auto sm:ml-0">
                         <button
                           onClick={(e) => promptDelete(e, report.id)}
                           disabled={deletingId === report.id}
-                          className="p-2.5 text-muted-foreground hover:text-danger hover:bg-danger/10 rounded-xl transition-all opacity-0 group-hover:opacity-100 disabled:opacity-50"
-                          title="Delete Report"
+                          className="p-3 text-[#86868B] hover:text-danger hover:bg-danger/5 border border-transparent hover:border-danger/10 rounded-2xl transition-all opacity-0 group-hover:opacity-100 disabled:opacity-50 shadow-sm bg-white"
+                          title="Purge Entry"
                         >
                           {deletingId === report.id ? (
                             <Loader2 className="h-5 w-5 animate-spin" />
@@ -226,8 +226,8 @@ export default function HistoryPage() {
                             <Trash2 className="h-5 w-5" />
                           )}
                         </button>
-                        <div className="flex-shrink-0 h-10 w-10 text-muted-foreground bg-surface border-border flex items-center justify-center rounded-xl group-hover:bg-primary/10 group-hover:text-primary group-hover:border-primary/30 transition-all">
-                          <ChevronRight className="h-5 w-5" />
+                        <div className="flex-shrink-0 h-12 w-12 text-[#86868B] bg-[#F5F5F7] border border-black/[0.02] flex items-center justify-center rounded-[1.25rem] group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all shadow-sm">
+                          <ChevronRight className="h-6 w-6" />
                         </div>
                       </div>
                       
@@ -242,33 +242,35 @@ export default function HistoryPage() {
 
       {/* Modernised Dialog */}
       <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
-        <DialogContent className="sm:max-w-[420px] bg-background border border-border shadow-2xl rounded-2xl p-0 overflow-hidden">
-          <div className="p-8">
-            <DialogHeader className="space-y-4">
-              <div className="mx-auto w-16 h-16 bg-danger/10 rounded-full flex items-center justify-center mb-2">
-                <AlertTriangle className="h-8 w-8 text-danger" />
+        <DialogContent className="sm:max-w-[440px] bg-white border border-black/[0.05] shadow-[0_32px_128px_rgba(0,0,0,0.1)] rounded-[3rem] p-0 overflow-hidden outline-none">
+          <div className="p-10">
+            <DialogHeader className="space-y-6">
+              <div className="mx-auto w-20 h-20 bg-danger/5 rounded-[2.25rem] flex items-center justify-center border border-danger/10">
+                <AlertTriangle className="h-10 w-10 text-danger" />
               </div>
-              <DialogTitle className="text-center text-2xl font-extrabold text-foreground">
-                {targetId === "ALL" ? "Delete All Reports?" : "Delete Report?"}
-              </DialogTitle>
-              <DialogDescription className="text-center text-sm font-medium text-muted-foreground leading-relaxed pt-2">
-                This action is permanent and cannot be undone. Are you sure you want to completely remove {targetId === "ALL" ? "all reports" : "this report"} from your history?
-              </DialogDescription>
+              <div className="space-y-2">
+                <DialogTitle className="text-center text-3xl font-extrabold text-[#1D1D1F] tracking-tight">
+                  {targetId === "ALL" ? "Purge Registry?" : "Delete Snapshot?"}
+                </DialogTitle>
+                <DialogDescription className="text-center text-sm font-medium text-[#86868B] leading-relaxed px-4">
+                  This execution is terminal and cannot be reversed. Proceed with the permanent removal of {targetId === "ALL" ? "entire history" : "this intelligence entry"}?
+                </DialogDescription>
+              </div>
             </DialogHeader>
-            <DialogFooter className="flex flex-col sm:flex-row gap-3 mt-8">
+            <DialogFooter className="flex flex-col sm:flex-row gap-4 mt-10">
               <Button
                 variant="outline"
-                className="flex-1 bg-surface border-border text-foreground hover:bg-background h-12 rounded-xl"
+                className="flex-1 bg-[#F5F5F7] border-black/[0.03] text-foreground hover:bg-[#E8E8ED] h-14 rounded-full font-bold shadow-sm transition-all"
                 onClick={() => setShowConfirmModal(false)}
               >
-                No, cancel
+                Retain
               </Button>
               <Button
                 variant="default"
-                className="flex-1 bg-danger hover:bg-danger/90 text-white font-bold border-none shadow-md h-12 rounded-xl"
+                className="flex-1 bg-danger hover:bg-danger/90 text-white font-heavy border-none shadow-lg h-14 rounded-full font-extrabold transition-all active:scale-95"
                 onClick={confirmDelete}
               >
-                Yes, delete
+                Delete Permanent
               </Button>
             </DialogFooter>
           </div>

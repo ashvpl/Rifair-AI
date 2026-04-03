@@ -9,65 +9,71 @@ interface BiasScoreCardProps {
 
 export function BiasScoreCard({ score }: BiasScoreCardProps) {
   const getScoreColor = (s: number) => {
-    if (s <= 30) return { stroke: "#22C55E", text: "text-success", bg: "bg-success/10", border: "border-success/20", label: "Low Risk" };
-    if (s <= 70) return { stroke: "#F59E0B", text: "text-warning", bg: "bg-warning/10", border: "border-warning/20", label: "Medium Risk" };
-    return { stroke: "#EF4444", text: "text-danger", bg: "bg-danger/10", border: "border-danger/20", label: "High Risk" };
+    if (s <= 30) return { stroke: "#22C55E", text: "text-success", bg: "bg-success/[0.03]", border: "border-success/10", label: "Optimal Logic" };
+    if (s <= 70) return { stroke: "#F59E0B", text: "text-warning", bg: "bg-warning/[0.03]", border: "border-warning/10", label: "Moderate Deviation" };
+    return { stroke: "#EF4444", text: "text-danger", bg: "bg-danger/[0.03]", border: "border-danger/10", label: "Critical Bias" };
   };
 
   const style = getScoreColor(score);
-  const radius = 60;
+  const radius = 64;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (score / 100) * circumference;
 
   return (
-    <div className={cn("glass-panel p-6 flex flex-col items-center justify-center relative overflow-hidden", style.border)}>
-      {/* Background glow behind ring */}
-      <div className={cn("absolute inset-0 blur-[60px] opacity-20 transition-colors", style.bg)} />
+    <div className={cn("bg-white border border-black/[0.05] p-10 flex flex-col items-center justify-center relative overflow-hidden rounded-[3rem] shadow-[0_4px_32px_rgba(0,0,0,0.02)] transition-all duration-500 hover:shadow-[0_8px_48px_rgba(0,0,0,0.04)]", style.border)}>
+      <h3 className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] mb-8 z-10 w-full text-center">Spectral Bias Index</h3>
       
-      <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-6 z-10 w-full text-center">Bias Severity Score</h3>
-      
-      <div className="relative flex items-center justify-center z-10">
-        <svg className="transform -rotate-90 w-40 h-40">
+      <div className="relative flex items-center justify-center z-10 w-48 h-48">
+        <svg className="transform -rotate-90 w-48 h-48 drop-shadow-[0_4px_12px_rgba(0,0,0,0.02)]">
           {/* Background Track */}
           <circle
-            cx="80"
-            cy="80"
+            cx="96"
+            cy="96"
             r={radius}
-            stroke="currentColor"
-            strokeWidth="12"
+            stroke="#F5F5F7"
+            strokeWidth="16"
             fill="transparent"
-            className="text-surface"
+            className="transition-colors"
           />
           {/* Progress Ring */}
           <motion.circle
             initial={{ strokeDashoffset: circumference }}
             animate={{ strokeDashoffset }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
-            cx="80"
-            cy="80"
+            transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
+            cx="96"
+            cy="96"
             r={radius}
             stroke={style.stroke}
-            strokeWidth="12"
+            strokeWidth="16"
             fill="transparent"
             strokeDasharray={circumference}
             strokeLinecap="round"
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <motion.span 
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5 }}
-            className={cn("text-4xl font-extrabold tracking-tighter", style.text)}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.5 }}
+            className="text-center"
           >
-            {score}
-          </motion.span>
+            <span className={cn("text-6xl font-black tracking-tighter leading-none block", style.text)}>
+              {score}
+            </span>
+            <span className="text-[10px] font-black text-[#86868B] uppercase tracking-widest mt-1 block">%</span>
+          </motion.div>
         </div>
       </div>
       
-      <div className={cn("mt-6 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest border", style.bg, style.text, style.border)}>
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 1.2 }}
+        className={cn("mt-10 px-8 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border shadow-sm", style.bg, style.text, style.border)}
+      >
         {style.label}
-      </div>
+      </motion.div>
     </div>
   );
 }
+

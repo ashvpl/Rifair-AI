@@ -1,36 +1,41 @@
 import { SignUp } from "@clerk/nextjs";
+import Image from "next/image";
 
 export default function SignUpPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0B0F19] relative overflow-hidden py-12">
-      {/* Background Glows */}
-      <div className="absolute w-[400px] h-[400px] bg-indigo-500 opacity-20 blur-[100px] rounded-full top-[-100px] left-[-100px]" />
-      <div className="absolute w-[400px] h-[400px] bg-violet-500 opacity-20 blur-[100px] rounded-full bottom-[-100px] right-[-100px]" />
-
+    <div className="min-h-screen flex items-center justify-center bg-white selection:bg-black selection:text-white relative overflow-hidden py-12">
       {/* Auth Card Container */}
-      <div className="w-full max-w-md z-10 px-4">
+      <div className="w-full max-w-md z-10 px-6 py-12">
         {/* Branding */}
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-white tracking-tight mb-2">
-            EquiHire AI
-          </h1>
-          <p className="text-gray-400 text-sm">
-            Revolutionize your hiring process.
-          </p>
+        <div className="mb-12 text-center space-y-6 flex flex-col items-center">
+          <div className="mx-auto flex items-center justify-center transition-transform hover:scale-105 active:scale-95 cursor-pointer">
+             <Image src="/whatsapp-logo.jpeg" alt="EquiHire AI" width={240} height={60} className="h-10 w-auto object-contain" />
+          </div>
         </div>
 
         {/* Clerk Component Wrapper */}
-        <div className="relative group transition-all duration-500">
-           {/* Subtle glow on hover/active */}
-           <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-violet-600 rounded-2xl blur opacity-10 group-hover:opacity-20 transition duration-1000 group-hover:duration-200"></div>
-           <SignUp 
-             appearance={{
-                elements: {
-                  rootBox: "w-full",
-                  card: "w-full bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl rounded-2xl",
-                }
-             }}
-           />
+        <div className="relative group transition-all duration-700 hover:scale-[1.01]">
+            <SignUp 
+              appearance={{
+                 elements: {
+                   rootBox: "w-full",
+                   card: "w-full bg-white border border-black/[0.05] shadow-[0_32px_120px_rgba(0,0,0,0.06)] rounded-[2.5rem] p-4",
+                   headerTitle: "text-[#1D1D1F] font-extrabold tracking-tight",
+                   headerSubtitle: "text-[#86868B] font-bold",
+                   socialButtonsBlockButton: "border-black/[0.05] hover:bg-[#F5F5F7] transition-all rounded-2xl shadow-sm",
+                   socialButtonsBlockButtonText: "font-bold text-[#1D1D1F]",
+                   formButtonPrimary: "bg-black hover:bg-black/90 text-white font-heavy transition-all h-14 rounded-2xl shadow-xl",
+                   formFieldLabel: "text-[#86868B] font-black uppercase text-[9px] tracking-widest",
+                   formFieldInput: "border-black/[0.05] bg-[#F5F5F7]/30 focus:bg-white rounded-2xl h-12 shadow-inner",
+                   footerActionText: "text-[#86868B] font-bold",
+                   footerActionLink: "text-primary font-black hover:text-primary/80 transition-colors"
+                 }
+              }}
+            />
+        </div>
+
+        <div className="mt-12 text-center">
+           <p className="text-[9px] font-black text-[#86868B] uppercase tracking-[0.4em] opacity-40">Secure Identity Layer v1.0.4</p>
         </div>
       </div>
     </div>

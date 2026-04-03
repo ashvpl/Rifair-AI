@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Sparkles, ShieldCheck, Search, FileCheck, Layers } from "lucide-react";
+import { LiquidLoader } from "@/components/ui/LiquidLoader";
+
 
 const MILESTONES = [
   { text: "Starting bias detection engine...", icon: Sparkles },
@@ -39,22 +41,12 @@ export function LoadingState() {
   return (
     <div className="flex flex-col items-center justify-center p-8 py-14 space-y-10 border border-indigo-100/50 rounded-[2.5rem] bg-white/60 backdrop-blur-xl shadow-2xl shadow-indigo-100/20 animate-in fade-in zoom-in duration-700 max-w-2xl mx-auto w-full">
       {/* Visual Indicator Container */}
-      <div className="relative group flex items-center justify-center">
-        {/* Outer Pulsing Glow */}
-        <div className="absolute inset-0 bg-indigo-500 rounded-full blur-[40px] animate-pulse opacity-10"></div>
-        
-        {/* Rotating border effect */}
-        <div className="absolute inset-x-[-10px] inset-y-[-10px] bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 rounded-3xl opacity-20 animate-[spin_6s_linear_infinite] blur-sm"></div>
-
-        {/* Main Icon Card */}
-        <div className="relative h-24 w-24 bg-white rounded-3xl shadow-lg flex items-center justify-center border border-indigo-50 overflow-hidden transform group-hover:scale-105 transition-transform duration-500">
-          <Icon className="h-10 w-10 text-indigo-600 animate-pulse" />
-          {/* Internal Shimmer */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-50/30 to-transparent skew-x-[-20deg] animate-shimmer"></div>
-        </div>
+      <div className="relative group flex flex-col items-center justify-center">
+        <LiquidLoader text="" className="scale-75" />
       </div>
 
       <div className="w-full max-w-md space-y-8 text-center px-6">
+
         {/* Milestone Text with Fade & Scale */}
         <div className="h-12 relative overflow-hidden">
           {MILESTONES.map((milestone, idx) => (

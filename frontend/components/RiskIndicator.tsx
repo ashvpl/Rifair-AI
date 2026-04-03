@@ -13,19 +13,19 @@ export function RiskIndicator({ level }: RiskIndicatorProps) {
 
   const configs = {
     Low: {
-      color: "bg-success/20 text-success border-success/30 hover:bg-success/30",
+      color: "bg-success text-white border-success/10 shadow-lg shadow-success/20",
       icon: ShieldCheck,
-      label: "Low bias risk",
+      label: "Optimal Architecture",
     },
     Medium: {
-      color: "bg-warning/20 text-warning border-warning/30 hover:bg-warning/30",
+      color: "bg-warning text-white border-warning/10 shadow-lg shadow-warning/20",
       icon: AlertCircle,
-      label: "Potential bias detected",
+      label: "Pattern Deviation",
     },
     High: {
-      color: "bg-danger/20 text-danger border-danger/30 hover:bg-danger/30",
+      color: "bg-danger text-white border-danger/10 shadow-lg shadow-danger/20",
       icon: AlertTriangle,
-      label: "High bias risk in interview",
+      label: "Critical Violation",
     },
   };
 
@@ -33,9 +33,10 @@ export function RiskIndicator({ level }: RiskIndicatorProps) {
   const Icon = config.icon;
 
   return (
-    <Badge className={cn("px-3 py-1 text-xs font-bold flex items-center gap-2 rounded-full border", config.color)}>
+    <div className={cn("px-5 py-2 text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-3 rounded-full border transition-all duration-300", config.color)}>
       <Icon className="h-4 w-4" />
       {config.label}
-    </Badge>
+    </div>
   );
 }
+

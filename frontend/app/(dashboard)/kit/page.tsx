@@ -56,85 +56,82 @@ export default function KitGeneratorPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-12 py-8 animate-in fade-in duration-700">
+    <div className="max-w-6xl mx-auto space-y-12 py-8 animate-in fade-in duration-1000 pb-20">
       
       {/* Header section */}
       <div className="relative">
-        <div className="absolute top-0 right-20 w-64 h-64 bg-secondary/10 rounded-full blur-[80px] -z-10" />
-        <div className="space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 bg-surface border border-border rounded-full">
+        <div className="space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 mb-2 bg-[#F5F5F7] border border-black/[0.03] rounded-full">
             <Sparkles className="h-3 w-3 text-secondary" />
-            <span className="text-xs font-semibold text-secondary uppercase tracking-wider">Kit Generator</span>
+            <span className="text-[10px] font-black text-secondary uppercase tracking-[0.2em]">Strategy Lab</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-foreground tracking-tight">Bias-Safe Interview Kit</h1>
-          <p className="text-muted-foreground max-w-2xl">
-            Generate structured, unbiased interview questions based on the role requirements using our semantic AI.
+          <h1 className="text-4xl font-extrabold text-foreground tracking-tight">Structured Interview Kits</h1>
+          <p className="text-[#86868B] max-w-2xl text-lg font-medium">
+            Generate high-precision, unbiased interview frameworks synchronized with role-specific requirements.
           </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         
         {/* Form Section */}
-        <div className="lg:col-span-1 space-y-6">
-          <div className="glass-panel p-6 shadow-xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-[40px] -z-10" />
+        <div className="lg:col-span-4 space-y-8">
+          <div className="bg-white border border-black/[0.05] p-10 rounded-[3rem] shadow-[0_4px_24px_rgba(0,0,0,0.02)] relative overflow-hidden transition-all duration-500 hover:shadow-[0_8px_32px_rgba(0,0,0,0.04)]">
             
-            <div className="mb-6">
-              <h2 className="text-lg font-bold text-foreground">Role Details</h2>
-              <p className="text-sm text-muted-foreground">Configure to generate custom questions.</p>
+            <div className="mb-10">
+              <h2 className="text-2xl font-extrabold text-foreground tracking-tight">Role Definitions</h2>
+              <p className="text-sm font-medium text-[#86868B] mt-1">Prime the engine for localized expertise.</p>
             </div>
             
-            <div className="space-y-5">
+            <div className="space-y-6">
               <div className="space-y-2">
-                <Label className="text-foreground/80">Job Role</Label>
+                <Label className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.1em] ml-1">Target Designation</Label>
                 <Input 
                   value={formData.role} 
                   onChange={(e) => setFormData({...formData, role: e.target.value})} 
-                  placeholder="e.g. Product Manager"
-                  className="bg-background/50 border-border focus:border-primary/50 focus:ring-primary/50 h-12"
+                  placeholder="e.g. Lead Machine Learning Engineer"
+                  className="bg-[#F5F5F7]/30 border-black/[0.05] focus:border-black/[0.1] focus:ring-4 focus:ring-black/5 h-14 rounded-2xl transition-all font-semibold"
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-foreground/80">Experience Level</Label>
+                <Label className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.1em] ml-1">Seniority Tier</Label>
                 <Input 
                   value={formData.experience_level} 
                   onChange={(e) => setFormData({...formData, experience_level: e.target.value})} 
-                  placeholder="e.g. Mid-level, 3-5 years" 
-                  className="bg-background/50 border-border focus:border-primary/50 focus:ring-primary/50 h-12"
+                  placeholder="e.g. Tier 4, 7-10 years" 
+                  className="bg-[#F5F5F7]/30 border-black/[0.05] focus:border-black/[0.1] focus:ring-4 focus:ring-black/5 h-14 rounded-2xl transition-all font-semibold"
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-foreground/80">Company Context</Label>
+                <Label className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.1em] ml-1">Organizational Archetype</Label>
                 <Input 
                   value={formData.company_type} 
                   onChange={(e) => setFormData({...formData, company_type: e.target.value})} 
-                  placeholder="e.g. Enterprise B2B" 
-                  className="bg-background/50 border-border focus:border-primary/50 focus:ring-primary/50 h-12"
+                  placeholder="e.g. Series B High-Growth" 
+                  className="bg-[#F5F5F7]/30 border-black/[0.05] focus:border-black/[0.1] focus:ring-4 focus:ring-black/5 h-14 rounded-2xl transition-all font-semibold"
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-foreground/80">Specific Diversity Goals <span className="text-muted-foreground">(Optional)</span></Label>
+                <Label className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.1em] ml-1">Strategic Constraints <span className="text-black/20 italic">(Optional)</span></Label>
                 <Textarea 
                   value={formData.diversity_goals} 
                   onChange={(e) => setFormData({...formData, diversity_goals: e.target.value})} 
-                  placeholder="e.g. Avoid industry jargon..."
-                  className="resize-none bg-background/50 border-border focus:border-primary/50 focus:ring-primary/50 min-h-[100px]"
+                  placeholder="e.g. Eliminate domain-specific linguistic barriers..."
+                  className="resize-none bg-[#F5F5F7]/30 border-black/[0.05] focus:border-black/[0.1] focus:ring-4 focus:ring-black/5 min-h-[120px] rounded-2xl transition-all font-semibold p-4"
                 />
               </div>
               
               <Button 
-                className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-foreground font-bold h-12 rounded-xl shadow-[0_0_15px_rgba(99,102,241,0.2)] hover:shadow-[0_0_25px_rgba(99,102,241,0.4)] transition-all mt-4 relative overflow-hidden group" 
+                className="w-full bg-black hover:bg-black/90 text-white font-heavy h-14 rounded-full shadow-xl transition-all mt-6 active:scale-95 group overflow-hidden" 
                 onClick={handleGenerate}
                 disabled={isLoading || !formData.role}
               >
-                <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                 {isLoading ? (
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin relative z-10" />
+                  <Loader2 className="w-5 h-5 mr-3 animate-spin" />
                 ) : (
-                  <Sparkles className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform relative z-10" />
+                  <Sparkles className="w-5 h-5 mr-3 group-hover:scale-125 transition-transform" />
                 )}
-                <span className="relative z-10">{isLoading ? "Synthesizing Kit..." : "Generate Safe Kit"}</span>
+                <span className="font-extrabold text-base tracking-tight">{isLoading ? "Synthesizing Framework..." : "Generate Master Kit"}</span>
               </Button>
               
               <AnimatePresence>
@@ -145,9 +142,9 @@ export default function KitGeneratorPage() {
                     exit={{ opacity: 0, height: 0 }}
                     className="overflow-hidden"
                   >
-                    <div className="p-3 bg-danger/10 border border-danger/20 text-danger text-sm rounded-xl flex items-start gap-2 mt-4">
+                    <div className="p-4 bg-danger/5 border border-danger/10 text-danger text-sm rounded-2xl flex items-start gap-3 mt-6 shadow-sm">
                       <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
-                      <p>{error}</p>
+                      <p className="font-bold tracking-tight">{error}</p>
                     </div>
                   </motion.div>
                 )}
@@ -157,7 +154,7 @@ export default function KitGeneratorPage() {
         </div>
 
         {/* Results Section */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-8 space-y-8">
           <AnimatePresence mode="wait">
             {!kit && !isLoading && (
               <motion.div 
@@ -165,13 +162,13 @@ export default function KitGeneratorPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="h-full min-h-[500px] glass-panel flex flex-col items-center justify-center p-12 text-muted-foreground border-dashed border-2"
+                className="h-full min-h-[500px] bg-white border border-black/[0.05] flex flex-col items-center justify-center p-16 text-[#86868B] border-dashed rounded-[3.5rem] shadow-[inset_0_8px_32px_rgba(0,0,0,0.01)]"
               >
-                <div className="h-20 w-20 bg-surface rounded-full flex items-center justify-center border border-border mb-6 shadow-inner">
-                  <FileText className="w-10 h-10 text-muted-foreground/50" />
+                <div className="h-24 w-24 bg-[#F5F5F7] rounded-full flex items-center justify-center border border-black/[0.03] mb-8 shadow-inner">
+                  <FileText className="w-10 h-10 text-black/10" />
                 </div>
-                <h3 className="text-xl font-bold text-foreground mb-2">Configure Role</h3>
-                <p className="max-w-sm text-center">Fill out the role details on the left and generate a comprehensive, unbiased interview kit.</p>
+                <h3 className="text-2xl font-extrabold text-foreground mb-3">System Idle</h3>
+                <p className="max-w-xs text-center font-medium leading-relaxed">Configure the matrix parameters on the left to synthesize a comprehensive, multi-layer interview framework.</p>
               </motion.div>
             )}
 
@@ -181,13 +178,13 @@ export default function KitGeneratorPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="h-full min-h-[500px] glass-panel flex flex-col items-center justify-center space-y-6 text-muted-foreground"
+                className="h-full min-h-[500px] bg-white border border-black/[0.05] rounded-[3.5rem] flex flex-col items-center justify-center space-y-8 shadow-[0_4px_32px_rgba(0,0,0,0.02)]"
               >
                 <div className="relative">
-                  <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
-                  <Loader2 className="w-12 h-12 animate-spin text-primary relative z-10" />
+                  <div className="absolute inset-0 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+                  <Loader2 className="w-16 h-16 animate-spin text-primary relative z-10" />
                 </div>
-                <p className="text-lg font-medium text-foreground tracking-wide">Designing unbiased questions...</p>
+                <p className="text-xl font-extrabold text-foreground tracking-tight">Neutralizing Bias Patterns...</p>
               </motion.div>
             )}
 
@@ -197,21 +194,20 @@ export default function KitGeneratorPage() {
                 variants={containerVariants}
                 initial="hidden"
                 animate="show"
-                className="space-y-6"
+                className="space-y-8"
               >
                 {/* Bias Validation Badge */}
-                <motion.div variants={itemVariants} className="bg-success/5 border border-success/20 p-5 rounded-2xl flex items-center justify-between shadow-sm relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-gradient-to-r from-success/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  <div className="flex items-center gap-4 relative z-10">
-                    <div className="bg-success/20 p-3 rounded-xl border border-success/30">
-                      <CheckCircle2 className="w-6 h-6 text-success" />
+                <motion.div variants={itemVariants} className="bg-success/[0.03] border border-success/10 p-8 rounded-[2.5rem] flex items-center justify-between shadow-sm relative overflow-hidden group">
+                  <div className="flex items-center gap-6 relative z-10">
+                    <div className="bg-success text-white p-4 rounded-3xl shadow-lg shadow-success/20">
+                      <CheckCircle2 className="w-8 h-8" />
                     </div>
                     <div>
-                      <p className="font-bold text-base text-success">AI Bias Audit Cleared</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Risk Score:</span>
-                        <span className="text-sm font-bold text-foreground">{biasValidation?.overall_bias_score}/100</span>
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-success/20 text-success font-bold uppercase ml-2 border border-success/30">
+                      <p className="font-extrabold text-2xl text-success tracking-tight">AI Compliance Protocol Verified</p>
+                      <div className="flex items-center gap-3 mt-2">
+                        <span className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em]">Risk Index:</span>
+                        <span className="text-lg font-extrabold text-foreground tracking-tighter">{biasValidation?.overall_bias_score}%</span>
+                        <span className="text-[10px] px-3 py-1 rounded-lg bg-success text-white font-black uppercase tracking-wider ml-4 border border-success/20">
                           {biasValidation?.risk_level || "LOW"}
                         </span>
                       </div>
@@ -220,22 +216,25 @@ export default function KitGeneratorPage() {
                 </motion.div>
 
                 {/* Recommended Questions */}
-                <motion.div variants={itemVariants} className="glass-panel overflow-hidden">
-                  <div className="p-6 border-b border-border bg-surface/50">
-                    <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-                      <Sparkles className="h-5 w-5 text-secondary" />
-                      Recommended Questions
+                <motion.div variants={itemVariants} className="bg-white border border-black/[0.05] rounded-[3rem] overflow-hidden shadow-[0_4px_32px_rgba(0,0,0,0.02)] transition-all duration-500 hover:shadow-[0_8px_48px_rgba(0,0,0,0.04)]">
+                  <div className="p-10 border-b border-black/[0.03] bg-[#F5F5F7]/30 flex items-center justify-between">
+                    <h2 className="text-2xl font-extrabold text-foreground flex items-center gap-3 tracking-tight">
+                      <Sparkles className="h-6 w-6 text-secondary" />
+                      Validated Question Matrix
                     </h2>
+                    <div className="h-2 w-32 bg-black/5 rounded-full overflow-hidden">
+                       <div className="h-full bg-black/20 w-3/4 rounded-full" />
+                    </div>
                   </div>
                   <div className="p-0">
-                    <ul className="divide-y divide-border/50">
+                    <ul className="divide-y divide-black/[0.03]">
                       {kit.questions?.map((q: string, idx: number) => (
-                        <li key={idx} className="p-6 hover:bg-surface/30 transition-colors flex gap-6 group">
-                          <div className="flex flex-col items-center">
-                            <span className="text-xs font-black text-secondary/50 uppercase tracking-widest mb-1">Question</span>
-                            <span className="text-2xl font-bold text-secondary">{idx + 1}</span>
+                        <li key={idx} className="p-8 hover:bg-[#F5F5F7]/30 transition-all flex gap-10 group cursor-default">
+                          <div className="flex flex-col items-center min-w-[60px]">
+                            <span className="text-[9px] font-black text-secondary/30 uppercase tracking-[0.15em] mb-2">Q-Index</span>
+                            <span className="text-4xl font-extrabold text-secondary tracking-tighter transition-transform group-hover:scale-110">{idx + 1}</span>
                           </div>
-                          <p className="text-base text-foreground/90 font-medium leading-relaxed pt-1.5">{q}</p>
+                          <p className="text-xl text-foreground font-semibold leading-relaxed tracking-tight pt-2">{q}</p>
                         </li>
                       ))}
                     </ul>
@@ -248,5 +247,6 @@ export default function KitGeneratorPage() {
         </div>
       </div>
     </div>
+
   );
 }

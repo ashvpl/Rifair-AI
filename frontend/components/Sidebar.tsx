@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { History, Settings, ShieldAlert, LayoutDashboard, FileText, Zap, ChevronRight } from "lucide-react";
+import { History, Settings, ShieldAlert, LayoutDashboard, FileText, Zap, ChevronRight, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -13,28 +14,32 @@ const navigation = [
   { name: "Simulation", href: "/simulate", icon: Zap },
   { name: "History", href: "/history", icon: History },
   { name: "Settings", href: "/settings", icon: Settings },
+  { name: "Back to Home", href: "/", icon: Home },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col w-72 h-screen border-r border-border/50 bg-[#0B0F19] relative z-20">
+    <div className="flex flex-col w-72 h-screen border-r border-black/[0.05] bg-white relative z-20">
       {/* Brand Section */}
-      <div className="flex items-center h-20 px-8 border-b border-border/30 relative">
-        <div className="absolute inset-0 bg-primary/5 blur-[20px] opacity-50" />
-        <Link href="/" className="flex items-center gap-3 group relative z-10">
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
-             <span className="text-white font-black text-xs">E</span>
+      <div className="flex items-center h-[120px] px-8 border-b border-black/[0.03] relative group overflow-hidden">
+        <Link href="/" className="flex items-center gap-4 group relative z-10 w-full transition-transform hover:scale-[1.02] active:scale-[0.98]">
+          <div className="relative h-[60px] flex items-center justify-start">
+             <Image 
+              src="/whatsapp-logo.jpeg" 
+              alt="EquiHire AI" 
+              width={240}
+              height={60}
+              className="h-[45px] w-auto object-contain"
+              priority
+            />
           </div>
-          <span className="text-xl font-black text-foreground tracking-tighter group-hover:text-primary transition-colors">
-            EquiHire <span className="text-primary">AI</span>
-          </span>
         </Link>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-8 space-y-2 overflow-y-auto">
+      <nav className="flex-1 px-4 py-8 space-y-1 overflow-y-auto">
         {navigation.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -42,25 +47,22 @@ export function Sidebar() {
               key={item.name}
               href={item.href}
               className={cn(
-                "group flex items-center px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-300 relative overflow-hidden",
+                "group flex items-center px-4 py-3 text-[15px] font-semibold rounded-xl transition-all duration-200 relative",
                 isActive
-                  ? "bg-primary/10 text-primary border border-primary/20 shadow-[0_0_15px_rgba(99,102,241,0.1)]"
-                  : "text-muted-foreground hover:text-foreground hover:bg-surface/50 border border-transparent"
+                  ? "bg-black/[0.03] text-foreground shadow-sm"
+                  : "text-[#86868B] hover:text-foreground hover:bg-black/[0.01]"
               )}
             >
               <item.icon className={cn(
                 "mr-3 h-5 w-5 transition-colors", 
-                isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
+                isActive ? "text-primary fill-primary/10" : "text-[#86868B] group-hover:text-foreground"
               )} />
               <span className="flex-1">{item.name}</span>
               {isActive && (
                 <motion.div 
-                  layoutId="sidebar-indicator"
-                  className="w-1 h-4 bg-primary rounded-full ml-auto"
+                   layoutId="sidebar-indicator"
+                   className="w-1 h-5 bg-primary rounded-full absolute left-0"
                 />
-              )}
-              {!isActive && (
-                <ChevronRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-40 group-hover:translate-x-0 transition-all ml-auto" />
               )}
             </Link>
           );
@@ -68,16 +70,13 @@ export function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="p-6 border-t border-border/30 bg-surface/20">
-        <div className="flex items-center gap-3 p-3 rounded-xl bg-surface/50 border border-border/30">
-          <div className="w-2 h-2 rounded-full bg-success animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
+      <div className="p-8 border-t border-black/[0.03] bg-black/[0.02]">
+        <div className="flex items-center gap-4 transition-opacity hover:opacity-80">
+          <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.3)] animate-pulse" />
           <div className="flex flex-col">
-            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest leading-none">System Status</span>
+            <span className="text-[9px] font-bold text-[#86868B] uppercase tracking-[0.1em] leading-none mb-1">Status</span>
             <span className="text-[11px] font-bold text-foreground">Operational</span>
           </div>
-        </div>
-        <div className="mt-4 text-[10px] font-black text-muted-foreground/50 text-center uppercase tracking-widest">
-          EquiHire AI v1.0
         </div>
       </div>
     </div>
