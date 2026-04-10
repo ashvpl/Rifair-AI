@@ -1,7 +1,7 @@
 "use client";
 
 import { UserProfile } from "@clerk/nextjs";
-import { User, Shield, Info, Bell, Key } from "lucide-react";
+import { Info, Bell } from "lucide-react";
 import { dark } from "@clerk/themes";
 
 export default function SettingsPage() {
@@ -11,10 +11,6 @@ export default function SettingsPage() {
       {/* Header section */}
       <div className="relative">
         <div className="space-y-1">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-2 bg-[#F5F5F7] border border-black/[0.03] rounded-full">
-            <User className="h-3 w-3 text-primary" />
-            <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Account Dashboard</span>
-          </div>
           <h1 className="text-4xl font-extrabold text-foreground tracking-tight">System Settings</h1>
           <p className="text-[#86868B] max-w-2xl text-lg font-medium">
             Manage your professional identity, security protocols, and platform preferences.
@@ -25,20 +21,6 @@ export default function SettingsPage() {
       <div className="grid gap-12">
         {/* Account Profile Card */}
         <div className="bg-white border border-black/[0.05] rounded-[3rem] overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all duration-500 hover:shadow-[0_8px_48px_rgba(0,0,0,0.04)] hover:border-black/[0.08]">
-          <div className="p-10 border-b border-black/[0.03] bg-[#F5F5F7]/30 flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="flex items-center gap-8">
-              <div className="h-20 w-20 bg-white rounded-3xl flex items-center justify-center text-primary border border-black/[0.05] shadow-[0_4px_12px_rgba(0,0,0,0.02)]">
-                <Shield className="h-10 w-10" />
-              </div>
-              <div className="space-y-2">
-                <h2 className="text-2xl font-extrabold text-foreground tracking-tight">Security Gateway</h2>
-                <p className="text-sm text-[#86868B] font-bold flex items-center gap-2 uppercase tracking-[0.05em]">
-                  <Key className="w-4 h-4" /> Enterprise Authentication Protocol
-                </p>
-              </div>
-            </div>
-          </div>
-          
           <div className="p-4 md:p-10 overflow-hidden bg-white">
             <div className="max-w-full rounded-[2rem] overflow-hidden border border-black/[0.03] bg-[#F5F5F7]/10 p-2 md:p-6 shadow-inner">
               <UserProfile 
