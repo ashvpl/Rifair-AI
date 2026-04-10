@@ -129,6 +129,7 @@ export function BiasTrendChart({ data = defaultData, className }: BiasTrendChart
               stroke="transparent"
               fill="url(#biasGradient)"
               strokeWidth={0}
+              tooltipType="none"
             />
 
             <Line
