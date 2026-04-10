@@ -1,7 +1,7 @@
 "use client";
 
 import { UserProfile } from "@clerk/nextjs";
-import { Info, Bell } from "lucide-react";
+import { Info } from "lucide-react";
 import { dark } from "@clerk/themes";
 
 export default function SettingsPage() {
@@ -58,19 +58,6 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        <div className="pt-16 pb-24 flex flex-col items-center gap-8 text-center relative overflow-hidden rounded-[3rem] bg-[#F5F5F7]/30 border border-black/[0.02]">
-           <div className="p-6 bg-white rounded-full border border-black/[0.03] shadow-xl relative group transition-all duration-500 hover:scale-110">
-              <Bell className="w-8 h-8 text-[#86868B] group-hover:text-primary transition-colors" />
-           </div>
-           <div className="space-y-4 px-6">
-              <p className="text-2xl font-black text-foreground uppercase tracking-[0.2em] italic">
-                Advanced Features coming to <span className="text-primary italic">EquiHire Pro</span>
-              </p>
-              <p className="text-lg text-[#86868B] font-medium max-w-lg mx-auto">
-                Next-gen team management, custom bias thresholds, and high-frequency API integration tools arriving in v2.0.
-              </p>
-           </div>
-        </div>
       </div>
     </div>
 
