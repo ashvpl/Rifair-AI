@@ -57,7 +57,6 @@ export function MiniNavbar() {
   const navLinksData = [
     { label: 'Analyze', href: '/analyze' },
     { label: 'Generator', href: '/kit' },
-    { label: 'Simulation', href: '/simulate' },
   ];
 
   const AuthActions = () => {

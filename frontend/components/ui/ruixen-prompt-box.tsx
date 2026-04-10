@@ -56,7 +56,14 @@ export default function RuixenPromptBox({ onSubmit, isLoading }: RuixenPromptBox
   return (
     <div className="w-full">
       <div className="max-w-4xl mx-auto space-y-3">
-        <div className="relative rounded-2xl bg-muted/10 border border-border/50 p-4 shadow-sm focus-within:border-black/10 focus-within:ring-4 focus-within:ring-black/5 transition-all">
+        <div className="relative p-0.5 rounded-2xl overflow-hidden shadow-sm transition-all duration-300">
+          <span
+            className={cn(
+              "absolute inset-[-300%] animate-[spin_3s_linear_infinite]",
+              "bg-[conic-gradient(from_90deg_at_50%_50%,var(--primary)_0%,#fff_50%,var(--primary)_100%)] dark:bg-[conic-gradient(from_90deg_at_50%_50%,var(--primary)_0%,#000_50%,var(--primary)_100%)]"
+            )}
+          />
+          <div className="relative z-10 w-full h-full bg-background rounded-[15px] p-4 backdrop-blur-3xl">
           {currentOption && (
             <div
               className={cn(
@@ -111,6 +118,7 @@ export default function RuixenPromptBox({ onSubmit, isLoading }: RuixenPromptBox
                 <SendHorizontal className="w-5 h-5" />
               )}
             </button>
+          </div>
           </div>
         </div>
 

@@ -8,12 +8,12 @@ import {
   LayoutDashboard, 
   ShieldAlert, 
   FileText, 
-  Zap, 
   History, 
   Settings, 
   Home,
   ChevronDown 
 } from "lucide-react";
+import { UserButton, useUser } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
 
 type MenuItem = { name: string; href: string; icon?: React.ElementType | string };
@@ -61,7 +61,6 @@ const SidebarWithSubmenu = () => {
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Analyze", href: "/analyze", icon: ShieldAlert },
     { name: "Kit Generator", href: "/kit", icon: FileText },
-    { name: "Simulation", href: "/simulate", icon: Zap },
     { name: "History", href: "/history", icon: History },
   ];
 
@@ -147,13 +146,23 @@ const SidebarWithSubmenu = () => {
             </div>
           </div>
           
-          {/* Footer Status */}
-          <div className="p-6 shrink-0 border-t border-black/[0.03] bg-black/[0.01]">
-            <div className="flex items-center gap-4 transition-opacity hover:opacity-80">
-              <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.3)] animate-pulse" />
+          {/* Footer Profile */}
+          <div className="px-4 py-6 shrink-0 border-t border-black/[0.03] bg-black/[0.01]">
+            <div className="flex items-center gap-x-3 transition-opacity">
+              <div className="relative group p-1">
+                <div className="absolute inset-0 bg-primary/10 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
+                <UserButton 
+                  appearance={{
+                    elements: {
+                      userButtonAvatarBox: "h-9 w-9 border border-black/10 shadow-sm transition-all hover:scale-105 active:scale-95",
+                      userButtonPopoverCard: "rounded-3xl border border-black/[0.05] shadow-2xl",
+                      userButtonPopoverActionButtonText: "font-bold text-foreground",
+                    }
+                  }}
+                />
+              </div>
               <div className="flex flex-col">
-                <span className="text-[9px] font-bold text-[#86868B] uppercase tracking-[0.1em] leading-none mb-1">Status</span>
-                <span className="text-[11px] font-bold text-foreground">Operational</span>
+                <span className="text-[11px] font-black text-foreground uppercase tracking-[0.15em]">Account Profile</span>
               </div>
             </div>
           </div>

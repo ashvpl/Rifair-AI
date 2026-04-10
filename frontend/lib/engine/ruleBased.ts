@@ -1,6 +1,6 @@
 import { RuleMatch } from "./types";
 
-export const BIAS_LEXICON = {
+export const BIAS_LANGUAGE_INTELLIGENCE = {
   gender: ["aggressive", "dominant", "assertive", "ninja", "rockstar", "bro culture", "male-dominated", "alpha", "competitive personality", "family plans", "start a family", "maternity", "paternity", "girl", "guys", "chairman", "manpower"],
   age: ["young", "energetic", "recent graduate", "freshers", "digital native", "junior mindset", "overqualified", "too experienced", "early career", "young team", "mature", "seasoned"],
   cultural: ["fit into culture", "culture fit", "bro culture", "fast-paced environment", "work hard play hard", "native speaker", "perfect English", "local candidates only", "background", "upbringing"],
@@ -85,7 +85,7 @@ export function extractRuleMatches(text: string): RuleMatch[] {
     "sex": 10, "sexy": 10, "sexual": 10, "vulgar": 10, "hookup": 10
   };
 
-  for (const [category, words] of Object.entries(BIAS_LEXICON)) {
+  for (const [category, words] of Object.entries(BIAS_LANGUAGE_INTELLIGENCE)) {
     for (const word of words) {
       if (lowercaseText.includes(word.toLowerCase())) {
         const template = CATEGORY_TEMPLATES[category] || CATEGORY_TEMPLATES.tone;

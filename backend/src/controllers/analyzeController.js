@@ -11,47 +11,48 @@ const getCacheKey = (prefix, params) => {
 
 const analyzeText = async (req, res) => {
   try {
-    const userId = req.auth.userId;
-    const { text } = req.body;
+    const userId = req.auth?.userId || req.auth?.claims?.sub;
+    const { text, name } = req.body;
 
     if (!text || text.length < 5) {
       return res.status(400).json({ error: "Input text too short" });
     }
 
     const cacheKey = getCacheKey("analyze", { text });
-    if (globalCache.has(cacheKey)) {
-      return res.json({ report: globalCache.get(cacheKey) });
-    }
-
-    // AI Call with Timeout and Fallback
     let aiResponse;
-    try {
-      aiResponse = await withTimeout(runUnifiedPipeline(text), 10000);
-      logger("AI ANALYSIS SUCCESSFUL");
-    } catch (error) {
-      console.error("AI ANALYSIS FAILED:", error.message);
-      // Fallback logic handled within runUnifiedPipeline or here if necessary
-      // For now, let's assume it throws if it completely fails
-      throw new Error("AI analysis unavailable");
+
+    if (globalCache.has(cacheKey)) {
+      aiResponse = globalCache.get(cacheKey).categories;
+    } else {
+      try {
+        aiResponse = await withTimeout(runUnifiedPipeline(text), 10000);
+        aiResponse.original_input = text;
+        aiResponse.analysis_type = 'analysis'; // Save inside JSONB
+        logger("AI ANALYSIS SUCCESSFUL");
+      } catch (error) {
+        console.error("AI ANALYSIS FAILED:", error.message);
+        throw new Error("AI analysis unavailable");
+      }
     }
 
     const reportData = {
       user_id: userId,
-      input_text: text,
+      input_text: name ? `Analysis - '${name}'` : text,
       bias_score: aiResponse.overallScore,
       risk_level: aiResponse.riskLevel,
       categories: aiResponse,
       created_at: new Date(),
     };
 
-    const { data, error } = await supabase
+    const { data, error: dbError } = await supabase
       .from("analysis_reports")
       .insert([reportData])
       .select()
       .single();
 
-    if (error) {
-      console.error("SUPABASE PERSISTENCE ERROR:", error);
+    if (dbError) {
+      console.error("SUPABASE PERSISTENCE ERROR (analyze):", dbError);
+      throw new Error(`Data retention failed: ${dbError.message}`);
     }
 
     const finalReport = data || reportData;

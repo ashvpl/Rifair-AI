@@ -30,7 +30,6 @@ export default function FooterSection({
       ],
     },
   ],
-  copyright = "© 2026 Equihire AI. All rights reserved.",
 }) {
   return (
     <footer className="bg-white py-24 border-t border-black/[0.03] relative z-10">
@@ -82,11 +81,6 @@ export default function FooterSection({
               </div>
             ))}
           </div>
-        </div>
-
-        {/* --- Bottom Bar --- */}
-        <div className="border-t border-black/5 mt-20 pt-10 flex flex-col md:flex-row justify-between items-center text-[10px] font-black text-black/30 uppercase tracking-[0.4em] gap-8 text-center md:text-left">
-          <p>{copyright}</p>
         </div>
       </div>
     </footer>

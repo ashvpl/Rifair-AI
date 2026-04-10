@@ -33,7 +33,8 @@ export async function GET(
       return NextResponse.json({ error: data.error || "Report not found" }, { status: response.status });
     }
 
-    return NextResponse.json({ report: data }, { status: 200 });
+    // Backend already returns { report: ... data ... }
+    return NextResponse.json(data, { status: 200 });
   } catch (error: unknown) {
     console.error("Report API Proxy error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

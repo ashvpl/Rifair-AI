@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Zap, Sparkles, Activity, Layers, ArrowUpRight } from "lucide-react"
+import { Zap, Activity, Layers, ArrowUpRight } from "lucide-react"
 import Link from "next/link"
 
 // --- Animation Components ---
@@ -163,14 +163,6 @@ export function EquiHireCoreFeatures() {
       animation: <BiasDetectorAnimation />,
       color: "bg-white",
       href: "/analyze"
-    },
-    {
-      title: "Fair Question Generator",
-      description: "Auto-generates inclusive and unbiased alternatives that accurately assess candidate skills.",
-      icon: Sparkles,
-      animation: <QuestionGenAnimation />,
-      color: "bg-white",
-      href: "/simulate"
     },
     {
       title: "Bias Scoring Engine",

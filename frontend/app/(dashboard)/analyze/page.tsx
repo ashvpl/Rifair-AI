@@ -1,14 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
-import { analyzeQuestions } from "@/lib/api";
+import { analyzeQuestions, getReportById } from "@/lib/api";
+import { useSearchParams } from "next/navigation";
 import { QuestionInput } from "@/components/QuestionInput";
 import { BiasScoreCard } from "@/components/BiasScoreCard";
 import { RiskIndicator } from "@/components/RiskIndicator";
 import { LoadingState } from "@/components/LoadingState";
+import HolographicCard from "@/components/ui/holographic-card";
 import { ShieldCheck, Info, AlertTriangle, Sparkles, Copy, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Typewriter } from "@/components/ui/typewriter";
 
 export default function AnalyzePage() {
   const { getToken } = useAuth();
@@ -16,15 +19,57 @@ export default function AnalyzePage() {
   const [report, setReport] = useState<Record<string, any> | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<number | null>(null);
+  const searchParams = useSearchParams();
+  const reportId = searchParams.get("reportId");
 
-  const handleAnalyze = async (text: string) => {
+  useEffect(() => {
+    const fetchReport = async () => {
+      if (!reportId) return;
+      setIsLoading(true);
+      setError(null);
+      try {
+        const token = await getToken();
+        const data = await getReportById(reportId, token);
+        let fetchedReport = data.report;
+        
+        if (!fetchedReport) throw new Error("Report data missing");
+
+        // Robust parsing of JSONB fields
+        if (typeof fetchedReport.categories === "string") {
+          try {
+            fetchedReport.categories = JSON.parse(fetchedReport.categories);
+          } catch (e) {
+            console.error("Failed to parse report categories", e);
+          }
+        }
+        
+        // Ensure categories is at least an empty object to avoid crashes
+        if (!fetchedReport.categories) fetchedReport.categories = {};
+        
+        // Reliability fallback for questions
+        if (!fetchedReport.categories.questions && Array.isArray(fetchedReport.flagged_phrases)) {
+           fetchedReport.categories.questions = fetchedReport.flagged_phrases;
+        }
+
+        setReport(fetchedReport); 
+      } catch (err: any) {
+        console.error("[ANALYZE] Load error:", err);
+        setError(err.message || "Failed to load report");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchReport();
+  }, [reportId, getToken]);
+
+  const handleAnalyze = async (text: string, name: string) => {
     setIsLoading(true);
     setError(null);
     setReport(null);
-
+ 
     try {
       const token = await getToken();
-      const data = await analyzeQuestions(text, token);
+      const data = await analyzeQuestions(text, token, name);
       setReport(data.report);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "AI service temporarily unavailable";
@@ -56,18 +101,15 @@ export default function AnalyzePage() {
   };
 
   return (
-    <div className="space-y-12 animate-in fade-in duration-1000 pb-20">
+    <div className="space-y-6 animate-in fade-in duration-1000 pb-20 pt-0">
       
       {/* Header section */}
       <div className="relative">
-        <div className="space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-2 bg-[#F5F5F7] border border-black/[0.03] rounded-full">
-            <Sparkles className="h-3 w-3 text-primary" />
-            <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Analysis Engine</span>
-          </div>
-          <h2 className="text-4xl font-extrabold text-foreground tracking-tight">Hybrid Bias Detection</h2>
+        <div className="space-y-1">
+
+          <h2 className="text-4xl font-extrabold text-foreground tracking-tight">Smarter Bias Detection</h2>
           <p className="text-[#86868B] max-w-2xl text-lg font-medium">
-            Analyze interview questions using our 3-layer engine: Lexicon, Patterns, and Semantic AI.
+            Analyze interview questions with AI that understands language, structure, and intent—so nothing slips through.
           </p>
         </div>
       </div>
@@ -75,7 +117,20 @@ export default function AnalyzePage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         <div className="lg:col-span-2 space-y-8 relative">
           
-          <QuestionInput onAnalyze={handleAnalyze} isLoading={isLoading} />
+          <QuestionInput 
+            onAnalyze={handleAnalyze} 
+            isLoading={isLoading} 
+            initialText={
+              report?.categories?.original_input || 
+              (report?.input_text?.startsWith("Analysis -") ? "" : report?.input_text) || 
+              ""
+            }
+            initialName={
+              report?.input_text?.startsWith("Analysis - '") 
+                ? report.input_text.replace(/^Analysis - '(.*)'$/, "$1") 
+                : ""
+            }
+          />
           
           <AnimatePresence>
             {error && (
@@ -114,69 +169,81 @@ export default function AnalyzePage() {
                   Bias Analysis Results
                 </h3>
               </div>
+
               
               <div className="space-y-8">
                 {report.categories?.questions?.map((q: any, idx: number) => {
                   const isNeutral = (q.biasScore || 0) <= 20 && (q.flags?.length || 0) === 0;
+                  const hasHighFlag = q.flags?.some((f: any) => f.severity === 'high');
+                  const biasLevel = isNeutral ? 'neutral' : hasHighFlag || (q.biasScore || 0) > 60 ? 'high' : 'medium';
                   
                   return (
-                    <motion.div variants={itemVariants} key={idx} className="bg-white border border-black/[0.05] rounded-[2rem] overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.04)] transition-all duration-500 group">
-                      {isNeutral ? (
-                        <div className="p-8 flex items-center justify-between gap-8 bg-success/5 border-l-[6px] border-l-success">
-                          <div className="text-xl text-foreground font-semibold tracking-tight">
-                            {q.original}
-                          </div>
-                          <div className="flex-shrink-0 flex items-center gap-2 px-4 py-2 bg-success/10 text-success rounded-full border border-success/20 text-[10px] font-black uppercase tracking-[0.2em]">
-                            <ShieldCheck className="h-4 w-4" />
-                            Neutral
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 relative h-full">
-                          <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-warning to-danger" />
-                          <div className="p-8 border-b md:border-b-0 md:border-r border-black/[0.03]">
-                            <h4 className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
-                              Original & Flags
-                            </h4>
-                            <div 
-                              className="text-lg text-foreground font-semibold leading-relaxed tracking-tight whitespace-pre-wrap highlight-container"
-                              dangerouslySetInnerHTML={{ __html: q.highlighted }}
-                            />
-                            {q.flags.length > 0 && (
-                              <div className="mt-8 flex flex-wrap gap-2">
-                                {q.flags.map((f: any, fIdx: number) => (
-                                  <span key={fIdx} className={`text-[10px] px-3 py-1.5 rounded-lg font-black uppercase tracking-wider border ${
-                                    f.severity === 'high' ? 'bg-danger/5 text-danger border-danger/10 shadow-sm' : 
-                                    f.severity === 'medium' ? 'bg-warning/5 text-warning border-warning/10 shadow-sm' : 
-                                    'bg-primary/5 text-primary border-primary/10 shadow-sm'
-                                  }`}>
-                                    {f.category}
-                                  </span>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                          
-                          <div className="p-8 bg-[#F5F5F7]/30 relative flex flex-col h-full">
-                            <h4 className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] mb-6 flex justify-between items-center">
-                              Strategic Recommendation
-                              <button 
-                                onClick={() => handleCopy(q.rewrite, idx)}
-                                className="text-[#86868B] hover:text-foreground transition-all duration-300 p-1 bg-white border border-black/5 rounded-lg shadow-sm"
-                                title="Copy rewrite"
-                              >
-                                {copiedId === idx ? <Check className="h-4 w-4 text-success" /> : <Copy className="h-4 w-4" />}
-                              </button>
-                            </h4>
-                            <div className="relative flex-1 flex flex-col justify-center">
-                              <Sparkles className="absolute -top-2 -left-2 h-4 w-4 text-primary opacity-20" />
-                              <p className="text-xl text-primary font-bold italic pl-6 border-l-4 border-primary/10">
-                                "{q.rewrite}"
-                              </p>
+                    <motion.div variants={itemVariants} key={idx}>
+                      <HolographicCard
+                        intensity={isNeutral ? 40 : 30}
+                        biasLevel={biasLevel as 'high' | 'medium' | 'neutral'}
+                      >
+                        {isNeutral ? (
+                          <div className="p-8 flex items-center justify-between gap-8">
+                            <div className="text-xl text-foreground font-semibold tracking-tight">
+                              {q.original}
+                            </div>
+                            <div className="flex-shrink-0 flex items-center gap-2 px-4 py-2 bg-success/10 text-success rounded-full border border-success/20 text-[10px] font-black uppercase tracking-[0.2em]">
+                              <ShieldCheck className="h-4 w-4" />
+                              Neutral
                             </div>
                           </div>
-                        </div>
-                      )}
+                        ) : (
+                          <div className="grid grid-cols-1 md:grid-cols-2 relative">
+                            {/* Gradient severity stripe */}
+                            <div className="absolute left-0 top-0 bottom-0 w-1.5 rounded-l-[2rem] bg-gradient-to-b from-warning to-danger z-10" />
+                            <div className="p-8 border-b md:border-b-0 md:border-r border-black/[0.04] pl-10">
+                              <h4 className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+                                <AlertTriangle className="h-3 w-3 text-danger" />
+                                Original &amp; Flags
+                              </h4>
+                              <div 
+                                className="text-lg text-foreground font-semibold leading-relaxed tracking-tight whitespace-pre-wrap highlight-container"
+                                dangerouslySetInnerHTML={{ __html: q.highlighted }}
+                              />
+                              {q.flags.length > 0 && (
+                                <div className="mt-8 flex flex-wrap gap-2">
+                                  {q.flags.map((f: any, fIdx: number) => (
+                                    <span key={fIdx} className={`text-[10px] px-3 py-1.5 rounded-full font-black uppercase tracking-wider border ${
+                                      f.severity === 'high' ? 'bg-danger/10 text-danger border-danger/20' : 
+                                      f.severity === 'medium' ? 'bg-warning/10 text-warning border-warning/20' : 
+                                      'bg-primary/5 text-primary border-primary/10'
+                                    }`}>
+                                      {f.category}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                            
+                            <div className="p-8 bg-[#FAFAFA]/60 relative flex flex-col">
+                              <h4 className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] mb-6 flex justify-between items-center">
+                                <span className="flex items-center gap-2">
+                                  <Sparkles className="h-3 w-3 text-primary" />
+                                  Strategic Recommendation
+                                </span>
+                                <button 
+                                  onClick={() => handleCopy(q.rewrite, idx)}
+                                  className="text-[#86868B] hover:text-foreground transition-all duration-300 p-1.5 bg-white border border-black/5 rounded-lg shadow-sm hover:shadow hover:scale-110 active:scale-95"
+                                  title="Copy rewrite"
+                                >
+                                  {copiedId === idx ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
+                                </button>
+                              </h4>
+                              <div className="relative flex-1 flex flex-col justify-center">
+                                <p className="text-xl text-primary font-bold italic pl-6 border-l-4 border-primary/20 leading-relaxed min-h-[3rem]">
+                                  &ldquo;<Typewriter text={q.rewrite} speed={50} />&rdquo;
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </HolographicCard>
                     </motion.div>
                   );
                 })}
@@ -187,7 +254,7 @@ export default function AnalyzePage() {
 
         <div className="space-y-8">
           <AnimatePresence mode="wait">
-            {report ? (
+            {report && (
               <motion.div 
                 key="results"
                 initial={{ opacity: 0, x: 20 }}
@@ -195,18 +262,16 @@ export default function AnalyzePage() {
                 transition={{ duration: 0.8 }}
                 className="space-y-8 sticky top-28"
               >
-                {!report.categories?.aiUsed && (
-                  <div className="p-4 bg-warning/5 border border-warning/10 text-warning text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl flex items-center gap-3 shadow-sm italic overflow-hidden">
-                    <div className="w-1.5 h-1.5 rounded-full bg-warning animate-pulse" />
-                    AI Fallback Mode Active
-                  </div>
-                )}
+
                 
                 <BiasScoreCard score={report.categories?.overallScore || report.bias_score} />
                 
                 <div className="bg-white border border-black/[0.05] p-8 rounded-[2rem] shadow-[0_4px_24px_rgba(0,0,0,0.02)] space-y-8">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em]">Risk Profile</span>
+                    <div className="text-[11px] font-black text-[#86868B] uppercase tracking-[0.25em] leading-[1.3] flex flex-col">
+                      <span>Risk</span>
+                      <span>Profile</span>
+                    </div>
                     <RiskIndicator level={report.categories?.riskLevel || report.risk_level} />
                   </div>
                   
@@ -238,24 +303,6 @@ export default function AnalyzePage() {
                       </div>
                     </div>
                   )}
-                </div>
-              </motion.div>
-            ) : (
-              <motion.div 
-                key="placeholder"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="bg-white border border-black/[0.05] p-12 flex flex-col items-center justify-center text-center space-y-6 sticky top-28 h-[500px] rounded-[3rem] shadow-[0_4px_24px_rgba(0,0,0,0.02)]"
-              >
-                <div className="h-24 w-24 bg-[#F5F5F7] rounded-full flex items-center justify-center border border-black/[0.03] shadow-[inset_0_4px_12px_rgba(0,0,0,0.01)]">
-                  <ShieldCheck className="h-10 w-10 text-black/10" />
-                </div>
-                <div className="space-y-2">
-                  <h3 className="text-2xl font-extrabold text-foreground tracking-tight">System Ready</h3>
-                  <p className="text-sm font-medium text-[#86868B] leading-relaxed max-w-[240px]">
-                    Analysis engine idling. Enter professional queries to generate deep intelligence reports.
-                  </p>
                 </div>
               </motion.div>
             )}

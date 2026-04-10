@@ -1,7 +1,7 @@
 const { validateWithAI } = require("../services/aiService");
 
 // --- CONSTANTS FROM ENGINE.JS ---
-const BIAS_LEXICON = {
+const BIAS_LANGUAGE_INTELLIGENCE = {
   gender: ["aggressive", "dominant", "assertive", "ninja", "rockstar", "bro culture", "male-dominated", "alpha", "competitive personality", "family plans", "start a family", "maternity", "paternity", "girl", "guys", "chairman", "manpower", "female", "male", "gender", "family", "marriage"],
   age: ["young", "energetic", "recent graduate", "freshers", "digital native", "junior mindset", "overqualified", "too experienced", "early career", "young team", "mature", "seasoned", "old school", "experience", "enough"],
   cultural: ["fit into culture", "culture fit", "bro culture", "fast-paced environment", "work hard play hard", "native speaker", "perfect English", "local candidates only", "background", "upbringing", "traditional values"],
@@ -11,7 +11,7 @@ const BIAS_LEXICON = {
   harassment: ["sex", "sexy", "sexual", "vulgar", "dating", "romantic relation", "hookup", "intimate relation", "handsome", "gorgeous", "physical appearance"]
 };
 
-const LEXICON_WEIGHTS = {
+const LANGUAGE_INTELLIGENCE_WEIGHTS = {
   gender: 8,
   age: 7,
   cultural: 7,
@@ -119,12 +119,12 @@ function detectRules(question) {
   const flags = [];
   const lower = question.toLowerCase();
 
-  // Lexicon matches
+  // Language Intelligence matches
   const foundCategories = new Set();
-  for (const [category, words] of Object.entries(BIAS_LEXICON)) {
+  for (const [category, words] of Object.entries(BIAS_LANGUAGE_INTELLIGENCE)) {
     for (const word of words) {
       if (lower.includes(word.toLowerCase())) {
-        const weight = LEXICON_WEIGHTS[category] || 5;
+        const weight = LANGUAGE_INTELLIGENCE_WEIGHTS[category] || 5;
         const isRepeated = foundCategories.has(category);
         const finalWeight = isRepeated ? weight * 1.2 : weight; // Boost rule: 20% amplification
         
@@ -162,11 +162,11 @@ function detectRules(question) {
  * STEP 5: INDEPENDENT SCORING SYSTEM (v1.0)
  */
 function calculateIndependentScore(signals, aiUsed = false) {
-  const { lexiconFlags, patterns, semanticAI, toneType } = signals;
+  const { languageIntelligenceFlags, patterns, semanticAI, toneType } = signals;
 
-  // 1. LEXICON SCORE
-  const totalLexiconWeight = lexiconFlags.reduce((sum, f) => sum + (f.weight || 0), 0);
-  const lexiconScore = Math.min(100, (totalLexiconWeight / 50) * 100); // Normalized against a max threshold of 50
+  // 1. LANGUAGE INTELLIGENCE SCORE
+  const totalLanguageIntelligenceWeight = languageIntelligenceFlags.reduce((sum, f) => sum + (f.weight || 0), 0);
+  const languageIntelligenceScore = Math.min(100, (totalLanguageIntelligenceWeight / 50) * 100); // Normalized against a max threshold of 50
 
   // 2. PATTERN SCORE
   let highestPattern = 0;
@@ -190,19 +190,19 @@ function calculateIndependentScore(signals, aiUsed = false) {
   // FINAL_SCORE CALCULATION
   let finalScore;
   if (aiUsed) {
-    finalScore = (lexiconScore * 0.35) + (patternScore * 0.25) + (semanticScore * 0.30) + (toneScore * 0.10);
+    finalScore = (languageIntelligenceScore * 0.35) + (patternScore * 0.25) + (semanticScore * 0.30) + (toneScore * 0.10);
   } else {
     // FALLBACK MODE (Rule 3)
-    finalScore = (lexiconScore * 0.6) + (patternScore * 0.4) + 10;
+    finalScore = (languageIntelligenceScore * 0.6) + (patternScore * 0.4) + 10;
   }
 
   // OVERRIDE RULE 1: HIGH RISK
-  if (patternScore >= 60 || (lexiconScore > 50 && toneScore > 40)) {
+  if (patternScore >= 60 || (languageIntelligenceScore > 50 && toneScore > 40)) {
     finalScore = Math.max(finalScore, 75);
   }
 
   // OVERRIDE RULE 2: MULTI-CATEGORY BOOST
-  const uniqueCategories = new Set(lexiconFlags.map(f => f.category));
+  const uniqueCategories = new Set(languageIntelligenceFlags.map(f => f.category));
   if (uniqueCategories.size >= 3) {
     finalScore += (uniqueCategories.size >= 5 ? 20 : 10);
   }
@@ -260,7 +260,7 @@ async function runUnifiedPipeline(text) {
   const rawQuestions = normalizeInput(text);
   let processedQuestions = rawQuestions.map(q => ({
     original: q,
-    lexiconFlags: [],
+    languageIntelligenceFlags: [],
     patterns: [],
     semanticAI: null,
     rewrite: q,
@@ -274,13 +274,13 @@ async function runUnifiedPipeline(text) {
   try {
     const questionsWithInitialFlags = processedQuestions.map(pq => {
       const allRuleFlags = detectRules(pq.original);
-      pq.lexiconFlags = allRuleFlags.filter(f => f.source === 'rule');
+      pq.languageIntelligenceFlags = allRuleFlags.filter(f => f.source === 'rule');
       pq.patterns = allRuleFlags.filter(f => f.source === 'pattern');
       return pq;
     });
 
     const hints = questionsWithInitialFlags.flatMap(pq => 
-      pq.lexiconFlags.map(f => `[${f.category}] "${f.word}"`)
+      pq.languageIntelligenceFlags.map(f => `[${f.category}] "${f.word}"`)
     );
     
     aiResults = await validateWithAI(text, hints);
@@ -301,7 +301,7 @@ async function runUnifiedPipeline(text) {
 
     // Calculate INDEPENDENT score for this question (Step 5)
     pq.biasScore = calculateIndependentScore({
-      lexiconFlags: pq.lexiconFlags,
+      languageIntelligenceFlags: pq.languageIntelligenceFlags,
       patterns: pq.patterns,
       semanticAI: pq.semanticAI,
       toneType: pq.semanticAI?.tone_type || "Neutral"
@@ -309,7 +309,13 @@ async function runUnifiedPipeline(text) {
 
     // Prepare unified flags for highlighting
     pq.flags = [
-      ...pq.lexiconFlags,
+      ...pq.languageIntelligenceFlags,
+      ...pq.patterns.map(p => ({
+        word: p.word,
+        category: p.category,
+        severity: (p.category === 'harassment' || p.category === 'socioeconomic' || p.category === 'discriminatory') ? 'high' : 'medium',
+        source: 'pattern'
+      })),
       ...(pq.semanticAI ? pq.semanticAI.bias_type.map(cat => ({ 
         word: pq.original, 
         category: cat, 
@@ -320,7 +326,7 @@ async function runUnifiedPipeline(text) {
     
     // STEP 7: Mandatory Rewrite (Fallback)
     if (pq.biasScore > 20 && pq.rewrite === pq.original) {
-      pq.rewrite = getRuleBasedRewrite(pq.original, pq.lexiconFlags);
+      pq.rewrite = getRuleBasedRewrite(pq.original, pq.languageIntelligenceFlags);
     }
 
     // STEP 8: Highlight Engine
@@ -344,7 +350,8 @@ async function runUnifiedPipeline(text) {
     overallScore,
     riskLevel,
     categoryBreakdown,
-    aiUsed
+    aiUsed,
+    summary: aiResults.summary || (aiUsed ? "Detailed AI analysis complete." : "Rule-based linguistic scan complete.")
   };
 }
 

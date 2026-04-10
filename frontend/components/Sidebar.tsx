@@ -11,7 +11,6 @@ const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Analyze", href: "/analyze", icon: ShieldAlert },
   { name: "Kit Generator", href: "/kit", icon: FileText },
-  { name: "Simulation", href: "/simulate", icon: Zap },
   { name: "History", href: "/history", icon: History },
   { name: "Settings", href: "/settings", icon: Settings },
   { name: "Back to Home", href: "/", icon: Home },

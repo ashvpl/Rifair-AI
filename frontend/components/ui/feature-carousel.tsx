@@ -17,8 +17,8 @@ import { HugeiconsIcon } from "@hugeicons/react";
 
 const FEATURES = [
   {
-    id: "lexicon",
-    label: "Lexicon Layer",
+    id: "language_intelligence",
+    label: "Language Intelligence Layer",
     icon: GlobalSearchIcon,
     image:
       "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1200",
@@ -63,14 +63,6 @@ const FEATURES = [
     image:
       "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=1200",
     description: "Audit entire question banks with enterprise precision.",
-  },
-  {
-    id: "realtime",
-    label: "Live Simulation",
-    icon: SmartPhone01Icon,
-    image:
-      "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=1200",
-    description: "Simulate candidate experiences in a bias-free environment.",
   },
   {
     id: "security",

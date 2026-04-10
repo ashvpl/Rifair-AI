@@ -41,7 +41,7 @@ export async function runBiasPipeline(text: string) {
       overall_bias_score: 1, // Will be recalculated by formatter anyway
       risk_level: "low" as const, // Will be recalculated
       summary: "Analysis completed via rule-based fallback due to AI timeout.",
-      top_insights: ["Linguistic scan detected patterns matching known bias lexicons."],
+      top_insights: ["Linguistic scan detected patterns matching known bias Language Intelligence."],
       questions: aggregated.length > 0 ? aggregated : sentences.map(s => ({
         question: s,
         bias_score: 1,
@@ -86,7 +86,7 @@ export function runRealTimePipeline(text: string) {
     overall_bias_score: finalScore,
     risk_level: riskLevel,
     summary: aggregated.length > 0 ? "Potential linguistic bias detected." : "No explicit bias patterns found.",
-    top_insights: aggregated.length > 0 ? ["Linguistic patterns matched known bias lexicons."] : [],
+    top_insights: aggregated.length > 0 ? ["Linguistic patterns matched known bias Language Intelligence."] : [],
     questions: aggregated,
     is_fallback: true
   };

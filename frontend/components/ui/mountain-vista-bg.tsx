@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Activity } from 'lucide-react';
+
 
 
 // Data Configuration
@@ -58,10 +58,7 @@ const MountainVistaParallax: React.FC<MountainVistaParallaxProps> = ({ title = '
 
       {/* Hero text */}
       <div className="hero-content relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-full">
-          <Activity className="h-3 w-3 text-white" />
-          <span className="text-[10px] font-black text-white uppercase tracking-[0.2em]">Analytics Hub</span>
-        </div>
+
         {title && <h1 className="hero-title text-4xl md:text-5xl font-black text-white drop-shadow-lg tracking-tighter">{title}</h1>}
         {subtitle && <p className="hero-subtitle text-white/90 mt-2 font-medium max-w-lg drop-shadow-md">{subtitle}</p>}
       </div>

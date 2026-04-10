@@ -60,12 +60,14 @@ export function BlurTextAnimation({
       const exponentialDelay = Math.pow(progress, 0.8) * 0.5;
       const baseDelay = index * 0.06;
       
+      // Use toFixed to ensure deterministic values across server/client (avoid float precision issues)
+      // Replace Math.random() with a deterministic value based on position
       return {
         text: word,
-        duration: 1.5 + Math.cos(index * 0.3) * 0.3,
-        delay: baseDelay + exponentialDelay,
-        blur: 15 + Math.floor(Math.random() * 8),
-        scale: 0.8 + Math.sin(index * 0.2) * 0.1
+        duration: parseFloat((1.5 + Math.cos(index * 0.3) * 0.3).toFixed(4)),
+        delay: parseFloat((baseDelay + exponentialDelay).toFixed(4)),
+        blur: 15 + ((index * 7) % 8),
+        scale: parseFloat((0.8 + Math.sin(index * 0.2) * 0.1).toFixed(4))
       };
     });
   }, [text, words]);

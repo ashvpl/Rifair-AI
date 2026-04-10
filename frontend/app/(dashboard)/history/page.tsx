@@ -5,7 +5,7 @@ import { useAuth } from "@clerk/nextjs";
 import { getReports, deleteReports, deleteReportById } from "@/lib/api";
 import Link from "next/link";
 import { Calendar, ChevronRight, Loader2, Trash2, AlertTriangle, FileText } from "lucide-react";
-import { RiskIndicator } from "@/components/RiskIndicator";
+import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/dialog";
 
 export default function HistoryPage() {
-  const { getToken } = useAuth();
+  const { getToken, isLoaded, userId } = useAuth();
   const [history, setHistory] = useState<Record<string, any>[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -27,22 +27,19 @@ export default function HistoryPage() {
   const [targetId, setTargetId] = useState<string | null>(null);
 
   const fetchHistory = async () => {
+    if (!isLoaded || !userId) return;
+    
+    setIsLoading(true);
     try {
       const token = await getToken();
       const data = await getReports(token);
       if (Array.isArray(data)) {
-        const uniqueMap = new Map();
-        data.forEach((item) => {
-          if (!uniqueMap.has(item.input_text)) {
-            uniqueMap.set(item.input_text, item);
-          }
-        });
-        setHistory(Array.from(uniqueMap.values()));
+        setHistory(data);
       } else {
         setHistory([]);
       }
     } catch (err) {
-      console.error(err);
+      console.error("[HISTORY] Load error:", err);
     } finally {
       setIsLoading(false);
     }
@@ -50,7 +47,7 @@ export default function HistoryPage() {
 
   useEffect(() => {
     fetchHistory();
-  }, []);
+  }, [isLoaded, userId, getToken]);
 
   const promptDelete = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
@@ -107,19 +104,15 @@ export default function HistoryPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-12 animate-in fade-in duration-1000 pb-20">
+    <div className="max-w-6xl mx-auto space-y-10 animate-in fade-in duration-1000 pb-20 pt-0">
       
       {/* Header section */}
       <div className="relative">
         <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-8">
-          <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 mb-2 bg-[#F5F5F7] border border-black/[0.03] rounded-full">
-              <FileText className="h-3 w-3 text-secondary" />
-              <span className="text-[10px] font-black text-secondary uppercase tracking-[0.2em]">Archive Hub</span>
-            </div>
-            <h1 className="text-4xl font-extrabold text-foreground tracking-tight">Analysis History</h1>
+          <div className="space-y-1">
+            <h1 className="text-4xl font-extrabold text-foreground tracking-tight">History</h1>
             <p className="text-[#86868B] max-w-xl text-lg font-medium">
-              Track, review, and manage all your past interview question bias analyses in a secure, unified ledger.
+              View and manage all your past bias analyses in one place.
             </p>
           </div>
           <div className="flex items-center gap-4">
@@ -142,7 +135,7 @@ export default function HistoryPage() {
                 ) : (
                   <Trash2 className="h-4 w-4 mr-2" />
                 )}
-                Purge History
+                Delete
               </Button>
             )}
           </div>
@@ -167,11 +160,10 @@ export default function HistoryPage() {
               <Calendar className="h-10 w-10 text-black/10" />
             </div>
             <div className="space-y-3">
-              <h3 className="text-2xl font-extrabold text-foreground">Archive is Empty</h3>
-              <p className="text-[#86868B] max-w-sm mx-auto font-medium">Your historical intelligence log is currently blank. Initiate an analysis to build your database.</p>
+              <h3 className="text-2xl font-extrabold text-foreground">Nothing here yet</h3>
             </div>
             <Link href="/analyze" className="inline-flex items-center justify-center h-12 px-8 mt-6 rounded-full bg-black text-white font-bold hover:bg-black/90 transition-all shadow-lg active:scale-95">
-              Launch Intelligence Engine <ChevronRight className="w-4 h-4 ml-1" />
+              Start Analysis <ChevronRight className="w-4 h-4 ml-1" />
             </Link>
           </div>
         </motion.div>
@@ -183,59 +175,66 @@ export default function HistoryPage() {
           className="grid gap-6"
         >
           <AnimatePresence>
-            {history.map((report) => (
-              <motion.div 
-                key={report.id} 
-                variants={itemVariants}
-                exit={{ opacity: 0, x: -20 }}
-                layout
-              >
-                <Link href={`/report/${report.id}`} className="block">
-                  <div className="bg-white border border-black/[0.05] p-7 group hover:border-primary transition-all duration-500 rounded-[2rem] shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.06)] relative overflow-hidden">
-                    <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/[0.005] transition-colors" />
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-8 relative z-10">
+            {history.map((report) => {
+              const typeInCategories = report.categories?.analysis_type;
+              const isKit = typeInCategories === 'kit' || report.input_text?.startsWith("Interview Kit: ");
+              const detailUrl = isKit ? `/kit?reportId=${report.id}` : `/analyze?reportId=${report.id}`;
+              
+              return (
+                <motion.div 
+                  key={report.id} 
+                  variants={itemVariants}
+                  exit={{ opacity: 0, x: -20 }}
+                  layout
+                >
+                  <Link href={detailUrl} className="block group">
+                    <div className="bg-white border border-black/[0.05] p-7 transition-all duration-500 rounded-[2rem] shadow-[0_4px_24px_rgba(0,0,0,0.02)] group-hover:shadow-[0_8px_32px_rgba(0,0,0,0.06)] group-hover:border-primary/20 relative overflow-hidden">
+                      <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/[0.005] transition-colors" />
                       
-                      <div className="flex-shrink-0 flex sm:flex-col items-center sm:w-24 sm:border-r border-black/[0.03] pr-0 sm:pr-8 gap-4 sm:gap-1">
-                        <span className="text-[10px] text-[#86868B] uppercase font-black tracking-[0.2em] sm:order-2 leading-none mt-1">Index</span>
-                        <span className="text-4xl font-extrabold text-[#1D1D1F] sm:order-1 tracking-tighter">{report.bias_score}</span>
-                      </div>
-                      
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-[#1D1D1F] font-bold truncate mb-3 group-hover:text-primary transition-colors text-xl tracking-tight">
-                          "{report.input_text.slice(0, 90)}..."
-                        </h4>
-                        <div className="flex items-center gap-5 text-xs font-bold text-[#86868B]">
-                          <span className="flex items-center gap-2 px-4 py-1.5 bg-[#F5F5F7] rounded-full border border-black/[0.02]">
-                            <Calendar className="h-3.5 w-3.5 opacity-40" />
-                            {format(new Date(report.created_at), "MMM d, yyyy • h:mm a")}
-                          </span>
-                          <RiskIndicator level={report.risk_level} />
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-8 relative z-10 w-full">
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-[#1D1D1F] font-bold truncate mb-3 text-xl tracking-tight">
+                            &ldquo;{report.input_text?.slice(0, 90)}...&rdquo;
+                          </h4>
+                          <div className="flex items-center gap-5 text-xs font-bold text-[#86868B]">
+                            <span className="flex items-center gap-2 px-4 py-1.5 bg-[#F5F5F7] rounded-full border border-black/[0.02]">
+                              <Calendar className="h-3.5 w-3.5 opacity-40" />
+                              {report.created_at && !isNaN(new Date(report.created_at).getTime())
+                                ? format(new Date(report.created_at), "MMM d, yyyy • h:mm a")
+                                : "—"}
+                            </span>
+                            <div className={cn(
+                              "px-5 py-2 text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-3 rounded-full border shadow-sm",
+                              report.bias_score > 60 ? "bg-danger/10 text-danger border-danger/20" :
+                              report.bias_score > 20 ? "bg-warning/10 text-warning border-warning/20" :
+                              "bg-success/10 text-success border-success/20"
+                            )}>
+                              {report.bias_score} Bias Score
+                            </div>
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="flex items-center gap-4 mt-6 sm:mt-0 ml-auto sm:ml-0">
-                        <button
-                          onClick={(e) => promptDelete(e, report.id)}
-                          disabled={deletingId === report.id}
-                          className="p-3 text-[#86868B] hover:text-danger hover:bg-danger/5 border border-transparent hover:border-danger/10 rounded-2xl transition-all opacity-0 group-hover:opacity-100 disabled:opacity-50 shadow-sm bg-white"
-                          title="Purge Entry"
-                        >
-                          {deletingId === report.id ? (
-                            <Loader2 className="h-5 w-5 animate-spin" />
-                          ) : (
-                            <Trash2 className="h-5 w-5" />
-                          )}
-                        </button>
-                        <div className="flex-shrink-0 h-12 w-12 text-[#86868B] bg-[#F5F5F7] border border-black/[0.02] flex items-center justify-center rounded-[1.25rem] group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all shadow-sm">
-                          <ChevronRight className="h-6 w-6" />
+                        <div className="flex items-center gap-4 mt-6 sm:mt-0 ml-auto sm:ml-0">
+                          <button
+                            onClick={(e) => promptDelete(e, report.id)}
+                            disabled={deletingId === report.id}
+                            className="p-3 text-[#86868B] hover:text-danger hover:bg-danger/5 border border-transparent hover:border-danger/10 rounded-2xl transition-all opacity-0 group-hover:opacity-100 disabled:opacity-50 shadow-sm bg-white relative z-20"
+                            title="Delete Entry"
+                          >
+                            {deletingId === report.id ? (
+                              <Loader2 className="h-5 w-5 animate-spin" />
+                            ) : (
+                              <Trash2 className="h-5 w-5" />
+                            )}
+                          </button>
                         </div>
+                        
                       </div>
-                      
                     </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
+                  </Link>
+                </motion.div>
+              );
+            })}
           </AnimatePresence>
         </motion.div>
       )}
@@ -250,10 +249,12 @@ export default function HistoryPage() {
               </div>
               <div className="space-y-2">
                 <DialogTitle className="text-center text-3xl font-extrabold text-[#1D1D1F] tracking-tight">
-                  {targetId === "ALL" ? "Purge Registry?" : "Delete Snapshot?"}
+                  {targetId === "ALL" ? "Delete History?" : "Delete Entry?"}
                 </DialogTitle>
                 <DialogDescription className="text-center text-sm font-medium text-[#86868B] leading-relaxed px-4">
-                  This execution is terminal and cannot be reversed. Proceed with the permanent removal of {targetId === "ALL" ? "entire history" : "this intelligence entry"}?
+                  {targetId === "ALL" 
+                    ? "Are you sure you want to delete all your history? This action cannot be undone."
+                    : "Are you sure you want to delete this entry? This action cannot be undone."}
                 </DialogDescription>
               </div>
             </DialogHeader>
@@ -263,14 +264,14 @@ export default function HistoryPage() {
                 className="flex-1 bg-[#F5F5F7] border-black/[0.03] text-foreground hover:bg-[#E8E8ED] h-14 rounded-full font-bold shadow-sm transition-all"
                 onClick={() => setShowConfirmModal(false)}
               >
-                Retain
+                Keep it
               </Button>
               <Button
                 variant="default"
                 className="flex-1 bg-danger hover:bg-danger/90 text-white font-heavy border-none shadow-lg h-14 rounded-full font-extrabold transition-all active:scale-95"
                 onClick={confirmDelete}
               >
-                Delete Permanent
+                Delete it
               </Button>
             </DialogFooter>
           </div>

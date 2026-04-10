@@ -14,19 +14,26 @@ async function fetchWithAuth(endpoint: string, options: RequestInit = {}, token?
     headers,
   });
 
-  const data = await response.json();
+  // Safely parse JSON — the response may be an HTML error page (502, 504, etc.)
+  let data: any = null;
+  try {
+    data = await response.json();
+  } catch {
+    // Non-JSON body (e.g. gateway error page)
+    throw new Error(`Request failed with status ${response.status}`);
+  }
 
   if (!response.ok) {
-    throw new Error(data.error || "API request failed");
+    throw new Error(data?.error || `Request failed with status ${response.status}`);
   }
 
   return data;
 }
 
-export async function analyzeQuestions(text: string, token?: string | null) {
+export async function analyzeQuestions(text: string, token?: string | null, name?: string) {
   return fetchWithAuth("/analyze", {
     method: "POST",
-    body: JSON.stringify({ text }),
+    body: JSON.stringify({ text, name }),
   }, token);
 }
 

@@ -6,11 +6,11 @@ import { dark } from "@clerk/themes";
 
 export default function SettingsPage() {
   return (
-    <div className="max-w-6xl mx-auto space-y-12 animate-in fade-in duration-1000 pb-20">
+    <div className="max-w-6xl mx-auto space-y-10 animate-in fade-in duration-1000 pb-20 pt-0">
       
       {/* Header section */}
       <div className="relative">
-        <div className="space-y-3">
+        <div className="space-y-1">
           <div className="inline-flex items-center gap-2 px-3 py-1 mb-2 bg-[#F5F5F7] border border-black/[0.03] rounded-full">
             <User className="h-3 w-3 text-primary" />
             <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Account Dashboard</span>

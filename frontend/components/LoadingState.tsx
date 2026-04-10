@@ -48,7 +48,7 @@ export function LoadingState() {
       <div className="w-full max-w-md space-y-8 text-center px-6">
 
         {/* Milestone Text with Fade & Scale */}
-        <div className="h-12 relative overflow-hidden">
+        <div className="h-20 relative overflow-hidden flex items-center justify-center">
           {MILESTONES.map((milestone, idx) => (
             <div
               key={idx}

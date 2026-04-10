@@ -197,23 +197,8 @@ STRICT JSON OUTPUT:
   return await callAI(masterPrompt, userPrompt, true);
 }
 
-/**
- * Simulates biased variations of a neutral question.
- */
-async function simulateBias(neutral_question) {
-  const sysPrompt = `You are EquiHire's Bias Simulator. 
-Generate 3 distinct biased variants of the provided question (gender, age, cultural, work_life, tone).
-STRICT JSON:
-{
-  "original": "...",
-  "variants": [ { "biased_question": "...", "category": "...", "explanation": "..." } ]
-}`;
-  return await callAI(sysPrompt, neutral_question, true);
-}
-
 module.exports = {
   validateWithAI,
   generateKitOptimized,
-  simulateBias,
   callAI
 };

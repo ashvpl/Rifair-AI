@@ -23,7 +23,19 @@ export async function GET() {
       cache: 'no-store'
     });
 
-    const data = await response.json();
+    // Safely attempt to parse JSON
+    let data;
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      data = await response.json();
+    } else {
+      const text = await response.text();
+      console.error(`[Proxy] Backend returned non-JSON response (${response.status}):`, text.slice(0, 200));
+      return NextResponse.json(
+        { error: `Backend returned ${response.status}: ${response.statusText}` }, 
+        { status: response.status || 500 }
+      );
+    }
 
     if (!response.ok) {
       console.error("Backend history error:", data);
@@ -32,9 +44,9 @@ export async function GET() {
 
     return NextResponse.json(data);
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
-    console.error("Reports API Proxy error:", error);
-    return NextResponse.json({ error: "Internal processing error occurred." }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Reports API Proxy error:", errorMessage);
+    return NextResponse.json({ error: `Internal Proxy Error: ${errorMessage}` }, { status: 500 });
   }
 }
 
@@ -56,7 +68,18 @@ export async function DELETE() {
       }
     });
 
-    const data = await response.json();
+    let data;
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      data = await response.json();
+    } else {
+      const text = await response.text();
+      console.error(`[Proxy] Backend Delete returned non-JSON response (${response.status}):`, text.slice(0, 200));
+      return NextResponse.json(
+        { error: `Backend returned ${response.status}` }, 
+        { status: response.status || 500 }
+      );
+    }
 
     if (!response.ok) {
       console.error("Backend delete history error:", data);
@@ -65,7 +88,8 @@ export async function DELETE() {
 
     return NextResponse.json({ message: "All reports deleted successfully" }, { status: 200 });
   } catch (error: unknown) {
-    console.error("Reports Delete API error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Reports Delete API error:", errorMessage);
+    return NextResponse.json({ error: `Internal Delete Proxy Error: ${errorMessage}` }, { status: 500 });
   }
 }

@@ -23,7 +23,19 @@ export async function GET() {
       cache: 'no-store'
     });
 
-    const data = await response.json();
+    // Safely parse JSON — guard against HTML error pages (502, 504, etc.)
+    let data;
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      data = await response.json();
+    } else {
+      const text = await response.text();
+      console.error(`[Proxy/history] Backend returned non-JSON (${response.status}):`, text.slice(0, 200));
+      return NextResponse.json(
+        { error: `Backend returned ${response.status}: ${response.statusText}` },
+        { status: response.status || 500 }
+      );
+    }
 
     if (!response.ok) {
       console.error("Backend history error:", data);
@@ -33,7 +45,8 @@ export async function GET() {
     // Dashboard expects the array under the 'history' key
     return NextResponse.json({ history: data }, { status: 200 });
   } catch (error: unknown) {
-    console.error("History API error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("History API error:", errorMessage);
+    return NextResponse.json({ error: `Internal Proxy Error: ${errorMessage}` }, { status: 500 });
   }
 }

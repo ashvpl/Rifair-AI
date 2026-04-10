@@ -2,7 +2,7 @@ const { supabase } = require("../config/supabase");
 
 const getReports = async (req, res) => {
   try {
-    const userId = req.auth.userId;
+    const userId = req.auth?.userId || req.auth?.claims?.sub;
     const { data, error } = await supabase
       .from("analysis_reports")
       .select("*")
@@ -19,7 +19,7 @@ const getReports = async (req, res) => {
 
 const deleteReports = async (req, res) => {
   try {
-    const userId = req.auth.userId;
+    const userId = req.auth?.userId || req.auth?.claims?.sub;
     const { error } = await supabase
       .from("analysis_reports")
       .delete()
@@ -35,7 +35,7 @@ const deleteReports = async (req, res) => {
 
 const getReportById = async (req, res) => {
   try {
-    const userId = req.auth.userId;
+    const userId = req.auth?.userId || req.auth?.claims?.sub;
     const { id } = req.params;
     const { data, error } = await supabase
       .from("analysis_reports")
@@ -54,7 +54,7 @@ const getReportById = async (req, res) => {
 
 const deleteReportById = async (req, res) => {
   try {
-    const userId = req.auth.userId;
+    const userId = req.auth?.userId || req.auth?.claims?.sub;
     const { id } = req.params;
     const { error } = await supabase
       .from("analysis_reports")

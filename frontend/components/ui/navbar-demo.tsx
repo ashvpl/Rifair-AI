@@ -22,12 +22,6 @@ const menus = [
     dropdown: false,
   },
   {
-    id: 2,
-    title: 'Simulator',
-    url: '/simulate',
-    dropdown: false,
-  },
-  {
     id: 3,
     title: 'Features',
     url: '#core-features',

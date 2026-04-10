@@ -12,10 +12,11 @@ export function Header() {
   const isDashboard = pathname?.split('/')[1] === 'dashboard' || 
                       pathname?.split('/')[1] === 'analyze' || 
                       pathname?.split('/')[1] === 'kit' || 
-                      pathname?.split('/')[1] === 'simulate' || 
                       pathname?.split('/')[1] === 'history' || 
                       pathname?.split('/')[1] === 'settings' ||
                       pathname?.split('/')[1] === 'report';
+
+  if (isDashboard) return null;
 
   return (
     <header className={cn(

@@ -13,19 +13,19 @@ export function RiskIndicator({ level }: RiskIndicatorProps) {
 
   const configs = {
     Low: {
-      color: "bg-success text-white border-success/10 shadow-lg shadow-success/20",
+      color: "bg-[#1D1D1F] text-white border-black/5 shadow-xl shadow-black/10",
       icon: ShieldCheck,
-      label: "Optimal Architecture",
+      label: "Optimal\nArchitecture",
     },
     Medium: {
-      color: "bg-warning text-white border-warning/10 shadow-lg shadow-warning/20",
+      color: "bg-warning text-white border-warning/10 shadow-xl shadow-warning/20",
       icon: AlertCircle,
-      label: "Pattern Deviation",
+      label: "Pattern\nDeviation",
     },
     High: {
-      color: "bg-danger text-white border-danger/10 shadow-lg shadow-danger/20",
+      color: "bg-danger text-white border-danger/10 shadow-xl shadow-danger/20",
       icon: AlertTriangle,
-      label: "Critical Violation",
+      label: "Critical\nViolation",
     },
   };
 
@@ -33,9 +33,13 @@ export function RiskIndicator({ level }: RiskIndicatorProps) {
   const Icon = config.icon;
 
   return (
-    <div className={cn("px-5 py-2 text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-3 rounded-full border transition-all duration-300", config.color)}>
-      <Icon className="h-4 w-4" />
-      {config.label}
+    <div className={cn("px-6 py-3.5 text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-4 rounded-[2rem] border transition-all duration-300", config.color)}>
+      <Icon className="h-5 w-5 opacity-80" />
+      <div className="flex flex-col text-left leading-[1.4]">
+        {config.label.split('\n').map((line, i) => (
+          <span key={i}>{line}</span>
+        ))}
+      </div>
     </div>
   );
 }

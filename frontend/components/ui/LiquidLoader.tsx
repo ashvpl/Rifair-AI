@@ -9,6 +9,7 @@ export interface LiquidLoaderProps {
 }
 
 export function LiquidLoader({ className, text = "Loading..." }: LiquidLoaderProps) {
+  const [mounted, setMounted] = React.useState(false);
   const [heights, setHeights] = React.useState([0, 0, 0, 0, 0, 0, 0]);
   const [droplets, setDroplets] = React.useState([
     false,
@@ -31,6 +32,7 @@ export function LiquidLoader({ className, text = "Loading..." }: LiquidLoaderPro
   ];
 
   React.useEffect(() => {
+    setMounted(true);
     const interval = setInterval(() => {
       setHeights((prev) =>
         prev.map((height, index) => {
@@ -74,7 +76,7 @@ export function LiquidLoader({ className, text = "Loading..." }: LiquidLoaderPro
               style={{
                 animationDelay: `${index * 0.2}s`,
                 filter: "blur(0.5px)",
-                transform: droplets[index]
+                transform: (mounted && droplets[index])
                   ? `translateY(${Math.sin(Date.now() * 0.008 + index * 0.5) * 3}px) scale(${0.8 + Math.sin(Date.now() * 0.006 + index * 0.3) * 0.4})`
                   : "translateY(10px) scale(0.5)",
               }}
@@ -95,7 +97,9 @@ export function LiquidLoader({ className, text = "Loading..." }: LiquidLoaderPro
               <div
                 className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-white/40 to-transparent rounded-full"
                 style={{
-                  transform: `translateY(${Math.sin(Date.now() * 0.003 + index * 0.5) * 1}px) scaleY(${0.8 + Math.sin(Date.now() * 0.004 + index * 0.3) * 0.3})`,
+                  transform: mounted 
+                    ? `translateY(${Math.sin(Date.now() * 0.003 + index * 0.5) * 1}px) scaleY(${0.8 + Math.sin(Date.now() * 0.004 + index * 0.3) * 0.3})`
+                    : "translateY(0px) scaleY(1)",
                 }}
               />
             </div>
@@ -106,8 +110,12 @@ export function LiquidLoader({ className, text = "Loading..." }: LiquidLoaderPro
                 colors[index]
               )}
               style={{
-                opacity: Math.sin(Date.now() * 0.003 + index * 0.9) * 0.4 + 0.6,
-                transform: `scale(${0.6 + Math.sin(Date.now() * 0.002 + index * 0.6) * 0.4}) translateY(${Math.sin(Date.now() * 0.004 + index * 0.8) * 1}px)`,
+                opacity: mounted 
+                  ? Math.sin(Date.now() * 0.003 + index * 0.9) * 0.4 + 0.6
+                  : 0.6,
+                transform: mounted 
+                  ? `scale(${0.6 + Math.sin(Date.now() * 0.002 + index * 0.6) * 0.4}) translateY(${Math.sin(Date.now() * 0.004 + index * 0.8) * 1}px)`
+                  : "scale(0.6) translateY(0px)",
                 filter: "blur(0.2px)",
               }}
             />

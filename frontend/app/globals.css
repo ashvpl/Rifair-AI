@@ -163,7 +163,17 @@
   }
   
   body {
-    @apply bg-background text-foreground antialiased selection:bg-primary min-h-screen relative;
+    @apply bg-background text-foreground antialiased min-h-screen relative;
+  }
+
+  ::selection {
+    background-color: rgba(0, 0, 0, 0.08);
+    color: inherit;
+  }
+
+  ::-moz-selection {
+    background-color: rgba(0, 0, 0, 0.08);
+    color: inherit;
   }
 }
 
@@ -232,4 +242,47 @@
   100% {
     background-position: 2000px 100%;
   }
+}
+
+/* ─── Holographic Analysis Cards ─── */
+.holo-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 2rem;
+  border: 1px solid rgba(0,0,0,0.04);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.03),
+    0 0 0 1px rgba(255,255,255,0.6) inset;
+  transition: transform 0.1s ease, box-shadow 0.35s ease;
+  isolation: isolate;
+}
+
+.holo-card:hover {
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.07),
+    0 0 0 1px rgba(180, 130, 255, 0.15) inset,
+    0 0 24px rgba(120, 200, 255, 0.06);
+}
+
+/* Bias flag highlight spans injected via dangerouslySetInnerHTML */
+.highlight-container mark,
+.highlight-container .highlight {
+  background: linear-gradient(135deg, rgba(239,68,68,0.12), rgba(245,158,11,0.12));
+  border-radius: 4px;
+  padding: 1px 3px;
+  color: inherit;
+  font-style: inherit;
+}
+
+/* Holographic rainbow border pulse on hover */
+@keyframes holo-border {
+  0%   { border-color: rgba(255,100,100,0.3); }
+  25%  { border-color: rgba(100,200,255,0.3); }
+  50%  { border-color: rgba(160,80,255,0.3); }
+  75%  { border-color: rgba(80,255,160,0.3); }
+  100% { border-color: rgba(255,100,100,0.3); }
+}
+
+.holo-card:hover {
+  animation: holo-border 3s linear infinite;
 }

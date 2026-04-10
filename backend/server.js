@@ -40,7 +40,6 @@ app.use((req, res, next) => {
 // --- ROUTES ---
 app.use("/api/analyze",      require("./src/routes/analyze"));
 app.use("/api/generate-kit", require("./src/routes/generateKit"));
-app.use("/api/simulate",     require("./src/routes/simulate"));
 app.use("/api/reports",      require("./src/routes/reports"));
 app.use("/api/report",       require("./src/routes/reports"));
 
