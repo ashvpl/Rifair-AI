@@ -1,0 +1,25 @@
+# ============================================================
+# FRONTEND — NEVER COMMIT THESE
+# ============================================================
+
+# Environment files — ALL of them, no exceptions
+.env
+.env.local
+.env.development
+.env.production
+.env.staging
+.env*.local
+
+# Next.js build output
+.next/
+out/
+
+# Dependencies
+node_modules/
+
+# Debug & misc
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+*.pem
