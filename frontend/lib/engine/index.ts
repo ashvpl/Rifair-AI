@@ -67,8 +67,9 @@ export function runRealTimePipeline(text: string) {
   const scores = aggregated.map(a => a.bias_score || 0);
   const maxScore = scores.length > 0 ? Math.max(...scores) : 0;
   
-  // Real-time scoring simulation (using similar logic to backend calculateFinalScore)
-  let finalScore = Math.min(100, Math.round(Math.pow(maxScore / 10, 1.1) * 100));
+  // Real-time scoring simulation: sum of individual issue scores
+  let finalScore = scores.reduce((sum, score) => sum + (score * 10), 0); // aggregated stores 0-10, so * 10
+
 
   // TONE AND STRUCTURE DETECTION (Real-time sync)
   const tonePatterns = /(punishment|penalty|consequences|must|strictly|mandatory)/i;

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Sparkles, Terminal } from "lucide-react";
+import { Terminal } from "lucide-react";
 
 export function ExamplePreview() {
   return (
@@ -31,7 +31,6 @@ export function ExamplePreview() {
                 <h6 className="text-sm font-bold text-zinc-200">Frontend Engineer</h6>
               </div>
             </div>
-            <Sparkles className="w-5 h-5 text-purple-400/40 animate-pulse" />
           </div>
           
           <div className="space-y-8 font-mono">

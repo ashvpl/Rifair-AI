@@ -30,7 +30,7 @@ export function Typewriter({
   }, [delay]);
 
   useEffect(() => {
-    if (!isStarted) return;
+    if (!isStarted || !text) return;
 
     let currentIndex = 0;
     const interval = setInterval(() => {
@@ -46,10 +46,12 @@ export function Typewriter({
     return () => clearInterval(interval);
   }, [text, speed, isStarted, onComplete]);
 
+  if (!text) return null;
+
   return (
     <span className={className}>
       {displayText}
-      {displayText.length < text.length && (
+      {displayText.length < (text?.length || 0) && (
         <motion.span
           initial={{ opacity: 0 }}
           animate={{ opacity: [0, 1, 0] }}

@@ -10,7 +10,6 @@ import {
   SmartPhone01Icon,
   CheckmarkCircle01Icon,
   DashboardSquare01Icon,
-  MagicWandIcon,
 } from "@hugeicons/core-free-icons";
 import { cn } from "@/lib/utils";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -43,7 +42,7 @@ const FEATURES = [
   {
     id: "generator",
     label: "Fair Generation",
-    icon: MagicWandIcon,
+    icon: CheckmarkCircle01Icon,
     image:
       "https://images.unsplash.com/photo-1578574577315-3fbeb0cecdc2?q=80&w=1200",
     description: "Auto-generates inclusive, bias-free question alternatives.",
@@ -165,19 +164,6 @@ export function FeatureCarousel() {
                         : "bg-transparent text-white/60 border-white/20 hover:border-white/40 hover:text-white"
                     )}
                   >
-                    <div
-                      className={cn(
-                        "flex items-center justify-center transition-colors duration-500",
-                        isActive ? "text-[#171717]" : "text-white/40"
-                      )}
-                    >
-                      <HugeiconsIcon
-                        icon={feature.icon}
-                        size={18}
-                        strokeWidth={2}
-                      />
-                    </div>
-
                     <span className="font-normal text-sm md:text-[15px] tracking-tight whitespace-nowrap uppercase">
                       {feature.label}
                     </span>

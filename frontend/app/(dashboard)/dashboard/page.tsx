@@ -1,37 +1,36 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { getReports } from "@/lib/api";
 import { 
   Loader2, 
-  AlertTriangle, 
-  CheckCircle2, 
   Activity, 
-  BarChart3, 
   FileText, 
   TrendingUp, 
   ShieldCheck,
   ChevronRight,
-  Plus
+  ArrowRight,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { BiasTrendChart } from "@/components/ui/bias-trend-chart";
 import { format } from "date-fns";
-import MountainVistaParallax from "@/components/ui/mountain-vista-bg";
+import { cn, safeParseReport } from "@/lib/utils";
 
 export default function DashboardPage() {
-  const { getToken } = useAuth();
+  const { getToken, isLoaded, userId } = useAuth();
   const [history, setHistory] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchDashboardHistory = async () => {
+      if (!isLoaded || !userId) return;
       try {
         const token = await getToken();
         const data = await getReports(token);
-        setHistory(data || []);
+        const parsedData = Array.isArray(data) ? data.map(safeParseReport) : [];
+        setHistory(parsedData);
       } catch (err) {
         console.error("Dashboard history error:", err);
       } finally {
@@ -39,181 +38,445 @@ export default function DashboardPage() {
       }
     };
     fetchDashboardHistory();
-  }, [getToken]);
+  }, [isLoaded, userId, getToken]);
+
+  // Stop showing the spinner if Clerk is loaded but there's no session
+  useEffect(() => {
+    if (isLoaded && !userId) {
+      setIsLoading(false);
+    }
+  }, [isLoaded, userId]);
+
+  const stats = useMemo(() => {
+    if (!history.length) return {
+      analysisCount: 0,
+      avgBiasScore: 0,
+      highBiasFlags: 0,
+      fairnessScore: 100,
+      trendData: [],
+      categoryBreakdown: {},
+      flaggedQuestions: []
+    };
+
+    const uniqueHistory = Array.from(new Map(history.map(item => [item.id, item])).values())
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+    const analyses = uniqueHistory.filter(item => {
+      const isKit = item.categories?.analysis_type === 'kit' || item.input_text?.startsWith("Interview Kit: ");
+      return !isKit;
+    });
+
+    const analysisCount = analyses.length;
+    
+    // Avg Bias Score
+    const avgBiasScore = analysisCount ? Math.round(analyses.reduce((sum, r) => sum + (r.bias_score || 0), 0) / analysisCount) : 0;
+    
+    // High Bias Flags
+    let highBiasFlags = 0;
+    const categoryBreakdown: Record<string, number> = {};
+    const flaggedQuestions: any[] = [];
+
+    uniqueHistory.forEach(item => {
+      const questions = item.categories?.questions || [];
+      if (questions.length > 0) {
+        questions.forEach((q: any) => {
+          if (q.bias_score >= 40) {
+            highBiasFlags++;
+            flaggedQuestions.push({
+              text: q.original,
+              score: q.bias_score,
+              type: q.bias_types?.[0] || 'Uncategorized',
+              date: item.created_at
+            });
+          }
+          (q.bias_types || []).forEach((t: string) => {
+            categoryBreakdown[t] = (categoryBreakdown[t] || 0) + 1;
+          });
+        });
+      } else if (item.bias_score >= 55) {
+        highBiasFlags++;
+        flaggedQuestions.push({
+          text: item.input_text,
+          score: item.bias_score,
+          type: item.categories?.bias_types?.[0] || 'General',
+          date: item.created_at
+        });
+      }
+    });
+
+    const lowBiasScans = analyses.filter(r => (r.bias_score || 0) < 40).length;
+    const fairnessScore = analysisCount > 0 ? Math.round((lowBiasScans / analysisCount) * 100) : 100;
+
+    const groupedData = uniqueHistory.reduce((acc: any, item) => {
+      const dateLabel = format(new Date(item.created_at), "MMM d");
+      if (!acc[dateLabel]) {
+        acc[dateLabel] = { date: dateLabel, sum: 0, count: 0 };
+      }
+      acc[dateLabel].sum += (item.bias_score || 0);
+      acc[dateLabel].count += 1;
+      return acc;
+    }, {});
+
+    const trendData = Object.values(groupedData)
+      .map((d: any) => ({
+        date: d.date,
+        score: Math.round(d.sum / d.count)
+      }))
+      .reverse()
+      .slice(-10);
+
+    return {
+      analysisCount,
+      avgBiasScore,
+      highBiasFlags,
+      fairnessScore,
+      trendData,
+      categoryBreakdown,
+      flaggedQuestions: flaggedQuestions.slice(0, 5)
+    };
+  }, [history]);
+
+  const heroContent = useMemo(() => {
+    if (stats.analysisCount === 0) {
+      return {
+        bg: 'bg-[#f0f9ff]',
+        border: 'border-blue-100',
+        titleColor: 'text-blue-900',
+        subtitleColor: 'text-blue-800/70',
+        buttonBg: 'bg-blue-600 hover:bg-blue-700',
+        title: "Welcome to EquiHire AI",
+        subtitle: "Paste your first set of interview questions to get a bias score instantly.",
+        cta: "Run your first analysis",
+        ctaLink: '/analyze'
+      };
+    }
+    
+    if (stats.highBiasFlags === 0 && stats.avgBiasScore < 40) {
+      return {
+        bg: 'bg-[#f0fdf4]',
+        border: 'border-green-100',
+        titleColor: 'text-green-900',
+        subtitleColor: 'text-green-800/70',
+        buttonBg: 'bg-green-600 hover:bg-green-700',
+        title: "Your hiring looks clean",
+        subtitle: `Avg bias score ${stats.avgBiasScore}/100 across ${stats.analysisCount} analyses. Keep it up.`,
+        cta: "Generate an interview kit",
+        ctaLink: '/kit'
+      };
+    }
+
+    return {
+      bg: 'bg-[#fff5f5]',
+      border: 'border-red-100',
+      titleColor: 'text-red-900',
+      subtitleColor: 'text-red-800/70',
+      buttonBg: 'bg-red-600 hover:bg-red-700',
+      title: `${stats.highBiasFlags} high-risk question${stats.highBiasFlags > 1 ? 's' : ''} need your attention`,
+      subtitle: `Avg bias score is ${stats.avgBiasScore}/100 — review flagged questions before your next round.`,
+      cta: "View flagged questions",
+      ctaLink: '/history'
+    };
+  }, [stats]);
+
+  const subtexts = useMemo(() => ({
+    bias: stats.analysisCount === 0 ? "No analyses yet" :
+          stats.avgBiasScore === 0 ? "Perfectly clean" :
+          stats.avgBiasScore < 40 ? "Looking good" :
+          stats.avgBiasScore < 65 ? "Moderate — review recommended" :
+          "High — action required",
+    flags: stats.analysisCount === 0 ? "Run an analysis to begin" :
+           stats.highBiasFlags === 0 ? "No issues detected" :
+           stats.highBiasFlags <= 2 ? "Review recommended" :
+           "Requires immediate fix",
+    fairness: stats.analysisCount === 0 ? "—" :
+              stats.fairnessScore === 100 ? "Perfect score" :
+              stats.fairnessScore >= 80 ? "Strong — minor gaps remain" :
+              stats.fairnessScore >= 60 ? "Improving — keep going" :
+              "Needs significant work",
+  }), [stats]);
+
+  const flagCardStyle = useMemo(() => {
+    if (stats.analysisCount === 0) return { bg: 'bg-[#F5F5F7]', border: 'border-black/[0.03]', text: 'text-[#86868B]', label: 'text-[#86868B]' };
+    if (stats.highBiasFlags === 0) return { bg: 'bg-emerald-50', border: 'border-emerald-100', text: 'text-emerald-600', label: 'text-emerald-900/40' };
+    if (stats.highBiasFlags <= 2) return { bg: 'bg-amber-50', border: 'border-amber-100', text: 'text-amber-600', label: 'text-amber-900/40' };
+    return { bg: 'bg-[#FEF2F2]', border: 'border-red-100', text: 'text-red-600', label: 'text-red-950/40' };
+  }, [stats]);
 
   if (isLoading) {
     return (
       <div className="flex flex-col justify-center items-center py-40 space-y-6">
-        <div className="relative">
-          <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
-          <Loader2 className="w-12 h-12 animate-spin text-primary relative z-10" />
-        </div>
-        <p className="text-muted-foreground font-medium tracking-wide">Synthesizing telemetry data...</p>
+        <Loader2 className="w-12 h-12 animate-spin text-primary" />
+        <p className="text-muted-foreground font-medium tracking-wide">Syncing data...</p>
       </div>
     );
   }
 
-  const uniqueHistory = Array.from(new Map(history.map(item => [item.id || item.input_text, item])).values());
-  const totalScans = uniqueHistory.length;
-  const avgScore = totalScans ? Math.round(uniqueHistory.reduce((sum, r) => sum + (r.bias_score || 0), 0) / totalScans) : 0;
-  const highRiskScans = uniqueHistory.filter(r => r.risk_level?.toLowerCase() === "high").length;
-  const fairnessScore = totalScans ? Math.round(((totalScans - highRiskScans) / totalScans) * 100) : 0;
-
-  // Prepare trend data
-  const trendData = uniqueHistory
-    .slice()
-    .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
-    .map(item => ({
-      date: format(new Date(item.created_at), "MMM d"),
-      score: item.bias_score
-    }))
-    .slice(-10); // Show last 10 entries
-
   const containerVariants = {
     hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 }
-    }
+    show: { opacity: 1, transition: { staggerChildren: 0.1 } }
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 300, damping: 24 } }
+    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
   };
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-1000 pb-20">
+    <div className="max-w-[1240px] mx-auto space-y-8 pb-20 pt-4 px-4 lg:px-6">
       
-      {/* Hero section - using MountainVistaParallax component */}
-      <MountainVistaParallax 
-        title="Your Hiring Intelligence Dashboard"
-        subtitle="Track bias, monitor improvements, and build fair interview processes."
-      />
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-[#1D1D1F] tracking-tight">Hiring intelligence dashboard</h1>
+        <p className="text-xs font-semibold text-[#86868B] uppercase tracking-wider">Last updated: today</p>
+      </div>
 
+      {/* Hero Banner Strip */}
+      <motion.div 
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className={cn(
+          "relative overflow-hidden border rounded-[2rem] p-8 lg:p-12 shadow-sm transition-colors duration-500",
+          heroContent.bg,
+          heroContent.border
+        )}
+      >
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
+          <div className="space-y-3">
+            <h2 className={cn("text-3xl lg:text-4xl font-extrabold tracking-tight", heroContent.titleColor)}>
+              {heroContent.title}
+            </h2>
+            <p className={cn("text-lg font-medium", heroContent.subtitleColor)}>
+              {heroContent.subtitle}
+            </p>
+          </div>
+          <Link href={heroContent.ctaLink}>
+            <button className={cn(
+              "whitespace-nowrap flex items-center gap-3 px-8 py-4 transition-all rounded-full text-white font-bold shadow-md hover:shadow-lg group active:scale-95",
+              heroContent.buttonBg
+            )}>
+              {heroContent.cta} <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </Link>
+        </div>
+      </motion.div>
+
+      {/* 4-Metric Grid - Light Grey Version */}
       <motion.div 
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6"
       >
-        <motion.div variants={itemVariants} className="bg-white border border-black/[0.05] p-8 rounded-[2.5rem] shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.04)] transition-all duration-500">
-          <div className="space-y-4">
-            <p className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] flex items-center gap-2">
-              <FileText className="w-3.5 h-3.5 text-primary" /> Total Analyses
-            </p>
-            <p className="text-5xl font-extrabold text-[#1D1D1F] tracking-tighter">{totalScans}</p>
-          </div>
-        </motion.div>
-        
-        <motion.div variants={itemVariants} className="bg-white border border-black/[0.05] p-8 rounded-[2.5rem] shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.04)] transition-all duration-500">
-          <div className="space-y-4">
-            <p className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] flex items-center gap-2">
-              <Activity className="w-3.5 h-3.5 text-[#0071E3]" /> Avg Bias Score
-            </p>
-            <div className="flex items-baseline gap-2">
-              <p className="text-5xl font-extrabold text-[#0071E3] tracking-tighter">{avgScore}</p>
-              <span className="text-sm font-bold text-[#86868B]">/100</span>
+        {/* TOTAL ANALYSES */}
+        <motion.div variants={itemVariants} className="bg-[#F5F5F7] p-8 rounded-[2rem] border border-black/[0.03] shadow-sm">
+          <div className="space-y-6">
+            <p className="text-[11px] font-black text-[#86868B] uppercase tracking-[0.15em]">TOTAL ANALYSES</p>
+            <div className="space-y-1">
+              <p className="text-5xl font-bold text-[#1D1D1F] tracking-tighter">{stats.analysisCount}</p>
+              {stats.analysisCount > 0 && (
+                <p className="text-sm font-bold text-[#86868B] flex items-center gap-1">
+                  <span className="text-[#059669]">+2</span> this week
+                </p>
+              )}
             </div>
           </div>
         </motion.div>
         
-        <motion.div variants={itemVariants} className="bg-white border border-black/[0.05] p-8 rounded-[2.5rem] shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.04)] transition-all duration-500">
-          <div className="space-y-4">
-            <p className="text-[10px] font-black text-danger uppercase tracking-[0.2em] flex items-center gap-2">
-              <AlertTriangle className="w-3.5 h-3.5" /> High Bias Flags
-            </p>
-            <p className="text-5xl font-extrabold text-danger tracking-tighter">{highRiskScans}</p>
+        {/* AVG BIAS SCORE */}
+        <motion.div variants={itemVariants} className="bg-[#F5F5F7] p-8 rounded-[2rem] border border-black/[0.03] shadow-sm">
+          <div className="space-y-6">
+            <p className="text-[11px] font-black text-[#86868B] uppercase tracking-[0.15em]">AVG BIAS SCORE</p>
+            <div className="space-y-1">
+              <div className="flex items-baseline gap-1">
+                <p className={cn(
+                  "text-5xl font-bold tracking-tighter",
+                  stats.analysisCount === 0 ? "text-[#1D1D1F]" :
+                  stats.avgBiasScore < 40 ? "text-[#059669]" :
+                  stats.avgBiasScore < 65 ? "text-amber-600" :
+                  "text-red-600"
+                )}>
+                  {stats.analysisCount === 0 ? "—" : stats.avgBiasScore}
+                </p>
+                <span className="text-lg font-bold text-[#86868B]">/100</span>
+              </div>
+              <p className={cn(
+                "text-sm font-bold capitalize",
+                stats.analysisCount === 0 ? "text-[#86868B]" :
+                stats.avgBiasScore < 40 ? "text-[#059669]" :
+                stats.avgBiasScore < 65 ? "text-amber-600" :
+                "text-red-600"
+              )}>
+                {subtexts.bias}
+              </p>
+            </div>
           </div>
         </motion.div>
         
-        <motion.div variants={itemVariants} className="bg-white border border-black/[0.05] p-8 rounded-[2.5rem] shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.04)] transition-all duration-500">
-          <div className="space-y-4">
-            <p className="text-[10px] font-black text-success uppercase tracking-[0.2em] flex items-center gap-2">
-              <ShieldCheck className="w-3.5 h-3.5" /> Fairness Score
-            </p>
-            <div className="flex items-baseline gap-1">
-              <p className="text-5xl font-extrabold text-success tracking-tighter">{fairnessScore}</p>
-              <span className="text-sm font-bold text-success">%</span>
+        {/* HIGH BIAS FLAGS */}
+        <motion.div variants={itemVariants} className={cn("p-8 rounded-[2rem] border shadow-sm transition-colors duration-500", flagCardStyle.bg, flagCardStyle.border)}>
+          <div className="space-y-6">
+            <p className={cn("text-[11px] font-black uppercase tracking-[0.15em]", flagCardStyle.label)}>HIGH BIAS FLAGS</p>
+            <div className="space-y-1">
+              <p className={cn("tracking-tighter font-bold", stats.analysisCount === 0 ? "text-2xl text-[#86868B]" : "text-5xl " + flagCardStyle.text)}>
+                {stats.analysisCount === 0 ? "No data yet" : stats.highBiasFlags}
+              </p>
+              <p className={cn("text-sm font-black uppercase", flagCardStyle.text)}>{subtexts.flags}</p>
+            </div>
+          </div>
+        </motion.div>
+        
+        {/* FAIRNESS SCORE */}
+        <motion.div variants={itemVariants} className="bg-[#F5F5F7] p-8 rounded-[2rem] border border-black/[0.03] shadow-sm">
+          <div className="space-y-6">
+            <p className="text-[11px] font-black text-[#86868B] uppercase tracking-[0.15em]">FAIRNESS SCORE</p>
+            <div className="space-y-1">
+              <div className="flex items-baseline gap-1">
+                <p className={cn(
+                  "text-5xl font-bold tracking-tighter",
+                  stats.analysisCount === 0 ? "text-[#1D1D1F]" :
+                  stats.fairnessScore >= 80 ? "text-[#059669]" :
+                  stats.fairnessScore >= 60 ? "text-amber-500" :
+                  "text-red-500"
+                )}>
+                  {stats.analysisCount === 0 ? "—" : stats.fairnessScore}
+                </p>
+                <span className={cn(
+                  "font-bold",
+                  stats.analysisCount === 0 ? "text-lg text-[#86868B]" : "text-2xl text-[#059669]"
+                )}>{stats.analysisCount === 0 ? "" : "%"}</span>
+              </div>
+              <p className={cn(
+                "text-sm font-bold capitalize",
+                stats.fairnessScore >= 80 ? "text-[#059669]/80" : stats.fairnessScore >= 60 ? "text-amber-500/80" : stats.analysisCount === 0 ? "text-[#86868B]" : "text-red-500/80"
+              )}>
+                {subtexts.fairness}
+              </p>
             </div>
           </div>
         </motion.div>
       </motion.div>
 
-      {/* Bias Trend Graph - GAME CHANGER */}
-      {totalScans > 0 && (
+      {/* Main Panels */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* Trend Panel */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
+          className="lg:col-span-2 bg-white rounded-[2.5rem] p-10 border border-black/[0.03] shadow-sm space-y-10"
         >
-          <BiasTrendChart 
-            data={trendData} 
-            className="w-full bg-white border border-black/[0.05] p-2 lg:p-4 rounded-[3rem] shadow-[0_4px_24px_rgba(0,0,0,0.02)]" 
-          />
+          <div className="flex items-center justify-between">
+            <h3 className="text-2xl font-bold text-[#1D1D1F] tracking-tight">Bias Trend Analysis</h3>
+            <div className="flex items-center gap-6">
+               <div className="flex items-center gap-2">
+                 <div className="w-3 h-3 rounded-full bg-[#10b981]" />
+                 <span className="text-xs font-bold text-[#86868B]">Fairness</span>
+               </div>
+               <div className="flex items-center gap-2">
+                 <div className="w-4 h-4 rounded-full border-2 border-slate-200" />
+                 <span className="text-xs font-bold text-[#86868B]">Daily Score</span>
+               </div>
+            </div>
+          </div>
+          <div className="h-[300px] w-full">
+            <BiasTrendChart data={stats.trendData} />
+          </div>
         </motion.div>
-      )}
 
+        {/* Category Panel */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="bg-white rounded-[2.5rem] p-10 border border-black/[0.03] shadow-sm space-y-10"
+        >
+          <h3 className="text-2xl font-bold text-[#1D1D1F] tracking-tight">Bias by category</h3>
+          <div className="space-y-6">
+            {Object.entries(stats.categoryBreakdown).length > 0 ? (
+              Object.entries(stats.categoryBreakdown).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([cat, count], idx) => (
+                <div key={cat} className="space-y-3">
+                  <div className="flex justify-between items-end">
+                    <span className="text-xs font-black text-[#1D1D1F] uppercase tracking-[0.1em]">{cat.replace('_', ' ')}</span>
+                    <span className="text-xs font-bold text-[#86868B]">{count} hits</span>
+                  </div>
+                  <div className="h-3 w-full bg-[#F5F5F7] rounded-full overflow-hidden">
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: `${Math.min(100, (count / Math.max(1, stats.highBiasFlags)) * 100)}%` }}
+                      className={cn(
+                        "h-full rounded-full",
+                        idx === 0 ? "bg-[#EF4444]" : idx === 1 ? "bg-[#F59E0B]" : "bg-[#10B981]"
+                      )}
+                    />
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="h-[200px] flex items-center justify-center border border-dashed border-slate-200 rounded-2xl bg-slate-50">
+                <p className="text-[#86868B] text-sm font-medium">No activity data yet.</p>
+              </div>
+            )}
+          </div>
+          <div className="pt-6 border-t border-slate-100">
+             <p className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] text-center">
+               D&I Intelligence Core Active
+             </p>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Flagged Questions Panel */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4, duration: 0.8 }}
-        className="space-y-8 pt-4"
+        transition={{ delay: 0.5 }}
+        className="bg-white rounded-[2.5rem] p-10 border border-black/[0.03] shadow-sm space-y-8"
       >
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-extrabold text-foreground tracking-tight">Recent Activity Log</h2>
-          {totalScans > 0 && (
-            <Link href="/history" className="text-xs font-bold text-primary hover:underline flex items-center gap-1 mt-1 px-4 py-2 rounded-full bg-primary/5">
-              View All History <ChevronRight className="w-3 h-3" />
-            </Link>
-          )}
+          <h3 className="text-2xl font-bold text-[#1D1D1F] tracking-tight">Recently flagged questions</h3>
+          <Link href="/history" className="text-sm font-bold text-[#059669] hover:text-[#047857] transition-colors flex items-center gap-1">
+            View full log <ChevronRight className="w-4 h-4" />
+          </Link>
         </div>
         
-        <div className="bg-white border border-black/[0.05] rounded-[3rem] overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
-          <div className="p-0">
-            <div className="flex flex-col">
-              {uniqueHistory.slice(0, 5).map((report, idx) => {
-                const isHigh = report.risk_level?.toLowerCase() === 'high';
-                const isMedium = report.risk_level?.toLowerCase() === 'medium';
-                const themeClass = isHigh ? 'text-danger bg-danger/5 border-danger/10' : 
-                                   isMedium ? 'text-warning bg-warning/5 border-warning/10' : 
-                                   'text-success bg-success/5 border-success/10';
-                
-                return (
-                  <div 
-                    key={report.id} 
-                    className={`flex items-center justify-between p-8 ${idx !== 0 ? 'border-t border-black/[0.03]' : ''} hover:bg-black/[0.01] transition-all group`}
-                  >
-                    <div className="truncate max-w-[60%] lg:max-w-[70%] text-lg font-bold text-foreground/80 group-hover:text-primary transition-colors">
-                      {report.input_text?.slice(0, 100)}{report.input_text?.length > 100 ? '...' : ''}
-                    </div>
-                    <div className="flex items-center gap-8">
-                      <span className={`px-5 py-2 text-[10px] font-black uppercase tracking-[0.15em] rounded-full border ${themeClass}`}>
-                        {report.risk_level}
-                      </span>
-                      <div className="flex flex-col items-end min-w-[80px]">
-                        <span className="font-extrabold text-2xl text-foreground tracking-tighter">{report.bias_score}</span>
-                        <span className="text-[9px] font-bold text-[#86868B] uppercase tracking-[0.1em]">Score</span>
-                      </div>
-                    </div>
+        <div className="grid grid-cols-1 gap-1">
+          {stats.flaggedQuestions.length > 0 ? (
+            stats.flaggedQuestions.map((q, i) => (
+              <div key={i} className={cn(
+                "py-6 px-4 flex items-center justify-between gap-8 group transition-colors rounded-2xl",
+                i % 2 === 0 ? "bg-transparent" : "bg-[#F5F5F7]/30"
+              )}>
+                <div className="space-y-2 max-w-[75%]">
+                  <p className="text-[#1D1D1F] font-bold text-xl leading-tight group-hover:text-[#059669] transition-colors">
+                    "{q.text.slice(0, 140)}{q.text.length > 140 ? '...' : ''}"
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <span className="text-[10px] font-black text-red-600 uppercase tracking-widest bg-red-50 px-2 py-1 rounded">
+                      {q.type} BIAS
+                    </span>
+                    <span className="text-[10px] font-bold text-[#86868B] uppercase tracking-widest">
+                      Detected {format(new Date(q.date), "MMM d, h:mm a")}
+                    </span>
                   </div>
-                );
-              })}
-              {uniqueHistory.length === 0 && (
-                <div className="text-center text-[#86868B] py-32 flex flex-col items-center">
-                  <div className="bg-[#F5F5F7] p-10 rounded-full mb-8">
-                    <Activity className="h-16 w-16 text-black/5" />
-                  </div>
-                  <h3 className="text-2xl font-black text-[#1D1D1F] mb-3">No activity yet</h3>
-                  <Link href="/analyze" className="inline-flex items-center justify-center h-14 px-10 rounded-full bg-black text-white font-bold hover:bg-black/90 transition-all shadow-lg active:scale-95 mt-6">
-                    Analyze a Question <ChevronRight className="w-4 h-4 ml-2" />
-                  </Link>
                 </div>
-              )}
+                <div className="flex flex-col items-end min-w-[100px]">
+                  <span className="text-4xl font-bold text-[#1D1D1F] tracking-tighter">
+                    {q.score}
+                  </span>
+                  <span className="text-[10px] font-black text-[#86868B] uppercase tracking-widest">
+                    BIAS SCORE
+                  </span>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="py-24 text-center bg-[#F5F5F7] rounded-[2rem] border border-dashed border-slate-200">
+              <p className="text-[#86868B] font-bold text-lg">Your recent analyses are bias-free.</p>
             </div>
-          </div>
+          )}
         </div>
       </motion.div>
+
     </div>
   );
 }

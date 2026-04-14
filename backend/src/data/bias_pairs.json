@@ -1,0 +1,37 @@
+[
+  {
+    "input": "Are you planning to have children?",
+    "output": "Are there any factors that might affect your availability for this role?",
+    "category": "gender"
+  },
+  {
+    "input": "Do you think you can handle pressure at your age?",
+    "output": "How do you handle high-pressure situations in your work?",
+    "category": "age"
+  },
+  {
+    "input": "Will your religion interfere with work?",
+    "output": "Are you able to meet the work schedule and attendance requirements for this role?",
+    "category": "cultural"
+  },
+  {
+    "input": "Where are you originally from?",
+    "output": "Are you legally authorized to work in this specific location/jurisdiction?",
+    "category": "cultural"
+  },
+  {
+    "input": "Do you have any health problems?",
+    "output": "Are you able to perform the essential functions of this job, with or without reasonable accommodation?",
+    "category": "health"
+  },
+  {
+    "input": "What was your last salary?",
+    "output": "What are your salary expectations for this particular position?",
+    "category": "socioeconomic"
+  },
+  {
+    "input": "Are you married?",
+    "output": "Can you handle occasional travel or late-night meetings as required by this role?",
+    "category": "gender"
+  }
+]

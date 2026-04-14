@@ -3,6 +3,10 @@ const { supabase } = require("../config/supabase");
 const getReports = async (req, res) => {
   try {
     const userId = req.auth?.userId || req.auth?.claims?.sub;
+    if (!userId) {
+      console.warn("[REPORTS] No userId found in request auth");
+      return res.status(401).json({ error: "Unauthorized" });
+    }
     const { data, error } = await supabase
       .from("analysis_reports")
       .select("*")
@@ -20,6 +24,7 @@ const getReports = async (req, res) => {
 const deleteReports = async (req, res) => {
   try {
     const userId = req.auth?.userId || req.auth?.claims?.sub;
+    if (!userId) return res.status(401).json({ error: "Unauthorized" });
     const { error } = await supabase
       .from("analysis_reports")
       .delete()
@@ -36,6 +41,7 @@ const deleteReports = async (req, res) => {
 const getReportById = async (req, res) => {
   try {
     const userId = req.auth?.userId || req.auth?.claims?.sub;
+    if (!userId) return res.status(401).json({ error: "Unauthorized" });
     const { id } = req.params;
     const { data, error } = await supabase
       .from("analysis_reports")

@@ -204,104 +204,69 @@ function aggregateSignals(sentences, matches) {
 }
 
 function calculateFinalScore(questions) {
-  // Fix 4: Handle zero-bias case (CRASH FIX)
   if (!questions || questions.length === 0) {
-    return {
-      score: 0,
-      risk_level: "low",
-      message: "No significant bias detected",
-      confidence: 0.9
-    };
+    return { score: 0, risk_level: "low" };
   }
 
-  let maxHard = 0;
-  let maxSoft = 0;
-  let maxAI = 0;
-  let maxCategoryScore = 0;
+  const EXPLICIT_BIAS_KEYWORDS = ["young", "old", "age", "woman", "man", "gender", "pregnant", "family", "children", "background", "accent"];
+  const FIXED_PROTECTED_ATTRIBUTES = ["age", "gender", "family", "ethnicity", "race", "religion"];
 
-  const categoryScores = {
-    gender: 0, age: 0, cultural: 0, work_life: 0, socioeconomic: 0, health: 0, tone: 0, harassment: 0
-  };
-
-  questions.forEach(q => {
-    const score = q.bias_score || 0;
-    if (score > maxCategoryScore) maxCategoryScore = score;
-
-    // Track layer maxes for the 3-layer formula
-    if (q.layers && q.layers.includes('hard')) maxHard = Math.max(maxHard, score);
-    if (q.layers && q.layers.includes('soft')) maxSoft = Math.max(maxSoft, score);
-    if (q.is_ai || typeof q.is_ai === 'undefined') maxAI = Math.max(maxAI, score);
-
-    if (Array.isArray(q.bias_type)) {
-      q.bias_type.forEach(cat => {
-        if (categoryScores.hasOwnProperty(cat)) {
-          categoryScores[cat] = Math.max(categoryScores[cat], score);
-        }
-      });
+  const scoredQuestions = questions.map(q => {
+    let qScore = q.bias_score || 0;
+    const metadata = q.metadata || {};
+    
+    // 1. WEIGHTED SCORING MODEL
+    // If AI provided broken/missing components, we estimate them from base score
+    const semantic = metadata.semantic_score || qScore;
+    const keyword = metadata.keyword_score || qScore;
+    const structural = metadata.structural_score || qScore;
+    
+    let weightedScore = (0.5 * semantic) + (0.3 * keyword) + (0.2 * structural);
+    
+    // 2. EXPLICIT BIAS BOOST
+    const text = (q.question || "").toLowerCase();
+    const hasExplicitKeyword = EXPLICIT_BIAS_KEYWORDS.some(kw => {
+      const regex = new RegExp(`\\b${kw}\\b`, 'i');
+      return regex.test(text);
+    });
+    if (hasExplicitKeyword) {
+      weightedScore += 35;
     }
+    
+    // 3. HARD TRIGGER RULES
+    const hasProtectedAttribute = FIXED_PROTECTED_ATTRIBUTES.some(attr => {
+      const regex = new RegExp(`\\b${attr}\\b`, 'i');
+      return regex.test(text) || (Array.isArray(q.bias_type) && q.bias_type.includes(attr));
+    });
+    if (hasProtectedAttribute) {
+      weightedScore = Math.max(weightedScore, 75);
+    }
+    
+    // 4. MULTI-BIAS AMPLIFICATION
+    if (Array.isArray(q.bias_type) && q.bias_type.length > 1) {
+      weightedScore += 15;
+    }
+    
+    // 5. NORMALIZATION
+    q.bias_score = Math.min(100, Math.round(weightedScore));
+    return q.bias_score;
   });
 
-  // PART 2: ACCURATE MATHEMATICAL ALLOCATION
-  // Final Score = (Layer Max Weight) * (Prevalence Multiplier)
-  const biasedQuestions = questions.filter(q => q.bias_score > 2);
-  const numBiased = biasedQuestions.length;
-  const totalQuestions = questions.length;
-  const biasRatio = numBiased / totalQuestions;
-
-  // Base weighted score of the worst offenders
-  const hardScore = maxHard * 10;
-  const softScore = maxSoft * 10;
-  const aiScore = maxAI * 10;
-  const intensityScore = (0.3 * hardScore) + (0.2 * softScore) + (0.5 * aiScore);
-
-  // TONE AND STRUCTURE DETECTION (Adds intensity but respects prevalence)
-  let toneOrStructureDetected = false;
-  const tonePatterns = /(punishment|penalty|consequences|must|strictly|mandatory)/i;
-  const structurePatterns = /(do you think you can really|given your background|how would you manage despite)/i;
+  // Calculate overall score as the max of any single question + weighted average of the rest
+  // This ensures that one HORRIBLE question makes the whole report high risk
+  const maxQScore = Math.max(...scoredQuestions);
+  const avgQScore = scoredQuestions.reduce((a, b) => a + b, 0) / scoredQuestions.length;
   
-  questions.forEach(q => {
-    if (tonePatterns.test(q.question) || structurePatterns.test(q.question)) {
-      toneOrStructureDetected = true;
-    }
-  });
-
-  let adjustedIntensity = intensityScore;
-  if (toneOrStructureDetected) {
-    adjustedIntensity = Math.min(100, adjustedIntensity + 15);
-  }
-
-  // MATHEMATICAL PREVALENCE SCALING
-  // Floor of 0.5 prevents the score from dropping too low if a severe bias exists, 
-  // but allows 'clean' questions to pull the overall score down to Medium levels.
-  const prevalenceFactor = 0.5 + (0.5 * biasRatio);
-  let finalScore = adjustedIntensity * prevalenceFactor;
-
-  // CRITICAL ESCALATION: Only force High Risk if bias is truly severe (score > 9) OR widespread.
-  const severeBias = maxCategoryScore >= 9;
-  const widespreadBias = biasRatio > 0.4 && maxCategoryScore >= 7;
-
-  if (severeBias) {
-    finalScore = Math.max(finalScore, 75);
-  } else if (widespreadBias) {
-    finalScore = Math.max(finalScore, 80);
-  }
-
-  finalScore = Math.min(100, Math.max(0, Math.round(finalScore)));
-
-  // PART 7: DEBUGGING
-  console.log("Hybrid Scoring Debug:", {
-    hardScore,
-    softScore,
-    aiScore,
-    finalScore,
-    maxCategoryScore
-  });
+  // Overall bias is sensitive: max score has 70% weight, average has 30%
+  let finalOverallScore = (0.7 * maxQScore) + (0.3 * avgQScore);
+  
+  finalOverallScore = Math.min(100, Math.round(finalOverallScore));
 
   let riskLevel = "low";
-  if (finalScore >= 75) riskLevel = "high";
-  else if (finalScore >= 40) riskLevel = "medium";
+  if (finalOverallScore >= 60) riskLevel = "high";
+  else if (finalOverallScore >= 30) riskLevel = "medium";
 
-  return { score: finalScore, risk_level: riskLevel };
+  return { score: finalOverallScore, risk_level: riskLevel };
 }
 
 function formatOutput(aiOutput) {
@@ -311,15 +276,13 @@ function formatOutput(aiOutput) {
     overall_bias_score: score,
     risk_level,
     summary: aiOutput.summary || "Analysis complete.",
-    top_insights: aiOutput.top_insights || ["No high-risk keywords detected."],
     questions: aiOutput.questions.map(q => ({
-      question: q.question,
+      original: q.question,
       bias_score: q.bias_score,
       bias_type: q.bias_type || [],
-      issue: q.issue || "None",
-      explanation: q.explanation || "",
-      impact: q.impact || "",
-      rewrite: q.rewrite || q.question
+      explanation: q.explanation || "No bias detected.",
+      improved_question: q.rewrite || q.question,
+      improved_score: q.improved_score || 0
     })),
     is_fallback: aiOutput.is_fallback || false
   };

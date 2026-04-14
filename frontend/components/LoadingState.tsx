@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Sparkles, ShieldCheck, Search, FileCheck, Layers } from "lucide-react";
+import { ShieldCheck, Search, FileCheck, Layers, Loader2 } from "lucide-react";
 import { LiquidLoader } from "@/components/ui/LiquidLoader";
 
 
 const MILESTONES = [
-  { text: "Starting bias detection engine...", icon: Sparkles },
+  { text: "Starting bias detection engine...", icon: Loader2 },
   { text: "Analyzing sentiment and tone...", icon: Search },
   { text: "Cross-referencing global DEI guidelines...", icon: ShieldCheck },
   { text: "Scanning for hidden demographic bias...", icon: Layers },

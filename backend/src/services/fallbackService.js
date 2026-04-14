@@ -2,6 +2,9 @@
  * Fallback Generator Service
  * Provides rule-based content when AI fails or validation rejects AI output.
  */
+const { generateInterviewKit } = require("./fallback");
+// Use the real deterministic engine for fallback analysis — NOT zeros.
+const { analyzeDeterministally } = require("./deterministicEngine");
 
 const FALLBACK_KITS = {
   mechanic: {
@@ -98,36 +101,142 @@ const DEFAULT_KIT = {
 
 /**
  * Generates a fallback kit based on the role.
+ * Now dynamically injects role context to avoid "fixed" appearance.
  */
-function getFallbackKit(role = "") {
-  const normalizedRole = role.toLowerCase();
+function getFallbackKit(role = "", experience = "mid") {
+  const normalizedRole = role.toLowerCase().trim();
+  
+  // 1. DATASET FUZZY/SEARCH MATCH
+  try {
+    const datasetMatch = generateInterviewKit(role, experience);
+    if (datasetMatch && datasetMatch.categories) {
+       let allQuestions = [];
+       
+       // Handle both categorized and search-grounded patterns
+       for (const [cat, qs] of Object.entries(datasetMatch.categories)) {
+          if (Array.isArray(qs)) {
+            // Inject context into generic-looking grounded questions
+            const contextualized = qs.map(q => {
+               if (q.length < 50) return `${q} (Specifically in the context of being a ${role})`;
+               return q;
+            });
+            allQuestions.push(...contextualized);
+          }
+       }
+       
+       const uniqueQuestions = Array.from(new Set(allQuestions)).slice(0, 7);
+       
+       if (uniqueQuestions.length >= 3) {
+         return {
+           role_summary: { 
+             domain: datasetMatch.role || role, 
+             skills: ["Dataset-backed Competency", "Domain Knowledge"], 
+             responsibilities: [`Execute role-specific tasks as a ${role}`] 
+           },
+           questions: uniqueQuestions,
+           rubric: DEFAULT_KIT.rubric,
+           source: "dataset_grounded_search"
+         };
+       }
+    }
+  } catch (e) {
+    console.warn("Dataset fallback failed:", e.message);
+  }
+
+  // 2. CURATED TEMPLATES
   for (const [key, kit] of Object.entries(FALLBACK_KITS)) {
     if (normalizedRole.includes(key)) return kit;
   }
-  return DEFAULT_KIT;
+
+  // 3. PURE DATA SYNTHESIS (No fixed templates)
+  // If search grounded questions were found, they are already returned above.
+  // If even that failed, we construct a "Conceptual Competency Kit"
+  const concepts = [
+    `Technical decision-making in ${role} environments`,
+    `Handling failure or performance bottlenecks as a ${role}`,
+    `Cross-functional collaboration challenges specific to ${role} work`,
+    `The evolution of ${role} tools and methodologies over the next 3 years`,
+    `Upholding high standards for quality/safety in ${role} deliverables`
+  ];
+
+  return {
+    role_summary: {
+      domain: role,
+      skills: ["Situational Analysis", "Role Adaptation", "Expert Execution"],
+      responsibilities: [`Drive excellence in ${role} operations`]
+    },
+    questions: concepts.map(c => `Explain your specific methodology regarding: ${c}. Give a recent example.`),
+    rubric: DEFAULT_KIT.rubric,
+    source: "autonomous_conceptual_fallback"
+  };
 }
 
 /**
- * Generates fallback bias analysis results.
+ * Generates fallback bias analysis results using the deterministic engine.
+ * This is called when ALL AI providers are exhausted. It is NOT lenient —
+ * every question still goes through the full Tier-0/1/2 keyword analysis.
  */
 function getFallbackAnalysis(text = "") {
-  return {
-    overall_bias_score: 0,
-    risk_level: "Low",
-    summary: "Standard linguistic check complete. No critical bias detected.",
-    top_insights: ["Analysis focused on direct skill evaluation.", "Language remains neutral and professional."],
-    questions: (text.split(/[?.!]/))
-      .filter(s => s.trim().length > 10)
-      .map(s => ({
-        question: s.trim(),
-        bias_score: 0,
-        bias_type: [],
-        issue: "None",
-        explanation: "This question focuses on professional skills/experience.",
-        impact: "Promotes fair and objective evaluation.",
-        rewrite: s.trim()
+  const rawSentences = text.split(/[?!]|\n+/)
+    .map(s => s.replace(/^\d+[.)]\s*/, "").trim())
+    .filter(s => s.length > 10);
+
+  if (rawSentences.length === 0) {
+    return {
+      overall_bias_score: 0,
+      risk_level: "low",
+      summary: "No processable questions found in fallback mode.",
+      top_insights: [],
+      questions: [],
+      is_fallback: true,
+    };
+  }
+
+  const analyzed = rawSentences.map(sentence => {
+    const det = analyzeDeterministally(sentence);
+    return {
+      original:          sentence,
+      bias_score:        det.bias_score,
+      bias_level:        det.bias_score >= 65 ? "HIGH" : det.bias_score >= 35 ? "MEDIUM" : "LOW",
+      bias_types:        det.bias_types,
+      explanation:       det.explanation,
+      improved_question: det.improved_question,
+      improved_score:    det.bias_score > 0 ? 5 : 0,
+      highlighted:       sentence,
+      source:            "rule_based_fallback",
+      detectionMethod:   "fallback",
+      flags:             det.bias_types.map(t => ({
+        category: t,
+        severity: det.bias_score >= 65 ? "high" : det.bias_score >= 35 ? "medium" : "low",
       })),
-    is_fallback: true
+    };
+  });
+
+  const biasedCount = analyzed.filter(q => q.bias_score > 30).length;
+  const rawAvg = analyzed.reduce((sum, q) => sum + q.bias_score, 0) / analyzed.length;
+  let overallBiasScore = Math.round(rawAvg);
+  if (biasedCount >= 5) overallBiasScore = Math.max(overallBiasScore, 75);
+  overallBiasScore = Math.min(100, overallBiasScore);
+
+  // Re-align per-question verdicts if overall is severe
+  const overallSevere = overallBiasScore >= 75;
+  const consistentQuestions = analyzed.map(q => ({
+    ...q,
+    bias_level: (overallSevere && q.bias_score > 15 && q.bias_level === "LOW") ? "MEDIUM" : q.bias_level,
+  }));
+
+  return {
+    overall_bias_score: overallBiasScore,
+    risk_level: overallBiasScore >= 75 ? "high" : overallBiasScore > 30 ? "medium" : "low",
+    summary:
+      biasedCount === 0
+        ? "Standard linguistic check complete. No critical bias terms detected."
+        : `Fallback engine flagged ${biasedCount} of ${analyzed.length} question(s) with potential bias terms.`,
+    top_insights: biasedCount > 0
+      ? ["Critical bias terminology detected via rule-based engine.", "AI validation unavailable — results are keyword-driven."]
+      : ["No critical bias keywords found.", "Consider AI validation for nuanced tone analysis."],
+    questions: consistentQuestions,
+    is_fallback: true,
   };
 }
 

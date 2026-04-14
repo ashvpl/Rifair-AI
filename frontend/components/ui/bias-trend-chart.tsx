@@ -36,38 +36,9 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function BiasTrendChart({ data = defaultData, className }: BiasTrendChartProps) {
-  const [period] = useState('7D');
-
-  const avgScore = data.length > 0 ? Math.round(data.reduce((sum, d) => sum + d.score, 0) / data.length) : 0;
-  const lastScore = data[data.length - 1]?.score || 0;
-  const prevScore = data[data.length - 2]?.score || 0;
-  const change = lastScore - prevScore;
-  const changePercent = prevScore > 0 ? ((change / prevScore) * 100).toFixed(1) : '0.0';
-
   return (
-    <Card className={cn('w-full', className)}>
-      <CardHeader className="flex flex-row items-start justify-between space-y-0">
-        <div>
-          <CardTitle>Bias Trend Analysis</CardTitle>
-          <CardDescription className="mt-1">Average bias score over time</CardDescription>
-        </div>
-        <Badge variant="secondary">
-          Last {period}
-        </Badge>
-      </CardHeader>
-
-      <CardContent>
-        <div className="mb-6">
-          <div className="flex items-baseline gap-3">
-            <div className="text-4xl font-bold">{avgScore}</div>
-            <div className={cn('text-sm font-medium', change >= 0 ? 'text-green-600' : 'text-red-600')}>
-              {change >= 0 ? '+' : ''}{changePercent}%
-            </div>
-          </div>
-          <div className="text-sm text-muted-foreground mt-1">Average score this week</div>
-        </div>
-
-        <ChartContainer config={chartConfig} className="h-[300px] w-full">
+    <div className={cn('w-full h-full min-h-[300px]', className)}>
+        <ChartContainer config={chartConfig} className="h-full w-full">
           <ComposedChart
             data={data}
             margin={{
@@ -79,15 +50,15 @@ export function BiasTrendChart({ data = defaultData, className }: BiasTrendChart
           >
             <defs>
               <linearGradient id="biasGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--color-score)" stopOpacity={0.3} />
-                <stop offset="100%" stopColor="var(--color-score)" stopOpacity={0.05} />
+                <stop offset="0%" stopColor="#10b981" stopOpacity={0.2} />
+                <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
               </linearGradient>
             </defs>
 
             <CartesianGrid
               strokeDasharray="3 3"
-              stroke="hsl(var(--border))"
-              strokeOpacity={0.5}
+              stroke="#000000"
+              strokeOpacity={0.04}
               horizontal={true}
               vertical={false}
             />
@@ -96,14 +67,14 @@ export function BiasTrendChart({ data = defaultData, className }: BiasTrendChart
               dataKey="date"
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+              tick={{ fontSize: 11, fill: '#86868B', fontWeight: 600 }}
               tickMargin={12}
             />
 
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+              tick={{ fontSize: 11, fill: '#86868B', fontWeight: 600 }}
               domain={[0, 100]}
               tickCount={6}
               tickMargin={12}
@@ -112,12 +83,13 @@ export function BiasTrendChart({ data = defaultData, className }: BiasTrendChart
             <ChartTooltip
               content={
                 <ChartTooltipContent
-                  className="rounded-md bg-popover/95 backdrop-blur-sm border shadow-md"
-                  labelFormatter={(value) => `${value}`}
+                  className="rounded-xl bg-white border border-black/5 shadow-xl font-bold text-[#1D1D1F]"
+                  indicator="dot"
+                  nameKey="score"
                 />
               }
               cursor={{
-                stroke: 'var(--color-score)',
+                stroke: '#10b981',
                 strokeWidth: 1,
                 strokeDasharray: '4 4',
               }}
@@ -130,29 +102,30 @@ export function BiasTrendChart({ data = defaultData, className }: BiasTrendChart
               fill="url(#biasGradient)"
               strokeWidth={0}
               tooltipType="none"
+              activeDot={false}
             />
 
             <Line
               type="monotone"
               dataKey="score"
-              stroke="var(--color-score)"
-              strokeWidth={3}
+              name="Bias Score"
+              stroke="#059669"
+              strokeWidth={4}
               dot={{
-                fill: 'hsl(var(--background))',
-                strokeWidth: 2,
-                r: 5,
-                stroke: 'var(--color-score)',
+                fill: '#059669',
+                strokeWidth: 0,
+                r: 4,
               }}
               activeDot={{
-                r: 6,
-                fill: 'var(--color-score)',
-                stroke: 'hsl(var(--background))',
+                r: 7,
+                fill: '#059669',
+                stroke: '#ffffff',
                 strokeWidth: 2,
               }}
+              animationDuration={1500}
             />
           </ComposedChart>
         </ChartContainer>
-      </CardContent>
-    </Card>
+    </div>
   );
 }

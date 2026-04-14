@@ -28,6 +28,7 @@ app.get("/health", (req, res) => {
 });
 
 // Request Timeout Middleware (30s)
+
 app.use((req, res, next) => {
   res.setTimeout(30000, () => {
     if (!res.headersSent) {

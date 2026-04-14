@@ -31,7 +31,6 @@ function isGeneric(text) {
     "strengths and weaknesses",
     "where do you see yourself",
     "why should we hire you",
-    "your experience",
   ];
   return genericPhrases.some((phrase) => text.toLowerCase().includes(phrase));
 }
@@ -60,9 +59,12 @@ function validateKit(role, kit) {
   let genericCount = 0;
   for (const q of questions) {
     if (isGeneric(q)) genericCount++;
+    // If ANY question mentions the role specifically, it's a huge positive signal
+    if (q.toLowerCase().includes(role.toLowerCase())) genericCount -= 0.5;
+    
     if (hasDomainMismatch(role, q)) return false;
   }
-  return genericCount / questions.length <= 0.5;
+  return (genericCount / questions.length) <= 0.4;
 }
 
 module.exports = {

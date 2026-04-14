@@ -4,11 +4,20 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { getReports, deleteReports, deleteReportById } from "@/lib/api";
 import Link from "next/link";
-import { Calendar, ChevronRight, Loader2, Trash2, AlertTriangle, FileText } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { getVerdict } from "@/lib/verdict";
+import { 
+  ShieldCheck, 
+  Check, 
+  Trash2, 
+  Loader2, 
+  Calendar, 
+  ChevronRight, 
+  AlertTriangle 
+} from "lucide-react";
+import { cn, safeParseReport } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -34,7 +43,7 @@ export default function HistoryPage() {
       const token = await getToken();
       const data = await getReports(token);
       if (Array.isArray(data)) {
-        setHistory(data);
+        setHistory(data.map(safeParseReport));
       } else {
         setHistory([]);
       }
@@ -179,6 +188,7 @@ export default function HistoryPage() {
               const typeInCategories = report.categories?.analysis_type;
               const isKit = typeInCategories === 'kit' || report.input_text?.startsWith("Interview Kit: ");
               const detailUrl = isKit ? `/kit?reportId=${report.id}` : `/analyze?reportId=${report.id}`;
+              const verdict = getVerdict(report.bias_score, isKit ? 'kit' : 'analysis');
               
               return (
                 <motion.div 
@@ -205,11 +215,16 @@ export default function HistoryPage() {
                             </span>
                             <div className={cn(
                               "px-5 py-2 text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-3 rounded-full border shadow-sm",
-                              report.bias_score > 60 ? "bg-danger/10 text-danger border-danger/20" :
-                              report.bias_score > 20 ? "bg-warning/10 text-warning border-warning/20" :
-                              "bg-success/10 text-success border-success/20"
+                              verdict.bg,
+                              verdict.color,
+                              verdict.border
                             )}>
-                              {report.bias_score} Bias Score
+                              {verdict.showCheck ? (
+                                <Check className="h-3.5 w-3.5" />
+                              ) : (
+                                <span className="opacity-70">{report.bias_score}</span>
+                              )}
+                              {verdict.label}
                             </div>
                           </div>
                         </div>

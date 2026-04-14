@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
-import { Mail, Lock, Eye, EyeClosed, ArrowRight, Sparkles, Check } from 'lucide-react';
+import { Mail, Lock, Eye, EyeClosed, ArrowRight, ShieldCheck, Check } from 'lucide-react';
 
 import { cn } from "@/lib/utils"
 
@@ -330,7 +330,7 @@ export function Component() {
                     transition={{ type: "spring", duration: 0.8 }}
                     className="mx-auto w-10 h-10 rounded-full border border-white/10 flex items-center justify-center relative overflow-hidden"
                   >
-                    <Sparkles className="w-5 h-5 text-white/90" />
+                    <ShieldCheck className="w-5 h-5 text-white/90" />
                     <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-50" />
                   </motion.div>
 

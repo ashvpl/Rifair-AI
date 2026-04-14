@@ -5,19 +5,28 @@ import { motion } from "framer-motion";
 
 interface BiasScoreCardProps {
   score: number;
+  type?: 'kit' | 'analysis';
 }
 
-export function BiasScoreCard({ score }: BiasScoreCardProps) {
+export function BiasScoreCard({ score, type = 'analysis' }: BiasScoreCardProps) {
   const getScoreColor = (s: number) => {
-    if (s <= 30) return { stroke: "#22C55E", text: "text-success", bg: "bg-success/[0.03]", border: "border-success/10", label: "Optimal Logic" };
-    if (s <= 70) return { stroke: "#F59E0B", text: "text-warning", bg: "bg-warning/[0.03]", border: "border-warning/10", label: "Moderate Deviation" };
-    return { stroke: "#EF4444", text: "text-danger", bg: "bg-danger/[0.03]", border: "border-danger/10", label: "Critical Bias" };
+    if (type === 'kit') {
+      if (s === 0) return { stroke: "#22C55E", text: "text-success", bg: "bg-success/[0.03]", border: "border-success/10", label: "BIAS FREE" };
+      if (s <= 15) return { stroke: "#22C55E", text: "text-success", bg: "bg-success/[0.03]", border: "border-success/10", label: "CLEAN" };
+      if (s >= 40) return { stroke: "#EF4444", text: "text-danger", bg: "bg-danger/[0.03]", border: "border-danger/10", label: "REVIEW NEEDED" };
+      return { stroke: "#22C55E", text: "text-success", bg: "bg-success/[0.03]", border: "border-success/10", label: "LOW BIAS" };
+    }
+
+    if (s >= 65) return { stroke: "#EF4444", text: "text-danger", bg: "bg-danger/[0.03]", border: "border-danger/10", label: "HIGH BIAS" };
+    if (s >= 40) return { stroke: "#F59E0B", text: "text-warning", bg: "bg-warning/[0.03]", border: "border-warning/10", label: "MODERATE" };
+    return { stroke: "#22C55E", text: "text-slate-500", bg: "bg-slate-50", border: "border-slate-200", label: "LOW BIAS" };
   };
 
   const style = getScoreColor(score);
   const radius = 64;
   const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (score / 100) * circumference;
+  const visualScore = Math.min(100, score);
+  const strokeDashoffset = circumference - (visualScore / 100) * circumference;
 
   return (
     <div className={cn("bg-white border border-black/[0.05] p-10 flex flex-col items-center justify-center relative overflow-hidden rounded-[3rem] shadow-[0_4px_32px_rgba(0,0,0,0.02)] transition-all duration-500 hover:shadow-[0_8px_48px_rgba(0,0,0,0.04)]", style.border)}>
@@ -60,7 +69,7 @@ export function BiasScoreCard({ score }: BiasScoreCardProps) {
             <span className={cn("text-6xl font-black tracking-tighter leading-none block", style.text)}>
               {score}
             </span>
-            <span className="text-[10px] font-black text-[#86868B] uppercase tracking-widest mt-1 block">%</span>
+            <span className="text-[10px] font-black text-[#86868B] uppercase tracking-widest mt-1 block">PTS</span>
           </motion.div>
         </div>
       </div>
