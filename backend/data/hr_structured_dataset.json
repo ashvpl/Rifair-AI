@@ -1,0 +1,3906 @@
+{
+  "DevOps Engineer": {
+    "fresher": {
+      "Adaptability": [
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you stay updated with industry trends?",
+        "Describe a time you failed and what you learned from it.",
+        "How do you react to sudden changes in priorities?",
+        "What's the most significant change you've had to adapt to at work?"
+      ],
+      "Conflict Resolution": [
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you deal with feedback that you disagree with?",
+        "What would you do if you disagreed with your manager?",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Describe a time you handled a difficult situation professionally."
+      ],
+      "Leadership": [
+        "Tell me about a time you mentored someone.",
+        "What makes a good leader in your opinion?",
+        "How do you motivate others in a leadership role?",
+        "Describe a time you led a project or team."
+      ],
+      "Career Goals": [
+        "Where do you see yourself in 5 years?",
+        "What skills do you hope to develop in your next role?",
+        "What kind of growth opportunities are you looking for?",
+        "How does this role fit into your career path?"
+      ],
+      "Work Style": [
+        "How do you organize and prioritize your daily tasks?",
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?",
+        "What tools or methods help you stay organized?"
+      ],
+      "Team Collaboration": [
+        "What role do you usually play in group settings?",
+        "Tell me about a time you worked well within a team.",
+        "Describe a project where teamwork was essential to success.",
+        "How do you handle disagreements within a team?",
+        "How do you build trust with new teammates?"
+      ],
+      "Culture Fit": [
+        "What are your expectations from leadership in a company?",
+        "What type of company culture do you thrive in?",
+        "How do you align with our company values?",
+        "How do you contribute to a positive team environment?",
+        "Describe a time you felt out of place in a workplace culture."
+      ],
+      "Motivation": [
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "Why do you want to work at our company?",
+        "How do you stay motivated during repetitive tasks?",
+        "What motivates you to come to work every day?"
+      ]
+    },
+    "intern": {
+      "Adaptability": [
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you react to sudden changes in priorities?",
+        "How do you stay updated with industry trends?",
+        "Describe a time you failed and what you learned from it.",
+        "Tell me about a time you had to learn something completely new quickly."
+      ],
+      "Leadership": [
+        "Describe a time you led a project or team.",
+        "What makes a good leader in your opinion?",
+        "Tell me about a time you mentored someone.",
+        "How do you motivate others in a leadership role?"
+      ],
+      "Motivation": [
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "What motivates you to come to work every day?",
+        "Why do you want to work at our company?",
+        "How do you stay motivated during repetitive tasks?"
+      ],
+      "Work Style": [
+        "What tools or methods help you stay organized?",
+        "How do you organize and prioritize your daily tasks?",
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?"
+      ],
+      "Culture Fit": [
+        "How do you contribute to a positive team environment?",
+        "How do you align with our company values?",
+        "What are your expectations from leadership in a company?",
+        "What type of company culture do you thrive in?",
+        "Describe a time you felt out of place in a workplace culture."
+      ],
+      "Career Goals": [
+        "What kind of growth opportunities are you looking for?",
+        "How does this role fit into your career path?",
+        "What skills do you hope to develop in your next role?",
+        "Where do you see yourself in 5 years?"
+      ],
+      "Conflict Resolution": [
+        "What would you do if you disagreed with your manager?",
+        "Describe a time you handled a difficult situation professionally.",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you deal with feedback that you disagree with?",
+        "How do you respond when a teammate isn't pulling their weight?"
+      ],
+      "Team Collaboration": [
+        "What role do you usually play in group settings?",
+        "How do you handle disagreements within a team?",
+        "Describe a project where teamwork was essential to success.",
+        "How do you build trust with new teammates?",
+        "Tell me about a time you worked well within a team."
+      ]
+    },
+    "4 years": {
+      "Team Collaboration": [
+        "How do you build trust with new teammates?",
+        "What role do you usually play in group settings?",
+        "Describe a project where teamwork was essential to success.",
+        "How do you handle disagreements within a team?",
+        "Tell me about a time you worked well within a team."
+      ],
+      "Work Style": [
+        "What tools or methods help you stay organized?",
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you organize and prioritize your daily tasks?"
+      ],
+      "Conflict Resolution": [
+        "How do you deal with feedback that you disagree with?",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "What would you do if you disagreed with your manager?",
+        "Describe a time you handled a difficult situation professionally.",
+        "Tell me about a conflict you had with a coworker and how you resolved it."
+      ],
+      "Culture Fit": [
+        "How do you contribute to a positive team environment?",
+        "What type of company culture do you thrive in?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you align with our company values?",
+        "What are your expectations from leadership in a company?"
+      ],
+      "Adaptability": [
+        "How do you stay updated with industry trends?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you react to sudden changes in priorities?",
+        "Describe a time you failed and what you learned from it.",
+        "What's the most significant change you've had to adapt to at work?"
+      ],
+      "Career Goals": [
+        "How does this role fit into your career path?",
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?",
+        "What skills do you hope to develop in your next role?"
+      ],
+      "Motivation": [
+        "How do you stay motivated during repetitive tasks?",
+        "Why do you want to work at our company?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "What motivates you to come to work every day?"
+      ],
+      "Leadership": [
+        "Tell me about a time you mentored someone.",
+        "What makes a good leader in your opinion?",
+        "Describe a time you led a project or team.",
+        "How do you motivate others in a leadership role?"
+      ]
+    },
+    "3 years": {
+      "Work Style": [
+        "Do you prefer working independently or in teams? Why?",
+        "How do you ensure productivity when working remotely?",
+        "How do you organize and prioritize your daily tasks?",
+        "What tools or methods help you stay organized?"
+      ],
+      "Motivation": [
+        "What motivates you to come to work every day?",
+        "How do you stay motivated during repetitive tasks?",
+        "Why do you want to work at our company?",
+        "Tell me about a time you were highly motivated to achieve a goal."
+      ],
+      "Career Goals": [
+        "Where do you see yourself in 5 years?",
+        "What kind of growth opportunities are you looking for?",
+        "What skills do you hope to develop in your next role?",
+        "How does this role fit into your career path?"
+      ],
+      "Team Collaboration": [
+        "What role do you usually play in group settings?",
+        "Tell me about a time you worked well within a team.",
+        "Describe a project where teamwork was essential to success.",
+        "How do you build trust with new teammates?",
+        "How do you handle disagreements within a team?"
+      ],
+      "Conflict Resolution": [
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you deal with feedback that you disagree with?",
+        "What would you do if you disagreed with your manager?",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Describe a time you handled a difficult situation professionally."
+      ],
+      "Culture Fit": [
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you contribute to a positive team environment?",
+        "What are your expectations from leadership in a company?",
+        "What type of company culture do you thrive in?",
+        "How do you align with our company values?"
+      ],
+      "Leadership": [
+        "What makes a good leader in your opinion?",
+        "How do you motivate others in a leadership role?",
+        "Tell me about a time you mentored someone.",
+        "Describe a time you led a project or team."
+      ],
+      "Adaptability": [
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you react to sudden changes in priorities?",
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you stay updated with industry trends?",
+        "Describe a time you failed and what you learned from it."
+      ]
+    },
+    "5 years": {
+      "Career Goals": [
+        "What skills do you hope to develop in your next role?",
+        "How does this role fit into your career path?",
+        "Where do you see yourself in 5 years?",
+        "What kind of growth opportunities are you looking for?"
+      ],
+      "Team Collaboration": [
+        "How do you handle disagreements within a team?",
+        "How do you build trust with new teammates?",
+        "Describe a project where teamwork was essential to success.",
+        "What role do you usually play in group settings?",
+        "Tell me about a time you worked well within a team."
+      ],
+      "Adaptability": [
+        "Tell me about a time you had to learn something completely new quickly.",
+        "What's the most significant change you've had to adapt to at work?",
+        "Describe a time you failed and what you learned from it.",
+        "How do you stay updated with industry trends?",
+        "How do you react to sudden changes in priorities?"
+      ],
+      "Culture Fit": [
+        "What type of company culture do you thrive in?",
+        "What are your expectations from leadership in a company?",
+        "How do you align with our company values?",
+        "How do you contribute to a positive team environment?",
+        "Describe a time you felt out of place in a workplace culture."
+      ],
+      "Conflict Resolution": [
+        "Describe a time you handled a difficult situation professionally.",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you deal with feedback that you disagree with?",
+        "What would you do if you disagreed with your manager?",
+        "How do you respond when a teammate isn't pulling their weight?"
+      ],
+      "Motivation": [
+        "What motivates you to come to work every day?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "Why do you want to work at our company?",
+        "How do you stay motivated during repetitive tasks?"
+      ],
+      "Work Style": [
+        "Do you prefer working independently or in teams? Why?",
+        "How do you organize and prioritize your daily tasks?",
+        "How do you ensure productivity when working remotely?",
+        "What tools or methods help you stay organized?"
+      ],
+      "Leadership": [
+        "How do you motivate others in a leadership role?",
+        "What makes a good leader in your opinion?",
+        "Describe a time you led a project or team.",
+        "Tell me about a time you mentored someone."
+      ]
+    },
+    "1 year": {
+      "Motivation": [
+        "What motivates you to come to work every day?",
+        "Why do you want to work at our company?",
+        "How do you stay motivated during repetitive tasks?",
+        "Tell me about a time you were highly motivated to achieve a goal."
+      ],
+      "Career Goals": [
+        "Where do you see yourself in 5 years?",
+        "How does this role fit into your career path?",
+        "What kind of growth opportunities are you looking for?",
+        "What skills do you hope to develop in your next role?"
+      ],
+      "Team Collaboration": [
+        "Describe a project where teamwork was essential to success.",
+        "Tell me about a time you worked well within a team.",
+        "What role do you usually play in group settings?",
+        "How do you handle disagreements within a team?",
+        "How do you build trust with new teammates?"
+      ],
+      "Conflict Resolution": [
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "How do you deal with feedback that you disagree with?",
+        "What would you do if you disagreed with your manager?",
+        "Describe a time you handled a difficult situation professionally."
+      ],
+      "Adaptability": [
+        "Describe a time you failed and what you learned from it.",
+        "How do you stay updated with industry trends?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you react to sudden changes in priorities?"
+      ],
+      "Work Style": [
+        "What tools or methods help you stay organized?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you organize and prioritize your daily tasks?",
+        "How do you ensure productivity when working remotely?"
+      ],
+      "Leadership": [
+        "Describe a time you led a project or team.",
+        "What makes a good leader in your opinion?",
+        "Tell me about a time you mentored someone.",
+        "How do you motivate others in a leadership role?"
+      ],
+      "Culture Fit": [
+        "What are your expectations from leadership in a company?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you align with our company values?",
+        "How do you contribute to a positive team environment?",
+        "What type of company culture do you thrive in?"
+      ]
+    },
+    "6 years": {
+      "Career Goals": [
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?",
+        "What skills do you hope to develop in your next role?",
+        "How does this role fit into your career path?"
+      ],
+      "Leadership": [
+        "Describe a time you led a project or team.",
+        "How do you motivate others in a leadership role?",
+        "Tell me about a time you mentored someone.",
+        "What makes a good leader in your opinion?"
+      ],
+      "Culture Fit": [
+        "How do you contribute to a positive team environment?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What type of company culture do you thrive in?",
+        "How do you align with our company values?",
+        "What are your expectations from leadership in a company?"
+      ],
+      "Adaptability": [
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you react to sudden changes in priorities?",
+        "Describe a time you failed and what you learned from it.",
+        "How do you stay updated with industry trends?",
+        "What's the most significant change you've had to adapt to at work?"
+      ],
+      "Conflict Resolution": [
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "What would you do if you disagreed with your manager?",
+        "How do you deal with feedback that you disagree with?",
+        "Describe a time you handled a difficult situation professionally."
+      ],
+      "Team Collaboration": [
+        "Tell me about a time you worked well within a team.",
+        "How do you handle disagreements within a team?",
+        "How do you build trust with new teammates?",
+        "Describe a project where teamwork was essential to success.",
+        "What role do you usually play in group settings?"
+      ],
+      "Motivation": [
+        "Why do you want to work at our company?",
+        "What motivates you to come to work every day?",
+        "How do you stay motivated during repetitive tasks?",
+        "Tell me about a time you were highly motivated to achieve a goal."
+      ],
+      "Work Style": [
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?",
+        "What tools or methods help you stay organized?",
+        "How do you organize and prioritize your daily tasks?"
+      ]
+    },
+    "2 years": {
+      "Adaptability": [
+        "How do you stay updated with industry trends?",
+        "Describe a time you failed and what you learned from it.",
+        "How do you react to sudden changes in priorities?",
+        "What's the most significant change you've had to adapt to at work?",
+        "Tell me about a time you had to learn something completely new quickly."
+      ],
+      "Conflict Resolution": [
+        "What would you do if you disagreed with your manager?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "How do you deal with feedback that you disagree with?"
+      ],
+      "Career Goals": [
+        "What kind of growth opportunities are you looking for?",
+        "What skills do you hope to develop in your next role?",
+        "Where do you see yourself in 5 years?",
+        "How does this role fit into your career path?"
+      ],
+      "Culture Fit": [
+        "How do you align with our company values?",
+        "What type of company culture do you thrive in?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What are your expectations from leadership in a company?",
+        "How do you contribute to a positive team environment?"
+      ],
+      "Work Style": [
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you organize and prioritize your daily tasks?",
+        "What tools or methods help you stay organized?"
+      ],
+      "Team Collaboration": [
+        "Describe a project where teamwork was essential to success.",
+        "How do you build trust with new teammates?",
+        "How do you handle disagreements within a team?",
+        "Tell me about a time you worked well within a team.",
+        "What role do you usually play in group settings?"
+      ],
+      "Motivation": [
+        "Why do you want to work at our company?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "How do you stay motivated during repetitive tasks?",
+        "What motivates you to come to work every day?"
+      ],
+      "Leadership": [
+        "What makes a good leader in your opinion?",
+        "Describe a time you led a project or team.",
+        "Tell me about a time you mentored someone.",
+        "How do you motivate others in a leadership role?"
+      ]
+    },
+    "7+ years": {
+      "Motivation": [
+        "How do you stay motivated during repetitive tasks?",
+        "What motivates you to come to work every day?",
+        "Why do you want to work at our company?",
+        "Tell me about a time you were highly motivated to achieve a goal."
+      ],
+      "Work Style": [
+        "What tools or methods help you stay organized?",
+        "How do you organize and prioritize your daily tasks?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you ensure productivity when working remotely?"
+      ],
+      "Career Goals": [
+        "What skills do you hope to develop in your next role?",
+        "What kind of growth opportunities are you looking for?",
+        "How does this role fit into your career path?",
+        "Where do you see yourself in 5 years?"
+      ],
+      "Team Collaboration": [
+        "How do you handle disagreements within a team?",
+        "Describe a project where teamwork was essential to success.",
+        "What role do you usually play in group settings?",
+        "How do you build trust with new teammates?",
+        "Tell me about a time you worked well within a team."
+      ],
+      "Culture Fit": [
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you contribute to a positive team environment?",
+        "What are your expectations from leadership in a company?",
+        "What type of company culture do you thrive in?",
+        "How do you align with our company values?"
+      ],
+      "Adaptability": [
+        "How do you stay updated with industry trends?",
+        "Describe a time you failed and what you learned from it.",
+        "How do you react to sudden changes in priorities?",
+        "What's the most significant change you've had to adapt to at work?",
+        "Tell me about a time you had to learn something completely new quickly."
+      ],
+      "Conflict Resolution": [
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "What would you do if you disagreed with your manager?",
+        "How do you deal with feedback that you disagree with?",
+        "Tell me about a conflict you had with a coworker and how you resolved it."
+      ],
+      "Leadership": [
+        "Tell me about a time you mentored someone.",
+        "What makes a good leader in your opinion?",
+        "Describe a time you led a project or team.",
+        "How do you motivate others in a leadership role?"
+      ]
+    }
+  },
+  "Product Manager": {
+    "2 years": {
+      "Conflict Resolution": [
+        "Describe a time you handled a difficult situation professionally.",
+        "What would you do if you disagreed with your manager?",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you deal with feedback that you disagree with?"
+      ],
+      "Work Style": [
+        "What tools or methods help you stay organized?",
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you organize and prioritize your daily tasks?"
+      ],
+      "Leadership": [
+        "What makes a good leader in your opinion?",
+        "How do you motivate others in a leadership role?",
+        "Tell me about a time you mentored someone.",
+        "Describe a time you led a project or team."
+      ],
+      "Culture Fit": [
+        "What type of company culture do you thrive in?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What are your expectations from leadership in a company?",
+        "How do you align with our company values?",
+        "How do you contribute to a positive team environment?"
+      ],
+      "Motivation": [
+        "Why do you want to work at our company?",
+        "How do you stay motivated during repetitive tasks?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "What motivates you to come to work every day?"
+      ],
+      "Adaptability": [
+        "What's the most significant change you've had to adapt to at work?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you stay updated with industry trends?",
+        "How do you react to sudden changes in priorities?",
+        "Describe a time you failed and what you learned from it."
+      ],
+      "Team Collaboration": [
+        "Describe a project where teamwork was essential to success.",
+        "What role do you usually play in group settings?",
+        "Tell me about a time you worked well within a team.",
+        "How do you build trust with new teammates?",
+        "How do you handle disagreements within a team?"
+      ],
+      "Career Goals": [
+        "Where do you see yourself in 5 years?",
+        "What skills do you hope to develop in your next role?",
+        "What kind of growth opportunities are you looking for?",
+        "How does this role fit into your career path?"
+      ]
+    },
+    "6 years": {
+      "Team Collaboration": [
+        "Tell me about a time you worked well within a team.",
+        "How do you handle disagreements within a team?",
+        "How do you build trust with new teammates?",
+        "What role do you usually play in group settings?",
+        "Describe a project where teamwork was essential to success."
+      ],
+      "Motivation": [
+        "How do you stay motivated during repetitive tasks?",
+        "What motivates you to come to work every day?",
+        "Why do you want to work at our company?",
+        "Tell me about a time you were highly motivated to achieve a goal."
+      ],
+      "Adaptability": [
+        "What's the most significant change you've had to adapt to at work?",
+        "Describe a time you failed and what you learned from it.",
+        "How do you react to sudden changes in priorities?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you stay updated with industry trends?"
+      ],
+      "Conflict Resolution": [
+        "How do you deal with feedback that you disagree with?",
+        "What would you do if you disagreed with your manager?",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Describe a time you handled a difficult situation professionally.",
+        "Tell me about a conflict you had with a coworker and how you resolved it."
+      ],
+      "Culture Fit": [
+        "What type of company culture do you thrive in?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you align with our company values?",
+        "How do you contribute to a positive team environment?",
+        "What are your expectations from leadership in a company?"
+      ],
+      "Career Goals": [
+        "How does this role fit into your career path?",
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?",
+        "What skills do you hope to develop in your next role?"
+      ],
+      "Leadership": [
+        "Tell me about a time you mentored someone.",
+        "How do you motivate others in a leadership role?",
+        "Describe a time you led a project or team.",
+        "What makes a good leader in your opinion?"
+      ],
+      "Work Style": [
+        "How do you ensure productivity when working remotely?",
+        "What tools or methods help you stay organized?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you organize and prioritize your daily tasks?"
+      ]
+    },
+    "7+ years": {
+      "Career Goals": [
+        "Where do you see yourself in 5 years?",
+        "What skills do you hope to develop in your next role?",
+        "How does this role fit into your career path?",
+        "What kind of growth opportunities are you looking for?"
+      ],
+      "Team Collaboration": [
+        "Describe a project where teamwork was essential to success.",
+        "How do you build trust with new teammates?",
+        "How do you handle disagreements within a team?",
+        "What role do you usually play in group settings?",
+        "Tell me about a time you worked well within a team."
+      ],
+      "Leadership": [
+        "What makes a good leader in your opinion?",
+        "Describe a time you led a project or team.",
+        "How do you motivate others in a leadership role?",
+        "Tell me about a time you mentored someone."
+      ],
+      "Motivation": [
+        "How do you stay motivated during repetitive tasks?",
+        "Why do you want to work at our company?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "What motivates you to come to work every day?"
+      ],
+      "Adaptability": [
+        "Describe a time you failed and what you learned from it.",
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you stay updated with industry trends?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you react to sudden changes in priorities?"
+      ],
+      "Work Style": [
+        "How do you ensure productivity when working remotely?",
+        "What tools or methods help you stay organized?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you organize and prioritize your daily tasks?"
+      ],
+      "Culture Fit": [
+        "What type of company culture do you thrive in?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What are your expectations from leadership in a company?",
+        "How do you align with our company values?",
+        "How do you contribute to a positive team environment?"
+      ],
+      "Conflict Resolution": [
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you deal with feedback that you disagree with?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "What would you do if you disagreed with your manager?"
+      ]
+    },
+    "4 years": {
+      "Conflict Resolution": [
+        "How do you deal with feedback that you disagree with?",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Describe a time you handled a difficult situation professionally.",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "What would you do if you disagreed with your manager?"
+      ],
+      "Work Style": [
+        "Do you prefer working independently or in teams? Why?",
+        "How do you ensure productivity when working remotely?",
+        "How do you organize and prioritize your daily tasks?",
+        "What tools or methods help you stay organized?"
+      ],
+      "Adaptability": [
+        "How do you react to sudden changes in priorities?",
+        "How do you stay updated with industry trends?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "What's the most significant change you've had to adapt to at work?",
+        "Describe a time you failed and what you learned from it."
+      ],
+      "Motivation": [
+        "Why do you want to work at our company?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "How do you stay motivated during repetitive tasks?",
+        "What motivates you to come to work every day?"
+      ],
+      "Culture Fit": [
+        "How do you contribute to a positive team environment?",
+        "What are your expectations from leadership in a company?",
+        "What type of company culture do you thrive in?",
+        "How do you align with our company values?",
+        "Describe a time you felt out of place in a workplace culture."
+      ],
+      "Team Collaboration": [
+        "How do you handle disagreements within a team?",
+        "Describe a project where teamwork was essential to success.",
+        "How do you build trust with new teammates?",
+        "What role do you usually play in group settings?",
+        "Tell me about a time you worked well within a team."
+      ],
+      "Leadership": [
+        "How do you motivate others in a leadership role?",
+        "Tell me about a time you mentored someone.",
+        "Describe a time you led a project or team.",
+        "What makes a good leader in your opinion?"
+      ],
+      "Career Goals": [
+        "Where do you see yourself in 5 years?",
+        "How does this role fit into your career path?",
+        "What kind of growth opportunities are you looking for?",
+        "What skills do you hope to develop in your next role?"
+      ]
+    },
+    "3 years": {
+      "Work Style": [
+        "Do you prefer working independently or in teams? Why?",
+        "How do you organize and prioritize your daily tasks?",
+        "How do you ensure productivity when working remotely?",
+        "What tools or methods help you stay organized?"
+      ],
+      "Culture Fit": [
+        "What are your expectations from leadership in a company?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you align with our company values?",
+        "What type of company culture do you thrive in?",
+        "How do you contribute to a positive team environment?"
+      ],
+      "Motivation": [
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "What motivates you to come to work every day?",
+        "How do you stay motivated during repetitive tasks?",
+        "Why do you want to work at our company?"
+      ],
+      "Career Goals": [
+        "Where do you see yourself in 5 years?",
+        "What kind of growth opportunities are you looking for?",
+        "How does this role fit into your career path?",
+        "What skills do you hope to develop in your next role?"
+      ],
+      "Adaptability": [
+        "How do you react to sudden changes in priorities?",
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you stay updated with industry trends?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "Describe a time you failed and what you learned from it."
+      ],
+      "Team Collaboration": [
+        "Describe a project where teamwork was essential to success.",
+        "Tell me about a time you worked well within a team.",
+        "How do you handle disagreements within a team?",
+        "How do you build trust with new teammates?",
+        "What role do you usually play in group settings?"
+      ],
+      "Leadership": [
+        "Tell me about a time you mentored someone.",
+        "What makes a good leader in your opinion?",
+        "Describe a time you led a project or team.",
+        "How do you motivate others in a leadership role?"
+      ],
+      "Conflict Resolution": [
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you deal with feedback that you disagree with?",
+        "What would you do if you disagreed with your manager?",
+        "Describe a time you handled a difficult situation professionally."
+      ]
+    },
+    "5 years": {
+      "Adaptability": [
+        "How do you react to sudden changes in priorities?",
+        "What's the most significant change you've had to adapt to at work?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "Describe a time you failed and what you learned from it.",
+        "How do you stay updated with industry trends?"
+      ],
+      "Conflict Resolution": [
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you deal with feedback that you disagree with?",
+        "What would you do if you disagreed with your manager?"
+      ],
+      "Work Style": [
+        "Do you prefer working independently or in teams? Why?",
+        "How do you ensure productivity when working remotely?",
+        "What tools or methods help you stay organized?",
+        "How do you organize and prioritize your daily tasks?"
+      ],
+      "Career Goals": [
+        "What skills do you hope to develop in your next role?",
+        "How does this role fit into your career path?",
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?"
+      ],
+      "Culture Fit": [
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you contribute to a positive team environment?",
+        "How do you align with our company values?",
+        "What are your expectations from leadership in a company?",
+        "What type of company culture do you thrive in?"
+      ],
+      "Team Collaboration": [
+        "How do you handle disagreements within a team?",
+        "What role do you usually play in group settings?",
+        "Describe a project where teamwork was essential to success.",
+        "Tell me about a time you worked well within a team.",
+        "How do you build trust with new teammates?"
+      ],
+      "Motivation": [
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "How do you stay motivated during repetitive tasks?",
+        "Why do you want to work at our company?",
+        "What motivates you to come to work every day?"
+      ],
+      "Leadership": [
+        "How do you motivate others in a leadership role?",
+        "Describe a time you led a project or team.",
+        "Tell me about a time you mentored someone.",
+        "What makes a good leader in your opinion?"
+      ]
+    },
+    "1 year": {
+      "Work Style": [
+        "How do you organize and prioritize your daily tasks?",
+        "What tools or methods help you stay organized?",
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?"
+      ],
+      "Adaptability": [
+        "Describe a time you failed and what you learned from it.",
+        "What's the most significant change you've had to adapt to at work?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you react to sudden changes in priorities?",
+        "How do you stay updated with industry trends?"
+      ],
+      "Conflict Resolution": [
+        "How do you deal with feedback that you disagree with?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "What would you do if you disagreed with your manager?",
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you respond when a teammate isn't pulling their weight?"
+      ],
+      "Culture Fit": [
+        "How do you align with our company values?",
+        "How do you contribute to a positive team environment?",
+        "What type of company culture do you thrive in?",
+        "What are your expectations from leadership in a company?",
+        "Describe a time you felt out of place in a workplace culture."
+      ],
+      "Motivation": [
+        "How do you stay motivated during repetitive tasks?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "What motivates you to come to work every day?",
+        "Why do you want to work at our company?"
+      ],
+      "Team Collaboration": [
+        "Describe a project where teamwork was essential to success.",
+        "Tell me about a time you worked well within a team.",
+        "What role do you usually play in group settings?",
+        "How do you handle disagreements within a team?",
+        "How do you build trust with new teammates?"
+      ],
+      "Career Goals": [
+        "What skills do you hope to develop in your next role?",
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?",
+        "How does this role fit into your career path?"
+      ],
+      "Leadership": [
+        "Describe a time you led a project or team.",
+        "How do you motivate others in a leadership role?",
+        "What makes a good leader in your opinion?",
+        "Tell me about a time you mentored someone."
+      ]
+    },
+    "intern": {
+      "Team Collaboration": [
+        "How do you build trust with new teammates?",
+        "How do you handle disagreements within a team?",
+        "What role do you usually play in group settings?",
+        "Tell me about a time you worked well within a team.",
+        "Describe a project where teamwork was essential to success."
+      ],
+      "Conflict Resolution": [
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you deal with feedback that you disagree with?",
+        "What would you do if you disagreed with your manager?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you respond when a teammate isn't pulling their weight?"
+      ],
+      "Culture Fit": [
+        "What are your expectations from leadership in a company?",
+        "How do you align with our company values?",
+        "What type of company culture do you thrive in?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you contribute to a positive team environment?"
+      ],
+      "Leadership": [
+        "Describe a time you led a project or team.",
+        "What makes a good leader in your opinion?",
+        "Tell me about a time you mentored someone.",
+        "How do you motivate others in a leadership role?"
+      ],
+      "Career Goals": [
+        "What kind of growth opportunities are you looking for?",
+        "What skills do you hope to develop in your next role?",
+        "Where do you see yourself in 5 years?",
+        "How does this role fit into your career path?"
+      ],
+      "Motivation": [
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "Why do you want to work at our company?",
+        "What motivates you to come to work every day?",
+        "How do you stay motivated during repetitive tasks?"
+      ],
+      "Work Style": [
+        "What tools or methods help you stay organized?",
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you organize and prioritize your daily tasks?"
+      ],
+      "Adaptability": [
+        "What's the most significant change you've had to adapt to at work?",
+        "Describe a time you failed and what you learned from it.",
+        "How do you stay updated with industry trends?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you react to sudden changes in priorities?"
+      ]
+    },
+    "fresher": {
+      "Work Style": [
+        "What tools or methods help you stay organized?",
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you organize and prioritize your daily tasks?"
+      ],
+      "Conflict Resolution": [
+        "How do you respond when a teammate isn't pulling their weight?",
+        "How do you deal with feedback that you disagree with?",
+        "What would you do if you disagreed with your manager?",
+        "Describe a time you handled a difficult situation professionally.",
+        "Tell me about a conflict you had with a coworker and how you resolved it."
+      ],
+      "Career Goals": [
+        "How does this role fit into your career path?",
+        "What skills do you hope to develop in your next role?",
+        "Where do you see yourself in 5 years?",
+        "What kind of growth opportunities are you looking for?"
+      ],
+      "Team Collaboration": [
+        "What role do you usually play in group settings?",
+        "How do you handle disagreements within a team?",
+        "Describe a project where teamwork was essential to success.",
+        "Tell me about a time you worked well within a team.",
+        "How do you build trust with new teammates?"
+      ],
+      "Culture Fit": [
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you contribute to a positive team environment?",
+        "How do you align with our company values?",
+        "What are your expectations from leadership in a company?",
+        "What type of company culture do you thrive in?"
+      ],
+      "Adaptability": [
+        "Describe a time you failed and what you learned from it.",
+        "What's the most significant change you've had to adapt to at work?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you react to sudden changes in priorities?",
+        "How do you stay updated with industry trends?"
+      ],
+      "Leadership": [
+        "Describe a time you led a project or team.",
+        "Tell me about a time you mentored someone.",
+        "What makes a good leader in your opinion?",
+        "How do you motivate others in a leadership role?"
+      ],
+      "Motivation": [
+        "What motivates you to come to work every day?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "How do you stay motivated during repetitive tasks?",
+        "Why do you want to work at our company?"
+      ]
+    }
+  },
+  "Data Scientist": {
+    "2 years": {
+      "Career Goals": [
+        "Where do you see yourself in 5 years?",
+        "What skills do you hope to develop in your next role?",
+        "What kind of growth opportunities are you looking for?",
+        "How does this role fit into your career path?"
+      ],
+      "Motivation": [
+        "Why do you want to work at our company?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "What motivates you to come to work every day?",
+        "How do you stay motivated during repetitive tasks?"
+      ],
+      "Culture Fit": [
+        "Describe a time you felt out of place in a workplace culture.",
+        "What are your expectations from leadership in a company?",
+        "What type of company culture do you thrive in?",
+        "How do you align with our company values?",
+        "How do you contribute to a positive team environment?"
+      ],
+      "Team Collaboration": [
+        "How do you build trust with new teammates?",
+        "Tell me about a time you worked well within a team.",
+        "Describe a project where teamwork was essential to success.",
+        "What role do you usually play in group settings?",
+        "How do you handle disagreements within a team?"
+      ],
+      "Work Style": [
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?",
+        "What tools or methods help you stay organized?",
+        "How do you organize and prioritize your daily tasks?"
+      ],
+      "Adaptability": [
+        "What's the most significant change you've had to adapt to at work?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you stay updated with industry trends?",
+        "Describe a time you failed and what you learned from it.",
+        "How do you react to sudden changes in priorities?"
+      ],
+      "Conflict Resolution": [
+        "What would you do if you disagreed with your manager?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "How do you deal with feedback that you disagree with?"
+      ],
+      "Leadership": [
+        "Describe a time you led a project or team.",
+        "How do you motivate others in a leadership role?",
+        "Tell me about a time you mentored someone.",
+        "What makes a good leader in your opinion?"
+      ]
+    },
+    "6 years": {
+      "Motivation": [
+        "What motivates you to come to work every day?",
+        "How do you stay motivated during repetitive tasks?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "Why do you want to work at our company?"
+      ],
+      "Conflict Resolution": [
+        "How do you deal with feedback that you disagree with?",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Describe a time you handled a difficult situation professionally.",
+        "What would you do if you disagreed with your manager?",
+        "Tell me about a conflict you had with a coworker and how you resolved it."
+      ],
+      "Adaptability": [
+        "Describe a time you failed and what you learned from it.",
+        "How do you react to sudden changes in priorities?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you stay updated with industry trends?"
+      ],
+      "Work Style": [
+        "How do you ensure productivity when working remotely?",
+        "How do you organize and prioritize your daily tasks?",
+        "What tools or methods help you stay organized?",
+        "Do you prefer working independently or in teams? Why?"
+      ],
+      "Career Goals": [
+        "How does this role fit into your career path?",
+        "What skills do you hope to develop in your next role?",
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?"
+      ],
+      "Culture Fit": [
+        "What are your expectations from leadership in a company?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What type of company culture do you thrive in?",
+        "How do you align with our company values?",
+        "How do you contribute to a positive team environment?"
+      ],
+      "Team Collaboration": [
+        "Tell me about a time you worked well within a team.",
+        "What role do you usually play in group settings?",
+        "Describe a project where teamwork was essential to success.",
+        "How do you build trust with new teammates?",
+        "How do you handle disagreements within a team?"
+      ],
+      "Leadership": [
+        "How do you motivate others in a leadership role?",
+        "What makes a good leader in your opinion?",
+        "Tell me about a time you mentored someone.",
+        "Describe a time you led a project or team."
+      ]
+    },
+    "1 year": {
+      "Motivation": [
+        "What motivates you to come to work every day?",
+        "How do you stay motivated during repetitive tasks?",
+        "Why do you want to work at our company?",
+        "Tell me about a time you were highly motivated to achieve a goal."
+      ],
+      "Adaptability": [
+        "How do you react to sudden changes in priorities?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "Describe a time you failed and what you learned from it.",
+        "How do you stay updated with industry trends?",
+        "What's the most significant change you've had to adapt to at work?"
+      ],
+      "Leadership": [
+        "Describe a time you led a project or team.",
+        "What makes a good leader in your opinion?",
+        "How do you motivate others in a leadership role?",
+        "Tell me about a time you mentored someone."
+      ],
+      "Culture Fit": [
+        "What type of company culture do you thrive in?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you align with our company values?",
+        "What are your expectations from leadership in a company?",
+        "How do you contribute to a positive team environment?"
+      ],
+      "Work Style": [
+        "How do you organize and prioritize your daily tasks?",
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?",
+        "What tools or methods help you stay organized?"
+      ],
+      "Career Goals": [
+        "What skills do you hope to develop in your next role?",
+        "Where do you see yourself in 5 years?",
+        "How does this role fit into your career path?",
+        "What kind of growth opportunities are you looking for?"
+      ],
+      "Conflict Resolution": [
+        "How do you deal with feedback that you disagree with?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "Describe a time you handled a difficult situation professionally.",
+        "What would you do if you disagreed with your manager?",
+        "How do you respond when a teammate isn't pulling their weight?"
+      ],
+      "Team Collaboration": [
+        "How do you build trust with new teammates?",
+        "Tell me about a time you worked well within a team.",
+        "How do you handle disagreements within a team?",
+        "Describe a project where teamwork was essential to success.",
+        "What role do you usually play in group settings?"
+      ]
+    },
+    "3 years": {
+      "Team Collaboration": [
+        "How do you build trust with new teammates?",
+        "How do you handle disagreements within a team?",
+        "Tell me about a time you worked well within a team.",
+        "Describe a project where teamwork was essential to success.",
+        "What role do you usually play in group settings?"
+      ],
+      "Motivation": [
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "How do you stay motivated during repetitive tasks?",
+        "What motivates you to come to work every day?",
+        "Why do you want to work at our company?"
+      ],
+      "Adaptability": [
+        "How do you react to sudden changes in priorities?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "Describe a time you failed and what you learned from it.",
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you stay updated with industry trends?"
+      ],
+      "Career Goals": [
+        "What kind of growth opportunities are you looking for?",
+        "What skills do you hope to develop in your next role?",
+        "How does this role fit into your career path?",
+        "Where do you see yourself in 5 years?"
+      ],
+      "Culture Fit": [
+        "How do you align with our company values?",
+        "How do you contribute to a positive team environment?",
+        "What are your expectations from leadership in a company?",
+        "What type of company culture do you thrive in?",
+        "Describe a time you felt out of place in a workplace culture."
+      ],
+      "Conflict Resolution": [
+        "What would you do if you disagreed with your manager?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you deal with feedback that you disagree with?"
+      ],
+      "Leadership": [
+        "What makes a good leader in your opinion?",
+        "Tell me about a time you mentored someone.",
+        "Describe a time you led a project or team.",
+        "How do you motivate others in a leadership role?"
+      ],
+      "Work Style": [
+        "What tools or methods help you stay organized?",
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you organize and prioritize your daily tasks?"
+      ]
+    },
+    "4 years": {
+      "Adaptability": [
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you react to sudden changes in priorities?",
+        "Describe a time you failed and what you learned from it.",
+        "How do you stay updated with industry trends?",
+        "Tell me about a time you had to learn something completely new quickly."
+      ],
+      "Team Collaboration": [
+        "Describe a project where teamwork was essential to success.",
+        "How do you handle disagreements within a team?",
+        "Tell me about a time you worked well within a team.",
+        "How do you build trust with new teammates?",
+        "What role do you usually play in group settings?"
+      ],
+      "Leadership": [
+        "How do you motivate others in a leadership role?",
+        "Describe a time you led a project or team.",
+        "Tell me about a time you mentored someone.",
+        "What makes a good leader in your opinion?"
+      ],
+      "Conflict Resolution": [
+        "How do you deal with feedback that you disagree with?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "Describe a time you handled a difficult situation professionally.",
+        "What would you do if you disagreed with your manager?",
+        "How do you respond when a teammate isn't pulling their weight?"
+      ],
+      "Motivation": [
+        "How do you stay motivated during repetitive tasks?",
+        "What motivates you to come to work every day?",
+        "Why do you want to work at our company?",
+        "Tell me about a time you were highly motivated to achieve a goal."
+      ],
+      "Work Style": [
+        "How do you organize and prioritize your daily tasks?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you ensure productivity when working remotely?",
+        "What tools or methods help you stay organized?"
+      ],
+      "Culture Fit": [
+        "Describe a time you felt out of place in a workplace culture.",
+        "What type of company culture do you thrive in?",
+        "What are your expectations from leadership in a company?",
+        "How do you contribute to a positive team environment?",
+        "How do you align with our company values?"
+      ],
+      "Career Goals": [
+        "How does this role fit into your career path?",
+        "What kind of growth opportunities are you looking for?",
+        "What skills do you hope to develop in your next role?",
+        "Where do you see yourself in 5 years?"
+      ]
+    },
+    "fresher": {
+      "Conflict Resolution": [
+        "How do you respond when a teammate isn't pulling their weight?",
+        "What would you do if you disagreed with your manager?",
+        "How do you deal with feedback that you disagree with?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "Describe a time you handled a difficult situation professionally."
+      ],
+      "Team Collaboration": [
+        "What role do you usually play in group settings?",
+        "Tell me about a time you worked well within a team.",
+        "Describe a project where teamwork was essential to success.",
+        "How do you build trust with new teammates?",
+        "How do you handle disagreements within a team?"
+      ],
+      "Leadership": [
+        "Describe a time you led a project or team.",
+        "How do you motivate others in a leadership role?",
+        "Tell me about a time you mentored someone.",
+        "What makes a good leader in your opinion?"
+      ],
+      "Career Goals": [
+        "How does this role fit into your career path?",
+        "What skills do you hope to develop in your next role?",
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?"
+      ],
+      "Adaptability": [
+        "Tell me about a time you had to learn something completely new quickly.",
+        "Describe a time you failed and what you learned from it.",
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you react to sudden changes in priorities?",
+        "How do you stay updated with industry trends?"
+      ],
+      "Work Style": [
+        "How do you organize and prioritize your daily tasks?",
+        "What tools or methods help you stay organized?",
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?"
+      ],
+      "Motivation": [
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "Why do you want to work at our company?",
+        "How do you stay motivated during repetitive tasks?",
+        "What motivates you to come to work every day?"
+      ],
+      "Culture Fit": [
+        "What type of company culture do you thrive in?",
+        "How do you align with our company values?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What are your expectations from leadership in a company?",
+        "How do you contribute to a positive team environment?"
+      ]
+    },
+    "intern": {
+      "Adaptability": [
+        "How do you stay updated with industry trends?",
+        "What's the most significant change you've had to adapt to at work?",
+        "Describe a time you failed and what you learned from it.",
+        "How do you react to sudden changes in priorities?",
+        "Tell me about a time you had to learn something completely new quickly."
+      ],
+      "Team Collaboration": [
+        "What role do you usually play in group settings?",
+        "How do you build trust with new teammates?",
+        "Tell me about a time you worked well within a team.",
+        "Describe a project where teamwork was essential to success.",
+        "How do you handle disagreements within a team?"
+      ],
+      "Conflict Resolution": [
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "Describe a time you handled a difficult situation professionally.",
+        "What would you do if you disagreed with your manager?",
+        "How do you deal with feedback that you disagree with?",
+        "How do you respond when a teammate isn't pulling their weight?"
+      ],
+      "Culture Fit": [
+        "What type of company culture do you thrive in?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you contribute to a positive team environment?",
+        "What are your expectations from leadership in a company?",
+        "How do you align with our company values?"
+      ],
+      "Leadership": [
+        "Tell me about a time you mentored someone.",
+        "How do you motivate others in a leadership role?",
+        "Describe a time you led a project or team.",
+        "What makes a good leader in your opinion?"
+      ],
+      "Motivation": [
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "Why do you want to work at our company?",
+        "How do you stay motivated during repetitive tasks?",
+        "What motivates you to come to work every day?"
+      ],
+      "Work Style": [
+        "How do you organize and prioritize your daily tasks?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you ensure productivity when working remotely?",
+        "What tools or methods help you stay organized?"
+      ],
+      "Career Goals": [
+        "Where do you see yourself in 5 years?",
+        "How does this role fit into your career path?",
+        "What kind of growth opportunities are you looking for?",
+        "What skills do you hope to develop in your next role?"
+      ]
+    },
+    "7+ years": {
+      "Adaptability": [
+        "Describe a time you failed and what you learned from it.",
+        "How do you react to sudden changes in priorities?",
+        "How do you stay updated with industry trends?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "What's the most significant change you've had to adapt to at work?"
+      ],
+      "Work Style": [
+        "What tools or methods help you stay organized?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you ensure productivity when working remotely?",
+        "How do you organize and prioritize your daily tasks?"
+      ],
+      "Career Goals": [
+        "How does this role fit into your career path?",
+        "What kind of growth opportunities are you looking for?",
+        "What skills do you hope to develop in your next role?",
+        "Where do you see yourself in 5 years?"
+      ],
+      "Conflict Resolution": [
+        "Describe a time you handled a difficult situation professionally.",
+        "What would you do if you disagreed with your manager?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "How do you deal with feedback that you disagree with?"
+      ],
+      "Team Collaboration": [
+        "How do you handle disagreements within a team?",
+        "Describe a project where teamwork was essential to success.",
+        "What role do you usually play in group settings?",
+        "Tell me about a time you worked well within a team.",
+        "How do you build trust with new teammates?"
+      ],
+      "Culture Fit": [
+        "What are your expectations from leadership in a company?",
+        "How do you contribute to a positive team environment?",
+        "What type of company culture do you thrive in?",
+        "How do you align with our company values?",
+        "Describe a time you felt out of place in a workplace culture."
+      ],
+      "Leadership": [
+        "Tell me about a time you mentored someone.",
+        "What makes a good leader in your opinion?",
+        "How do you motivate others in a leadership role?",
+        "Describe a time you led a project or team."
+      ],
+      "Motivation": [
+        "What motivates you to come to work every day?",
+        "How do you stay motivated during repetitive tasks?",
+        "Why do you want to work at our company?",
+        "Tell me about a time you were highly motivated to achieve a goal."
+      ]
+    },
+    "5 years": {
+      "Culture Fit": [
+        "How do you align with our company values?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you contribute to a positive team environment?",
+        "What are your expectations from leadership in a company?",
+        "What type of company culture do you thrive in?"
+      ],
+      "Career Goals": [
+        "What skills do you hope to develop in your next role?",
+        "How does this role fit into your career path?",
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?"
+      ],
+      "Motivation": [
+        "Why do you want to work at our company?",
+        "What motivates you to come to work every day?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "How do you stay motivated during repetitive tasks?"
+      ],
+      "Conflict Resolution": [
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "Describe a time you handled a difficult situation professionally.",
+        "What would you do if you disagreed with your manager?",
+        "How do you deal with feedback that you disagree with?",
+        "How do you respond when a teammate isn't pulling their weight?"
+      ],
+      "Work Style": [
+        "How do you ensure productivity when working remotely?",
+        "How do you organize and prioritize your daily tasks?",
+        "Do you prefer working independently or in teams? Why?",
+        "What tools or methods help you stay organized?"
+      ],
+      "Team Collaboration": [
+        "What role do you usually play in group settings?",
+        "How do you handle disagreements within a team?",
+        "Tell me about a time you worked well within a team.",
+        "How do you build trust with new teammates?",
+        "Describe a project where teamwork was essential to success."
+      ],
+      "Adaptability": [
+        "How do you stay updated with industry trends?",
+        "Describe a time you failed and what you learned from it.",
+        "How do you react to sudden changes in priorities?",
+        "What's the most significant change you've had to adapt to at work?",
+        "Tell me about a time you had to learn something completely new quickly."
+      ],
+      "Leadership": [
+        "Describe a time you led a project or team.",
+        "What makes a good leader in your opinion?",
+        "How do you motivate others in a leadership role?",
+        "Tell me about a time you mentored someone."
+      ]
+    }
+  },
+  "Marketing Associate": {
+    "4 years": {
+      "Conflict Resolution": [
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "What would you do if you disagreed with your manager?",
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you deal with feedback that you disagree with?",
+        "How do you respond when a teammate isn't pulling their weight?"
+      ],
+      "Culture Fit": [
+        "What are your expectations from leadership in a company?",
+        "How do you align with our company values?",
+        "What type of company culture do you thrive in?",
+        "How do you contribute to a positive team environment?",
+        "Describe a time you felt out of place in a workplace culture."
+      ],
+      "Motivation": [
+        "Why do you want to work at our company?",
+        "How do you stay motivated during repetitive tasks?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "What motivates you to come to work every day?"
+      ],
+      "Leadership": [
+        "How do you motivate others in a leadership role?",
+        "What makes a good leader in your opinion?",
+        "Describe a time you led a project or team.",
+        "Tell me about a time you mentored someone."
+      ],
+      "Adaptability": [
+        "How do you stay updated with industry trends?",
+        "Describe a time you failed and what you learned from it.",
+        "How do you react to sudden changes in priorities?",
+        "What's the most significant change you've had to adapt to at work?",
+        "Tell me about a time you had to learn something completely new quickly."
+      ],
+      "Career Goals": [
+        "How does this role fit into your career path?",
+        "What skills do you hope to develop in your next role?",
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?"
+      ],
+      "Work Style": [
+        "How do you organize and prioritize your daily tasks?",
+        "What tools or methods help you stay organized?",
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?"
+      ],
+      "Team Collaboration": [
+        "Describe a project where teamwork was essential to success.",
+        "Tell me about a time you worked well within a team.",
+        "How do you build trust with new teammates?",
+        "What role do you usually play in group settings?",
+        "How do you handle disagreements within a team?"
+      ]
+    },
+    "1 year": {
+      "Career Goals": [
+        "What skills do you hope to develop in your next role?",
+        "Where do you see yourself in 5 years?",
+        "What kind of growth opportunities are you looking for?",
+        "How does this role fit into your career path?"
+      ],
+      "Adaptability": [
+        "How do you stay updated with industry trends?",
+        "How do you react to sudden changes in priorities?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "What's the most significant change you've had to adapt to at work?",
+        "Describe a time you failed and what you learned from it."
+      ],
+      "Motivation": [
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "Why do you want to work at our company?",
+        "How do you stay motivated during repetitive tasks?",
+        "What motivates you to come to work every day?"
+      ],
+      "Work Style": [
+        "How do you ensure productivity when working remotely?",
+        "How do you organize and prioritize your daily tasks?",
+        "What tools or methods help you stay organized?",
+        "Do you prefer working independently or in teams? Why?"
+      ],
+      "Team Collaboration": [
+        "What role do you usually play in group settings?",
+        "Tell me about a time you worked well within a team.",
+        "How do you handle disagreements within a team?",
+        "Describe a project where teamwork was essential to success.",
+        "How do you build trust with new teammates?"
+      ],
+      "Conflict Resolution": [
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "What would you do if you disagreed with your manager?",
+        "How do you deal with feedback that you disagree with?",
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you respond when a teammate isn't pulling their weight?"
+      ],
+      "Culture Fit": [
+        "How do you contribute to a positive team environment?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What are your expectations from leadership in a company?",
+        "How do you align with our company values?",
+        "What type of company culture do you thrive in?"
+      ],
+      "Leadership": [
+        "Tell me about a time you mentored someone.",
+        "Describe a time you led a project or team.",
+        "What makes a good leader in your opinion?",
+        "How do you motivate others in a leadership role?"
+      ]
+    },
+    "6 years": {
+      "Leadership": [
+        "How do you motivate others in a leadership role?",
+        "Tell me about a time you mentored someone.",
+        "What makes a good leader in your opinion?",
+        "Describe a time you led a project or team."
+      ],
+      "Culture Fit": [
+        "What are your expectations from leadership in a company?",
+        "How do you contribute to a positive team environment?",
+        "What type of company culture do you thrive in?",
+        "How do you align with our company values?",
+        "Describe a time you felt out of place in a workplace culture."
+      ],
+      "Motivation": [
+        "How do you stay motivated during repetitive tasks?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "Why do you want to work at our company?",
+        "What motivates you to come to work every day?"
+      ],
+      "Career Goals": [
+        "What kind of growth opportunities are you looking for?",
+        "How does this role fit into your career path?",
+        "Where do you see yourself in 5 years?",
+        "What skills do you hope to develop in your next role?"
+      ],
+      "Work Style": [
+        "What tools or methods help you stay organized?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you organize and prioritize your daily tasks?",
+        "How do you ensure productivity when working remotely?"
+      ],
+      "Adaptability": [
+        "How do you react to sudden changes in priorities?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "Describe a time you failed and what you learned from it.",
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you stay updated with industry trends?"
+      ],
+      "Conflict Resolution": [
+        "What would you do if you disagreed with your manager?",
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you deal with feedback that you disagree with?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you respond when a teammate isn't pulling their weight?"
+      ],
+      "Team Collaboration": [
+        "How do you handle disagreements within a team?",
+        "How do you build trust with new teammates?",
+        "Tell me about a time you worked well within a team.",
+        "Describe a project where teamwork was essential to success.",
+        "What role do you usually play in group settings?"
+      ]
+    },
+    "fresher": {
+      "Team Collaboration": [
+        "How do you build trust with new teammates?",
+        "How do you handle disagreements within a team?",
+        "Describe a project where teamwork was essential to success.",
+        "What role do you usually play in group settings?",
+        "Tell me about a time you worked well within a team."
+      ],
+      "Culture Fit": [
+        "What are your expectations from leadership in a company?",
+        "How do you align with our company values?",
+        "How do you contribute to a positive team environment?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What type of company culture do you thrive in?"
+      ],
+      "Motivation": [
+        "How do you stay motivated during repetitive tasks?",
+        "Why do you want to work at our company?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "What motivates you to come to work every day?"
+      ],
+      "Adaptability": [
+        "What's the most significant change you've had to adapt to at work?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you stay updated with industry trends?",
+        "Describe a time you failed and what you learned from it.",
+        "How do you react to sudden changes in priorities?"
+      ],
+      "Conflict Resolution": [
+        "How do you respond when a teammate isn't pulling their weight?",
+        "How do you deal with feedback that you disagree with?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "Describe a time you handled a difficult situation professionally.",
+        "What would you do if you disagreed with your manager?"
+      ],
+      "Career Goals": [
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?",
+        "How does this role fit into your career path?",
+        "What skills do you hope to develop in your next role?"
+      ],
+      "Work Style": [
+        "Do you prefer working independently or in teams? Why?",
+        "How do you ensure productivity when working remotely?",
+        "How do you organize and prioritize your daily tasks?",
+        "What tools or methods help you stay organized?"
+      ],
+      "Leadership": [
+        "What makes a good leader in your opinion?",
+        "Tell me about a time you mentored someone.",
+        "Describe a time you led a project or team.",
+        "How do you motivate others in a leadership role?"
+      ]
+    },
+    "3 years": {
+      "Work Style": [
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you organize and prioritize your daily tasks?",
+        "What tools or methods help you stay organized?"
+      ],
+      "Culture Fit": [
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you contribute to a positive team environment?",
+        "How do you align with our company values?",
+        "What are your expectations from leadership in a company?",
+        "What type of company culture do you thrive in?"
+      ],
+      "Adaptability": [
+        "How do you stay updated with industry trends?",
+        "Describe a time you failed and what you learned from it.",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you react to sudden changes in priorities?",
+        "What's the most significant change you've had to adapt to at work?"
+      ],
+      "Team Collaboration": [
+        "Tell me about a time you worked well within a team.",
+        "How do you build trust with new teammates?",
+        "What role do you usually play in group settings?",
+        "Describe a project where teamwork was essential to success.",
+        "How do you handle disagreements within a team?"
+      ],
+      "Career Goals": [
+        "How does this role fit into your career path?",
+        "What skills do you hope to develop in your next role?",
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?"
+      ],
+      "Conflict Resolution": [
+        "What would you do if you disagreed with your manager?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "How do you deal with feedback that you disagree with?"
+      ],
+      "Leadership": [
+        "What makes a good leader in your opinion?",
+        "Tell me about a time you mentored someone.",
+        "How do you motivate others in a leadership role?",
+        "Describe a time you led a project or team."
+      ],
+      "Motivation": [
+        "What motivates you to come to work every day?",
+        "Why do you want to work at our company?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "How do you stay motivated during repetitive tasks?"
+      ]
+    },
+    "intern": {
+      "Culture Fit": [
+        "How do you contribute to a positive team environment?",
+        "What type of company culture do you thrive in?",
+        "What are your expectations from leadership in a company?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you align with our company values?"
+      ],
+      "Motivation": [
+        "How do you stay motivated during repetitive tasks?",
+        "What motivates you to come to work every day?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "Why do you want to work at our company?"
+      ],
+      "Adaptability": [
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you react to sudden changes in priorities?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "Describe a time you failed and what you learned from it.",
+        "How do you stay updated with industry trends?"
+      ],
+      "Conflict Resolution": [
+        "Describe a time you handled a difficult situation professionally.",
+        "What would you do if you disagreed with your manager?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "How do you deal with feedback that you disagree with?"
+      ],
+      "Career Goals": [
+        "Where do you see yourself in 5 years?",
+        "How does this role fit into your career path?",
+        "What skills do you hope to develop in your next role?",
+        "What kind of growth opportunities are you looking for?"
+      ],
+      "Work Style": [
+        "What tools or methods help you stay organized?",
+        "How do you organize and prioritize your daily tasks?",
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?"
+      ],
+      "Team Collaboration": [
+        "How do you handle disagreements within a team?",
+        "Tell me about a time you worked well within a team.",
+        "What role do you usually play in group settings?",
+        "Describe a project where teamwork was essential to success.",
+        "How do you build trust with new teammates?"
+      ],
+      "Leadership": [
+        "Describe a time you led a project or team.",
+        "How do you motivate others in a leadership role?",
+        "What makes a good leader in your opinion?",
+        "Tell me about a time you mentored someone."
+      ]
+    },
+    "2 years": {
+      "Culture Fit": [
+        "What type of company culture do you thrive in?",
+        "How do you contribute to a positive team environment?",
+        "How do you align with our company values?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What are your expectations from leadership in a company?"
+      ],
+      "Career Goals": [
+        "How does this role fit into your career path?",
+        "Where do you see yourself in 5 years?",
+        "What skills do you hope to develop in your next role?",
+        "What kind of growth opportunities are you looking for?"
+      ],
+      "Leadership": [
+        "How do you motivate others in a leadership role?",
+        "Describe a time you led a project or team.",
+        "What makes a good leader in your opinion?",
+        "Tell me about a time you mentored someone."
+      ],
+      "Adaptability": [
+        "How do you stay updated with industry trends?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "Describe a time you failed and what you learned from it.",
+        "How do you react to sudden changes in priorities?",
+        "What's the most significant change you've had to adapt to at work?"
+      ],
+      "Conflict Resolution": [
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you deal with feedback that you disagree with?",
+        "What would you do if you disagreed with your manager?",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Describe a time you handled a difficult situation professionally."
+      ],
+      "Team Collaboration": [
+        "Describe a project where teamwork was essential to success.",
+        "How do you handle disagreements within a team?",
+        "How do you build trust with new teammates?",
+        "What role do you usually play in group settings?",
+        "Tell me about a time you worked well within a team."
+      ],
+      "Motivation": [
+        "Why do you want to work at our company?",
+        "What motivates you to come to work every day?",
+        "How do you stay motivated during repetitive tasks?",
+        "Tell me about a time you were highly motivated to achieve a goal."
+      ],
+      "Work Style": [
+        "How do you ensure productivity when working remotely?",
+        "What tools or methods help you stay organized?",
+        "How do you organize and prioritize your daily tasks?",
+        "Do you prefer working independently or in teams? Why?"
+      ]
+    },
+    "7+ years": {
+      "Team Collaboration": [
+        "What role do you usually play in group settings?",
+        "How do you build trust with new teammates?",
+        "How do you handle disagreements within a team?",
+        "Describe a project where teamwork was essential to success.",
+        "Tell me about a time you worked well within a team."
+      ],
+      "Leadership": [
+        "Describe a time you led a project or team.",
+        "Tell me about a time you mentored someone.",
+        "How do you motivate others in a leadership role?",
+        "What makes a good leader in your opinion?"
+      ],
+      "Work Style": [
+        "What tools or methods help you stay organized?",
+        "How do you organize and prioritize your daily tasks?",
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?"
+      ],
+      "Adaptability": [
+        "How do you stay updated with industry trends?",
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you react to sudden changes in priorities?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "Describe a time you failed and what you learned from it."
+      ],
+      "Career Goals": [
+        "How does this role fit into your career path?",
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?",
+        "What skills do you hope to develop in your next role?"
+      ],
+      "Motivation": [
+        "Why do you want to work at our company?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "What motivates you to come to work every day?",
+        "How do you stay motivated during repetitive tasks?"
+      ],
+      "Culture Fit": [
+        "What type of company culture do you thrive in?",
+        "How do you contribute to a positive team environment?",
+        "What are your expectations from leadership in a company?",
+        "How do you align with our company values?",
+        "Describe a time you felt out of place in a workplace culture."
+      ],
+      "Conflict Resolution": [
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "How do you deal with feedback that you disagree with?",
+        "What would you do if you disagreed with your manager?",
+        "Tell me about a conflict you had with a coworker and how you resolved it."
+      ]
+    },
+    "5 years": {
+      "Leadership": [
+        "How do you motivate others in a leadership role?",
+        "Tell me about a time you mentored someone.",
+        "What makes a good leader in your opinion?",
+        "Describe a time you led a project or team."
+      ],
+      "Adaptability": [
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you react to sudden changes in priorities?",
+        "Describe a time you failed and what you learned from it.",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you stay updated with industry trends?"
+      ],
+      "Conflict Resolution": [
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "What would you do if you disagreed with your manager?",
+        "How do you deal with feedback that you disagree with?",
+        "Tell me about a conflict you had with a coworker and how you resolved it."
+      ],
+      "Motivation": [
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "How do you stay motivated during repetitive tasks?",
+        "What motivates you to come to work every day?",
+        "Why do you want to work at our company?"
+      ],
+      "Work Style": [
+        "What tools or methods help you stay organized?",
+        "How do you ensure productivity when working remotely?",
+        "How do you organize and prioritize your daily tasks?",
+        "Do you prefer working independently or in teams? Why?"
+      ],
+      "Career Goals": [
+        "Where do you see yourself in 5 years?",
+        "What kind of growth opportunities are you looking for?",
+        "What skills do you hope to develop in your next role?",
+        "How does this role fit into your career path?"
+      ],
+      "Team Collaboration": [
+        "Tell me about a time you worked well within a team.",
+        "What role do you usually play in group settings?",
+        "How do you build trust with new teammates?",
+        "Describe a project where teamwork was essential to success.",
+        "How do you handle disagreements within a team?"
+      ],
+      "Culture Fit": [
+        "How do you align with our company values?",
+        "What type of company culture do you thrive in?",
+        "What are your expectations from leadership in a company?",
+        "How do you contribute to a positive team environment?",
+        "Describe a time you felt out of place in a workplace culture."
+      ]
+    }
+  },
+  "Software Engineer": {
+    "2 years": {
+      "Career Goals": [
+        "How does this role fit into your career path?",
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?",
+        "What skills do you hope to develop in your next role?"
+      ],
+      "Conflict Resolution": [
+        "What would you do if you disagreed with your manager?",
+        "Describe a time you handled a difficult situation professionally.",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "How do you deal with feedback that you disagree with?"
+      ],
+      "Culture Fit": [
+        "What type of company culture do you thrive in?",
+        "How do you align with our company values?",
+        "What are your expectations from leadership in a company?",
+        "How do you contribute to a positive team environment?",
+        "Describe a time you felt out of place in a workplace culture."
+      ],
+      "Work Style": [
+        "Do you prefer working independently or in teams? Why?",
+        "How do you organize and prioritize your daily tasks?",
+        "How do you ensure productivity when working remotely?",
+        "What tools or methods help you stay organized?"
+      ],
+      "Team Collaboration": [
+        "Tell me about a time you worked well within a team.",
+        "What role do you usually play in group settings?",
+        "How do you build trust with new teammates?",
+        "How do you handle disagreements within a team?",
+        "Describe a project where teamwork was essential to success."
+      ],
+      "Adaptability": [
+        "Describe a time you failed and what you learned from it.",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you stay updated with industry trends?",
+        "How do you react to sudden changes in priorities?",
+        "What's the most significant change you've had to adapt to at work?"
+      ],
+      "Motivation": [
+        "What motivates you to come to work every day?",
+        "How do you stay motivated during repetitive tasks?",
+        "Why do you want to work at our company?",
+        "Tell me about a time you were highly motivated to achieve a goal."
+      ],
+      "Leadership": [
+        "Tell me about a time you mentored someone.",
+        "Describe a time you led a project or team.",
+        "How do you motivate others in a leadership role?",
+        "What makes a good leader in your opinion?"
+      ]
+    },
+    "5 years": {
+      "Culture Fit": [
+        "Describe a time you felt out of place in a workplace culture.",
+        "What type of company culture do you thrive in?",
+        "How do you align with our company values?",
+        "What are your expectations from leadership in a company?",
+        "How do you contribute to a positive team environment?"
+      ],
+      "Team Collaboration": [
+        "How do you handle disagreements within a team?",
+        "How do you build trust with new teammates?",
+        "Tell me about a time you worked well within a team.",
+        "Describe a project where teamwork was essential to success.",
+        "What role do you usually play in group settings?"
+      ],
+      "Conflict Resolution": [
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you deal with feedback that you disagree with?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "What would you do if you disagreed with your manager?",
+        "How do you respond when a teammate isn't pulling their weight?"
+      ],
+      "Motivation": [
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "Why do you want to work at our company?",
+        "How do you stay motivated during repetitive tasks?",
+        "What motivates you to come to work every day?"
+      ],
+      "Adaptability": [
+        "How do you stay updated with industry trends?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "Describe a time you failed and what you learned from it.",
+        "How do you react to sudden changes in priorities?",
+        "What's the most significant change you've had to adapt to at work?"
+      ],
+      "Career Goals": [
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?",
+        "What skills do you hope to develop in your next role?",
+        "How does this role fit into your career path?"
+      ],
+      "Leadership": [
+        "Describe a time you led a project or team.",
+        "How do you motivate others in a leadership role?",
+        "Tell me about a time you mentored someone.",
+        "What makes a good leader in your opinion?"
+      ],
+      "Work Style": [
+        "Do you prefer working independently or in teams? Why?",
+        "How do you ensure productivity when working remotely?",
+        "What tools or methods help you stay organized?",
+        "How do you organize and prioritize your daily tasks?"
+      ]
+    },
+    "intern": {
+      "Adaptability": [
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you stay updated with industry trends?",
+        "How do you react to sudden changes in priorities?",
+        "Describe a time you failed and what you learned from it.",
+        "Tell me about a time you had to learn something completely new quickly."
+      ],
+      "Culture Fit": [
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you contribute to a positive team environment?",
+        "What type of company culture do you thrive in?",
+        "How do you align with our company values?",
+        "What are your expectations from leadership in a company?"
+      ],
+      "Career Goals": [
+        "Where do you see yourself in 5 years?",
+        "What kind of growth opportunities are you looking for?",
+        "How does this role fit into your career path?",
+        "What skills do you hope to develop in your next role?"
+      ],
+      "Leadership": [
+        "How do you motivate others in a leadership role?",
+        "Describe a time you led a project or team.",
+        "Tell me about a time you mentored someone.",
+        "What makes a good leader in your opinion?"
+      ],
+      "Motivation": [
+        "What motivates you to come to work every day?",
+        "How do you stay motivated during repetitive tasks?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "Why do you want to work at our company?"
+      ],
+      "Team Collaboration": [
+        "How do you build trust with new teammates?",
+        "What role do you usually play in group settings?",
+        "Describe a project where teamwork was essential to success.",
+        "How do you handle disagreements within a team?",
+        "Tell me about a time you worked well within a team."
+      ],
+      "Work Style": [
+        "Do you prefer working independently or in teams? Why?",
+        "How do you ensure productivity when working remotely?",
+        "What tools or methods help you stay organized?",
+        "How do you organize and prioritize your daily tasks?"
+      ],
+      "Conflict Resolution": [
+        "How do you deal with feedback that you disagree with?",
+        "Describe a time you handled a difficult situation professionally.",
+        "What would you do if you disagreed with your manager?",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Tell me about a conflict you had with a coworker and how you resolved it."
+      ]
+    },
+    "3 years": {
+      "Leadership": [
+        "What makes a good leader in your opinion?",
+        "How do you motivate others in a leadership role?",
+        "Tell me about a time you mentored someone.",
+        "Describe a time you led a project or team."
+      ],
+      "Motivation": [
+        "How do you stay motivated during repetitive tasks?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "What motivates you to come to work every day?",
+        "Why do you want to work at our company?"
+      ],
+      "Work Style": [
+        "What tools or methods help you stay organized?",
+        "How do you organize and prioritize your daily tasks?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you ensure productivity when working remotely?"
+      ],
+      "Conflict Resolution": [
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you deal with feedback that you disagree with?",
+        "What would you do if you disagreed with your manager?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you respond when a teammate isn't pulling their weight?"
+      ],
+      "Adaptability": [
+        "Tell me about a time you had to learn something completely new quickly.",
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you react to sudden changes in priorities?",
+        "How do you stay updated with industry trends?",
+        "Describe a time you failed and what you learned from it."
+      ],
+      "Team Collaboration": [
+        "Tell me about a time you worked well within a team.",
+        "What role do you usually play in group settings?",
+        "Describe a project where teamwork was essential to success.",
+        "How do you build trust with new teammates?",
+        "How do you handle disagreements within a team?"
+      ],
+      "Culture Fit": [
+        "How do you contribute to a positive team environment?",
+        "How do you align with our company values?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What are your expectations from leadership in a company?",
+        "What type of company culture do you thrive in?"
+      ],
+      "Career Goals": [
+        "What kind of growth opportunities are you looking for?",
+        "How does this role fit into your career path?",
+        "Where do you see yourself in 5 years?",
+        "What skills do you hope to develop in your next role?"
+      ]
+    },
+    "1 year": {
+      "Team Collaboration": [
+        "What role do you usually play in group settings?",
+        "How do you handle disagreements within a team?",
+        "How do you build trust with new teammates?",
+        "Describe a project where teamwork was essential to success.",
+        "Tell me about a time you worked well within a team."
+      ],
+      "Adaptability": [
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you react to sudden changes in priorities?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "Describe a time you failed and what you learned from it.",
+        "How do you stay updated with industry trends?"
+      ],
+      "Career Goals": [
+        "Where do you see yourself in 5 years?",
+        "What kind of growth opportunities are you looking for?",
+        "How does this role fit into your career path?",
+        "What skills do you hope to develop in your next role?"
+      ],
+      "Work Style": [
+        "Do you prefer working independently or in teams? Why?",
+        "What tools or methods help you stay organized?",
+        "How do you ensure productivity when working remotely?",
+        "How do you organize and prioritize your daily tasks?"
+      ],
+      "Conflict Resolution": [
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "How do you deal with feedback that you disagree with?",
+        "What would you do if you disagreed with your manager?",
+        "Describe a time you handled a difficult situation professionally."
+      ],
+      "Motivation": [
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "How do you stay motivated during repetitive tasks?",
+        "What motivates you to come to work every day?",
+        "Why do you want to work at our company?"
+      ],
+      "Leadership": [
+        "What makes a good leader in your opinion?",
+        "How do you motivate others in a leadership role?",
+        "Tell me about a time you mentored someone.",
+        "Describe a time you led a project or team."
+      ],
+      "Culture Fit": [
+        "How do you align with our company values?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you contribute to a positive team environment?",
+        "What type of company culture do you thrive in?",
+        "What are your expectations from leadership in a company?"
+      ]
+    },
+    "7+ years": {
+      "Leadership": [
+        "Tell me about a time you mentored someone.",
+        "Describe a time you led a project or team.",
+        "How do you motivate others in a leadership role?",
+        "What makes a good leader in your opinion?"
+      ],
+      "Work Style": [
+        "How do you organize and prioritize your daily tasks?",
+        "How do you ensure productivity when working remotely?",
+        "What tools or methods help you stay organized?",
+        "Do you prefer working independently or in teams? Why?"
+      ],
+      "Culture Fit": [
+        "What are your expectations from leadership in a company?",
+        "How do you contribute to a positive team environment?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you align with our company values?",
+        "What type of company culture do you thrive in?"
+      ],
+      "Conflict Resolution": [
+        "Describe a time you handled a difficult situation professionally.",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "What would you do if you disagreed with your manager?",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "How do you deal with feedback that you disagree with?"
+      ],
+      "Career Goals": [
+        "How does this role fit into your career path?",
+        "What skills do you hope to develop in your next role?",
+        "Where do you see yourself in 5 years?",
+        "What kind of growth opportunities are you looking for?"
+      ],
+      "Adaptability": [
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you stay updated with industry trends?",
+        "What's the most significant change you've had to adapt to at work?",
+        "Describe a time you failed and what you learned from it.",
+        "How do you react to sudden changes in priorities?"
+      ],
+      "Team Collaboration": [
+        "How do you build trust with new teammates?",
+        "What role do you usually play in group settings?",
+        "Tell me about a time you worked well within a team.",
+        "How do you handle disagreements within a team?",
+        "Describe a project where teamwork was essential to success."
+      ],
+      "Motivation": [
+        "What motivates you to come to work every day?",
+        "Why do you want to work at our company?",
+        "How do you stay motivated during repetitive tasks?",
+        "Tell me about a time you were highly motivated to achieve a goal."
+      ]
+    },
+    "4 years": {
+      "Leadership": [
+        "Describe a time you led a project or team.",
+        "Tell me about a time you mentored someone.",
+        "How do you motivate others in a leadership role?",
+        "What makes a good leader in your opinion?"
+      ],
+      "Motivation": [
+        "What motivates you to come to work every day?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "How do you stay motivated during repetitive tasks?",
+        "Why do you want to work at our company?"
+      ],
+      "Conflict Resolution": [
+        "What would you do if you disagreed with your manager?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you deal with feedback that you disagree with?",
+        "How do you respond when a teammate isn't pulling their weight?"
+      ],
+      "Culture Fit": [
+        "What type of company culture do you thrive in?",
+        "What are your expectations from leadership in a company?",
+        "How do you contribute to a positive team environment?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you align with our company values?"
+      ],
+      "Work Style": [
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?",
+        "What tools or methods help you stay organized?",
+        "How do you organize and prioritize your daily tasks?"
+      ],
+      "Team Collaboration": [
+        "Describe a project where teamwork was essential to success.",
+        "What role do you usually play in group settings?",
+        "How do you build trust with new teammates?",
+        "How do you handle disagreements within a team?",
+        "Tell me about a time you worked well within a team."
+      ],
+      "Adaptability": [
+        "How do you react to sudden changes in priorities?",
+        "Describe a time you failed and what you learned from it.",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you stay updated with industry trends?"
+      ],
+      "Career Goals": [
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?",
+        "What skills do you hope to develop in your next role?",
+        "How does this role fit into your career path?"
+      ]
+    },
+    "fresher": {
+      "Culture Fit": [
+        "How do you align with our company values?",
+        "What are your expectations from leadership in a company?",
+        "How do you contribute to a positive team environment?",
+        "What type of company culture do you thrive in?",
+        "Describe a time you felt out of place in a workplace culture."
+      ],
+      "Adaptability": [
+        "Describe a time you failed and what you learned from it.",
+        "How do you stay updated with industry trends?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you react to sudden changes in priorities?"
+      ],
+      "Team Collaboration": [
+        "Tell me about a time you worked well within a team.",
+        "Describe a project where teamwork was essential to success.",
+        "How do you handle disagreements within a team?",
+        "How do you build trust with new teammates?",
+        "What role do you usually play in group settings?"
+      ],
+      "Career Goals": [
+        "Where do you see yourself in 5 years?",
+        "What kind of growth opportunities are you looking for?",
+        "What skills do you hope to develop in your next role?",
+        "How does this role fit into your career path?"
+      ],
+      "Motivation": [
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "What motivates you to come to work every day?",
+        "Why do you want to work at our company?",
+        "How do you stay motivated during repetitive tasks?"
+      ],
+      "Work Style": [
+        "What tools or methods help you stay organized?",
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you organize and prioritize your daily tasks?"
+      ],
+      "Conflict Resolution": [
+        "How do you deal with feedback that you disagree with?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "What would you do if you disagreed with your manager?"
+      ],
+      "Leadership": [
+        "How do you motivate others in a leadership role?",
+        "What makes a good leader in your opinion?",
+        "Tell me about a time you mentored someone.",
+        "Describe a time you led a project or team."
+      ]
+    },
+    "6 years": {
+      "Conflict Resolution": [
+        "How do you deal with feedback that you disagree with?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Describe a time you handled a difficult situation professionally.",
+        "What would you do if you disagreed with your manager?"
+      ],
+      "Work Style": [
+        "Do you prefer working independently or in teams? Why?",
+        "How do you organize and prioritize your daily tasks?",
+        "How do you ensure productivity when working remotely?",
+        "What tools or methods help you stay organized?"
+      ],
+      "Culture Fit": [
+        "What are your expectations from leadership in a company?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you contribute to a positive team environment?",
+        "What type of company culture do you thrive in?",
+        "How do you align with our company values?"
+      ],
+      "Motivation": [
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "How do you stay motivated during repetitive tasks?",
+        "Why do you want to work at our company?",
+        "What motivates you to come to work every day?"
+      ],
+      "Career Goals": [
+        "Where do you see yourself in 5 years?",
+        "What skills do you hope to develop in your next role?",
+        "What kind of growth opportunities are you looking for?",
+        "How does this role fit into your career path?"
+      ],
+      "Adaptability": [
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you stay updated with industry trends?",
+        "How do you react to sudden changes in priorities?",
+        "Describe a time you failed and what you learned from it.",
+        "Tell me about a time you had to learn something completely new quickly."
+      ],
+      "Leadership": [
+        "Describe a time you led a project or team.",
+        "What makes a good leader in your opinion?",
+        "Tell me about a time you mentored someone.",
+        "How do you motivate others in a leadership role?"
+      ],
+      "Team Collaboration": [
+        "What role do you usually play in group settings?",
+        "Tell me about a time you worked well within a team.",
+        "Describe a project where teamwork was essential to success.",
+        "How do you build trust with new teammates?",
+        "How do you handle disagreements within a team?"
+      ]
+    }
+  },
+  "QA Analyst": {
+    "1 year": {
+      "Career Goals": [
+        "Where do you see yourself in 5 years?",
+        "What kind of growth opportunities are you looking for?",
+        "What skills do you hope to develop in your next role?",
+        "How does this role fit into your career path?"
+      ],
+      "Leadership": [
+        "How do you motivate others in a leadership role?",
+        "What makes a good leader in your opinion?",
+        "Tell me about a time you mentored someone.",
+        "Describe a time you led a project or team."
+      ],
+      "Adaptability": [
+        "Describe a time you failed and what you learned from it.",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you react to sudden changes in priorities?",
+        "How do you stay updated with industry trends?",
+        "What's the most significant change you've had to adapt to at work?"
+      ],
+      "Team Collaboration": [
+        "Describe a project where teamwork was essential to success.",
+        "Tell me about a time you worked well within a team.",
+        "What role do you usually play in group settings?",
+        "How do you handle disagreements within a team?",
+        "How do you build trust with new teammates?"
+      ],
+      "Motivation": [
+        "What motivates you to come to work every day?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "Why do you want to work at our company?",
+        "How do you stay motivated during repetitive tasks?"
+      ],
+      "Culture Fit": [
+        "How do you contribute to a positive team environment?",
+        "How do you align with our company values?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What type of company culture do you thrive in?",
+        "What are your expectations from leadership in a company?"
+      ],
+      "Work Style": [
+        "Do you prefer working independently or in teams? Why?",
+        "What tools or methods help you stay organized?",
+        "How do you ensure productivity when working remotely?",
+        "How do you organize and prioritize your daily tasks?"
+      ],
+      "Conflict Resolution": [
+        "How do you respond when a teammate isn't pulling their weight?",
+        "How do you deal with feedback that you disagree with?",
+        "What would you do if you disagreed with your manager?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "Describe a time you handled a difficult situation professionally."
+      ]
+    },
+    "2 years": {
+      "Work Style": [
+        "What tools or methods help you stay organized?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you ensure productivity when working remotely?",
+        "How do you organize and prioritize your daily tasks?"
+      ],
+      "Conflict Resolution": [
+        "How do you deal with feedback that you disagree with?",
+        "What would you do if you disagreed with your manager?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Describe a time you handled a difficult situation professionally."
+      ],
+      "Career Goals": [
+        "What skills do you hope to develop in your next role?",
+        "What kind of growth opportunities are you looking for?",
+        "How does this role fit into your career path?",
+        "Where do you see yourself in 5 years?"
+      ],
+      "Motivation": [
+        "How do you stay motivated during repetitive tasks?",
+        "Why do you want to work at our company?",
+        "What motivates you to come to work every day?",
+        "Tell me about a time you were highly motivated to achieve a goal."
+      ],
+      "Leadership": [
+        "Tell me about a time you mentored someone.",
+        "Describe a time you led a project or team.",
+        "What makes a good leader in your opinion?",
+        "How do you motivate others in a leadership role?"
+      ],
+      "Team Collaboration": [
+        "What role do you usually play in group settings?",
+        "How do you handle disagreements within a team?",
+        "Tell me about a time you worked well within a team.",
+        "Describe a project where teamwork was essential to success.",
+        "How do you build trust with new teammates?"
+      ],
+      "Culture Fit": [
+        "How do you align with our company values?",
+        "What are your expectations from leadership in a company?",
+        "How do you contribute to a positive team environment?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What type of company culture do you thrive in?"
+      ],
+      "Adaptability": [
+        "How do you react to sudden changes in priorities?",
+        "What's the most significant change you've had to adapt to at work?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "Describe a time you failed and what you learned from it.",
+        "How do you stay updated with industry trends?"
+      ]
+    },
+    "fresher": {
+      "Adaptability": [
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you react to sudden changes in priorities?",
+        "Describe a time you failed and what you learned from it.",
+        "How do you stay updated with industry trends?",
+        "What's the most significant change you've had to adapt to at work?"
+      ],
+      "Conflict Resolution": [
+        "How do you deal with feedback that you disagree with?",
+        "Describe a time you handled a difficult situation professionally.",
+        "What would you do if you disagreed with your manager?",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Tell me about a conflict you had with a coworker and how you resolved it."
+      ],
+      "Leadership": [
+        "Tell me about a time you mentored someone.",
+        "How do you motivate others in a leadership role?",
+        "What makes a good leader in your opinion?",
+        "Describe a time you led a project or team."
+      ],
+      "Career Goals": [
+        "What kind of growth opportunities are you looking for?",
+        "What skills do you hope to develop in your next role?",
+        "How does this role fit into your career path?",
+        "Where do you see yourself in 5 years?"
+      ],
+      "Team Collaboration": [
+        "What role do you usually play in group settings?",
+        "How do you handle disagreements within a team?",
+        "Describe a project where teamwork was essential to success.",
+        "How do you build trust with new teammates?",
+        "Tell me about a time you worked well within a team."
+      ],
+      "Work Style": [
+        "Do you prefer working independently or in teams? Why?",
+        "How do you organize and prioritize your daily tasks?",
+        "What tools or methods help you stay organized?",
+        "How do you ensure productivity when working remotely?"
+      ],
+      "Motivation": [
+        "Why do you want to work at our company?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "How do you stay motivated during repetitive tasks?",
+        "What motivates you to come to work every day?"
+      ],
+      "Culture Fit": [
+        "What are your expectations from leadership in a company?",
+        "What type of company culture do you thrive in?",
+        "How do you align with our company values?",
+        "How do you contribute to a positive team environment?",
+        "Describe a time you felt out of place in a workplace culture."
+      ]
+    },
+    "5 years": {
+      "Culture Fit": [
+        "How do you align with our company values?",
+        "What type of company culture do you thrive in?",
+        "How do you contribute to a positive team environment?",
+        "What are your expectations from leadership in a company?",
+        "Describe a time you felt out of place in a workplace culture."
+      ],
+      "Team Collaboration": [
+        "What role do you usually play in group settings?",
+        "Describe a project where teamwork was essential to success.",
+        "How do you build trust with new teammates?",
+        "Tell me about a time you worked well within a team.",
+        "How do you handle disagreements within a team?"
+      ],
+      "Motivation": [
+        "Why do you want to work at our company?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "What motivates you to come to work every day?",
+        "How do you stay motivated during repetitive tasks?"
+      ],
+      "Adaptability": [
+        "Describe a time you failed and what you learned from it.",
+        "How do you stay updated with industry trends?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you react to sudden changes in priorities?",
+        "What's the most significant change you've had to adapt to at work?"
+      ],
+      "Career Goals": [
+        "How does this role fit into your career path?",
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?",
+        "What skills do you hope to develop in your next role?"
+      ],
+      "Conflict Resolution": [
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Describe a time you handled a difficult situation professionally.",
+        "What would you do if you disagreed with your manager?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you deal with feedback that you disagree with?"
+      ],
+      "Work Style": [
+        "How do you ensure productivity when working remotely?",
+        "What tools or methods help you stay organized?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you organize and prioritize your daily tasks?"
+      ],
+      "Leadership": [
+        "Tell me about a time you mentored someone.",
+        "How do you motivate others in a leadership role?",
+        "What makes a good leader in your opinion?",
+        "Describe a time you led a project or team."
+      ]
+    },
+    "intern": {
+      "Motivation": [
+        "What motivates you to come to work every day?",
+        "Why do you want to work at our company?",
+        "How do you stay motivated during repetitive tasks?",
+        "Tell me about a time you were highly motivated to achieve a goal."
+      ],
+      "Adaptability": [
+        "Describe a time you failed and what you learned from it.",
+        "What's the most significant change you've had to adapt to at work?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you react to sudden changes in priorities?",
+        "How do you stay updated with industry trends?"
+      ],
+      "Culture Fit": [
+        "How do you contribute to a positive team environment?",
+        "How do you align with our company values?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What type of company culture do you thrive in?",
+        "What are your expectations from leadership in a company?"
+      ],
+      "Work Style": [
+        "How do you organize and prioritize your daily tasks?",
+        "What tools or methods help you stay organized?",
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?"
+      ],
+      "Conflict Resolution": [
+        "How do you deal with feedback that you disagree with?",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Describe a time you handled a difficult situation professionally.",
+        "What would you do if you disagreed with your manager?",
+        "Tell me about a conflict you had with a coworker and how you resolved it."
+      ],
+      "Leadership": [
+        "Describe a time you led a project or team.",
+        "Tell me about a time you mentored someone.",
+        "What makes a good leader in your opinion?",
+        "How do you motivate others in a leadership role?"
+      ],
+      "Team Collaboration": [
+        "What role do you usually play in group settings?",
+        "Tell me about a time you worked well within a team.",
+        "How do you build trust with new teammates?",
+        "How do you handle disagreements within a team?",
+        "Describe a project where teamwork was essential to success."
+      ],
+      "Career Goals": [
+        "How does this role fit into your career path?",
+        "What kind of growth opportunities are you looking for?",
+        "What skills do you hope to develop in your next role?",
+        "Where do you see yourself in 5 years?"
+      ]
+    },
+    "6 years": {
+      "Adaptability": [
+        "How do you stay updated with industry trends?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "Describe a time you failed and what you learned from it.",
+        "How do you react to sudden changes in priorities?",
+        "What's the most significant change you've had to adapt to at work?"
+      ],
+      "Motivation": [
+        "Why do you want to work at our company?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "What motivates you to come to work every day?",
+        "How do you stay motivated during repetitive tasks?"
+      ],
+      "Work Style": [
+        "How do you ensure productivity when working remotely?",
+        "What tools or methods help you stay organized?",
+        "How do you organize and prioritize your daily tasks?",
+        "Do you prefer working independently or in teams? Why?"
+      ],
+      "Team Collaboration": [
+        "Tell me about a time you worked well within a team.",
+        "What role do you usually play in group settings?",
+        "Describe a project where teamwork was essential to success.",
+        "How do you build trust with new teammates?",
+        "How do you handle disagreements within a team?"
+      ],
+      "Leadership": [
+        "Tell me about a time you mentored someone.",
+        "Describe a time you led a project or team.",
+        "How do you motivate others in a leadership role?",
+        "What makes a good leader in your opinion?"
+      ],
+      "Conflict Resolution": [
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you deal with feedback that you disagree with?",
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "What would you do if you disagreed with your manager?"
+      ],
+      "Culture Fit": [
+        "How do you align with our company values?",
+        "How do you contribute to a positive team environment?",
+        "What type of company culture do you thrive in?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What are your expectations from leadership in a company?"
+      ],
+      "Career Goals": [
+        "What skills do you hope to develop in your next role?",
+        "What kind of growth opportunities are you looking for?",
+        "How does this role fit into your career path?",
+        "Where do you see yourself in 5 years?"
+      ]
+    },
+    "3 years": {
+      "Team Collaboration": [
+        "Tell me about a time you worked well within a team.",
+        "What role do you usually play in group settings?",
+        "Describe a project where teamwork was essential to success.",
+        "How do you build trust with new teammates?",
+        "How do you handle disagreements within a team?"
+      ],
+      "Culture Fit": [
+        "How do you contribute to a positive team environment?",
+        "What are your expectations from leadership in a company?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you align with our company values?",
+        "What type of company culture do you thrive in?"
+      ],
+      "Career Goals": [
+        "What skills do you hope to develop in your next role?",
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?",
+        "How does this role fit into your career path?"
+      ],
+      "Leadership": [
+        "What makes a good leader in your opinion?",
+        "Tell me about a time you mentored someone.",
+        "How do you motivate others in a leadership role?",
+        "Describe a time you led a project or team."
+      ],
+      "Adaptability": [
+        "What's the most significant change you've had to adapt to at work?",
+        "Describe a time you failed and what you learned from it.",
+        "How do you react to sudden changes in priorities?",
+        "How do you stay updated with industry trends?",
+        "Tell me about a time you had to learn something completely new quickly."
+      ],
+      "Conflict Resolution": [
+        "How do you respond when a teammate isn't pulling their weight?",
+        "How do you deal with feedback that you disagree with?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "What would you do if you disagreed with your manager?",
+        "Describe a time you handled a difficult situation professionally."
+      ],
+      "Work Style": [
+        "How do you ensure productivity when working remotely?",
+        "How do you organize and prioritize your daily tasks?",
+        "What tools or methods help you stay organized?",
+        "Do you prefer working independently or in teams? Why?"
+      ],
+      "Motivation": [
+        "Why do you want to work at our company?",
+        "What motivates you to come to work every day?",
+        "How do you stay motivated during repetitive tasks?",
+        "Tell me about a time you were highly motivated to achieve a goal."
+      ]
+    },
+    "4 years": {
+      "Team Collaboration": [
+        "Tell me about a time you worked well within a team.",
+        "How do you build trust with new teammates?",
+        "What role do you usually play in group settings?",
+        "Describe a project where teamwork was essential to success.",
+        "How do you handle disagreements within a team?"
+      ],
+      "Culture Fit": [
+        "How do you align with our company values?",
+        "What type of company culture do you thrive in?",
+        "What are your expectations from leadership in a company?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you contribute to a positive team environment?"
+      ],
+      "Work Style": [
+        "What tools or methods help you stay organized?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you ensure productivity when working remotely?",
+        "How do you organize and prioritize your daily tasks?"
+      ],
+      "Adaptability": [
+        "How do you react to sudden changes in priorities?",
+        "Describe a time you failed and what you learned from it.",
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you stay updated with industry trends?",
+        "Tell me about a time you had to learn something completely new quickly."
+      ],
+      "Motivation": [
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "How do you stay motivated during repetitive tasks?",
+        "What motivates you to come to work every day?",
+        "Why do you want to work at our company?"
+      ],
+      "Leadership": [
+        "What makes a good leader in your opinion?",
+        "How do you motivate others in a leadership role?",
+        "Tell me about a time you mentored someone.",
+        "Describe a time you led a project or team."
+      ],
+      "Career Goals": [
+        "Where do you see yourself in 5 years?",
+        "How does this role fit into your career path?",
+        "What skills do you hope to develop in your next role?",
+        "What kind of growth opportunities are you looking for?"
+      ],
+      "Conflict Resolution": [
+        "How do you respond when a teammate isn't pulling their weight?",
+        "How do you deal with feedback that you disagree with?",
+        "What would you do if you disagreed with your manager?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "Describe a time you handled a difficult situation professionally."
+      ]
+    },
+    "7+ years": {
+      "Motivation": [
+        "Why do you want to work at our company?",
+        "How do you stay motivated during repetitive tasks?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "What motivates you to come to work every day?"
+      ],
+      "Work Style": [
+        "How do you organize and prioritize your daily tasks?",
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?",
+        "What tools or methods help you stay organized?"
+      ],
+      "Leadership": [
+        "Tell me about a time you mentored someone.",
+        "How do you motivate others in a leadership role?",
+        "Describe a time you led a project or team.",
+        "What makes a good leader in your opinion?"
+      ],
+      "Career Goals": [
+        "Where do you see yourself in 5 years?",
+        "How does this role fit into your career path?",
+        "What skills do you hope to develop in your next role?",
+        "What kind of growth opportunities are you looking for?"
+      ],
+      "Culture Fit": [
+        "How do you contribute to a positive team environment?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What type of company culture do you thrive in?",
+        "What are your expectations from leadership in a company?",
+        "How do you align with our company values?"
+      ],
+      "Adaptability": [
+        "How do you stay updated with industry trends?",
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you react to sudden changes in priorities?",
+        "Describe a time you failed and what you learned from it.",
+        "Tell me about a time you had to learn something completely new quickly."
+      ],
+      "Conflict Resolution": [
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "Describe a time you handled a difficult situation professionally.",
+        "What would you do if you disagreed with your manager?",
+        "How do you deal with feedback that you disagree with?"
+      ],
+      "Team Collaboration": [
+        "Describe a project where teamwork was essential to success.",
+        "How do you handle disagreements within a team?",
+        "Tell me about a time you worked well within a team.",
+        "What role do you usually play in group settings?",
+        "How do you build trust with new teammates?"
+      ]
+    }
+  },
+  "UX Designer": {
+    "2 years": {
+      "Leadership": [
+        "Describe a time you led a project or team.",
+        "What makes a good leader in your opinion?",
+        "Tell me about a time you mentored someone.",
+        "How do you motivate others in a leadership role?"
+      ],
+      "Motivation": [
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "What motivates you to come to work every day?",
+        "How do you stay motivated during repetitive tasks?",
+        "Why do you want to work at our company?"
+      ],
+      "Career Goals": [
+        "What kind of growth opportunities are you looking for?",
+        "How does this role fit into your career path?",
+        "Where do you see yourself in 5 years?",
+        "What skills do you hope to develop in your next role?"
+      ],
+      "Adaptability": [
+        "How do you stay updated with industry trends?",
+        "Describe a time you failed and what you learned from it.",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you react to sudden changes in priorities?",
+        "What's the most significant change you've had to adapt to at work?"
+      ],
+      "Work Style": [
+        "Do you prefer working independently or in teams? Why?",
+        "How do you ensure productivity when working remotely?",
+        "How do you organize and prioritize your daily tasks?",
+        "What tools or methods help you stay organized?"
+      ],
+      "Conflict Resolution": [
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you deal with feedback that you disagree with?",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "What would you do if you disagreed with your manager?"
+      ],
+      "Culture Fit": [
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you contribute to a positive team environment?",
+        "How do you align with our company values?",
+        "What type of company culture do you thrive in?",
+        "What are your expectations from leadership in a company?"
+      ],
+      "Team Collaboration": [
+        "What role do you usually play in group settings?",
+        "Describe a project where teamwork was essential to success.",
+        "How do you handle disagreements within a team?",
+        "How do you build trust with new teammates?",
+        "Tell me about a time you worked well within a team."
+      ]
+    },
+    "4 years": {
+      "Culture Fit": [
+        "How do you align with our company values?",
+        "How do you contribute to a positive team environment?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What are your expectations from leadership in a company?",
+        "What type of company culture do you thrive in?"
+      ],
+      "Motivation": [
+        "How do you stay motivated during repetitive tasks?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "What motivates you to come to work every day?",
+        "Why do you want to work at our company?"
+      ],
+      "Leadership": [
+        "Describe a time you led a project or team.",
+        "What makes a good leader in your opinion?",
+        "Tell me about a time you mentored someone.",
+        "How do you motivate others in a leadership role?"
+      ],
+      "Adaptability": [
+        "Tell me about a time you had to learn something completely new quickly.",
+        "Describe a time you failed and what you learned from it.",
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you react to sudden changes in priorities?",
+        "How do you stay updated with industry trends?"
+      ],
+      "Work Style": [
+        "How do you organize and prioritize your daily tasks?",
+        "How do you ensure productivity when working remotely?",
+        "What tools or methods help you stay organized?",
+        "Do you prefer working independently or in teams? Why?"
+      ],
+      "Career Goals": [
+        "What skills do you hope to develop in your next role?",
+        "What kind of growth opportunities are you looking for?",
+        "How does this role fit into your career path?",
+        "Where do you see yourself in 5 years?"
+      ],
+      "Conflict Resolution": [
+        "What would you do if you disagreed with your manager?",
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you deal with feedback that you disagree with?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you respond when a teammate isn't pulling their weight?"
+      ],
+      "Team Collaboration": [
+        "How do you build trust with new teammates?",
+        "How do you handle disagreements within a team?",
+        "What role do you usually play in group settings?",
+        "Tell me about a time you worked well within a team.",
+        "Describe a project where teamwork was essential to success."
+      ]
+    },
+    "1 year": {
+      "Team Collaboration": [
+        "How do you build trust with new teammates?",
+        "How do you handle disagreements within a team?",
+        "What role do you usually play in group settings?",
+        "Describe a project where teamwork was essential to success.",
+        "Tell me about a time you worked well within a team."
+      ],
+      "Career Goals": [
+        "How does this role fit into your career path?",
+        "Where do you see yourself in 5 years?",
+        "What kind of growth opportunities are you looking for?",
+        "What skills do you hope to develop in your next role?"
+      ],
+      "Work Style": [
+        "Do you prefer working independently or in teams? Why?",
+        "How do you organize and prioritize your daily tasks?",
+        "What tools or methods help you stay organized?",
+        "How do you ensure productivity when working remotely?"
+      ],
+      "Conflict Resolution": [
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "What would you do if you disagreed with your manager?",
+        "How do you deal with feedback that you disagree with?",
+        "Tell me about a conflict you had with a coworker and how you resolved it."
+      ],
+      "Motivation": [
+        "Why do you want to work at our company?",
+        "How do you stay motivated during repetitive tasks?",
+        "What motivates you to come to work every day?",
+        "Tell me about a time you were highly motivated to achieve a goal."
+      ],
+      "Adaptability": [
+        "Describe a time you failed and what you learned from it.",
+        "How do you stay updated with industry trends?",
+        "How do you react to sudden changes in priorities?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "What's the most significant change you've had to adapt to at work?"
+      ],
+      "Culture Fit": [
+        "How do you align with our company values?",
+        "How do you contribute to a positive team environment?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What are your expectations from leadership in a company?",
+        "What type of company culture do you thrive in?"
+      ],
+      "Leadership": [
+        "What makes a good leader in your opinion?",
+        "How do you motivate others in a leadership role?",
+        "Describe a time you led a project or team.",
+        "Tell me about a time you mentored someone."
+      ]
+    },
+    "3 years": {
+      "Work Style": [
+        "Do you prefer working independently or in teams? Why?",
+        "How do you organize and prioritize your daily tasks?",
+        "What tools or methods help you stay organized?",
+        "How do you ensure productivity when working remotely?"
+      ],
+      "Team Collaboration": [
+        "Tell me about a time you worked well within a team.",
+        "Describe a project where teamwork was essential to success.",
+        "What role do you usually play in group settings?",
+        "How do you build trust with new teammates?",
+        "How do you handle disagreements within a team?"
+      ],
+      "Culture Fit": [
+        "How do you contribute to a positive team environment?",
+        "What are your expectations from leadership in a company?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What type of company culture do you thrive in?",
+        "How do you align with our company values?"
+      ],
+      "Career Goals": [
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?",
+        "How does this role fit into your career path?",
+        "What skills do you hope to develop in your next role?"
+      ],
+      "Conflict Resolution": [
+        "What would you do if you disagreed with your manager?",
+        "Describe a time you handled a difficult situation professionally.",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you deal with feedback that you disagree with?",
+        "How do you respond when a teammate isn't pulling their weight?"
+      ],
+      "Leadership": [
+        "How do you motivate others in a leadership role?",
+        "Describe a time you led a project or team.",
+        "What makes a good leader in your opinion?",
+        "Tell me about a time you mentored someone."
+      ],
+      "Motivation": [
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "How do you stay motivated during repetitive tasks?",
+        "What motivates you to come to work every day?",
+        "Why do you want to work at our company?"
+      ],
+      "Adaptability": [
+        "What's the most significant change you've had to adapt to at work?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "Describe a time you failed and what you learned from it.",
+        "How do you stay updated with industry trends?",
+        "How do you react to sudden changes in priorities?"
+      ]
+    },
+    "6 years": {
+      "Conflict Resolution": [
+        "What would you do if you disagreed with your manager?",
+        "Describe a time you handled a difficult situation professionally.",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you deal with feedback that you disagree with?",
+        "How do you respond when a teammate isn't pulling their weight?"
+      ],
+      "Team Collaboration": [
+        "What role do you usually play in group settings?",
+        "Tell me about a time you worked well within a team.",
+        "How do you handle disagreements within a team?",
+        "Describe a project where teamwork was essential to success.",
+        "How do you build trust with new teammates?"
+      ],
+      "Culture Fit": [
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you align with our company values?",
+        "How do you contribute to a positive team environment?",
+        "What are your expectations from leadership in a company?",
+        "What type of company culture do you thrive in?"
+      ],
+      "Motivation": [
+        "Why do you want to work at our company?",
+        "What motivates you to come to work every day?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "How do you stay motivated during repetitive tasks?"
+      ],
+      "Adaptability": [
+        "Tell me about a time you had to learn something completely new quickly.",
+        "Describe a time you failed and what you learned from it.",
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you react to sudden changes in priorities?",
+        "How do you stay updated with industry trends?"
+      ],
+      "Career Goals": [
+        "Where do you see yourself in 5 years?",
+        "What skills do you hope to develop in your next role?",
+        "How does this role fit into your career path?",
+        "What kind of growth opportunities are you looking for?"
+      ],
+      "Work Style": [
+        "Do you prefer working independently or in teams? Why?",
+        "What tools or methods help you stay organized?",
+        "How do you organize and prioritize your daily tasks?",
+        "How do you ensure productivity when working remotely?"
+      ],
+      "Leadership": [
+        "How do you motivate others in a leadership role?",
+        "Tell me about a time you mentored someone.",
+        "What makes a good leader in your opinion?",
+        "Describe a time you led a project or team."
+      ]
+    },
+    "7+ years": {
+      "Work Style": [
+        "How do you organize and prioritize your daily tasks?",
+        "Do you prefer working independently or in teams? Why?",
+        "What tools or methods help you stay organized?",
+        "How do you ensure productivity when working remotely?"
+      ],
+      "Adaptability": [
+        "How do you stay updated with industry trends?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "Describe a time you failed and what you learned from it.",
+        "How do you react to sudden changes in priorities?",
+        "What's the most significant change you've had to adapt to at work?"
+      ],
+      "Team Collaboration": [
+        "Tell me about a time you worked well within a team.",
+        "Describe a project where teamwork was essential to success.",
+        "How do you build trust with new teammates?",
+        "How do you handle disagreements within a team?",
+        "What role do you usually play in group settings?"
+      ],
+      "Motivation": [
+        "How do you stay motivated during repetitive tasks?",
+        "Why do you want to work at our company?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "What motivates you to come to work every day?"
+      ],
+      "Career Goals": [
+        "What skills do you hope to develop in your next role?",
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?",
+        "How does this role fit into your career path?"
+      ],
+      "Culture Fit": [
+        "How do you contribute to a positive team environment?",
+        "How do you align with our company values?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What type of company culture do you thrive in?",
+        "What are your expectations from leadership in a company?"
+      ],
+      "Leadership": [
+        "What makes a good leader in your opinion?",
+        "Tell me about a time you mentored someone.",
+        "Describe a time you led a project or team.",
+        "How do you motivate others in a leadership role?"
+      ],
+      "Conflict Resolution": [
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you deal with feedback that you disagree with?",
+        "Describe a time you handled a difficult situation professionally.",
+        "What would you do if you disagreed with your manager?"
+      ]
+    },
+    "fresher": {
+      "Team Collaboration": [
+        "What role do you usually play in group settings?",
+        "Describe a project where teamwork was essential to success.",
+        "How do you build trust with new teammates?",
+        "How do you handle disagreements within a team?",
+        "Tell me about a time you worked well within a team."
+      ],
+      "Conflict Resolution": [
+        "How do you deal with feedback that you disagree with?",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "What would you do if you disagreed with your manager?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "Describe a time you handled a difficult situation professionally."
+      ],
+      "Leadership": [
+        "Describe a time you led a project or team.",
+        "How do you motivate others in a leadership role?",
+        "Tell me about a time you mentored someone.",
+        "What makes a good leader in your opinion?"
+      ],
+      "Adaptability": [
+        "How do you react to sudden changes in priorities?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you stay updated with industry trends?",
+        "What's the most significant change you've had to adapt to at work?",
+        "Describe a time you failed and what you learned from it."
+      ],
+      "Career Goals": [
+        "What kind of growth opportunities are you looking for?",
+        "What skills do you hope to develop in your next role?",
+        "How does this role fit into your career path?",
+        "Where do you see yourself in 5 years?"
+      ],
+      "Motivation": [
+        "How do you stay motivated during repetitive tasks?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "Why do you want to work at our company?",
+        "What motivates you to come to work every day?"
+      ],
+      "Culture Fit": [
+        "How do you align with our company values?",
+        "How do you contribute to a positive team environment?",
+        "What are your expectations from leadership in a company?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What type of company culture do you thrive in?"
+      ],
+      "Work Style": [
+        "How do you ensure productivity when working remotely?",
+        "How do you organize and prioritize your daily tasks?",
+        "What tools or methods help you stay organized?",
+        "Do you prefer working independently or in teams? Why?"
+      ]
+    },
+    "5 years": {
+      "Conflict Resolution": [
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "Describe a time you handled a difficult situation professionally.",
+        "What would you do if you disagreed with your manager?",
+        "How do you deal with feedback that you disagree with?"
+      ],
+      "Motivation": [
+        "What motivates you to come to work every day?",
+        "How do you stay motivated during repetitive tasks?",
+        "Why do you want to work at our company?",
+        "Tell me about a time you were highly motivated to achieve a goal."
+      ],
+      "Adaptability": [
+        "How do you stay updated with industry trends?",
+        "Describe a time you failed and what you learned from it.",
+        "How do you react to sudden changes in priorities?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "What's the most significant change you've had to adapt to at work?"
+      ],
+      "Culture Fit": [
+        "Describe a time you felt out of place in a workplace culture.",
+        "What type of company culture do you thrive in?",
+        "How do you align with our company values?",
+        "How do you contribute to a positive team environment?",
+        "What are your expectations from leadership in a company?"
+      ],
+      "Work Style": [
+        "What tools or methods help you stay organized?",
+        "How do you organize and prioritize your daily tasks?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you ensure productivity when working remotely?"
+      ],
+      "Career Goals": [
+        "What kind of growth opportunities are you looking for?",
+        "How does this role fit into your career path?",
+        "Where do you see yourself in 5 years?",
+        "What skills do you hope to develop in your next role?"
+      ],
+      "Team Collaboration": [
+        "How do you handle disagreements within a team?",
+        "Describe a project where teamwork was essential to success.",
+        "How do you build trust with new teammates?",
+        "Tell me about a time you worked well within a team.",
+        "What role do you usually play in group settings?"
+      ],
+      "Leadership": [
+        "Tell me about a time you mentored someone.",
+        "What makes a good leader in your opinion?",
+        "How do you motivate others in a leadership role?",
+        "Describe a time you led a project or team."
+      ]
+    },
+    "intern": {
+      "Leadership": [
+        "Tell me about a time you mentored someone.",
+        "Describe a time you led a project or team.",
+        "How do you motivate others in a leadership role?",
+        "What makes a good leader in your opinion?"
+      ],
+      "Work Style": [
+        "How do you ensure productivity when working remotely?",
+        "How do you organize and prioritize your daily tasks?",
+        "Do you prefer working independently or in teams? Why?",
+        "What tools or methods help you stay organized?"
+      ],
+      "Adaptability": [
+        "Describe a time you failed and what you learned from it.",
+        "How do you react to sudden changes in priorities?",
+        "How do you stay updated with industry trends?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "What's the most significant change you've had to adapt to at work?"
+      ],
+      "Career Goals": [
+        "Where do you see yourself in 5 years?",
+        "What kind of growth opportunities are you looking for?",
+        "How does this role fit into your career path?",
+        "What skills do you hope to develop in your next role?"
+      ],
+      "Culture Fit": [
+        "What are your expectations from leadership in a company?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What type of company culture do you thrive in?",
+        "How do you contribute to a positive team environment?",
+        "How do you align with our company values?"
+      ],
+      "Motivation": [
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "Why do you want to work at our company?",
+        "What motivates you to come to work every day?",
+        "How do you stay motivated during repetitive tasks?"
+      ],
+      "Conflict Resolution": [
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you deal with feedback that you disagree with?",
+        "What would you do if you disagreed with your manager?"
+      ],
+      "Team Collaboration": [
+        "How do you build trust with new teammates?",
+        "Tell me about a time you worked well within a team.",
+        "How do you handle disagreements within a team?",
+        "What role do you usually play in group settings?",
+        "Describe a project where teamwork was essential to success."
+      ]
+    }
+  },
+  "HR Specialist": {
+    "1 year": {
+      "Culture Fit": [
+        "How do you align with our company values?",
+        "How do you contribute to a positive team environment?",
+        "What are your expectations from leadership in a company?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What type of company culture do you thrive in?"
+      ],
+      "Conflict Resolution": [
+        "How do you deal with feedback that you disagree with?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "What would you do if you disagreed with your manager?"
+      ],
+      "Team Collaboration": [
+        "What role do you usually play in group settings?",
+        "How do you handle disagreements within a team?",
+        "How do you build trust with new teammates?",
+        "Tell me about a time you worked well within a team.",
+        "Describe a project where teamwork was essential to success."
+      ],
+      "Career Goals": [
+        "What skills do you hope to develop in your next role?",
+        "What kind of growth opportunities are you looking for?",
+        "How does this role fit into your career path?",
+        "Where do you see yourself in 5 years?"
+      ],
+      "Work Style": [
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you organize and prioritize your daily tasks?",
+        "What tools or methods help you stay organized?"
+      ],
+      "Adaptability": [
+        "Tell me about a time you had to learn something completely new quickly.",
+        "Describe a time you failed and what you learned from it.",
+        "How do you stay updated with industry trends?",
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you react to sudden changes in priorities?"
+      ],
+      "Motivation": [
+        "What motivates you to come to work every day?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "How do you stay motivated during repetitive tasks?",
+        "Why do you want to work at our company?"
+      ],
+      "Leadership": [
+        "How do you motivate others in a leadership role?",
+        "Describe a time you led a project or team.",
+        "What makes a good leader in your opinion?",
+        "Tell me about a time you mentored someone."
+      ]
+    },
+    "6 years": {
+      "Culture Fit": [
+        "How do you contribute to a positive team environment?",
+        "What type of company culture do you thrive in?",
+        "How do you align with our company values?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What are your expectations from leadership in a company?"
+      ],
+      "Career Goals": [
+        "What skills do you hope to develop in your next role?",
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?",
+        "How does this role fit into your career path?"
+      ],
+      "Motivation": [
+        "How do you stay motivated during repetitive tasks?",
+        "What motivates you to come to work every day?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "Why do you want to work at our company?"
+      ],
+      "Conflict Resolution": [
+        "Describe a time you handled a difficult situation professionally.",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you deal with feedback that you disagree with?",
+        "What would you do if you disagreed with your manager?",
+        "How do you respond when a teammate isn't pulling their weight?"
+      ],
+      "Team Collaboration": [
+        "What role do you usually play in group settings?",
+        "How do you handle disagreements within a team?",
+        "How do you build trust with new teammates?",
+        "Describe a project where teamwork was essential to success.",
+        "Tell me about a time you worked well within a team."
+      ],
+      "Leadership": [
+        "Tell me about a time you mentored someone.",
+        "Describe a time you led a project or team.",
+        "How do you motivate others in a leadership role?",
+        "What makes a good leader in your opinion?"
+      ],
+      "Adaptability": [
+        "How do you react to sudden changes in priorities?",
+        "How do you stay updated with industry trends?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "Describe a time you failed and what you learned from it.",
+        "What's the most significant change you've had to adapt to at work?"
+      ],
+      "Work Style": [
+        "How do you ensure productivity when working remotely?",
+        "What tools or methods help you stay organized?",
+        "How do you organize and prioritize your daily tasks?",
+        "Do you prefer working independently or in teams? Why?"
+      ]
+    },
+    "intern": {
+      "Conflict Resolution": [
+        "How do you respond when a teammate isn't pulling their weight?",
+        "What would you do if you disagreed with your manager?",
+        "How do you deal with feedback that you disagree with?",
+        "Describe a time you handled a difficult situation professionally.",
+        "Tell me about a conflict you had with a coworker and how you resolved it."
+      ],
+      "Motivation": [
+        "What motivates you to come to work every day?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "How do you stay motivated during repetitive tasks?",
+        "Why do you want to work at our company?"
+      ],
+      "Adaptability": [
+        "How do you react to sudden changes in priorities?",
+        "How do you stay updated with industry trends?",
+        "What's the most significant change you've had to adapt to at work?",
+        "Describe a time you failed and what you learned from it.",
+        "Tell me about a time you had to learn something completely new quickly."
+      ],
+      "Team Collaboration": [
+        "How do you build trust with new teammates?",
+        "What role do you usually play in group settings?",
+        "Describe a project where teamwork was essential to success.",
+        "How do you handle disagreements within a team?",
+        "Tell me about a time you worked well within a team."
+      ],
+      "Work Style": [
+        "What tools or methods help you stay organized?",
+        "How do you ensure productivity when working remotely?",
+        "How do you organize and prioritize your daily tasks?",
+        "Do you prefer working independently or in teams? Why?"
+      ],
+      "Career Goals": [
+        "How does this role fit into your career path?",
+        "Where do you see yourself in 5 years?",
+        "What skills do you hope to develop in your next role?",
+        "What kind of growth opportunities are you looking for?"
+      ],
+      "Culture Fit": [
+        "How do you contribute to a positive team environment?",
+        "What are your expectations from leadership in a company?",
+        "What type of company culture do you thrive in?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "How do you align with our company values?"
+      ],
+      "Leadership": [
+        "Tell me about a time you mentored someone.",
+        "Describe a time you led a project or team.",
+        "What makes a good leader in your opinion?",
+        "How do you motivate others in a leadership role?"
+      ]
+    },
+    "fresher": {
+      "Conflict Resolution": [
+        "How do you respond when a teammate isn't pulling their weight?",
+        "How do you deal with feedback that you disagree with?",
+        "Describe a time you handled a difficult situation professionally.",
+        "What would you do if you disagreed with your manager?",
+        "Tell me about a conflict you had with a coworker and how you resolved it."
+      ],
+      "Team Collaboration": [
+        "How do you build trust with new teammates?",
+        "Tell me about a time you worked well within a team.",
+        "How do you handle disagreements within a team?",
+        "Describe a project where teamwork was essential to success.",
+        "What role do you usually play in group settings?"
+      ],
+      "Motivation": [
+        "What motivates you to come to work every day?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "How do you stay motivated during repetitive tasks?",
+        "Why do you want to work at our company?"
+      ],
+      "Leadership": [
+        "Describe a time you led a project or team.",
+        "Tell me about a time you mentored someone.",
+        "How do you motivate others in a leadership role?",
+        "What makes a good leader in your opinion?"
+      ],
+      "Adaptability": [
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you react to sudden changes in priorities?",
+        "Describe a time you failed and what you learned from it.",
+        "How do you stay updated with industry trends?",
+        "Tell me about a time you had to learn something completely new quickly."
+      ],
+      "Culture Fit": [
+        "What are your expectations from leadership in a company?",
+        "How do you align with our company values?",
+        "How do you contribute to a positive team environment?",
+        "What type of company culture do you thrive in?",
+        "Describe a time you felt out of place in a workplace culture."
+      ],
+      "Work Style": [
+        "How do you organize and prioritize your daily tasks?",
+        "What tools or methods help you stay organized?",
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?"
+      ],
+      "Career Goals": [
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?",
+        "How does this role fit into your career path?",
+        "What skills do you hope to develop in your next role?"
+      ]
+    },
+    "4 years": {
+      "Work Style": [
+        "How do you organize and prioritize your daily tasks?",
+        "How do you ensure productivity when working remotely?",
+        "What tools or methods help you stay organized?",
+        "Do you prefer working independently or in teams? Why?"
+      ],
+      "Adaptability": [
+        "What's the most significant change you've had to adapt to at work?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you react to sudden changes in priorities?",
+        "Describe a time you failed and what you learned from it.",
+        "How do you stay updated with industry trends?"
+      ],
+      "Team Collaboration": [
+        "How do you build trust with new teammates?",
+        "Describe a project where teamwork was essential to success.",
+        "What role do you usually play in group settings?",
+        "How do you handle disagreements within a team?",
+        "Tell me about a time you worked well within a team."
+      ],
+      "Culture Fit": [
+        "Describe a time you felt out of place in a workplace culture.",
+        "What type of company culture do you thrive in?",
+        "How do you contribute to a positive team environment?",
+        "How do you align with our company values?",
+        "What are your expectations from leadership in a company?"
+      ],
+      "Conflict Resolution": [
+        "What would you do if you disagreed with your manager?",
+        "How do you deal with feedback that you disagree with?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Describe a time you handled a difficult situation professionally."
+      ],
+      "Motivation": [
+        "Why do you want to work at our company?",
+        "What motivates you to come to work every day?",
+        "How do you stay motivated during repetitive tasks?",
+        "Tell me about a time you were highly motivated to achieve a goal."
+      ],
+      "Career Goals": [
+        "What skills do you hope to develop in your next role?",
+        "How does this role fit into your career path?",
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?"
+      ],
+      "Leadership": [
+        "Tell me about a time you mentored someone.",
+        "What makes a good leader in your opinion?",
+        "How do you motivate others in a leadership role?",
+        "Describe a time you led a project or team."
+      ]
+    },
+    "7+ years": {
+      "Team Collaboration": [
+        "How do you build trust with new teammates?",
+        "Describe a project where teamwork was essential to success.",
+        "What role do you usually play in group settings?",
+        "Tell me about a time you worked well within a team.",
+        "How do you handle disagreements within a team?"
+      ],
+      "Work Style": [
+        "Do you prefer working independently or in teams? Why?",
+        "How do you ensure productivity when working remotely?",
+        "How do you organize and prioritize your daily tasks?",
+        "What tools or methods help you stay organized?"
+      ],
+      "Career Goals": [
+        "How does this role fit into your career path?",
+        "What skills do you hope to develop in your next role?",
+        "Where do you see yourself in 5 years?",
+        "What kind of growth opportunities are you looking for?"
+      ],
+      "Motivation": [
+        "What motivates you to come to work every day?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "How do you stay motivated during repetitive tasks?",
+        "Why do you want to work at our company?"
+      ],
+      "Culture Fit": [
+        "Describe a time you felt out of place in a workplace culture.",
+        "What type of company culture do you thrive in?",
+        "What are your expectations from leadership in a company?",
+        "How do you align with our company values?",
+        "How do you contribute to a positive team environment?"
+      ],
+      "Leadership": [
+        "Describe a time you led a project or team.",
+        "What makes a good leader in your opinion?",
+        "How do you motivate others in a leadership role?",
+        "Tell me about a time you mentored someone."
+      ],
+      "Conflict Resolution": [
+        "What would you do if you disagreed with your manager?",
+        "How do you deal with feedback that you disagree with?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "Describe a time you handled a difficult situation professionally.",
+        "How do you respond when a teammate isn't pulling their weight?"
+      ],
+      "Adaptability": [
+        "What's the most significant change you've had to adapt to at work?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "How do you stay updated with industry trends?",
+        "Describe a time you failed and what you learned from it.",
+        "How do you react to sudden changes in priorities?"
+      ]
+    },
+    "5 years": {
+      "Team Collaboration": [
+        "How do you build trust with new teammates?",
+        "Describe a project where teamwork was essential to success.",
+        "Tell me about a time you worked well within a team.",
+        "How do you handle disagreements within a team?",
+        "What role do you usually play in group settings?"
+      ],
+      "Motivation": [
+        "How do you stay motivated during repetitive tasks?",
+        "What motivates you to come to work every day?",
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "Why do you want to work at our company?"
+      ],
+      "Conflict Resolution": [
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Describe a time you handled a difficult situation professionally.",
+        "What would you do if you disagreed with your manager?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you deal with feedback that you disagree with?"
+      ],
+      "Work Style": [
+        "How do you organize and prioritize your daily tasks?",
+        "Do you prefer working independently or in teams? Why?",
+        "What tools or methods help you stay organized?",
+        "How do you ensure productivity when working remotely?"
+      ],
+      "Adaptability": [
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you stay updated with industry trends?",
+        "Describe a time you failed and what you learned from it.",
+        "How do you react to sudden changes in priorities?",
+        "Tell me about a time you had to learn something completely new quickly."
+      ],
+      "Leadership": [
+        "Tell me about a time you mentored someone.",
+        "How do you motivate others in a leadership role?",
+        "Describe a time you led a project or team.",
+        "What makes a good leader in your opinion?"
+      ],
+      "Career Goals": [
+        "How does this role fit into your career path?",
+        "What kind of growth opportunities are you looking for?",
+        "Where do you see yourself in 5 years?",
+        "What skills do you hope to develop in your next role?"
+      ],
+      "Culture Fit": [
+        "Describe a time you felt out of place in a workplace culture.",
+        "What are your expectations from leadership in a company?",
+        "What type of company culture do you thrive in?",
+        "How do you contribute to a positive team environment?",
+        "How do you align with our company values?"
+      ]
+    },
+    "3 years": {
+      "Culture Fit": [
+        "Describe a time you felt out of place in a workplace culture.",
+        "What type of company culture do you thrive in?",
+        "How do you align with our company values?",
+        "How do you contribute to a positive team environment?",
+        "What are your expectations from leadership in a company?"
+      ],
+      "Team Collaboration": [
+        "How do you build trust with new teammates?",
+        "Tell me about a time you worked well within a team.",
+        "Describe a project where teamwork was essential to success.",
+        "How do you handle disagreements within a team?",
+        "What role do you usually play in group settings?"
+      ],
+      "Motivation": [
+        "Why do you want to work at our company?",
+        "How do you stay motivated during repetitive tasks?",
+        "What motivates you to come to work every day?",
+        "Tell me about a time you were highly motivated to achieve a goal."
+      ],
+      "Work Style": [
+        "What tools or methods help you stay organized?",
+        "How do you ensure productivity when working remotely?",
+        "Do you prefer working independently or in teams? Why?",
+        "How do you organize and prioritize your daily tasks?"
+      ],
+      "Conflict Resolution": [
+        "How do you deal with feedback that you disagree with?",
+        "What would you do if you disagreed with your manager?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Describe a time you handled a difficult situation professionally."
+      ],
+      "Leadership": [
+        "What makes a good leader in your opinion?",
+        "Tell me about a time you mentored someone.",
+        "How do you motivate others in a leadership role?",
+        "Describe a time you led a project or team."
+      ],
+      "Adaptability": [
+        "How do you stay updated with industry trends?",
+        "What's the most significant change you've had to adapt to at work?",
+        "How do you react to sudden changes in priorities?",
+        "Tell me about a time you had to learn something completely new quickly.",
+        "Describe a time you failed and what you learned from it."
+      ],
+      "Career Goals": [
+        "Where do you see yourself in 5 years?",
+        "What kind of growth opportunities are you looking for?",
+        "How does this role fit into your career path?",
+        "What skills do you hope to develop in your next role?"
+      ]
+    },
+    "2 years": {
+      "Motivation": [
+        "Tell me about a time you were highly motivated to achieve a goal.",
+        "What motivates you to come to work every day?",
+        "Why do you want to work at our company?",
+        "How do you stay motivated during repetitive tasks?"
+      ],
+      "Conflict Resolution": [
+        "What would you do if you disagreed with your manager?",
+        "How do you deal with feedback that you disagree with?",
+        "How do you respond when a teammate isn't pulling their weight?",
+        "Tell me about a conflict you had with a coworker and how you resolved it.",
+        "Describe a time you handled a difficult situation professionally."
+      ],
+      "Work Style": [
+        "Do you prefer working independently or in teams? Why?",
+        "What tools or methods help you stay organized?",
+        "How do you ensure productivity when working remotely?",
+        "How do you organize and prioritize your daily tasks?"
+      ],
+      "Leadership": [
+        "How do you motivate others in a leadership role?",
+        "What makes a good leader in your opinion?",
+        "Tell me about a time you mentored someone.",
+        "Describe a time you led a project or team."
+      ],
+      "Adaptability": [
+        "How do you stay updated with industry trends?",
+        "How do you react to sudden changes in priorities?",
+        "What's the most significant change you've had to adapt to at work?",
+        "Describe a time you failed and what you learned from it.",
+        "Tell me about a time you had to learn something completely new quickly."
+      ],
+      "Career Goals": [
+        "What kind of growth opportunities are you looking for?",
+        "How does this role fit into your career path?",
+        "What skills do you hope to develop in your next role?",
+        "Where do you see yourself in 5 years?"
+      ],
+      "Team Collaboration": [
+        "Describe a project where teamwork was essential to success.",
+        "How do you handle disagreements within a team?",
+        "How do you build trust with new teammates?",
+        "Tell me about a time you worked well within a team.",
+        "What role do you usually play in group settings?"
+      ],
+      "Culture Fit": [
+        "How do you contribute to a positive team environment?",
+        "Describe a time you felt out of place in a workplace culture.",
+        "What are your expectations from leadership in a company?",
+        "What type of company culture do you thrive in?",
+        "How do you align with our company values?"
+      ]
+    }
+  }
+}

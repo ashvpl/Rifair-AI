@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Zap, Activity, Layers, ArrowUpRight } from "lucide-react"
+import { Zap, Sparkles, Activity, Layers, ArrowUpRight } from "lucide-react"
 import Link from "next/link"
 
 // --- Animation Components ---
@@ -180,6 +180,14 @@ export function EquiHireCoreFeatures() {
       color: "bg-white",
       dark: false,
       href: "/analyze"
+    },
+    {
+      title: "Fair Question Generator",
+      description: "Auto-generates inclusive and unbiased alternatives that accurately assess candidate skills.",
+      icon: Sparkles,
+      animation: <QuestionGenAnimation />,
+      color: "bg-white",
+      href: "/kit"
     }
   ]
 
@@ -220,9 +228,6 @@ export function EquiHireCoreFeatures() {
                         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 items-center min-h-[340px]">
                             <div className="p-10 flex flex-col h-full justify-between border-b lg:border-b-0 lg:border-r border-black/[0.03]">
                                 <div>
-                                    <div className={`h-12 w-12 rounded-2xl ${feature.dark ? 'bg-white/10 text-white' : 'bg-muted text-primary'} flex items-center justify-center mb-8 group-hover:scale-110 transition-transform shadow-sm`}>
-                                        <feature.icon className="h-6 w-6" />
-                                    </div>
                                     <h3 className={`text-2xl font-bold ${feature.dark ? 'text-white' : 'text-[#1D1D1F]'} mb-4`}>{feature.title}</h3>
                                     <p className={`${feature.dark ? 'text-white/60' : 'text-[#86868B]'} text-lg leading-relaxed`}>
                                         {feature.description}

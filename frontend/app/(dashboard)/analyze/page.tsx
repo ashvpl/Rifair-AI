@@ -12,6 +12,7 @@ import HolographicCard from "@/components/ui/holographic-card";
 import { ShieldCheck, Info, AlertTriangle, Sparkles, Copy, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Typewriter } from "@/components/ui/typewriter";
+import { safeParseReport } from "@/lib/utils";
 
 export default function AnalyzePage() {
   const { getToken } = useAuth();
@@ -30,26 +31,9 @@ export default function AnalyzePage() {
       try {
         const token = await getToken();
         const data = await getReportById(reportId, token);
-        let fetchedReport = data.report;
+        const fetchedReport = safeParseReport(data.report);
         
         if (!fetchedReport) throw new Error("Report data missing");
-
-        // Robust parsing of JSONB fields
-        if (typeof fetchedReport.categories === "string") {
-          try {
-            fetchedReport.categories = JSON.parse(fetchedReport.categories);
-          } catch (e) {
-            console.error("Failed to parse report categories", e);
-          }
-        }
-        
-        // Ensure categories is at least an empty object to avoid crashes
-        if (!fetchedReport.categories) fetchedReport.categories = {};
-        
-        // Reliability fallback for questions
-        if (!fetchedReport.categories.questions && Array.isArray(fetchedReport.flagged_phrases)) {
-           fetchedReport.categories.questions = fetchedReport.flagged_phrases;
-        }
 
         setReport(fetchedReport); 
       } catch (err: any) {
@@ -70,7 +54,9 @@ export default function AnalyzePage() {
     try {
       const token = await getToken();
       const data = await analyzeQuestions(text, token, name);
-      setReport(data.report);
+      const reportData = safeParseReport(data.report);
+      
+      setReport(reportData);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "AI service temporarily unavailable";
       setError(msg);
@@ -173,9 +159,10 @@ export default function AnalyzePage() {
               
               <div className="space-y-8">
                 {report.categories?.questions?.map((q: any, idx: number) => {
-                  const isNeutral = (q.biasScore || 0) <= 20 && (q.flags?.length || 0) === 0;
+                  const qBiasScore = q.bias_score ?? q.biasScore ?? 0;
+                  const isNeutral = qBiasScore <= 20 && (q.flags?.length || 0) === 0;
                   const hasHighFlag = q.flags?.some((f: any) => f.severity === 'high');
-                  const biasLevel = isNeutral ? 'neutral' : hasHighFlag || (q.biasScore || 0) > 60 ? 'high' : 'medium';
+                  const biasLevel = isNeutral ? 'neutral' : hasHighFlag || qBiasScore > 60 ? 'high' : 'medium';
                   
                   return (
                     <motion.div variants={itemVariants} key={idx}>
@@ -198,16 +185,37 @@ export default function AnalyzePage() {
                             {/* Gradient severity stripe */}
                             <div className="absolute left-0 top-0 bottom-0 w-1.5 rounded-l-[2rem] bg-gradient-to-b from-warning to-danger z-10" />
                             <div className="p-8 border-b md:border-b-0 md:border-r border-black/[0.04] pl-10">
-                              <h4 className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
-                                <AlertTriangle className="h-3 w-3 text-danger" />
-                                Original &amp; Flags
-                              </h4>
+                                <div className="flex justify-between items-start mb-6">
+                                  <h4 className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] flex items-center gap-2">
+                                    <AlertTriangle className="h-3 w-3 text-danger" />
+                                    Detected Bias
+                                  </h4>
+                                  <div className="flex gap-2">
+                                    {q.detectionMethod && (
+                                      <div className={`text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest ${q.detectionMethod === 'full' ? 'bg-primary/10 text-primary border border-primary/20' : 'bg-warning/10 text-warning border border-warning/20'}`}>
+                                        {q.detectionMethod === 'full' ? 'AI-Powered' : 'Rule-Based Fallback'}
+                                      </div>
+                                    )}
+                                    <div className="text-[10px] font-black bg-danger/10 text-danger px-3 py-1 rounded-full uppercase tracking-widest">
+                                      Score: {Math.round(q.bias_score || 0)}
+                                    </div>
+                                  </div>
+                                </div>
                               <div 
                                 className="text-lg text-foreground font-semibold leading-relaxed tracking-tight whitespace-pre-wrap highlight-container"
-                                dangerouslySetInnerHTML={{ __html: q.highlighted }}
+                                dangerouslySetInnerHTML={{ __html: q.highlighted || q.original }}
                               />
-                              {q.flags.length > 0 && (
-                                <div className="mt-8 flex flex-wrap gap-2">
+                              
+                              {/* NEW: WHY BIAS Section */}
+                              {q.explanation && (
+                                <div className="mt-6 p-4 bg-black/[0.02] rounded-2xl border border-black/[0.03]">
+                                   <p className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.15em] mb-1">Why Bias?</p>
+                                   <p className="text-sm text-foreground/80 font-medium italic">{q.explanation}</p>
+                                </div>
+                              )}
+
+                              {q.flags && q.flags.length > 0 && (
+                                <div className="mt-6 flex flex-wrap gap-2">
                                   {q.flags.map((f: any, fIdx: number) => (
                                     <span key={fIdx} className={`text-[10px] px-3 py-1.5 rounded-full font-black uppercase tracking-wider border ${
                                       f.severity === 'high' ? 'bg-danger/10 text-danger border-danger/20' : 
@@ -221,23 +229,29 @@ export default function AnalyzePage() {
                               )}
                             </div>
                             
-                            <div className="p-8 bg-[#FAFAFA]/60 relative flex flex-col">
-                              <h4 className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] mb-6 flex justify-between items-center">
-                                <span className="flex items-center gap-2">
-                                  <Sparkles className="h-3 w-3 text-primary" />
-                                  Strategic Recommendation
-                                </span>
-                                <button 
-                                  onClick={() => handleCopy(q.rewrite, idx)}
-                                  className="text-[#86868B] hover:text-foreground transition-all duration-300 p-1.5 bg-white border border-black/5 rounded-lg shadow-sm hover:shadow hover:scale-110 active:scale-95"
-                                  title="Copy rewrite"
-                                >
-                                  {copiedId === idx ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
-                                </button>
-                              </h4>
+                            <div className="p-8 bg-[#f0f9f1]/60 relative flex flex-col">
+                              <div className="flex justify-between items-start mb-6">
+                                <h4 className="text-[10px] font-black text-success uppercase tracking-[0.2em] flex justify-between items-center group">
+                                  <span className="flex items-center gap-2">
+                                    Improved Question
+                                  </span>
+                                </h4>
+                                <div className="flex items-center gap-3">
+                                  <div className="text-[10px] font-black bg-success/10 text-success px-3 py-1 rounded-full uppercase tracking-widest">
+                                    Score: {Math.round(q.improved_score || 10)}
+                                  </div>
+                                  <button 
+                                    onClick={() => handleCopy(q.improved_question, idx)}
+                                    className="text-[#86868B] hover:text-foreground transition-all duration-300 p-1.5 bg-white border border-black/5 rounded-lg shadow-sm hover:shadow hover:scale-110 active:scale-95"
+                                    title="Copy rewrite"
+                                  >
+                                    {copiedId === idx ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
+                                  </button>
+                                </div>
+                              </div>
                               <div className="relative flex-1 flex flex-col justify-center">
-                                <p className="text-xl text-primary font-bold italic pl-6 border-l-4 border-primary/20 leading-relaxed min-h-[3rem]">
-                                  &ldquo;<Typewriter text={q.rewrite} speed={50} />&rdquo;
+                                <p className="text-xl text-primary font-bold italic pl-6 border-l-4 border-success/40 leading-relaxed min-h-[3rem]">
+                                  &ldquo;<Typewriter text={q.improved_question} speed={50} />&rdquo;
                                 </p>
                               </div>
                             </div>
@@ -264,46 +278,45 @@ export default function AnalyzePage() {
               >
 
                 
-                <BiasScoreCard score={report.categories?.overallScore || report.bias_score} />
+                {(() => {
+                  const typeInCategories = report?.categories?.analysis_type;
+                  const isKit = typeInCategories === 'kit' || report?.input_text?.startsWith("Interview Kit: ");
+                  return (
+                    <BiasScoreCard 
+                      score={report.bias_score || report.categories?.overall_bias_score || 0} 
+                      type={isKit ? 'kit' : 'analysis'}
+                    />
+                  );
+                })()}
                 
-                <div className="bg-white border border-black/[0.05] p-8 rounded-[2rem] shadow-[0_4px_24px_rgba(0,0,0,0.02)] space-y-8">
-                  <div className="flex items-center justify-between">
-                    <div className="text-[11px] font-black text-[#86868B] uppercase tracking-[0.25em] leading-[1.3] flex flex-col">
-                      <span>Risk</span>
-                      <span>Profile</span>
-                    </div>
-                    <RiskIndicator level={report.categories?.riskLevel || report.risk_level} />
-                  </div>
-                  
-                  {report.categories?.categoryBreakdown && Object.keys(report.categories.categoryBreakdown).length > 0 && (
-                    <div className="pt-8 border-t border-black/[0.03]">
-                      <span className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] mb-6 block">
-                        Detection Clusters
-                      </span>
-                      <div className="space-y-5">
-                        {Object.entries(report.categories.categoryBreakdown).map(([cat, count]: [any, any]) => {
-                          const percentage = Math.min((count / 5) * 100, 100);
-                          return (
-                            <div key={cat} className="space-y-2 group">
-                              <div className="flex justify-between text-xs font-bold tracking-tight">
-                                <span className="capitalize text-foreground/70">{cat}</span>
-                                <span className="text-foreground">{count}</span>
-                              </div>
-                              <div className="h-2 w-full bg-[#F5F5F7] rounded-full overflow-hidden">
-                                <motion.div 
-                                  initial={{ width: 0 }}
-                                  animate={{ width: `${percentage}%` }}
-                                  transition={{ duration: 1.5, ease: "circOut" }}
-                                  className="h-full bg-black rounded-full" 
-                                />
-                              </div>
+                {report.categories?.categoryBreakdown && Object.keys(report.categories.categoryBreakdown).length > 0 && (
+                  <div className="bg-white border border-black/[0.05] p-8 rounded-[2rem] shadow-[0_4px_24px_rgba(0,0,0,0.02)] space-y-8">
+                    <span className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] mb-6 block">
+                      Detection Clusters
+                    </span>
+                    <div className="space-y-5">
+                      {Object.entries(report.categories.categoryBreakdown).map(([cat, count]: [any, any]) => {
+                        const percentage = Math.min((count / 5) * 100, 100);
+                        return (
+                          <div key={cat} className="space-y-2 group">
+                            <div className="flex justify-between text-xs font-bold tracking-tight">
+                              <span className="capitalize text-foreground/70">{cat}</span>
+                              <span className="text-foreground">{count}</span>
                             </div>
-                          );
-                        })}
-                      </div>
+                            <div className="h-2 w-full bg-[#F5F5F7] rounded-full overflow-hidden">
+                              <motion.div 
+                                initial={{ width: 0 }}
+                                animate={{ width: `${percentage}%` }}
+                                transition={{ duration: 1.5, ease: "circOut" }}
+                                className="h-full bg-black rounded-full" 
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </motion.div>
             )}
           </AnimatePresence>

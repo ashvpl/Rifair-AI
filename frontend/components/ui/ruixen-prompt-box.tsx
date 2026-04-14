@@ -10,19 +10,16 @@ import { Loader2 } from "lucide-react";
 const TRANSFORM_OPTIONS = [
   {
     label: "Extreme Bias (Stress Test)",
-    icon: Zap,
     color: "text-red-500",
     bg: "bg-red-100",
   },
   {
     label: "Subtle Microaggressions",
-    icon: Sparkles,
     color: "text-yellow-600",
     bg: "bg-yellow-100",
   },
   {
     label: "Neutral Benchmark",
-    icon: Scale,
     color: "text-indigo-500",
     bg: "bg-indigo-100",
   },
@@ -73,7 +70,6 @@ export default function RuixenPromptBox({ onSubmit, isLoading }: RuixenPromptBox
                 "shadow-sm"
               )}
             >
-              <currentOption.icon className="inline-block w-3.5 h-3.5 mr-1.5" />
               {currentOption.label}
             </div>
           )}
@@ -122,9 +118,8 @@ export default function RuixenPromptBox({ onSubmit, isLoading }: RuixenPromptBox
           </div>
         </div>
 
-        {/* Transform Options */}
         <div className="flex flex-wrap gap-2 justify-start px-1 pt-1">
-          {TRANSFORM_OPTIONS.map(({ label, icon: Icon, color }) => {
+          {TRANSFORM_OPTIONS.map(({ label, color }) => {
             const isSelected = label === selectedOption;
             return (
               <button
@@ -141,7 +136,6 @@ export default function RuixenPromptBox({ onSubmit, isLoading }: RuixenPromptBox
                     : "bg-transparent border-border/50 text-muted-foreground hover:bg-muted/10 hover:border-black/5"
                 )}
               >
-                <Icon className={cn("w-4 h-4", color)} />
                 <span className="whitespace-nowrap">{label}</span>
               </button>
             );

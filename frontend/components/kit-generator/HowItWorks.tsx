@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Cpu, FileCheck } from "lucide-react";
+import { Search, Activity, FileCheck } from "lucide-react";
 import { motion } from "framer-motion";
 
 const steps = [
@@ -14,7 +14,7 @@ const steps = [
   {
     title: "AI Processing",
     desc: "Multi-layer bias-aware generation",
-    icon: Cpu,
+    icon: Activity,
     color: "from-purple-500/20 to-pink-500/20",
     iconColor: "text-purple-400"
   },

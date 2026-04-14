@@ -88,20 +88,12 @@ export function LogosSection() {
 
 const logos = [
 	{
-		src: "https://storage.efferd.com/logo/nvidia-wordmark.svg",
-		alt: "Nvidia Logo",
-	},
-	{
 		src: "https://storage.efferd.com/logo/supabase-wordmark.svg",
 		alt: "Supabase Logo",
 	},
 	{
 		src: "https://storage.efferd.com/logo/openai-wordmark.svg",
 		alt: "OpenAI Logo",
-	},
-	{
-		src: "https://storage.efferd.com/logo/turso-wordmark.svg",
-		alt: "Turso Logo",
 	},
 	{
 		src: "https://storage.efferd.com/logo/vercel-wordmark.svg",

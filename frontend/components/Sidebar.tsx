@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { History, Settings, ShieldAlert, LayoutDashboard, FileText, Zap, ChevronRight, Home } from "lucide-react";
+import { History, Settings, ShieldAlert, LayoutDashboard, FileText, ChevronRight, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import Image from "next/image";

@@ -184,13 +184,35 @@ async function validateWithAI(text, hints) {
       }
     }
 
-    try {
-      console.log("AI Pipeline: Falling back to OpenAI...");
-      const result = await withTimeout(callOpenAI(augmentedText), timeoutMs);
-      return cleanAIResponse(result, text);
-    } catch (e3) {
-      console.error("AI Pipeline: OpenAI also failed:", e3.message);
-      throw new Error("AI Validation Failed Across All Providers");
+      // GROK FALLBACK (SECONDARY)
+      if (process.env.GROK_API_KEY) {
+        try {
+          console.log("AI Pipeline: Falling back to Grok (xAI)...");
+          const grok = new OpenAI({ apiKey: process.env.GROK_API_KEY, baseURL: "https://api.x.ai/v1" });
+          const completion = await withTimeout(grok.chat.completions.create({
+            model: "grok4.20",
+            response_format: { type: "json_object" },
+            messages: [
+              { role: "system", content: SYSTEM_PROMPT },
+              { role: "user", content: `USER INPUT:\n${augmentedText}` },
+            ],
+          }), timeoutMs);
+          return cleanAIResponse(JSON.parse(completion.choices[0].message.content), text);
+        } catch (eGrok) {
+          console.error("AI Pipeline: Grok also failed:", eGrok.message);
+        }
+      }
+
+      // OPENAI FALLBACK (TERNARY)
+      try {
+        console.log("AI Pipeline: Falling back to OpenAI...");
+        const result = await withTimeout(callOpenAI(augmentedText), timeoutMs);
+        return cleanAIResponse(result, text);
+      } catch (eOpenAI) {
+        console.error("AI Pipeline: OpenAI also failed:", eOpenAI.message);
+      }
+      
+      throw new Error("AI Validation Failed Across All Providers (Gemini, Grok, OpenAI)");
     }
   }
 }

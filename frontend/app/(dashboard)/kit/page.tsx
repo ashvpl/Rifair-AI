@@ -9,12 +9,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { Sparkles, Loader2, FileText, CheckCircle2, AlertCircle, PlusCircle } from "lucide-react";
+import { Loader2, FileText, CheckCircle2, AlertCircle, PlusCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Typewriter } from "@/components/ui/typewriter";
 import { KitFeatureCards } from "@/components/kit-generator/KitFeatureCards";
 import { LoadingState } from "@/components/LoadingState";
 import HolographicCard from "@/components/ui/holographic-card";
+import { BiasScoreCard } from "@/components/BiasScoreCard";
 
 export default function KitGeneratorPage() {
   const { getToken } = useAuth();
@@ -214,11 +215,30 @@ export default function KitGeneratorPage() {
                   >
                     <div className="absolute top-0 right-0 w-96 h-96 bg-black/[0.01] rounded-full blur-[120px] -mr-48 -mt-48" />
                     <div className="relative z-10 flex flex-col items-center justify-center flex-1 py-10">
-                      <div className="text-center mb-12 space-y-3">
-                        <h3 className="text-4xl font-extrabold text-[#1D1D1F] tracking-tight uppercase">How it works</h3>
-                        <p className="text-[#86868B] font-bold max-w-sm mx-auto leading-relaxed uppercase text-[11px] tracking-widest">Explore the core capabilities of the EquiHire interview engine.</p>
-                      </div>
-                      <KitFeatureCards />
+                      {error ? (
+                        <div className="text-center space-y-4 max-w-sm mx-auto">
+                          <div className="bg-destructive/10 text-destructive p-4 rounded-2xl border border-destructive/20 mb-4">
+                            <AlertCircle className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                            <h3 className="font-black text-xs uppercase tracking-widest mb-1">Critical Backend Error</h3>
+                            <p className="text-xs font-bold opacity-80">{error}</p>
+                          </div>
+                          <Button 
+                            variant="outline" 
+                            onClick={handleGenerate}
+                            className="bg-white hover:bg-[#F5F5F7] border-black/[0.05] rounded-xl font-black text-[10px] uppercase tracking-widest px-8"
+                          >
+                            Retry Generation
+                          </Button>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="text-center mb-12 space-y-3">
+                            <h3 className="text-4xl font-extrabold text-[#1D1D1F] tracking-tight uppercase">How it works</h3>
+                            <p className="text-[#86868B] font-bold max-w-sm mx-auto leading-relaxed uppercase text-[11px] tracking-widest">Explore the core capabilities of the EquiHire interview engine.</p>
+                          </div>
+                          <KitFeatureCards />
+                        </>
+                      )}
                     </div>
                   </motion.div>
                 ) : (
@@ -236,14 +256,21 @@ export default function KitGeneratorPage() {
                     >
                       {/* Results Header */}
                       <div className="p-10 border-b border-black/[0.03] bg-white/40 backdrop-blur-sm flex items-center justify-between shrink-0 relative z-10">
-                        <div>
+                        <div className="flex-1">
                           <h2 className="text-2xl font-extrabold text-foreground tracking-tight">
                             Validated Kit Output
                           </h2>
                           <div className="flex items-center gap-3 mt-1">
                             <div className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
-                            <span className="text-[9px] font-black text-[#86868B] uppercase tracking-[0.2em]">Risk Grade: {biasValidation?.risk_level || "LOW"}</span>
+                            <span className="text-[9px] font-black text-[#86868B] uppercase tracking-[0.2em]">Risk Grade: {biasValidation?.risk_level || biasValidation?.riskLevel || "LOW"}</span>
                           </div>
+                        </div>
+                        
+                        <div className="scale-50 -mr-20 -my-10">
+                           <BiasScoreCard 
+                             score={biasValidation?.overall_bias_score || biasValidation?.overallScore || 0} 
+                             type="kit"
+                           />
                         </div>
                       </div>
 
