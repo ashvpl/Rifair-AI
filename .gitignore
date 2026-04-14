@@ -1,5 +1,13 @@
 # Dependencies
 node_modules/
+
+# Backend test/scratch scripts (never commit these - may contain API keys)
+backend/test_*.js
+backend/tester*.js
+backend/list_models.js
+backend/scratch/
+backend/*.pid
+backend/test_log.txt
 .pnp
 .pnp.js
 
