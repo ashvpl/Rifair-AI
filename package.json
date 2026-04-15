@@ -1,5 +1,5 @@
 {
-  "name": "equihire-monorepo",
+  "name": "rifair-monorepo",
   "private": true,
   "workspaces": [
     "frontend",

@@ -144,7 +144,7 @@ export default function DashboardPage() {
         titleColor: 'text-blue-900',
         subtitleColor: 'text-blue-800/70',
         buttonBg: 'bg-blue-600 hover:bg-blue-700',
-        title: "Welcome to EquiHire AI",
+        title: "Welcome to Rifair AI",
         subtitle: "Paste your first set of interview questions to get a bias score instantly.",
         cta: "Run your first analysis",
         ctaLink: '/analyze'

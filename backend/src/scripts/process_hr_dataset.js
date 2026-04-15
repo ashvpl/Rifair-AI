@@ -2,7 +2,7 @@ const fs = require('fs');
 const readline = require('readline');
 const path = require('path');
 
-const datasetPath = '/Users/ayushpatil/Documents/EquihireAI/hr_interview_questions_dataset.json';
+const datasetPath = '/Users/ayushpatil/Documents/RifairAI/hr_interview_questions_dataset.json';
 const outputPath = path.join(__dirname, '../../data/hr_structured_dataset.json');
 
 if (!fs.existsSync(path.dirname(outputPath))) {

@@ -99,7 +99,7 @@ export function KitFeatureCards() {
               >
                 <div className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_white] animate-pulse" />
                 <span className="text-white font-black text-[9px] uppercase tracking-[0.3em]">
-                  EquiHire Intelligence
+                  Rifair Intelligence
                 </span>
               </div>
 

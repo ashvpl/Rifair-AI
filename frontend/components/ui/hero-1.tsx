@@ -48,7 +48,7 @@ export function HeroSection() {
 				</div>
 
 				<p className="fade-in slide-in-from-bottom-10 mx-auto max-w-2xl animate-in fill-mode-backwards text-center text-base text-foreground/80 tracking-wider delay-200 duration-500 ease-out sm:text-lg md:text-xl font-medium">
-					EquiHire AI analyzes interview questions, detects hidden bias, and generates fair, inclusive alternatives — in seconds.
+					Rifair AI analyzes interview questions, detects hidden bias, and generates fair, inclusive alternatives — in seconds.
 				</p>
 
 				<div className="fade-in slide-in-from-bottom-10 flex animate-in flex-row flex-wrap items-center justify-center gap-3 fill-mode-backwards pt-2 delay-300 duration-500 ease-out">

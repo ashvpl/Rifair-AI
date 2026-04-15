@@ -8,8 +8,8 @@ export default function SignUpPage() {
         {/* Logo only — no title, no subtitle */}
         <div className="mb-10 flex justify-center">
           <Image
-            src="/whatsapp-logo.jpeg"
-            alt="EquiHire AI"
+            src="/rifair-logo.png"
+            alt="Rifair AI"
             width={200}
             height={50}
             className="h-10 w-auto object-contain"

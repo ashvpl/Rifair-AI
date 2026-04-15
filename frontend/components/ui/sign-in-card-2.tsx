@@ -349,7 +349,7 @@ export function Component() {
                     transition={{ delay: 0.3 }}
                     className="text-white/60 text-xs"
                   >
-                    Sign in to continue to EquiHire AI
+                    Sign in to continue to Rifair AI
                   </motion.p>
                 </div>
 

@@ -1,6 +1,6 @@
-npm warn config ignoring workspace config at /Users/ayushpatil/Documents/EquihireAI/frontend/.npmrc
+npm warn config ignoring workspace config at /Users/ayushpatil/Documents/RifairAI/frontend/.npmrc
 
-> equihire-ai@0.1.0 dev
+> Rifair-ai@0.1.0 dev
 > next dev
 
 ⚠ Port 3000 is in use by process 3509, using available port 3001 instead.

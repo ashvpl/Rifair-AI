@@ -26,10 +26,10 @@ export function Sidebar() {
         <Link href="/" className="flex items-center gap-4 group relative z-10 w-full transition-transform hover:scale-[1.02] active:scale-[0.98]">
           <div className="relative h-[60px] flex items-center justify-start">
              <Image 
-              src="/whatsapp-logo.jpeg" 
-              alt="EquiHire AI" 
-              width={240}
-              height={60}
+              src="/rifair-logo.png" 
+              alt="Rifair AI" 
+              width={200}
+              height={50}
               className="h-[45px] w-auto object-contain"
               priority
             />

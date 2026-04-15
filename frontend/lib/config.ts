@@ -1,5 +1,5 @@
 /**
- * Centralized API configuration for EquiHire AI.
+ * Centralized API configuration for Rifair AI.
  * This ensures consistency across all API calls and Vercel compatibility.
  * 
  * IMPORTANT: By default, we use a Next.js Proxy approach. 

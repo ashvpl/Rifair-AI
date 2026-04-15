@@ -26,7 +26,7 @@ export default function FooterSection({
       title: "Company",
       links: [
         { text: "About Us", url: "/#about-us" },
-        { text: "Contact", url: "mailto:support@equihire.ai" },
+        { text: "Contact", url: "mailto:support@rifair.ai" },
       ],
     },
   ],
@@ -40,14 +40,14 @@ export default function FooterSection({
           {/* Logo + Mission */}
           <div className="max-w-md">
             <div className="relative h-12 w-auto mb-6">
-              <Image src="/whatsapp-logo.jpeg" alt="EquiHire AI" width={180} height={45} className="h-full w-auto object-contain" />
+              <Image src="/rifair-logo.png" alt="Rifair AI" width={180} height={45} className="h-full w-auto object-contain" />
             </div>
             <div className="space-y-6">
               <h3 className="text-sm font-black text-[#1D1D1F] uppercase tracking-[0.2em]">
                 Towards Equitable Hiring
               </h3>
               <p className="text-lg text-black/50 font-medium leading-[1.6] tracking-tight">
-                EquiHire AI is pioneering the future of ethical recruitment with advanced bias detection and skills-first evaluation tools. Empowering teams to build diverse, high-performing organizations.
+                Rifair AI is pioneering the future of ethical recruitment with advanced bias detection and skills-first evaluation tools. Empowering teams to build diverse, high-performing organizations.
               </p>
               
               <div className="flex items-center gap-3 pt-4 opacity-40 grayscale">

@@ -27,12 +27,12 @@ export function Header() {
         <Link href="/" className="flex items-center gap-3 transition-transform hover:scale-105 active:scale-95 group">
           <div className="relative h-[60px] flex items-center justify-start">
              <Image 
-              src="/whatsapp-logo.jpeg" 
-              alt="EquiHire AI" 
-              width={128}
-              height={32}
+              src="/rifair-logo.png" 
+              alt="Rifair AI" 
+              width={160}
+              height={40}
               className="w-auto object-contain"
-              style={{ height: '32px' }}
+              style={{ height: '40px' }}
               priority
             />
           </div>

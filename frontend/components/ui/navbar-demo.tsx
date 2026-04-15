@@ -61,8 +61,8 @@ export function NavBarDemo() {
         <Link href="/" className="flex items-center group">
           <div className="relative h-[32px] flex items-center">
              <Image 
-              src="/whatsapp-logo.jpeg" 
-              alt="EquiHire AI" 
+              src="/rifair-logo.png" 
+              alt="Rifair AI" 
               width={128}
               height={32}
               className="w-auto object-contain"

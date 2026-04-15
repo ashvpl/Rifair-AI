@@ -8,7 +8,7 @@ import { NavBarDemo } from "@/components/ui/navbar-demo";
 import { cn } from "@/lib/utils";
 import SpotlightBackground from "@/components/ui/spotlight-background";
 import { BubbleText } from "@/components/ui/bubble-text";
-import { EquiHireCoreFeatures } from "@/components/ui/equihire-features";
+import { RifairCoreFeatures as RifairCoreFeatures } from "@/components/ui/rifair-features";
 import FeatureCarousel from "@/components/ui/feature-carousel";
 import { InteractiveAccordion } from "@/components/ui/interactive-image-accordion";
 import { HeroSection, LogosSection } from "@/components/ui/hero-1";
@@ -45,7 +45,7 @@ export default function LandingPage() {
         </section>
 
         {/* CORE FEATURES SECTION - ANIMATED */}
-        <EquiHireCoreFeatures />
+        <RifairCoreFeatures />
 
         {/* LIVE EXAMPLE SECTION */}
         <section className="py-32 px-6 lg:px-12 bg-[#101012] text-white relative border-y border-black/[0.03]">
@@ -153,7 +153,7 @@ export default function LandingPage() {
         <section id="about-us" className="py-32 px-6 lg:px-12 relative w-full bg-[#F5F5F7] border-y border-black/[0.05]">
             <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-20">
                 <div className="space-y-12">
-                    <h2 className="text-4xl md:text-5xl font-black text-[#1D1D1F] tracking-tight">Why EquiHire AI</h2>
+                    <h2 className="text-4xl md:text-5xl font-black text-[#1D1D1F] tracking-tight">Why Rifair AI</h2>
                     <ul className="space-y-8">
                         <li className="flex items-start gap-5">
                             <div className="h-10 w-10 rounded-full bg-muted text-primary flex items-center justify-center shrink-0 mt-1">

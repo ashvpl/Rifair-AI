@@ -77,8 +77,8 @@ const SidebarWithSubmenu = () => {
           <div className="flex items-center justify-center p-6 border-b border-black/[0.03] shrink-0">
             <Link href="/" className="flex items-center justify-center group w-full transition-transform hover:scale-[1.02] active:scale-[0.98]">
               <Image 
-                src="/whatsapp-logo.jpeg" 
-                alt="EquiHire AI" 
+                src="/rifair-logo.png" 
+                alt="Rifair AI" 
                 width={128}
                 height={32}
                 className="w-auto object-contain"

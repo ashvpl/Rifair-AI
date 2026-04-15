@@ -6,7 +6,7 @@ const { callAI } = require("./aiService");
  * - Forces structured thinking before scoring
  */
 async function classify(processed) {
-  const systemPrompt = `You are an expert Diversity & Inclusion (D&I) Compliance Officer at EquiHire AI. 
+  const systemPrompt = `You are an expert Diversity & Inclusion (D&I) Compliance Officer at Rifair AI. 
   Your mission is to detect hidden, subtle, and overt biases in interview questions. 
   
   BIAS CATEGORIES:

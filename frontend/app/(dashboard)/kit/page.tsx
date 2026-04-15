@@ -234,7 +234,7 @@ export default function KitGeneratorPage() {
                         <>
                           <div className="text-center mb-12 space-y-3">
                             <h3 className="text-4xl font-extrabold text-[#1D1D1F] tracking-tight uppercase">How it works</h3>
-                            <p className="text-[#86868B] font-bold max-w-sm mx-auto leading-relaxed uppercase text-[11px] tracking-widest">Explore the core capabilities of the EquiHire interview engine.</p>
+                            <p className="text-[#86868B] font-bold max-w-sm mx-auto leading-relaxed uppercase text-[11px] tracking-widest">Explore the core capabilities of the Rifair interview engine.</p>
                           </div>
                           <KitFeatureCards />
                         </>

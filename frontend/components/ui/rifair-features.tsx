@@ -154,7 +154,7 @@ function DeepAnalysisAnimation() {
 
 // --- Main Section ---
 
-export function EquiHireCoreFeatures() {
+export function RifairCoreFeatures() {
   const features = [
     {
       title: "AI Bias Detection",

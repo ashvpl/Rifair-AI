@@ -51,7 +51,7 @@ async function generateRewrite(processed, classification) {
   }
 
   // 2. AI PATH: Intelligence Layer
-  const systemPrompt = `You are an expert Interview Coach at EquiHire AI. 
+  const systemPrompt = `You are an expert Interview Coach at Rifair AI. 
   Your job is to transform biased or personal interview questions into professional, competency-based questions.
   
   REFRAMING RULES:

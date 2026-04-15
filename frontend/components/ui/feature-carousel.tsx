@@ -239,7 +239,7 @@ export function FeatureCarousel() {
                   >
                     <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_10px_white]" />
                     <span className="text-white/80 text-[10px] font-normal uppercase tracking-[0.3em] font-mono">
-                      EquiHire Analysis
+                      Rifair Analysis
                     </span>
                   </div>
                 </motion.div>

@@ -97,8 +97,8 @@ export function MiniNavbar() {
         <Link href="/" className="transition-transform hover:scale-105 active:scale-95 block">
           <div className="relative h-[60px] flex items-center">
             <Image 
-              src="/whatsapp-logo.jpeg" 
-              alt="EquiHire AI" 
+              src="/rifair-logo.png" 
+              alt="Rifair AI" 
               width={240}
               height={60}
               className="h-full w-auto object-contain"

@@ -5,7 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 
 
 export const metadata: Metadata = {
-  title: "EquiHire AI | Interview Bias & Hiring Risk Intelligence",
+  title: "Rifair AI | Interview Bias & Hiring Risk Intelligence",
   description: "Detect hidden bias in interview questions using AI.",
 };
 
