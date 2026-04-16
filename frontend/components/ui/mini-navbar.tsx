@@ -65,7 +65,7 @@ export function MiniNavbar() {
     if (userId) {
       return (
         <div className="flex items-center gap-8">
-          <Link href="/analyze" className="text-[13px] font-black text-[#1D1D1F] uppercase tracking-[0.2em] hover:text-primary transition-colors hidden sm:block">
+          <Link href="/dashboard" className="text-[13px] font-black text-[#1D1D1F] uppercase tracking-[0.2em] hover:text-primary transition-colors hidden sm:block">
             Dashboard
           </Link>
           <UserButton 
