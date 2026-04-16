@@ -69,12 +69,45 @@ const SidebarWithSubmenu = () => {
     { name: "Back to Home", href: "/", icon: Home },
   ];
 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Close menu when route changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
   return (
     <>
-      <nav className="flex flex-col w-72 h-screen border-r bg-white relative z-20">
+      {/* Mobile Toggle Button */}
+      <button 
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        className="md:hidden fixed top-4 left-4 z-50 p-2.5 bg-white border border-black/5 rounded-xl shadow-[0_4px_16px_rgba(0,0,0,0.06)] active:scale-95 transition-transform"
+      >
+        <svg className="w-5 h-5 text-[#1D1D1F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          {isMobileMenuOpen ? (
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+          ) : (
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 6h16M4 12h16m-7 6h7" />
+          )}
+        </svg>
+      </button>
+
+      {/* Mobile Overlay Backdrop */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/20 backdrop-blur-[2px] z-30 md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Sidebar Container */}
+      <nav className={cn(
+        "flex flex-col w-[280px] md:w-72 h-screen border-r bg-white fixed md:sticky top-0 left-0 z-40 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+        isMobileMenuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+      )}>
         <div className="flex flex-col h-full">
           {/* Logo Section */}
-          <div className="flex items-center justify-center h-[80px] border-b border-black/[0.03] shrink-0">
+          <div className="flex items-center justify-center h-[80px] border-b border-black/[0.03] shrink-0 mt-8 md:mt-0">
             <Link href="/" className="flex items-center justify-center group w-full relative h-[40px]">
               <Image 
                 src="/rifair-logo.png" 
@@ -100,7 +133,7 @@ const SidebarWithSubmenu = () => {
                     <Link
                       href={item.href}
                       className={cn(
-                        "flex items-center gap-x-2 p-2.5 rounded-lg transition-all duration-150",
+                        "flex items-center gap-x-2 p-3 rounded-xl transition-all duration-150",
                         isActive
                           ? "bg-black/[0.03] text-foreground font-semibold"
                           : "text-gray-600 hover:text-foreground hover:bg-gray-50 active:bg-gray-100"
@@ -108,7 +141,7 @@ const SidebarWithSubmenu = () => {
                     >
                       <item.icon className={cn(
                         "w-5 h-5",
-                        isActive ? "text-primary fill-primary/10" : "text-gray-500"
+                        isActive ? "text-primary stroke-[2.5px]" : "text-gray-500"
                       )} />
                       {item.name}
                     </Link>
@@ -126,7 +159,7 @@ const SidebarWithSubmenu = () => {
                       <Link
                         href={item.href}
                         className={cn(
-                          "flex items-center gap-x-2 p-2.5 rounded-lg transition-all duration-150",
+                          "flex items-center gap-x-2 p-3 rounded-xl transition-all duration-150",
                           isActive
                             ? "bg-black/[0.03] text-foreground font-semibold"
                             : "text-gray-600 hover:text-foreground hover:bg-gray-50 active:bg-gray-100"
@@ -134,7 +167,7 @@ const SidebarWithSubmenu = () => {
                       >
                         <item.icon className={cn(
                           "w-5 h-5",
-                          isActive ? "text-primary fill-primary/10" : "text-gray-500"
+                          isActive ? "text-primary stroke-[2.5px]" : "text-gray-500"
                         )} />
                         {item.name}
                       </Link>

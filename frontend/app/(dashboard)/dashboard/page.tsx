@@ -239,7 +239,7 @@ export default function DashboardPage() {
           heroContent.border
         )}
       >
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-8">
+        <div className="relative z-10 flex flex-row items-center justify-between gap-4 md:gap-8">
           <div className="space-y-2 md:space-y-3">
             <h2 className={cn("text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight", heroContent.titleColor)}>
               {heroContent.title}
@@ -259,15 +259,15 @@ export default function DashboardPage() {
         </div>
       </motion.div>
 
-      {/* 4-Metric Grid - Light Grey Version */}
+      {/* 4-Metric Grid - Horizontal Scroll on Mobile */}
       <motion.div 
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6"
+        className="flex lg:grid lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6 overflow-x-auto pb-4 snap-x snap-mandatory hide-scrollbar [&>div]:min-w-[200px] sm:[&>div]:min-w-[240px] lg:[&>div]:min-w-0"
       >
         {/* TOTAL ANALYSES */}
-        <motion.div variants={itemVariants} className="bg-[#F5F5F7] p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-black/[0.03] shadow-sm">
+        <motion.div variants={itemVariants} className="bg-[#F5F5F7] p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-black/[0.03] shadow-sm snap-start shrink-0">
           <div className="space-y-3 md:space-y-6">
             <p className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.15em]">TOTAL ANALYSES</p>
             <div className="space-y-1">
@@ -282,7 +282,7 @@ export default function DashboardPage() {
         </motion.div>
         
         {/* AVG BIAS SCORE */}
-        <motion.div variants={itemVariants} className="bg-[#F5F5F7] p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-black/[0.03] shadow-sm">
+        <motion.div variants={itemVariants} className="bg-[#F5F5F7] p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-black/[0.03] shadow-sm snap-start shrink-0">
           <div className="space-y-3 md:space-y-6">
             <p className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.15em]">AVG BIAS SCORE</p>
             <div className="space-y-1">
@@ -312,7 +312,7 @@ export default function DashboardPage() {
         </motion.div>
         
         {/* HIGH BIAS FLAGS */}
-        <motion.div variants={itemVariants} className={cn("p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border shadow-sm transition-colors duration-500", flagCardStyle.bg, flagCardStyle.border)}>
+        <motion.div variants={itemVariants} className={cn("p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border shadow-sm transition-colors duration-500 snap-start shrink-0", flagCardStyle.bg, flagCardStyle.border)}>
           <div className="space-y-3 md:space-y-6">
             <p className={cn("text-[10px] font-black uppercase tracking-[0.15em]", flagCardStyle.label)}>HIGH BIAS FLAGS</p>
             <div className="space-y-1">
@@ -325,7 +325,7 @@ export default function DashboardPage() {
         </motion.div>
         
         {/* FAIRNESS SCORE */}
-        <motion.div variants={itemVariants} className="bg-[#F5F5F7] p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-black/[0.03] shadow-sm">
+        <motion.div variants={itemVariants} className="bg-[#F5F5F7] p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-black/[0.03] shadow-sm snap-start shrink-0">
           <div className="space-y-3 md:space-y-6">
             <p className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.15em]">FAIRNESS SCORE</p>
             <div className="space-y-1">
@@ -443,7 +443,7 @@ export default function DashboardPage() {
           {stats.flaggedQuestions.length > 0 ? (
             stats.flaggedQuestions.map((q, i) => (
               <div key={i} className={cn(
-                "py-4 md:py-6 px-3 md:px-4 flex items-center justify-between gap-4 md:gap-8 group transition-colors rounded-2xl",
+                "py-4 md:py-6 px-3 md:px-4 flex flex-row items-center justify-between gap-2 sm:gap-4 md:gap-8 group transition-colors rounded-2xl",
                 i % 2 === 0 ? "bg-transparent" : "bg-[#F5F5F7]/30"
               )}>
                 <div className="space-y-1.5 md:space-y-2 min-w-0 flex-1">
@@ -459,7 +459,7 @@ export default function DashboardPage() {
                     </span>
                   </div>
                 </div>
-                <div className="flex flex-col items-end min-w-[60px] md:min-w-[100px]">
+                <div className="flex flex-col items-end min-w-[50px] sm:min-w-[60px] md:min-w-[100px]">
                   <span className="text-2xl md:text-4xl font-bold text-[#1D1D1F] tracking-tighter">
                     {q.score}
                   </span>
