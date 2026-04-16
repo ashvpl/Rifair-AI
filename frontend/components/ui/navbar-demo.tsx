@@ -57,16 +57,15 @@ export function NavBarDemo() {
       className="fixed top-0 left-0 z-[100] w-full bg-white"
     >
       <div className="max-w-7xl mx-auto flex h-20 items-center justify-between px-6 lg:px-12">
-        {/* Branding - Exactly as requested using the WhatsApp JPEG file */}
+        {/* Branding - exactly as requested using the WhatsApp JPEG file */}
         <Link href="/" className="flex items-center group">
-          <div className="relative h-[32px] flex items-center">
+          <div className="relative h-[40px] w-[160px] flex items-center">
              <Image 
               src="/rifair-logo.png" 
               alt="Rifair AI" 
-              width={128}
-              height={32}
-              className="w-auto object-contain"
-              style={{ height: '32px' }}
+              width={200}
+              height={200}
+              className="absolute left-0 h-[120px] w-auto object-contain scale-[1.5] origin-left"
               priority
             />
           </div>

@@ -25,14 +25,14 @@ export function Header() {
     )}>
       {!isDashboard && (
         <Link href="/" className="flex items-center gap-3 transition-transform hover:scale-105 active:scale-95 group">
-          <div className="relative h-[60px] flex items-center justify-start">
+          <div className="relative h-[90px] flex items-center justify-start">
              <Image 
               src="/rifair-logo.png" 
               alt="Rifair AI" 
-              width={160}
-              height={40}
+              width={90}
+              height={90}
               className="w-auto object-contain"
-              style={{ height: '40px' }}
+              style={{ height: '90px' }}
               priority
             />
           </div>

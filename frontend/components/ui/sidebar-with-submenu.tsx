@@ -74,15 +74,14 @@ const SidebarWithSubmenu = () => {
       <nav className="flex flex-col w-72 h-screen border-r bg-white relative z-20">
         <div className="flex flex-col h-full">
           {/* Logo Section */}
-          <div className="flex items-center justify-center p-6 border-b border-black/[0.03] shrink-0">
-            <Link href="/" className="flex items-center justify-center group w-full transition-transform hover:scale-[1.02] active:scale-[0.98]">
+          <div className="flex items-center justify-center h-[80px] border-b border-black/[0.03] shrink-0">
+            <Link href="/" className="flex items-center justify-center group w-full relative h-[40px]">
               <Image 
                 src="/rifair-logo.png" 
                 alt="Rifair AI" 
-                width={128}
-                height={32}
-                className="w-auto object-contain"
-                style={{ height: '32px' }}
+                width={200}
+                height={200}
+                className="absolute h-[140px] w-auto object-contain scale-[1.25] origin-center"
                 priority
                 onError={(e) => {
                   const target = e.target as HTMLElement;
