@@ -222,11 +222,11 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="max-w-[1240px] mx-auto space-y-8 pb-20 pt-4 px-4 lg:px-6">
+    <div className="max-w-[1240px] mx-auto space-y-5 md:space-y-8 pb-4 pt-4 px-0 lg:px-6">
       
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-[#1D1D1F] tracking-tight">Hiring intelligence dashboard</h1>
-        <p className="text-xs font-semibold text-[#86868B] uppercase tracking-wider">Last updated: today</p>
+      <div className="flex items-center justify-between gap-2">
+        <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-[#1D1D1F] tracking-tight">Hiring intelligence dashboard</h1>
+        <p className="text-[10px] font-semibold text-[#86868B] uppercase tracking-wider whitespace-nowrap">Last updated: today</p>
       </div>
 
       {/* Hero Banner Strip */}
@@ -239,21 +239,21 @@ export default function DashboardPage() {
           heroContent.border
         )}
       >
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
-          <div className="space-y-3">
-            <h2 className={cn("text-3xl lg:text-4xl font-extrabold tracking-tight", heroContent.titleColor)}>
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-8">
+          <div className="space-y-2 md:space-y-3">
+            <h2 className={cn("text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight", heroContent.titleColor)}>
               {heroContent.title}
             </h2>
-            <p className={cn("text-lg font-medium", heroContent.subtitleColor)}>
+            <p className={cn("text-sm md:text-lg font-medium", heroContent.subtitleColor)}>
               {heroContent.subtitle}
             </p>
           </div>
           <Link href={heroContent.ctaLink}>
             <button className={cn(
-              "whitespace-nowrap flex items-center gap-3 px-8 py-4 transition-all rounded-full text-white font-bold shadow-md hover:shadow-lg group active:scale-95",
+              "w-full md:w-auto whitespace-nowrap flex items-center justify-center gap-2 md:gap-3 px-5 md:px-8 py-3 md:py-4 transition-all rounded-full text-white font-bold shadow-md hover:shadow-lg group active:scale-95 text-sm md:text-base min-h-[44px]",
               heroContent.buttonBg
             )}>
-              {heroContent.cta} <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              {heroContent.cta} <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
             </button>
           </Link>
         </div>
@@ -264,14 +264,14 @@ export default function DashboardPage() {
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6"
+        className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6"
       >
         {/* TOTAL ANALYSES */}
-        <motion.div variants={itemVariants} className="bg-[#F5F5F7] p-8 rounded-[2rem] border border-black/[0.03] shadow-sm">
-          <div className="space-y-6">
-            <p className="text-[11px] font-black text-[#86868B] uppercase tracking-[0.15em]">TOTAL ANALYSES</p>
+        <motion.div variants={itemVariants} className="bg-[#F5F5F7] p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-black/[0.03] shadow-sm">
+          <div className="space-y-3 md:space-y-6">
+            <p className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.15em]">TOTAL ANALYSES</p>
             <div className="space-y-1">
-              <p className="text-5xl font-bold text-[#1D1D1F] tracking-tighter">{stats.analysisCount}</p>
+              <p className="text-3xl md:text-5xl font-bold text-[#1D1D1F] tracking-tighter">{stats.analysisCount}</p>
               {stats.analysisCount > 0 && (
                 <p className="text-sm font-bold text-[#86868B] flex items-center gap-1">
                   <span className="text-[#059669]">+2</span> this week
@@ -282,13 +282,13 @@ export default function DashboardPage() {
         </motion.div>
         
         {/* AVG BIAS SCORE */}
-        <motion.div variants={itemVariants} className="bg-[#F5F5F7] p-8 rounded-[2rem] border border-black/[0.03] shadow-sm">
-          <div className="space-y-6">
-            <p className="text-[11px] font-black text-[#86868B] uppercase tracking-[0.15em]">AVG BIAS SCORE</p>
+        <motion.div variants={itemVariants} className="bg-[#F5F5F7] p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-black/[0.03] shadow-sm">
+          <div className="space-y-3 md:space-y-6">
+            <p className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.15em]">AVG BIAS SCORE</p>
             <div className="space-y-1">
               <div className="flex items-baseline gap-1">
                 <p className={cn(
-                  "text-5xl font-bold tracking-tighter",
+                  "text-3xl md:text-5xl font-bold tracking-tighter",
                   stats.analysisCount === 0 ? "text-[#1D1D1F]" :
                   stats.avgBiasScore < 40 ? "text-[#059669]" :
                   stats.avgBiasScore < 65 ? "text-amber-600" :
@@ -312,11 +312,11 @@ export default function DashboardPage() {
         </motion.div>
         
         {/* HIGH BIAS FLAGS */}
-        <motion.div variants={itemVariants} className={cn("p-8 rounded-[2rem] border shadow-sm transition-colors duration-500", flagCardStyle.bg, flagCardStyle.border)}>
-          <div className="space-y-6">
-            <p className={cn("text-[11px] font-black uppercase tracking-[0.15em]", flagCardStyle.label)}>HIGH BIAS FLAGS</p>
+        <motion.div variants={itemVariants} className={cn("p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border shadow-sm transition-colors duration-500", flagCardStyle.bg, flagCardStyle.border)}>
+          <div className="space-y-3 md:space-y-6">
+            <p className={cn("text-[10px] font-black uppercase tracking-[0.15em]", flagCardStyle.label)}>HIGH BIAS FLAGS</p>
             <div className="space-y-1">
-              <p className={cn("tracking-tighter font-bold", stats.analysisCount === 0 ? "text-2xl text-[#86868B]" : "text-5xl " + flagCardStyle.text)}>
+              <p className={cn("tracking-tighter font-bold", stats.analysisCount === 0 ? "text-xl text-[#86868B]" : "text-3xl md:text-5xl " + flagCardStyle.text)}>
                 {stats.analysisCount === 0 ? "No data yet" : stats.highBiasFlags}
               </p>
               <p className={cn("text-sm font-black uppercase", flagCardStyle.text)}>{subtexts.flags}</p>
@@ -325,13 +325,13 @@ export default function DashboardPage() {
         </motion.div>
         
         {/* FAIRNESS SCORE */}
-        <motion.div variants={itemVariants} className="bg-[#F5F5F7] p-8 rounded-[2rem] border border-black/[0.03] shadow-sm">
-          <div className="space-y-6">
-            <p className="text-[11px] font-black text-[#86868B] uppercase tracking-[0.15em]">FAIRNESS SCORE</p>
+        <motion.div variants={itemVariants} className="bg-[#F5F5F7] p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-black/[0.03] shadow-sm">
+          <div className="space-y-3 md:space-y-6">
+            <p className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.15em]">FAIRNESS SCORE</p>
             <div className="space-y-1">
               <div className="flex items-baseline gap-1">
                 <p className={cn(
-                  "text-5xl font-bold tracking-tighter",
+                  "text-3xl md:text-5xl font-bold tracking-tighter",
                   stats.analysisCount === 0 ? "text-[#1D1D1F]" :
                   stats.fairnessScore >= 80 ? "text-[#059669]" :
                   stats.fairnessScore >= 60 ? "text-amber-500" :
@@ -363,10 +363,10 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="lg:col-span-2 bg-white rounded-[2.5rem] p-10 border border-black/[0.03] shadow-sm space-y-10"
+          className="lg:col-span-2 bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-10 border border-black/[0.03] shadow-sm space-y-6 md:space-y-10"
         >
-          <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-bold text-[#1D1D1F] tracking-tight">Bias Trend Analysis</h3>
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <h3 className="text-lg md:text-2xl font-bold text-[#1D1D1F] tracking-tight">Bias Trend Analysis</h3>
             <div className="flex items-center gap-6">
                <div className="flex items-center gap-2">
                  <div className="w-3 h-3 rounded-full bg-[#10b981]" />
@@ -388,9 +388,9 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-white rounded-[2.5rem] p-10 border border-black/[0.03] shadow-sm space-y-10"
+          className="bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-10 border border-black/[0.03] shadow-sm space-y-6 md:space-y-10"
         >
-          <h3 className="text-2xl font-bold text-[#1D1D1F] tracking-tight">Bias by category</h3>
+          <h3 className="text-lg md:text-2xl font-bold text-[#1D1D1F] tracking-tight">Bias by category</h3>
           <div className="space-y-6">
             {Object.entries(stats.categoryBreakdown).length > 0 ? (
               Object.entries(stats.categoryBreakdown).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([cat, count], idx) => (
@@ -430,10 +430,10 @@ export default function DashboardPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="bg-white rounded-[2.5rem] p-10 border border-black/[0.03] shadow-sm space-y-8"
+        className="bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-10 border border-black/[0.03] shadow-sm space-y-5 md:space-y-8"
       >
-        <div className="flex items-center justify-between">
-          <h3 className="text-2xl font-bold text-[#1D1D1F] tracking-tight">Recently flagged questions</h3>
+        <div className="flex items-center justify-between gap-2 flex-wrap">
+          <h3 className="text-lg md:text-2xl font-bold text-[#1D1D1F] tracking-tight">Recently flagged questions</h3>
           <Link href="/history" className="text-sm font-bold text-[#059669] hover:text-[#047857] transition-colors flex items-center gap-1">
             View full log <ChevronRight className="w-4 h-4" />
           </Link>
@@ -443,28 +443,28 @@ export default function DashboardPage() {
           {stats.flaggedQuestions.length > 0 ? (
             stats.flaggedQuestions.map((q, i) => (
               <div key={i} className={cn(
-                "py-6 px-4 flex items-center justify-between gap-8 group transition-colors rounded-2xl",
+                "py-4 md:py-6 px-3 md:px-4 flex items-center justify-between gap-4 md:gap-8 group transition-colors rounded-2xl",
                 i % 2 === 0 ? "bg-transparent" : "bg-[#F5F5F7]/30"
               )}>
-                <div className="space-y-2 max-w-[75%]">
-                  <p className="text-[#1D1D1F] font-bold text-xl leading-tight group-hover:text-[#059669] transition-colors">
-                    "{q.text.slice(0, 140)}{q.text.length > 140 ? '...' : ''}"
+                <div className="space-y-1.5 md:space-y-2 min-w-0 flex-1">
+                  <p className="text-[#1D1D1F] font-bold text-sm md:text-xl leading-tight group-hover:text-[#059669] transition-colors">
+                    &ldquo;{q.text.slice(0, 80)}{q.text.length > 80 ? '...' : ''}&rdquo;
                   </p>
-                  <div className="flex items-center gap-3">
-                    <span className="text-[10px] font-black text-red-600 uppercase tracking-widest bg-red-50 px-2 py-1 rounded">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-[9px] md:text-[10px] font-black text-red-600 uppercase tracking-widest bg-red-50 px-2 py-1 rounded">
                       {q.type} BIAS
                     </span>
-                    <span className="text-[10px] font-bold text-[#86868B] uppercase tracking-widest">
-                      Detected {format(new Date(q.date), "MMM d, h:mm a")}
+                    <span className="text-[9px] md:text-[10px] font-bold text-[#86868B] uppercase tracking-widest">
+                      {format(new Date(q.date), "MMM d")}
                     </span>
                   </div>
                 </div>
-                <div className="flex flex-col items-end min-w-[100px]">
-                  <span className="text-4xl font-bold text-[#1D1D1F] tracking-tighter">
+                <div className="flex flex-col items-end min-w-[60px] md:min-w-[100px]">
+                  <span className="text-2xl md:text-4xl font-bold text-[#1D1D1F] tracking-tighter">
                     {q.score}
                   </span>
-                  <span className="text-[10px] font-black text-[#86868B] uppercase tracking-widest">
-                    BIAS SCORE
+                  <span className="text-[8px] md:text-[10px] font-black text-[#86868B] uppercase tracking-widest">
+                    BIAS
                   </span>
                 </div>
               </div>

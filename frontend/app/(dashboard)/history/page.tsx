@@ -113,20 +113,20 @@ export default function HistoryPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-10 animate-in fade-in duration-1000 pb-20 pt-0">
+    <div className="max-w-6xl mx-auto space-y-6 md:space-y-10 animate-in fade-in duration-1000 pb-4 pt-0">
       
       {/* Header section */}
       <div className="relative">
-        <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-8">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 md:gap-8">
           <div className="space-y-1">
-            <h1 className="text-4xl font-extrabold text-foreground tracking-tight">History</h1>
-            <p className="text-[#86868B] max-w-xl text-lg font-medium">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-foreground tracking-tight">History</h1>
+            <p className="text-[#86868B] max-w-xl text-sm md:text-lg font-medium">
               View and manage all your past bias analyses in one place.
             </p>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="text-[10px] font-black uppercase tracking-[0.15em] text-[#86868B] bg-[#F5F5F7] px-6 py-2.5 rounded-full border border-black/[0.03]">
-              {history.length} Reports Total
+          <div className="flex items-center gap-3">
+            <div className="text-[10px] font-black uppercase tracking-[0.15em] text-[#86868B] bg-[#F5F5F7] px-4 py-2 rounded-full border border-black/[0.03]">
+              {history.length} Reports
             </div>
             {history.length > 0 && (
               <Button
@@ -162,7 +162,7 @@ export default function HistoryPage() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-[#F5F5F7]/30 border-2 border-dashed border-black/[0.05] p-24 text-center rounded-[3rem]"
+          className="bg-[#F5F5F7]/30 border-2 border-dashed border-black/[0.05] p-12 md:p-24 text-center rounded-[2rem] md:rounded-[3rem]"
         >
           <div className="space-y-8">
             <div className="mx-auto h-24 w-24 bg-white rounded-full flex items-center justify-center border border-black/[0.03] shadow-[inset_0_4px_12px_rgba(0,0,0,0.01)]">
@@ -198,29 +198,29 @@ export default function HistoryPage() {
                   layout
                 >
                   <Link href={detailUrl} className="block group">
-                    <div className="bg-white border border-black/[0.05] p-7 transition-all duration-500 rounded-[2rem] shadow-[0_4px_24px_rgba(0,0,0,0.02)] group-hover:shadow-[0_8px_32px_rgba(0,0,0,0.06)] group-hover:border-primary/20 relative overflow-hidden">
+                    <div className="bg-white border border-black/[0.05] p-4 md:p-7 transition-all duration-500 rounded-[1.5rem] md:rounded-[2rem] shadow-[0_4px_24px_rgba(0,0,0,0.02)] group-hover:shadow-[0_8px_32px_rgba(0,0,0,0.06)] group-hover:border-primary/20 relative overflow-hidden">
                       <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/[0.005] transition-colors" />
                       
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-8 relative z-10 w-full">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-4 md:gap-8 relative z-10 w-full">
                         <div className="flex-1 min-w-0">
-                          <h4 className="text-[#1D1D1F] font-bold truncate mb-3 text-xl tracking-tight">
-                            &ldquo;{report.input_text?.slice(0, 90)}...&rdquo;
+                          <h4 className="text-[#1D1D1F] font-bold truncate mb-2 md:mb-3 text-sm md:text-xl tracking-tight">
+                            &ldquo;{report.input_text?.slice(0, 60)}...&rdquo;
                           </h4>
-                          <div className="flex items-center gap-5 text-xs font-bold text-[#86868B]">
-                            <span className="flex items-center gap-2 px-4 py-1.5 bg-[#F5F5F7] rounded-full border border-black/[0.02]">
-                              <Calendar className="h-3.5 w-3.5 opacity-40" />
+                          <div className="flex items-center gap-2 flex-wrap text-xs font-bold text-[#86868B]">
+                            <span className="flex items-center gap-1.5 px-3 py-1 bg-[#F5F5F7] rounded-full border border-black/[0.02]">
+                              <Calendar className="h-3 w-3 opacity-40" />
                               {report.created_at && !isNaN(new Date(report.created_at).getTime())
-                                ? format(new Date(report.created_at), "MMM d, yyyy • h:mm a")
+                                ? format(new Date(report.created_at), "MMM d, yyyy")
                                 : "—"}
                             </span>
                             <div className={cn(
-                              "px-5 py-2 text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-3 rounded-full border shadow-sm",
+                              "px-3 py-1 text-[10px] font-black uppercase tracking-[0.15em] flex items-center gap-2 rounded-full border shadow-sm",
                               verdict.bg,
                               verdict.color,
                               verdict.border
                             )}>
                               {verdict.showCheck ? (
-                                <Check className="h-3.5 w-3.5" />
+                                <Check className="h-3 w-3" />
                               ) : (
                                 <span className="opacity-70">{report.bias_score}</span>
                               )}
@@ -229,17 +229,18 @@ export default function HistoryPage() {
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-4 mt-6 sm:mt-0 ml-auto sm:ml-0">
+                        {/* Delete button — always visible on mobile */}
+                        <div className="flex items-center gap-4 sm:gap-4 ml-auto sm:ml-0">
                           <button
                             onClick={(e) => promptDelete(e, report.id)}
                             disabled={deletingId === report.id}
-                            className="p-3 text-[#86868B] hover:text-danger hover:bg-danger/5 border border-transparent hover:border-danger/10 rounded-2xl transition-all opacity-0 group-hover:opacity-100 disabled:opacity-50 shadow-sm bg-white relative z-20"
+                            className="p-2.5 md:p-3 text-[#86868B] hover:text-danger hover:bg-danger/5 border border-transparent hover:border-danger/10 rounded-xl md:rounded-2xl transition-all sm:opacity-0 sm:group-hover:opacity-100 disabled:opacity-50 shadow-sm bg-white relative z-20 min-h-[44px] min-w-[44px] flex items-center justify-center"
                             title="Delete Entry"
                           >
                             {deletingId === report.id ? (
-                              <Loader2 className="h-5 w-5 animate-spin" />
+                              <Loader2 className="h-4 w-4 animate-spin" />
                             ) : (
-                              <Trash2 className="h-5 w-5" />
+                              <Trash2 className="h-4 w-4 md:h-5 md:w-5" />
                             )}
                           </button>
                         </div>

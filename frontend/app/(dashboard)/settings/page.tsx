@@ -6,13 +6,13 @@ import { dark } from "@clerk/themes";
 
 export default function SettingsPage() {
   return (
-    <div className="max-w-6xl mx-auto space-y-10 animate-in fade-in duration-1000 pb-20 pt-0">
+    <div className="max-w-6xl mx-auto space-y-6 md:space-y-10 animate-in fade-in duration-1000 pb-4 pt-0">
       
       {/* Header section */}
       <div className="relative">
         <div className="space-y-1">
-          <h1 className="text-4xl font-extrabold text-foreground tracking-tight">System Settings</h1>
-          <p className="text-[#86868B] max-w-2xl text-lg font-medium">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-foreground tracking-tight">System Settings</h1>
+          <p className="text-[#86868B] max-w-2xl text-sm md:text-lg font-medium">
             Manage your professional identity, security protocols, and platform preferences.
           </p>
         </div>

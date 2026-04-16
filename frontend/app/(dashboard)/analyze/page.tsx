@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { analyzeQuestions, getReportById } from "@/lib/api";
 import { useSearchParams } from "next/navigation";
@@ -22,6 +22,8 @@ export default function AnalyzePage() {
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const searchParams = useSearchParams();
   const reportId = searchParams.get("reportId");
+  // Auto-scroll to results on mobile
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchReport = async () => {
@@ -57,6 +59,10 @@ export default function AnalyzePage() {
       const reportData = safeParseReport(data.report);
       
       setReport(reportData);
+      // Auto-scroll to results on mobile after a short delay for animation
+      setTimeout(() => {
+        resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 300);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "AI service temporarily unavailable";
       setError(msg);
@@ -87,21 +93,20 @@ export default function AnalyzePage() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-1000 pb-20 pt-0">
+    <div className="space-y-4 md:space-y-6 animate-in fade-in duration-1000 pb-4 pt-0">
       
       {/* Header section */}
       <div className="relative">
         <div className="space-y-1">
-
-          <h2 className="text-4xl font-extrabold text-foreground tracking-tight">Smarter Bias Detection</h2>
-          <p className="text-[#86868B] max-w-2xl text-lg font-medium">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-foreground tracking-tight">Smarter Bias Detection</h2>
+          <p className="text-[#86868B] max-w-2xl text-sm sm:text-base md:text-lg font-medium">
             Analyze interview questions with AI that understands language, structure, and intent—so nothing slips through.
           </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        <div className="lg:col-span-2 space-y-8 relative">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
+        <div className="lg:col-span-2 space-y-5 md:space-y-8 relative">
           
           <QuestionInput 
             onAnalyze={handleAnalyze} 
@@ -135,23 +140,24 @@ export default function AnalyzePage() {
           </AnimatePresence>
 
           {isLoading && (
-            <div className="pt-8">
+            <div className="pt-4 md:pt-8">
               <LoadingState />
             </div>
           )}
 
           {!isLoading && report && (
             <motion.div 
+              ref={resultsRef}
               variants={containerVariants}
               initial="hidden"
               animate="show"
-              className="space-y-10 pt-10 border-t border-black/[0.05] mt-10"
+              className="space-y-6 md:space-y-10 pt-6 md:pt-10 border-t border-black/[0.05] mt-6 md:mt-10"
             >
-              <div className="flex items-center gap-4">
-                <div className="h-10 w-10 bg-primary/10 rounded-xl flex items-center justify-center">
-                   <ShieldCheck className="h-6 w-6 text-primary" />
+              <div className="flex items-center gap-3 md:gap-4">
+                <div className="h-8 w-8 md:h-10 md:w-10 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                   <ShieldCheck className="h-5 w-5 md:h-6 md:w-6 text-primary" />
                 </div>
-                <h3 className="text-2xl font-extrabold text-foreground tracking-tight">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-extrabold text-foreground tracking-tight">
                   Bias Analysis Results
                 </h3>
               </div>
@@ -171,12 +177,12 @@ export default function AnalyzePage() {
                         biasLevel={biasLevel as 'high' | 'medium' | 'neutral'}
                       >
                         {isNeutral ? (
-                          <div className="p-8 flex items-center justify-between gap-8">
-                            <div className="text-xl text-foreground font-semibold tracking-tight">
+                          <div className="p-4 md:p-8 flex items-center justify-between gap-4 md:gap-8">
+                            <div className="text-sm md:text-xl text-foreground font-semibold tracking-tight leading-snug">
                               {q.original}
                             </div>
-                            <div className="flex-shrink-0 flex items-center gap-2 px-4 py-2 bg-success/10 text-success rounded-full border border-success/20 text-[10px] font-black uppercase tracking-[0.2em]">
-                              <ShieldCheck className="h-4 w-4" />
+                            <div className="flex-shrink-0 flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-success/10 text-success rounded-full border border-success/20 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em]">
+                              <ShieldCheck className="h-3.5 w-3.5 md:h-4 md:w-4" />
                               Neutral
                             </div>
                           </div>
@@ -184,9 +190,9 @@ export default function AnalyzePage() {
                           <div className="grid grid-cols-1 md:grid-cols-2 relative">
                             {/* Gradient severity stripe */}
                             <div className="absolute left-0 top-0 bottom-0 w-1.5 rounded-l-[2rem] bg-gradient-to-b from-warning to-danger z-10" />
-                            <div className="p-8 border-b md:border-b-0 md:border-r border-black/[0.04] pl-10">
+                            <div className="p-4 md:p-8 border-b md:border-b-0 md:border-r border-black/[0.04] pl-7 md:pl-10">
                                 <div className="flex justify-between items-start mb-6">
-                                  <h4 className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] flex items-center gap-2">
+                                  <h4 className="text-[9px] md:text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] flex items-center gap-1.5 md:gap-2">
                                     <AlertTriangle className="h-3 w-3 text-danger" />
                                     Detected Bias
                                   </h4>
@@ -202,7 +208,7 @@ export default function AnalyzePage() {
                                   </div>
                                 </div>
                               <div 
-                                className="text-lg text-foreground font-semibold leading-relaxed tracking-tight whitespace-pre-wrap highlight-container"
+                                className="text-sm md:text-lg text-foreground font-semibold leading-relaxed tracking-tight whitespace-pre-wrap highlight-container mt-2 md:mt-0"
                                 dangerouslySetInnerHTML={{ __html: q.highlighted || q.original }}
                               />
                               
@@ -229,7 +235,7 @@ export default function AnalyzePage() {
                               )}
                             </div>
                             
-                            <div className="p-8 bg-[#f0f9f1]/60 relative flex flex-col">
+                            <div className="p-4 md:p-8 bg-[#f0f9f1]/60 relative flex flex-col">
                               <div className="flex justify-between items-start mb-6">
                                 <h4 className="text-[10px] font-black text-success uppercase tracking-[0.2em] flex justify-between items-center group">
                                   <span className="flex items-center gap-2">
@@ -250,7 +256,7 @@ export default function AnalyzePage() {
                                 </div>
                               </div>
                               <div className="relative flex-1 flex flex-col justify-center">
-                                <p className="text-xl text-primary font-bold italic pl-6 border-l-4 border-success/40 leading-relaxed min-h-[3rem]">
+                                <p className="text-sm md:text-xl text-primary font-bold italic pl-4 md:pl-6 border-l-4 border-success/40 leading-relaxed min-h-[2rem] md:min-h-[3rem]">
                                   &ldquo;<Typewriter text={q.improved_question} speed={50} />&rdquo;
                                 </p>
                               </div>
@@ -266,15 +272,15 @@ export default function AnalyzePage() {
           )}
         </div>
 
-        <div className="space-y-8">
+        <div className="space-y-5 md:space-y-8">
           <AnimatePresence mode="wait">
             {report && (
               <motion.div 
                 key="results"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, x: 0, y: 20 }}
+                animate={{ opacity: 1, x: 0, y: 0 }}
                 transition={{ duration: 0.8 }}
-                className="space-y-8 sticky top-28"
+                className="space-y-5 md:space-y-8 lg:sticky lg:top-28"
               >
 
                 

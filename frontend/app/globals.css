@@ -155,15 +155,41 @@
   
   * {
     @apply border-border;
+    /* Remove 300ms tap delay and blue highlight on mobile */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    box-sizing: border-box;
   }
-  
+
   html, body, :root {
     font-family: "Geist Mono", Geist Mono, monospace !important;
     scroll-behavior: smooth;
+    /* Momentum scrolling on iOS */
+    -webkit-overflow-scrolling: touch;
+    /* Prevent font size inflation on orientation change (iOS) */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
   
   body {
     @apply bg-background text-foreground antialiased min-h-screen relative;
+    /* Prevent horizontal overflow on mobile */
+    overflow-x: hidden;
+  }
+
+  /* Restore touch-action for scrollable elements */
+  [data-scroll], main, .overflow-y-auto, .overflow-auto {
+    touch-action: pan-y pinch-zoom;
+  }
+
+  /* Inputs need default touch-action */
+  input, textarea, select {
+    touch-action: auto;
+  }
+
+  /* Smooth momentum scroll for scrollable areas */
+  .overflow-y-auto, .overflow-auto {
+    -webkit-overflow-scrolling: touch;
   }
 
   ::selection {
@@ -174,6 +200,23 @@
   ::-moz-selection {
     background-color: rgba(0, 0, 0, 0.08);
     color: inherit;
+  }
+}
+
+/* ─── Safe Area Utilities ─── */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.safe-area-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* ─── Mobile touch target min-size ─── */
+@layer utilities {
+  .min-touch {
+    min-height: 44px;
+    min-width: 44px;
   }
 }
 
