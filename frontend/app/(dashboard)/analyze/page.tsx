@@ -187,10 +187,10 @@ export default function AnalyzePage() {
                             </div>
                           </div>
                         ) : (
-                          <div className="grid grid-cols-1 md:grid-cols-2 relative">
+                          <div className="grid grid-cols-2 relative">
                             {/* Gradient severity stripe */}
                             <div className="absolute left-0 top-0 bottom-0 w-1.5 rounded-l-[2rem] bg-gradient-to-b from-warning to-danger z-10" />
-                            <div className="p-4 md:p-8 border-b md:border-b-0 md:border-r border-black/[0.04] pl-7 md:pl-10">
+                            <div className="p-4 md:p-8 border-r border-black/[0.04] pl-7 md:pl-10 flex flex-col justify-between">
                                 <div className="flex justify-between items-start mb-6">
                                   <h4 className="text-[9px] md:text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] flex items-center gap-1.5 md:gap-2">
                                     <AlertTriangle className="h-3 w-3 text-danger" />

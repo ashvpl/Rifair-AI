@@ -33,33 +33,33 @@ export function QuestionInput({ onAnalyze, isLoading, initialText = "", initialN
   };
 
   return (
-    <div className={cn("space-y-3 md:space-y-4 animate-in fade-in zoom-in-95 duration-500", isLoading && "hidden")}>
+    <div className={cn("space-y-4 animate-in fade-in zoom-in-95 duration-500", isLoading && "hidden")}>
       <div className="relative group">
         <Input 
           placeholder="Name this analysis (e.g. Frontend Team Questions)"
-          className="h-12 md:h-14 mb-3 md:mb-4 text-sm md:text-lg px-4 md:px-6 rounded-2xl bg-surface border-border text-foreground transition-all focus:ring-2 focus:ring-primary/50 focus:border-primary/50 shadow-lg"
+          className="h-14 mb-4 text-lg px-6 rounded-2xl bg-surface border-border text-foreground transition-all focus:ring-2 focus:ring-primary/50 focus:border-primary/50 shadow-lg"
           value={name}
           onChange={(e) => setName(e.target.value)}
           disabled={isLoading}
         />
         <Textarea
           placeholder="Paste your interview questions here..."
-          className="min-h-[160px] md:min-h-[220px] text-sm md:text-lg p-4 md:p-6 transition-all resize-none rounded-2xl bg-surface border-border text-foreground focus:ring-2 focus:ring-primary/50 focus:border-primary/50 placeholder:text-muted-foreground shadow-lg group-hover:shadow-primary/5"
+          className="min-h-[220px] text-lg p-6 transition-all resize-none rounded-2xl bg-surface border-border text-foreground focus:ring-2 focus:ring-primary/50 focus:border-primary/50 placeholder:text-muted-foreground shadow-lg group-hover:shadow-primary/5"
           value={text}
           onChange={(e) => setText(e.target.value)}
           disabled={isLoading}
         />
-        <div className="absolute bottom-3 right-3 md:bottom-4 md:right-4 text-xs text-muted-foreground font-medium bg-background/50 px-2 md:px-3 py-1 rounded-full backdrop-blur-md border border-border">
-          {text.length} / 5000
+        <div className="absolute bottom-4 right-4 text-xs text-muted-foreground font-medium bg-background/50 px-3 py-1 rounded-full backdrop-blur-md border border-border">
+          {text.length} / 5000 chars
         </div>
       </div>
 
-      <div className="pt-1 md:pt-2">
+      <div className="pt-2">
         <Button
           size="lg"
           onClick={handleSubmit}
           disabled={isLoading || !text.trim()}
-          className="w-full relative p-0.5 inline-flex overflow-hidden rounded-2xl group shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:shadow-[0_0_30px_rgba(99,102,241,0.5)] transition-all h-auto min-h-[44px]"
+          className="w-full relative p-0.5 inline-flex overflow-hidden rounded-2xl group shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:shadow-[0_0_30px_rgba(99,102,241,0.5)] transition-all h-auto"
         >
           <span
             className={cn(
@@ -69,7 +69,7 @@ export function QuestionInput({ onAnalyze, isLoading, initialText = "", initialN
           />
           <span
             className={cn(
-              "inline-flex size-full items-center text-black justify-center rounded-2xl px-6 py-3 backdrop-blur-3xl font-semibold transition-all text-sm md:text-base"
+              "inline-flex size-full items-center text-black justify-center rounded-2xl px-6 py-3 backdrop-blur-3xl font-semibold transition-all"
             )}
           >
             <span className="relative z-10">Analyse</span>

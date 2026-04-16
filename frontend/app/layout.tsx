@@ -6,15 +6,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 export const metadata: Metadata = {
   title: "Rifair AI | Interview Bias & Hiring Risk Intelligence",
   description: "Detect hidden bias in interview questions using AI.",
-  manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "Rifair AI",
-  },
-  formatDetection: {
-    telephone: false,
-  },
 };
 
 export const viewport: Viewport = {
