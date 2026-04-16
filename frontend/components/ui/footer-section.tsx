@@ -39,8 +39,8 @@ export default function FooterSection({
           
           {/* Logo + Mission */}
           <div className="max-w-md">
-            <div className="relative h-12 w-auto mb-6">
-              <Image src="/rifair-logo.png" alt="Rifair AI" width={180} height={45} className="h-full w-auto object-contain" />
+            <div className="relative h-[40px] w-full mb-6 flex items-center">
+              <Image src="/rifair-logo.png" alt="Rifair AI" width={200} height={200} className="absolute left-0 h-[140px] w-auto object-contain scale-[1.25] origin-left" />
             </div>
             <div className="space-y-6">
               <h3 className="text-sm font-black text-[#1D1D1F] uppercase tracking-[0.2em]">

@@ -7,8 +7,8 @@ export function Logo({ className }: { className?: string; color?: string }) {
       <Image 
         src="/rifair-logo.png" 
         alt="Rifair AI Logo" 
-        width={180} 
-        height={60} 
+        width={90} 
+        height={90} 
         className="object-contain"
         priority
       />

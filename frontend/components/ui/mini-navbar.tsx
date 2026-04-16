@@ -95,13 +95,13 @@ export function MiniNavbar() {
     <div className="fixed top-8 left-0 right-0 z-50 flex items-center justify-between px-6 lg:px-12 pointer-events-none">
       <div className="pointer-events-auto">
         <Link href="/" className="transition-transform hover:scale-105 active:scale-95 block">
-          <div className="relative h-[60px] flex items-center">
+          <div className="relative h-[40px] w-[160px] flex items-center">
             <Image 
               src="/rifair-logo.png" 
               alt="Rifair AI" 
-              width={240}
-              height={60}
-              className="h-full w-auto object-contain"
+              width={200}
+              height={200}
+              className="absolute left-0 h-[140px] w-auto object-contain scale-[1.25] origin-left"
               priority
             />
           </div>

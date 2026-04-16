@@ -24,13 +24,13 @@ export function Sidebar() {
       {/* Brand Section */}
       <div className="flex items-center h-[120px] px-8 border-b border-black/[0.03] relative group overflow-hidden">
         <Link href="/" className="flex items-center gap-4 group relative z-10 w-full transition-transform hover:scale-[1.02] active:scale-[0.98]">
-          <div className="relative h-[60px] flex items-center justify-start">
+          <div className="relative h-[40px] w-full flex items-center justify-start">
              <Image 
               src="/rifair-logo.png" 
               alt="Rifair AI" 
               width={200}
-              height={50}
-              className="h-[45px] w-auto object-contain"
+              height={200}
+              className="absolute left-0 h-[140px] w-auto object-contain scale-[1.25] origin-left"
               priority
             />
           </div>
