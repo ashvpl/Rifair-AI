@@ -8,11 +8,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Input text is too short" }, { status: 400 });
     }
 
-    // Run extremely fast rule-based only pipeline
     const fastResponse = runRealTimePipeline(text);
 
     return NextResponse.json({ result: fastResponse }, { status: 200 });
   } catch (error: any) {
-    return NextResponse.json({ error: "Internal processing error occurred." }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
+    console.error("Realtime proxy error:", error);
+    return NextResponse.json(
+      { error: `Connection failed: ${errorMessage}. Check backend URL configuration.` },
+      { status: 500 }
+    );
   }
 }

@@ -78,36 +78,48 @@ const SidebarWithSubmenu = () => {
 
   return (
     <>
-      {/* Mobile Toggle Button */}
-      <button 
-        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className="md:hidden fixed top-4 left-4 z-50 p-2.5 bg-white border border-black/5 rounded-xl shadow-[0_4px_16px_rgba(0,0,0,0.06)] active:scale-95 transition-transform"
-      >
-        <svg className="w-5 h-5 text-[#1D1D1F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          {isMobileMenuOpen ? (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
-          ) : (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 6h16M4 12h16m-7 6h7" />
-          )}
-        </svg>
-      </button>
+      {/* Mobile Top Bar */}
+      <div className="md:hidden fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md border-b border-black/5 z-40 px-4 h-16 flex items-center justify-between shadow-sm">
+        <Link href="/" className="flex items-center h-[32px]">
+          <Image 
+            src="/rifair-logo.png" 
+            alt="Rifair AI" 
+            width={100}
+            height={100}
+            className="w-auto h-full object-contain" 
+            priority
+          />
+        </Link>
+        <button 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="p-2 border border-black/5 rounded-xl active:scale-95 transition-transform min-h-[44px] min-w-[44px] flex items-center justify-center bg-black/5 hover:bg-black/10"
+        >
+          <svg className="w-5 h-5 text-[#1D1D1F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {isMobileMenuOpen ? (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 6h16M4 12h16m-7 6h7" />
+            )}
+          </svg>
+        </button>
+      </div>
 
       {/* Mobile Overlay Backdrop */}
       {isMobileMenuOpen && (
         <div 
-          className="fixed inset-0 bg-black/20 backdrop-blur-[2px] z-30 md:hidden"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
 
       {/* Sidebar Container */}
       <nav className={cn(
-        "flex flex-col w-[280px] md:w-72 h-screen border-r bg-white fixed md:sticky top-0 left-0 z-40 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+        "flex flex-col w-[280px] md:w-72 h-screen border-r bg-white fixed md:sticky top-0 left-0 z-50 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-xl md:shadow-none",
         isMobileMenuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
       )}>
         <div className="flex flex-col h-full">
           {/* Logo Section */}
-          <div className="flex items-center justify-center h-[80px] border-b border-black/[0.03] shrink-0 mt-8 md:mt-0">
+          <div className="flex items-center justify-center h-[80px] border-b border-black/[0.03] shrink-0 mt-2 md:mt-0">
             <Link href="/" className="flex items-center justify-center group w-full relative h-[40px]">
               <Image 
                 src="/rifair-logo.png" 

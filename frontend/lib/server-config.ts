@@ -11,11 +11,12 @@ export const BACKEND_URL =
   process.env.NEXT_PUBLIC_BACKEND_URL ||
   "http://localhost:5001";
 
-if (!BACKEND_URL || BACKEND_URL === "http://localhost:5001") {
+if (!BACKEND_URL || BACKEND_URL.includes("localhost")) {
   if (process.env.NODE_ENV === "production") {
     console.error(
-      "❌ [server-config] BACKEND_URL is not set or is localhost in production! " +
-      "Set BACKEND_URL in your Vercel environment variables to your Render backend URL."
+      "CRITICAL ERROR: BACKEND_URL is missing or set to localhost in production.\n" +
+      "This will cause all API calls to fail.\n" +
+      "FIX: Add BACKEND_URL to your Vercel Project Settings > Environment Variables."
     );
   }
 }

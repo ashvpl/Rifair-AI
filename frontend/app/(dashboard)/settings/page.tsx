@@ -20,9 +20,9 @@ export default function SettingsPage() {
 
       <div className="grid gap-12">
         {/* Account Profile Card */}
-        <div className="bg-white border border-black/[0.05] rounded-[3rem] overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all duration-500 hover:shadow-[0_8px_48px_rgba(0,0,0,0.04)] hover:border-black/[0.08]">
-          <div className="p-4 md:p-10 overflow-hidden bg-white">
-            <div className="max-w-full rounded-[2rem] overflow-hidden border border-black/[0.03] bg-[#F5F5F7]/10 p-2 md:p-6 shadow-inner">
+        <div className="bg-white border border-black/[0.05] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)] transition-all duration-500 hover:shadow-[0_8px_48px_rgba(0,0,0,0.04)] hover:border-black/[0.08]">
+          <div className="p-2 sm:p-4 md:p-10 overflow-hidden bg-white">
+            <div className="max-w-full rounded-[1.5rem] md:rounded-[2rem] overflow-x-auto border border-black/[0.03] bg-[#F5F5F7]/10 p-1 sm:p-2 md:p-6 shadow-inner">
               <UserProfile 
                  routing="hash"
                  appearance={{

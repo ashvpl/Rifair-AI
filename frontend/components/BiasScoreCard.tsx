@@ -31,8 +31,8 @@ export function BiasScoreCard({ score, type = 'analysis' }: BiasScoreCardProps) 
   const strokeDashoffset = circumference - (visualScore / 100) * circumference;
 
   return (
-    <div className={cn("bg-white border border-black/[0.05] p-6 md:p-10 flex flex-col items-center justify-center relative overflow-hidden rounded-[2rem] md:rounded-[3rem] shadow-[0_4px_32px_rgba(0,0,0,0.02)] transition-all duration-500 hover:shadow-[0_8px_48px_rgba(0,0,0,0.04)]", style.border)}>
-      <h3 className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] mb-6 md:mb-8 z-10 w-full text-center">Spectral Bias Index</h3>
+    <div className="bg-white border border-black/[0.05] p-5 sm:p-6 md:p-10 flex flex-col items-center justify-center relative overflow-hidden rounded-[2rem] md:rounded-[3rem] shadow-[0_4px_32px_rgba(0,0,0,0.02)] transition-all duration-500 hover:shadow-[0_8px_48px_rgba(0,0,0,0.04)]" style={style}>
+      <h3 className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] mb-4 sm:mb-6 md:mb-8 z-10 w-full text-center">Spectral Bias Index</h3>
       
       {/* Responsive ring: w-36 h-36 on mobile, w-48 h-48 on desktop */}
       <div className="relative flex items-center justify-center z-10 w-36 h-36 md:w-48 md:h-48">
@@ -71,10 +71,10 @@ export function BiasScoreCard({ score, type = 'analysis' }: BiasScoreCardProps) 
             transition={{ delay: 0.8, duration: 0.5 }}
             className="text-center"
           >
-            <span className={cn("text-4xl md:text-6xl font-black tracking-tighter leading-none block", style.text)}>
+            <span className={cn("text-3xl sm:text-4xl md:text-6xl font-black tracking-tighter leading-none block", style.text)}>
               {score}
             </span>
-            <span className="text-[10px] font-black text-[#86868B] uppercase tracking-widest mt-1 block">PTS</span>
+            <span className="text-[9px] sm:text-[10px] font-black text-[#86868B] uppercase tracking-widest mt-1 block">PTS</span>
           </motion.div>
         </div>
       </div>
@@ -83,7 +83,7 @@ export function BiasScoreCard({ score, type = 'analysis' }: BiasScoreCardProps) 
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 1.2 }}
-        className={cn("mt-6 md:mt-10 px-6 md:px-8 py-2 md:py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border shadow-sm", style.bg, style.text, style.border)}
+        className={cn("mt-4 sm:mt-6 md:mt-10 px-4 sm:px-6 md:px-8 py-1.5 sm:py-2 md:py-2.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] border shadow-sm", style.bg, style.text, style.border)}
       >
         {style.label}
       </motion.div>

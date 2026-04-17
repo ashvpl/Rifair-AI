@@ -67,7 +67,7 @@ export function KitFeatureCards() {
               key={feature.id}
               initial={false}
               animate={{
-                x: isActive ? 0 : isPrev ? -120 : isNext ? 120 : 0,
+                x: isActive ? 0 : isPrev ? -80 : isNext ? 80 : 0,
                 scale: isActive ? 1 : isPrev || isNext ? 0.82 : 0.6,
                 opacity: isActive ? 1 : isPrev || isNext ? 0.35 : 0,
                 rotate: isPrev ? -6 : isNext ? 6 : 0,
@@ -79,7 +79,7 @@ export function KitFeatureCards() {
                 damping: 24,
                 mass: 0.8,
               }}
-              className="absolute inset-0 rounded-[3rem] overflow-hidden border-8 border-black bg-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] origin-center"
+              className="absolute inset-0 rounded-[2rem] sm:rounded-[3rem] overflow-hidden border-4 sm:border-8 border-black bg-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] origin-center"
             >
               <img
                 src={feature.image}
@@ -111,12 +111,12 @@ export function KitFeatureCards() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 20 }}
                     transition={{ delay: 0.2, duration: 0.5 }}
-                    className="absolute inset-x-0 bottom-0 p-10 pt-24 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end pointer-events-none"
+                    className="absolute inset-x-0 bottom-0 p-6 sm:p-10 pt-20 sm:pt-24 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end pointer-events-none"
                   >
-                    <div className="bg-white text-black px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] w-fit shadow-xl mb-4 border border-black/10">
+                    <div className="bg-white text-black px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] w-fit shadow-xl mb-3 sm:mb-4 border border-black/10">
                       {index + 1} • {feature.label}
                     </div>
-                    <p className="text-white font-black text-2xl leading-tight tracking-tight drop-shadow-xl">
+                    <p className="text-white font-black text-xl sm:text-2xl leading-tight tracking-tight drop-shadow-xl text-balance">
                       {feature.description}
                     </p>
                   </motion.div>
