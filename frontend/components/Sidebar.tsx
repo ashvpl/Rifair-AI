@@ -23,7 +23,7 @@ export function Sidebar() {
     <div className="flex flex-col w-72 h-screen border-r border-black/[0.05] bg-white relative z-20">
       {/* Brand Section */}
       <div className="flex items-center h-[120px] px-8 border-b border-black/[0.03] relative group overflow-hidden">
-        <Link href="/" className="flex items-center gap-4 group relative z-10 w-full transition-transform hover:scale-[1.02] active:scale-[0.98]">
+        <Link href="/dashboard" className="flex items-center gap-4 group relative z-10 w-full transition-transform hover:scale-[1.02] active:scale-[0.98]">
           <div className="relative h-[40px] w-full flex items-center justify-start">
              <Image 
               src="/rifair-logo.png" 

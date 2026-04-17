@@ -120,7 +120,7 @@ const SidebarWithSubmenu = () => {
         <div className="flex flex-col h-full">
           {/* Logo Section */}
           <div className="flex items-center justify-center h-[80px] border-b border-black/[0.03] shrink-0 mt-2 md:mt-0">
-            <Link href="/" className="flex items-center justify-center group w-full relative h-[40px]">
+            <Link href="/dashboard" className="flex items-center justify-center group w-full relative h-[40px]">
               <Image 
                 src="/rifair-logo.png" 
                 alt="Rifair AI" 
