@@ -24,17 +24,34 @@ export async function POST(req: Request) {
       body: JSON.stringify(body),
     });
 
-    const data = await response.json();
+    let data;
+    const rawText = await response.text();
+    try {
+      data = JSON.parse(rawText);
+    } catch {
+      console.error("[FRONTEND KIT] Backend error (non-JSON):", rawText.substring(0, 300));
+      return NextResponse.json(
+        { error: `Backend Error (${response.status}): ${rawText.substring(0, 100)}` },
+        { status: response.status || 502 }
+      );
+    }
 
     if (!response.ok) {
       console.error("[FRONTEND KIT] Backend Error:", data);
-      return NextResponse.json({ error: data.error || "Failed... backend responded with error" }, { status: response.status });
+      return NextResponse.json(
+        { error: data.error || data.message || "Failed... backend responded with error" },
+        { status: response.status }
+      );
     }
 
     console.log("[FRONTEND KIT] Success!");
     return NextResponse.json(data, { status: 200 });
   } catch (error: any) {
+    const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
     console.error("[FRONTEND KIT] Proxy error:", error.message || error);
-    return NextResponse.json({ error: "Internal processing error occurred." }, { status: 500 });
+    return NextResponse.json(
+      { error: `Connection failed: ${errorMessage}. Check backend URL configuration.` },
+      { status: 500 }
+    );
   }
 }

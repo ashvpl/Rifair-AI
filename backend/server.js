@@ -27,8 +27,16 @@ app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok", timestamp: new Date() });
 });
 
-// Request Timeout Middleware (30s)
+// Root route for default platform health checks
+app.get("/", (req, res) => {
+  res.status(200).json({ 
+    message: "Rifair AI Backend API is running",
+    status: "ok",
+    version: "1.0.0"
+  });
+});
 
+// Request Timeout Middleware (30s)
 app.use((req, res, next) => {
   res.setTimeout(30000, () => {
     if (!res.headersSent) {
@@ -59,8 +67,26 @@ app.use((err, req, res, next) => {
   });
 });
 
+// --- PROCESS HANDLERS (Debugging & Stability) ---
+process.on("uncaughtException", (err) => {
+  console.error("❌ UNCAUGHT EXCEPTION:", err);
+  // Give time for logs to flush before exiting
+  setTimeout(() => process.exit(1), 500);
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("❌ UNHANDLED REJECTION:", reason);
+});
+
+process.on("SIGTERM", () => {
+  console.log("⚠️ SIGTERM received. Cleaning up...");
+  process.exit(0);
+});
+
 // --- SERVER BOOT ---
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
+  console.log(`Health check available at /health`);
 });
+

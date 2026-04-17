@@ -19,7 +19,7 @@ export function WhatYouGet() {
         <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">What you'll get</h4>
       </div>
       
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {items.map((item, idx) => (
           <motion.div
             key={idx}

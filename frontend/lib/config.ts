@@ -16,9 +16,12 @@ export const API_BASE_URL =
   (isBrowser ? "/api" : process.env.NEXT_PUBLIC_BACKEND_URL) || 
   "http://localhost:5001";
 
-// Validate production settings
 if (process.env.NODE_ENV === "production") {
   if (!process.env.NEXT_PUBLIC_BACKEND_URL && !isBrowser) {
-    console.error("❌ NEXT_PUBLIC_BACKEND_URL is not defined in the production environment!");
+    console.error(
+      "CRITICAL: NEXT_PUBLIC_BACKEND_URL is not defined in the production environment!\n" +
+      "This will cause client-side and server-side fetches to fail.\n" +
+      "FIX: In Vercel, go to Settings > Environment Variables and add NEXT_PUBLIC_BACKEND_URL."
+    );
   }
 }

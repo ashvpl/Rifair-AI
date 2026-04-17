@@ -39,29 +39,29 @@ export function LoadingState() {
   const Icon = MILESTONES[currentStep].icon;
 
   return (
-    <div className="flex flex-col items-center justify-center p-8 py-14 space-y-10 border border-indigo-100/50 rounded-[2.5rem] bg-white/60 backdrop-blur-xl shadow-2xl shadow-indigo-100/20 animate-in fade-in zoom-in duration-700 max-w-2xl mx-auto w-full">
+    <div className="flex flex-col items-center justify-center p-6 sm:p-8 py-10 sm:py-14 space-y-6 sm:space-y-10 border border-indigo-100/50 rounded-[2rem] sm:rounded-[2.5rem] bg-white/60 backdrop-blur-xl shadow-2xl shadow-indigo-100/20 animate-in fade-in zoom-in duration-700 max-w-2xl mx-auto w-full">
       {/* Visual Indicator Container */}
       <div className="relative group flex flex-col items-center justify-center">
-        <LiquidLoader text="" className="scale-75" />
+        <LiquidLoader text="" className="scale-50 sm:scale-75" />
       </div>
 
       <div className="w-full max-w-md space-y-8 text-center px-6">
 
         {/* Milestone Text with Fade & Scale */}
-        <div className="h-20 relative overflow-hidden flex items-center justify-center">
+        <div className="h-16 sm:h-20 relative overflow-hidden flex items-center justify-center text-center">
           {MILESTONES.map((milestone, idx) => (
             <div
               key={idx}
-              className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-1000 ease-out ${
+              className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-1000 ease-out px-4 ${
                 idx === currentStep 
                   ? "opacity-100 translate-y-0 scale-100" 
                   : "opacity-0 translate-y-8 scale-95"
               }`}
             >
-              <span className="text-xs font-bold text-indigo-500 uppercase tracking-widest mb-1">
+              <span className="text-[10px] sm:text-xs font-bold text-indigo-500 uppercase tracking-widest mb-1">
                 Phase 0{idx + 1}
               </span>
-              <p className="text-xl font-extrabold text-slate-800 tracking-tight leading-none">
+              <p className="text-base sm:text-xl font-extrabold text-slate-800 tracking-tight leading-snug sm:leading-none">
                 {milestone.text}
               </p>
             </div>
@@ -95,9 +95,9 @@ export function LoadingState() {
         </div>
       </div>
 
-      <div className="flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-full border border-slate-100 animate-fade-up">
+      <div className="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-slate-50 rounded-full border border-slate-100 animate-fade-up">
         <div className="h-1.5 w-1.5 bg-indigo-500 rounded-full animate-ping"></div>
-        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">
+        <p className="text-[8px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wide">
           Hiring Intelligence Engine Active
         </p>
       </div>

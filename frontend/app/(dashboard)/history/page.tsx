@@ -124,15 +124,15 @@ export default function HistoryPage() {
               View and manage all your past bias analyses in one place.
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="text-[10px] font-black uppercase tracking-[0.15em] text-[#86868B] bg-[#F5F5F7] px-4 py-2 rounded-full border border-black/[0.03]">
+          <div className="flex items-center gap-2 md:gap-3">
+            <div className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.15em] text-[#86868B] bg-[#F5F5F7] px-3 md:px-4 py-1.5 md:py-2 rounded-full border border-black/[0.03]">
               {history.length} Reports
             </div>
             {history.length > 0 && (
               <Button
                 variant="outline"
                 size="sm"
-                className="text-danger border-danger/10 bg-danger/5 hover:bg-danger/10 hover:border-danger/30 shadow-sm transition-all h-10 px-6 rounded-full font-bold"
+                className="text-danger border-danger/10 bg-danger/5 hover:bg-danger/10 hover:border-danger/30 shadow-sm transition-all h-9 md:h-10 px-4 md:px-6 rounded-full font-bold text-xs md:text-sm"
                 onClick={() => {
                   setTargetId("ALL");
                   setShowConfirmModal(true);
@@ -168,10 +168,10 @@ export default function HistoryPage() {
             <div className="mx-auto h-24 w-24 bg-white rounded-full flex items-center justify-center border border-black/[0.03] shadow-[inset_0_4px_12px_rgba(0,0,0,0.01)]">
               <Calendar className="h-10 w-10 text-black/10" />
             </div>
-            <div className="space-y-3">
-              <h3 className="text-2xl font-extrabold text-foreground">Nothing here yet</h3>
+            <div className="space-y-2 md:space-y-3">
+              <h3 className="text-xl md:text-2xl font-extrabold text-foreground">Nothing here yet</h3>
             </div>
-            <Link href="/analyze" className="inline-flex items-center justify-center h-12 px-8 mt-6 rounded-full bg-black text-white font-bold hover:bg-black/90 transition-all shadow-lg active:scale-95">
+            <Link href="/analyze" className="inline-flex items-center justify-center h-12 px-6 md:px-8 mt-6 rounded-full bg-black text-white font-bold hover:bg-black/90 transition-all shadow-lg active:scale-95 text-sm md:text-base">
               Start Analysis <ChevronRight className="w-4 h-4 ml-1" />
             </Link>
           </div>
@@ -230,11 +230,11 @@ export default function HistoryPage() {
                         </div>
 
                         {/* Delete button — always visible on mobile */}
-                        <div className="flex items-center gap-4 sm:gap-4 ml-auto sm:ml-0">
+                        <div className="flex items-center gap-4 sm:gap-4 mt-2 sm:mt-0 sm:ml-auto md:ml-0">
                           <button
                             onClick={(e) => promptDelete(e, report.id)}
                             disabled={deletingId === report.id}
-                            className="p-2.5 md:p-3 text-[#86868B] hover:text-danger hover:bg-danger/5 border border-transparent hover:border-danger/10 rounded-xl md:rounded-2xl transition-all sm:opacity-0 sm:group-hover:opacity-100 disabled:opacity-50 shadow-sm bg-white relative z-20 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                            className="p-2 sm:p-2.5 md:p-3 text-[#86868B] hover:text-danger hover:bg-danger/5 border border-transparent hover:border-danger/10 rounded-xl md:rounded-2xl transition-all sm:opacity-0 sm:group-hover:opacity-100 disabled:opacity-50 shadow-sm bg-white relative z-20 min-h-[40px] md:min-h-[44px] min-w-[40px] md:min-w-[44px] flex items-center justify-center ml-auto"
                             title="Delete Entry"
                           >
                             {deletingId === report.id ? (

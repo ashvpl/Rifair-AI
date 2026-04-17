@@ -138,10 +138,10 @@ export default function KitGeneratorPage() {
           >
             {/* Form Section - Restored on Left */}
             <div className="lg:col-span-1 h-full">
-              <div className="bg-white border border-black/[0.05] p-10 md:p-12 h-full min-h-[700px] rounded-[3.5rem] shadow-[0_4px_24px_rgba(0,0,0,0.02)] relative overflow-hidden transition-all duration-500 hover:shadow-[0_8px_32px_rgba(0,0,0,0.04)] flex flex-col">
-                <div className="mb-10">
-                  <h2 className="text-2xl font-extrabold text-foreground tracking-tight">Role Definitions</h2>
-                  <p className="text-sm font-medium text-[#86868B] mt-1">Prime the engine for localized expertise.</p>
+              <div className="bg-white border border-black/[0.05] p-6 sm:p-8 md:p-12 h-full min-h-[500px] md:min-h-[700px] rounded-[2rem] md:rounded-[3.5rem] shadow-[0_4px_24px_rgba(0,0,0,0.02)] relative overflow-hidden transition-all duration-500 hover:shadow-[0_8px_32px_rgba(0,0,0,0.04)] flex flex-col">
+                <div className="mb-6 md:mb-10">
+                  <h2 className="text-xl md:text-2xl font-extrabold text-foreground tracking-tight">Role Definitions</h2>
+                  <p className="text-xs md:text-sm font-medium text-[#86868B] mt-1">Prime the engine for localized expertise.</p>
                 </div>
                 
                 <div className="space-y-6 flex-1 flex flex-col">
@@ -211,9 +211,9 @@ export default function KitGeneratorPage() {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.5 }}
-                    className="h-full min-h-[700px] bg-white border border-black/[0.05] flex flex-col items-stretch p-12 text-foreground rounded-[3.5rem] shadow-[0_8px_48px_rgba(0,0,0,0.02)] relative overflow-hidden"
+                    className="h-full min-h-[500px] md:min-h-[700px] bg-white border border-black/[0.05] flex flex-col items-stretch p-6 sm:p-8 md:p-12 text-foreground rounded-[2rem] md:rounded-[3.5rem] shadow-[0_8px_48px_rgba(0,0,0,0.02)] relative overflow-hidden"
                   >
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-black/[0.01] rounded-full blur-[120px] -mr-48 -mt-48" />
+                    <div className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-black/[0.01] rounded-full blur-[120px] -mr-32 -mt-32 md:-mr-48 md:-mt-48" />
                     <div className="relative z-10 flex flex-col items-center justify-center flex-1 py-10">
                       {error ? (
                         <div className="text-center space-y-4 max-w-sm mx-auto">
@@ -252,10 +252,10 @@ export default function KitGeneratorPage() {
                     <HolographicCard 
                       intensity={45} 
                       biasLevel="neutral"
-                      className="h-full min-h-[700px] flex flex-col items-stretch rounded-[3.5rem] shadow-[0_8px_64px_rgba(0,0,0,0.04)] relative overflow-hidden"
+                      className="h-full min-h-[500px] md:min-h-[700px] flex flex-col items-stretch rounded-[2rem] md:rounded-[3.5rem] shadow-[0_8px_64px_rgba(0,0,0,0.04)] relative overflow-hidden"
                     >
                       {/* Results Header */}
-                      <div className="p-10 border-b border-black/[0.03] bg-white/40 backdrop-blur-sm flex items-center justify-between shrink-0 relative z-10">
+                      <div className="p-6 md:p-10 border-b border-black/[0.03] bg-white/40 backdrop-blur-sm flex items-center justify-between shrink-0 relative z-10 flex-col sm:flex-row gap-4">
                         <div className="flex-1">
                           <h2 className="text-2xl font-extrabold text-foreground tracking-tight">
                             Validated Kit Output
@@ -266,7 +266,7 @@ export default function KitGeneratorPage() {
                           </div>
                         </div>
                         
-                        <div className="scale-50 -mr-20 -my-10">
+                        <div className="scale-75 sm:scale-50 sm:-mr-20 sm:-my-10">
                            <BiasScoreCard 
                              score={biasValidation?.overall_bias_score || biasValidation?.overallScore || 0} 
                              type="kit"
@@ -278,11 +278,11 @@ export default function KitGeneratorPage() {
                       <div className="flex-1 overflow-y-auto p-0 scrollbar-hide relative z-10">
                         <ul className="divide-y divide-black/[0.03]">
                           {kit.questions?.map((q: string, idx: number) => (
-                            <li key={idx} className="p-8 hover:bg-white/40 backdrop-blur-[1px] transition-all flex gap-8 group cursor-default items-start">
-                              <div className="flex flex-col items-center min-w-[40px] pt-1">
-                                <span className="text-[40px] font-black text-black tracking-tighter leading-none group-hover:scale-110 transition-transform">{idx + 1}</span>
+                            <li key={idx} className="p-4 sm:p-6 md:p-8 hover:bg-white/40 backdrop-blur-[1px] transition-all flex gap-4 md:gap-8 group cursor-default items-start flex-col sm:flex-row">
+                              <div className="flex flex-col items-center min-w-[30px] md:min-w-[40px] pt-1">
+                                <span className="text-2xl md:text-[40px] font-black text-black tracking-tighter leading-none group-hover:scale-110 transition-transform">{idx + 1}</span>
                               </div>
-                              <p className="text-xl text-foreground font-semibold leading-relaxed tracking-tight pt-1">
+                              <p className="text-base sm:text-lg md:text-xl text-foreground font-semibold leading-relaxed tracking-tight pt-1">
                                 <Typewriter text={q} speed={30} delay={idx * 500} />
                               </p>
                             </li>
