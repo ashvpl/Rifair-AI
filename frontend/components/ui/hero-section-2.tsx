@@ -88,30 +88,21 @@ const HeroSection2 = React.forwardRef<HTMLDivElement, HeroSectionProps>(
 
                 <motion.main variants={containerVariants}>
                     <motion.h2
-                      className="font-black leading-[1.1] tracking-tight text-[#1D1D1F]"
-                      style={{ fontSize: 'clamp(28px, 5vw, 60px)', wordBreak: 'break-word', overflowWrap: 'break-word' }}
+                      className="text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight text-[#1D1D1F]"
                       variants={itemVariants}
                     >
                         {title}
                     </motion.h2>
                     <motion.div className="my-8 h-1.5 w-24 bg-primary" variants={itemVariants}></motion.div>
                     <motion.p
-                        className="mb-10 max-w-lg text-black/60 font-medium leading-relaxed"
-                        style={{ fontSize: 'clamp(14px, 2.5vw, 20px)' }}
+                        className="mb-10 max-w-lg text-lg text-black/60 font-medium leading-relaxed"
                         variants={itemVariants}
                       >
                         {subtitle}
                     </motion.p>
                     <motion.a 
                         href={callToAction.href} 
-                        className="inline-flex items-center gap-3 text-white px-8 py-5 rounded-full text-base font-bold tracking-tight transition-all hover:scale-105 active:scale-95 shadow-xl"
-                        style={{
-                          background: '#0a3d2e',
-                          whiteSpace: 'nowrap',
-                          minWidth: '220px',
-                          justifyContent: 'center',
-                          fontSize: 'clamp(14px, 2vw, 18px)',
-                        }}
+                        className="bg-black inline-flex items-center gap-3 text-white px-8 py-5 rounded-full text-base font-bold tracking-tight transition-all hover:scale-105 active:scale-95 shadow-xl"
                         variants={itemVariants}
                       >
                         {callToAction.text}

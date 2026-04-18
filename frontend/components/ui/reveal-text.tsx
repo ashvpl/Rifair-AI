@@ -52,83 +52,94 @@ export function RevealText({
   return (
     <div className={cn("flex items-center justify-center relative select-none", className)}>
       <div className="flex flex-wrap justify-center">
-        {text.split("").map((letter, index) => {
-          if (letter === " ") return <span key={index} className={cn(fontSize, "w-[0.25em]")} />;
+        {text.split(" ").map((word, wordIndex, wordsArray) => {
+          const previousWordsLen = wordsArray.slice(0, wordIndex).reduce((acc, w) => acc + w.length, 0);
+          const globalWordStartIdx = previousWordsLen + wordIndex;
           
           return (
-            <motion.span
-              key={index}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-              className={cn(fontSize, "font-black tracking-tighter cursor-crosshair relative overflow-hidden inline-block")}
-              initial={{ 
-                scale: 0,
-                opacity: 0,
-                y: 20
-              }}
-              animate={{ 
-                scale: 1,
-                opacity: 1,
-                y: 0
-              }}
-              transition={{
-                delay: index * letterDelay,
-                type: "spring",
-                damping: 12,
-                stiffness: 200,
-                mass: 0.8,
-              }}
-            >
-              {/* Base text layer */}
-              <motion.span 
-                className={cn("absolute inset-0 transition-colors duration-300", textColor)}
-                animate={{ 
-                  opacity: hoveredIndex === index ? 0 : 1 
-                }}
-                transition={{ duration: 0.1 }}
-              >
-                {letter}
-              </motion.span>
-              {/* Image text layer with background panning */}
-              <motion.span
-                className="text-transparent bg-clip-text bg-cover bg-no-repeat bg-center"
-                animate={{ 
-                  opacity: hoveredIndex === index ? 1 : 0,
-                  scale: hoveredIndex === index ? 1.1 : 1
-                }}
-                transition={{ 
-                  opacity: { duration: 0.15 },
-                  scale: { duration: 0.4, ease: "easeOut" }
-                }}
-                style={{
-                  backgroundImage: `url('${letterImages[index % letterImages.length]}')`,
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
-              >
-                {letter}
-              </motion.span>
-              
-              {/* Overlay text sweep */}
-              {showOverlay && (
-                <motion.span
-                  className={cn("absolute inset-0 pointer-events-none", overlayColor)}
-                  initial={{ opacity: 0, x: "-100%" }}
-                  animate={{ 
-                    opacity: [0, 1, 1, 0],
-                    x: ["-100%", "0%", "0%", "100%"]
-                  }}
-                  transition={{
-                    delay: index * overlayDelay,
-                    duration: overlayDuration,
-                    times: [0, 0.2, 0.8, 1],
-                    ease: "easeInOut"
-                  }}
-                >
-                  {letter}
-                </motion.span>
+            <span key={wordIndex} className="inline-flex whitespace-nowrap">
+              {word.split("").map((letter, letterIndex) => {
+                const index = globalWordStartIdx + letterIndex;
+                return (
+                  <motion.span
+                    key={index}
+                    onMouseEnter={() => setHoveredIndex(index)}
+                    onMouseLeave={() => setHoveredIndex(null)}
+                    className={cn(fontSize, "font-black tracking-tighter cursor-crosshair relative overflow-hidden inline-block")}
+                    initial={{ 
+                      scale: 0,
+                      opacity: 0,
+                      y: 20
+                    }}
+                    animate={{ 
+                      scale: 1,
+                      opacity: 1,
+                      y: 0
+                    }}
+                    transition={{
+                      delay: index * letterDelay,
+                      type: "spring",
+                      damping: 12,
+                      stiffness: 200,
+                      mass: 0.8,
+                    }}
+                  >
+                    {/* Base text layer */}
+                    <motion.span 
+                      className={cn("absolute inset-0 transition-colors duration-300", textColor)}
+                      animate={{ 
+                        opacity: hoveredIndex === index ? 0 : 1 
+                      }}
+                      transition={{ duration: 0.1 }}
+                    >
+                      {letter}
+                    </motion.span>
+                    {/* Image text layer with background panning */}
+                    <motion.span
+                      className="text-transparent bg-clip-text bg-cover bg-no-repeat bg-center"
+                      animate={{ 
+                        opacity: hoveredIndex === index ? 1 : 0,
+                        scale: hoveredIndex === index ? 1.1 : 1
+                      }}
+                      transition={{ 
+                        opacity: { duration: 0.15 },
+                        scale: { duration: 0.4, ease: "easeOut" }
+                      }}
+                      style={{
+                        backgroundImage: `url('${letterImages[index % letterImages.length]}')`,
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                      }}
+                    >
+                      {letter}
+                    </motion.span>
+                    
+                    {/* Overlay text sweep */}
+                    {showOverlay && (
+                      <motion.span
+                        className={cn("absolute inset-0 pointer-events-none", overlayColor)}
+                        initial={{ opacity: 0, x: "-100%" }}
+                        animate={{ 
+                          opacity: [0, 1, 1, 0],
+                          x: ["-100%", "0%", "0%", "100%"]
+                        }}
+                        transition={{
+                          delay: index * overlayDelay,
+                          duration: overlayDuration,
+                          times: [0, 0.2, 0.8, 1],
+                          ease: "easeInOut"
+                        }}
+                      >
+                        {letter}
+                      </motion.span>
+                    )}
+                  </motion.span>
+                );
+              })}
+              {wordIndex < wordsArray.length - 1 && (
+                <span className={cn(fontSize, "w-[0.25em]")} />
               )}
-            </motion.span>
+            </span>
           );
         })}
       </div>

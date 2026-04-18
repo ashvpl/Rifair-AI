@@ -68,28 +68,30 @@ export function NavBarDemo() {
         transition={{ duration: 0.3, ease: "easeInOut" }}
         className="fixed top-0 left-0 z-[100] w-full bg-white/95 backdrop-blur-sm border-b border-black/[0.04]"
       >
-        <div className="max-w-7xl mx-auto flex h-16 md:h-20 items-center justify-between px-4 md:px-6 lg:px-12">
+        <div className="max-w-7xl mx-auto flex h-16 md:h-20 items-center justify-between px-4 md:px-6 lg:px-12 relative">
           {/* Branding */}
-          <Link href="/" className="flex items-center group" onClick={() => setMobileMenuOpen(false)}>
-            <div className="relative h-[36px] md:h-[40px] w-[130px] md:w-[160px] flex items-center">
-              <Image 
-                src="/rifair-logo.png" 
-                alt="Rifair AI" 
-                width={200}
-                height={200}
-                className="absolute left-0 h-[100px] md:h-[120px] w-auto object-contain scale-[1.5] origin-left"
-                priority
-              />
-            </div>
-          </Link>
+          <div className="flex shrink-0">
+            <Link href="/" className="flex items-center group w-full" onClick={() => setMobileMenuOpen(false)}>
+              <div className="relative h-[36px] md:h-[40px] w-[130px] md:w-[160px] flex items-center">
+                <Image 
+                  src="/rifair-logo.png" 
+                  alt="Rifair AI" 
+                  width={200}
+                  height={200}
+                  className="absolute left-0 h-[100px] md:h-[120px] w-auto object-contain scale-[1.5] origin-left"
+                  priority
+                />
+              </div>
+            </Link>
+          </div>
           
           {/* Center Navigation — hidden on mobile */}
-          <div className="hidden md:flex flex-1 justify-center z-[100]">
+          <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 z-[100]">
             <NavBar list={menus} />
           </div>
 
           {/* Right: Auth Buttons + hamburger */}
-          <div className="flex items-center gap-2 md:gap-4 relative z-[100]">
+          <div className="flex items-center justify-end gap-2 md:gap-4 relative z-[100] shrink-0">
             {!isLoaded ? (
               <div className="w-20 h-10 animate-pulse bg-[#F5F5F7] rounded-full" />
             ) : isSignedIn ? (

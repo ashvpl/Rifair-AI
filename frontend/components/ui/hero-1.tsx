@@ -30,42 +30,28 @@ export function HeroSection() {
 
 				<div className="flex flex-col items-center gap-1 md:gap-2 w-full max-w-5xl">
 					{/* Hero title wrapper — word-break prevention */}
-					<div
-						style={{
-							wordBreak: 'break-word',
-							overflowWrap: 'break-word',
-							hyphens: 'none',
-							width: '100%',
-							textAlign: 'center',
-						}}
-					>
+					<div className="w-full text-center flex flex-col items-center gap-2">
 						<RevealText 
 							text="Eliminate Bias from"
-							fontSize="text-[clamp(28px,7vw,72px)]"
+							fontSize="text-3xl sm:text-4xl md:text-5xl lg:text-[56px]"
 							textColor="text-[#1D1D1F]"
 							overlayColor="text-indigo-600"
 							letterDelay={0.06}
-							className="w-full"
+							className="w-full block"
 						/>
 						<RevealText 
 							text="Hiring Decisions – Instantly."
-							fontSize="text-[clamp(28px,7vw,72px)]"
+							fontSize="text-3xl sm:text-4xl md:text-5xl lg:text-[56px]"
 							textColor="text-[#1D1D1F]"
 							overlayColor="text-emerald-600"
 							letterDelay={0.05}
-							className="w-full"
+							className="w-full block"
 						/>
 					</div>
 				</div>
 
 				<p
-					className="fade-in slide-in-from-bottom-10 mx-auto max-w-2xl animate-in fill-mode-backwards text-center tracking-wider delay-200 duration-500 ease-out font-medium"
-					style={{
-						fontSize: 'clamp(15px, 3vw, 18px)',
-						lineHeight: '1.7',
-						color: 'rgba(0,0,0,0.65)',
-						maxWidth: '100%',
-					}}
+					className="fade-in slide-in-from-bottom-10 mx-auto max-w-2xl animate-in fill-mode-backwards text-center text-base text-foreground/80 tracking-wider delay-200 duration-500 ease-out sm:text-lg md:text-xl font-medium"
 				>
 					Rifair AI analyzes interview questions, detects hidden bias, and generates fair, inclusive alternatives — in seconds.
 				</p>
@@ -73,39 +59,17 @@ export function HeroSection() {
 				<div className="fade-in slide-in-from-bottom-10 flex animate-in flex-row flex-wrap items-center justify-center gap-3 fill-mode-backwards pt-2 delay-300 duration-500 ease-out w-full max-w-sm sm:max-w-none">
 					{isSignedIn ? (
 						<Link href="/dashboard" className="w-full sm:w-auto">
-							<button
-								className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-full font-bold transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
-								style={{
-									background: '#0a3d2e',
-									color: 'white',
-									padding: '16px 32px',
-									fontSize: '16px',
-									fontWeight: 500,
-									borderRadius: '50px',
-									minHeight: '52px',
-									boxShadow: '0 4px 20px rgba(10,61,46,0.3)',
-								}}
-							>
-								Dashboard <ArrowRightIcon className="w-4 h-4" />
-							</button>
+							<Button className="w-full sm:w-auto rounded-full font-bold h-12 px-8" size="lg">
+								Dashboard{" "}
+								<ArrowRightIcon className="size-4 ms-2" />
+							</Button>
 						</Link>
 					) : (
 						<Link href="/analyze" className="w-full sm:w-auto">
-							<button
-								className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-full font-bold transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
-								style={{
-									background: '#0a3d2e',
-									color: 'white',
-									padding: '16px 32px',
-									fontSize: '16px',
-									fontWeight: 500,
-									borderRadius: '50px',
-									minHeight: '52px',
-									boxShadow: '0 4px 20px rgba(10,61,46,0.3)',
-								}}
-							>
-								Try Free Analysis <ArrowRightIcon className="w-4 h-4" />
-							</button>
+							<Button className="w-full sm:w-auto rounded-full font-bold h-12 px-8" size="lg">
+								Try Free Analysis{" "}
+								<ArrowRightIcon className="size-4 ms-2" />
+							</Button>
 						</Link>
 					)}
 				</div>

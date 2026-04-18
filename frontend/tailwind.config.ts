@@ -80,17 +80,10 @@ const config: Config = {
   			sm: "calc(var(--radius) - 4px)",
   		},
         fontFamily: {
-          sans: ["'Inter'", "var(--font-sans)", "-apple-system", "BlinkMacSystemFont", "'Segoe UI'", "sans-serif"],
-          mono: ["'Geist Mono'", "var(--font-mono)", "monospace"],
+          sans: ["var(--font-sans)"],
+          mono: ["var(--font-mono)"],
         },
-        screens: {
-          // Mobile-first approach
-          sm: '480px',
-          md: '768px',   // Tablet starts
-          lg: '1024px',  // Desktop starts
-          xl: '1280px',
-          '2xl': '1536px',
-        },
+
   	},
   },
   plugins: [require("tailwindcss-animate")],

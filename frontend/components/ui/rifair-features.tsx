@@ -201,7 +201,7 @@ export function RifairCoreFeatures() {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8">
                 <div className="space-y-4">
                   <h2 className="font-black text-[#1D1D1F] tracking-tight">Core Features</h2>
-                  <p className="text-[#86868B] font-medium max-w-xl" style={{ fontSize: 'clamp(14px, 2.5vw, 20px)' }}>Enterprise-grade capabilities for modern hiring teams obsessed with quality.</p>
+                  <p className="text-[#86868B] text-lg font-medium max-w-xl">Enterprise-grade capabilities for modern hiring teams obsessed with quality.</p>
                 </div>
                 <motion.div
                     whileHover={{ scale: 1.05 }}
@@ -230,14 +230,12 @@ export function RifairCoreFeatures() {
                             <div className="p-6 md:p-10 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-black/[0.03]">
                                 <div className="min-w-0">
                                     <h3
-                                      className={`font-bold ${feature.dark ? 'text-white' : 'text-[#1D1D1F]'} mb-3 md:mb-4`}
-                                      style={{ fontSize: 'clamp(16px, 3vw, 24px)', wordBreak: 'break-word' }}
+                                      className={`text-xl font-bold ${feature.dark ? 'text-white' : 'text-[#1D1D1F]'} mb-3 md:mb-4`}
                                     >
                                       {feature.title}
                                     </h3>
                                     <p
-                                      className={`${feature.dark ? 'text-white/60' : 'text-[#86868B]'} leading-relaxed`}
-                                      style={{ fontSize: 'clamp(13px, 2vw, 18px)' }}
+                                      className={`text-base ${feature.dark ? 'text-white/60' : 'text-[#86868B]'} leading-relaxed`}
                                     >
                                         {feature.description}
                                     </p>
