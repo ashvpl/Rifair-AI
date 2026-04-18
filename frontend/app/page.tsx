@@ -33,11 +33,11 @@ export default function LandingPage() {
         </section>
 
         {/* HOW IT WORKS SECTION */}
-        <section id="how-it-works" className="py-24 px-6 lg:px-12 relative overflow-hidden bg-[#F5F5F7]">
-          <div className="max-w-7xl mx-auto space-y-20">
+        <section id="how-it-works" className="py-16 md:py-24 relative overflow-hidden bg-[#F5F5F7]" style={{ paddingLeft: 'clamp(16px, 5vw, 80px)', paddingRight: 'clamp(16px, 5vw, 80px)' }}>
+          <div className="max-w-7xl mx-auto space-y-12 md:space-y-20">
             <div className="text-center space-y-4">
-              <h2 className="text-4xl md:text-6xl font-black text-[#1D1D1F] tracking-tight">How It Works</h2>
-              <p className="text-xl text-[#86868B] font-medium">Eight steps to institutionalizing fairness.</p>
+              <h2 className="font-black text-[#1D1D1F] tracking-tight">How It Works</h2>
+              <p className="text-[#86868B] font-medium" style={{ fontSize: 'clamp(15px, 3vw, 20px)' }}>Eight steps to institutionalizing fairness.</p>
             </div>
             
             <FeatureCarousel />
@@ -48,29 +48,51 @@ export default function LandingPage() {
         <RifairCoreFeatures />
 
         {/* LIVE EXAMPLE SECTION */}
-        <section className="py-32 px-6 lg:px-12 bg-[#101012] text-white relative border-y border-black/[0.03]">
+        <section className="py-16 md:py-32 bg-[#101012] text-white relative border-y border-black/[0.03] overflow-hidden" style={{ paddingLeft: 'clamp(16px, 5vw, 80px)', paddingRight: 'clamp(16px, 5vw, 80px)' }}>
             {/* Subtle glow behind the card */}
             <div 
                 className="absolute top-1/2 left-3/4 -translate-y-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full pointer-events-none opacity-20 z-0 blur-[120px]"
                 style={{ background: 'radial-gradient(circle, #6366f1 0%, transparent 60%)' }}
             />
             
-            <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
-                <div className="space-y-10">
-                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight min-h-[1.2em]">
+            <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-10 md:gap-16 items-center relative z-10">
+                {/* Text side — force z-index above blurs */}
+                <div className="space-y-6 md:space-y-10 relative z-20">
+                    <h2
+                      className="font-black tracking-tight leading-tight"
+                      style={{
+                        color: '#ffffff',
+                        opacity: 1,
+                        position: 'relative',
+                        zIndex: 20,
+                        fontSize: 'clamp(28px, 5vw, 64px)',
+                        wordBreak: 'break-word',
+                        overflowWrap: 'break-word',
+                        minHeight: '1.2em',
+                      }}
+                    >
                         <BlurTextAnimation 
                             text="See the difference in real-time."
-                            fontSize="text-4xl md:text-5xl lg:text-6xl"
+                            fontSize="text-[clamp(28px,5vw,64px)]"
                             textColor="text-white"
                             className="font-black"
                             containerClassName="justify-start"
                             animationDelay={6000}
                         />
                     </h2>
-                    <div className="text-xl text-white/60 leading-relaxed font-medium min-h-[4em]">
+                    <div
+                      style={{
+                        color: 'rgba(255,255,255,0.6)',
+                        opacity: 1,
+                        position: 'relative',
+                        zIndex: 20,
+                        minHeight: '4em',
+                        fontSize: 'clamp(15px, 3vw, 20px)',
+                      }}
+                    >
                         <BlurTextAnimation 
                             text="Our engine doesn't just block bad questions. It fundamentally rebuilds them, cutting out subtle signals of bias while purely focusing on core competencies."
-                            fontSize="text-xl"
+                            fontSize="text-[clamp(15px,3vw,20px)]"
                             textColor="text-white/60"
                             className="font-medium"
                             containerClassName="justify-start text-left"
@@ -150,43 +172,44 @@ export default function LandingPage() {
 
 
         {/* WHY / WHO ADVANCED SECTIONS */}
-        <section id="about-us" className="py-32 px-6 lg:px-12 relative w-full bg-[#F5F5F7] border-y border-black/[0.05]">
-            <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-20">
-                <div className="space-y-12">
-                    <h2 className="text-4xl md:text-5xl font-black text-[#1D1D1F] tracking-tight">Why Rifair AI</h2>
-                    <ul className="space-y-8">
-                        <li className="flex items-start gap-5">
+        <section id="about-us" className="py-16 md:py-32 relative w-full bg-[#F5F5F7] border-y border-black/[0.05]" style={{ paddingLeft: 'clamp(16px, 5vw, 80px)', paddingRight: 'clamp(16px, 5vw, 80px)' }}>
+            <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20">
+                <div className="space-y-8 md:space-y-12">
+                    <h2 className="font-black text-[#1D1D1F] tracking-tight">Why Rifair AI</h2>
+                    <ul className="space-y-6 md:space-y-8">
+                        <li className="flex items-start gap-4 md:gap-5">
                             <div className="h-10 w-10 rounded-full bg-muted text-primary flex items-center justify-center shrink-0 mt-1">
                                 <CheckCircle className="h-5 w-5" />
                             </div>
-                            <div>
-                                <h4 className="text-2xl font-bold text-[#1D1D1F]">Removes Unconscious Bias</h4>
-                                <p className="text-[#86868B] text-lg mt-2 leading-relaxed">Eliminate subtle biases that humans inherently miss.</p>
+                            {/* min-w-0 prevents text overflow on mobile */}
+                            <div className="min-w-0 flex-1">
+                                <h4 className="text-xl font-bold text-[#1D1D1F]" style={{ wordBreak: 'break-word' }}>Removes Unconscious Bias</h4>
+                                <p className="text-[#86868B] mt-2 leading-relaxed" style={{ fontSize: 'clamp(14px, 2.5vw, 18px)' }}>Eliminate subtle biases that humans inherently miss.</p>
                             </div>
                         </li>
-                        <li className="flex items-start gap-5">
+                        <li className="flex items-start gap-4 md:gap-5">
                             <div className="h-10 w-10 rounded-full bg-muted text-primary flex items-center justify-center shrink-0 mt-1">
                                 <CheckCircle className="h-5 w-5" />
                             </div>
-                            <div>
-                                <h4 className="text-2xl font-bold text-[#1D1D1F]">Improves Hiring Fairness</h4>
-                                <p className="text-[#86868B] text-lg mt-2 leading-relaxed">Create a perfectly level playing field for all candidates.</p>
+                            <div className="min-w-0 flex-1">
+                                <h4 className="text-xl font-bold text-[#1D1D1F]" style={{ wordBreak: 'break-word' }}>Improves Hiring Fairness</h4>
+                                <p className="text-[#86868B] mt-2 leading-relaxed" style={{ fontSize: 'clamp(14px, 2.5vw, 18px)' }}>Create a perfectly level playing field for all candidates.</p>
                             </div>
                         </li>
-                        <li className="flex items-start gap-5">
+                        <li className="flex items-start gap-4 md:gap-5">
                             <div className="h-10 w-10 rounded-full bg-muted text-primary flex items-center justify-center shrink-0 mt-1">
                                 <CheckCircle className="h-5 w-5" />
                             </div>
-                            <div>
-                                <h4 className="text-2xl font-bold text-[#1D1D1F]">Ensures Compliance</h4>
-                                <p className="text-[#86868B] text-lg mt-2 leading-relaxed">Stay seamlessly aligned with modern employment standards and ethical guidelines.</p>
+                            <div className="min-w-0 flex-1">
+                                <h4 className="text-xl font-bold text-[#1D1D1F]" style={{ wordBreak: 'break-word' }}>Ensures Compliance</h4>
+                                <p className="text-[#86868B] mt-2 leading-relaxed" style={{ fontSize: 'clamp(14px, 2.5vw, 18px)' }}>Stay seamlessly aligned with modern employment standards and ethical guidelines.</p>
                             </div>
                         </li>
                     </ul>
                 </div>
 
-                <div className="space-y-12">
-                    <h2 className="text-4xl md:text-5xl font-black text-[#1D1D1F] tracking-tight">Who is it for</h2>
+                <div className="space-y-8 md:space-y-12">
+                    <h2 className="font-black text-[#1D1D1F] tracking-tight">Who is it for</h2>
                     <InteractiveAccordion 
                         items={[
                             {
@@ -214,10 +237,10 @@ export default function LandingPage() {
         </section>
 
         {/* TRUST SECTION & BOTTOM CTA */}
-        <section className="py-24 px-6 lg:px-12 relative w-full bg-[#F5F5F7] border-t border-black/[0.05]">
+        <section className="py-12 md:py-24 relative w-full bg-[#F5F5F7] border-t border-black/[0.05]" style={{ paddingLeft: 'clamp(16px, 5vw, 80px)', paddingRight: 'clamp(16px, 5vw, 80px)' }}>
             <div className="max-w-7xl mx-auto space-y-12">
                 {/* Trust / Authority Section inside the bottom CTA */}
-                <div className="flex flex-wrap justify-center gap-x-12 gap-y-6 pb-24 border-b border-black/[0.03]">
+                <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 pb-12 md:pb-24 border-b border-black/[0.03]">
                     <div className="flex items-center gap-3 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-500 cursor-default">
                         <CheckCircle className="h-4 w-4" />
                         <span className="text-[10px] font-black text-black uppercase tracking-[0.3em]">Made for modern hiring teams</span>

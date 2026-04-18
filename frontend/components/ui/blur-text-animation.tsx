@@ -115,17 +115,24 @@ export function BlurTextAnimation({
           {textWords.map((word, index) => (
             <span
               key={index}
-              className={cn("inline-block transition-all", isAnimating ? 'opacity-100' : 'opacity-0')}
+              className={cn("inline-block transition-all")}
               style={{
                 transitionDuration: `${word.duration}s`,
                 transitionDelay: `${word.delay}s`,
                 transitionTimingFunction: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                // Start visible with slight blur, animate to fully sharp
+                // This ensures text is ALWAYS readable even if animation doesn't trigger
                 filter: isAnimating 
                   ? 'blur(0px) brightness(1)' 
-                  : `blur(${word.blur}px) brightness(0.6)`,
+                  : isInView 
+                    ? `blur(${word.blur}px) brightness(0.6)` 
+                    : 'blur(0px) brightness(1)',
+                opacity: isInView && !isAnimating ? (word.blur > 18 ? 0.3 : 0.6) : 1,
                 transform: isAnimating 
                   ? 'translateY(0) scale(1) rotateX(0deg)' 
-                  : `translateY(30px) scale(${word.scale || 1}) rotateX(-15deg)`,
+                  : isInView
+                    ? `translateY(30px) scale(${word.scale || 1}) rotateX(-15deg)`
+                    : 'translateY(0) scale(1) rotateX(0deg)',
                 marginRight: '0.35em',
                 willChange: 'filter, transform, opacity',
                 transformStyle: 'preserve-3d',

@@ -62,7 +62,7 @@ const HeroSection2 = React.forwardRef<HTMLDivElement, HeroSectionProps>(
       <motion.section
         ref={ref}
         className={cn(
-          "relative flex w-full flex-col overflow-hidden bg-[#F5F5F7] text-[#1D1D1F] md:flex-row rounded-[3rem] border border-black/5",
+          "relative flex w-full flex-col overflow-hidden bg-[#F5F5F7] text-[#1D1D1F] md:flex-row rounded-[2rem] md:rounded-[3rem] border border-black/5",
           className
         )}
         initial="hidden"
@@ -72,7 +72,7 @@ const HeroSection2 = React.forwardRef<HTMLDivElement, HeroSectionProps>(
         {...(restProps as any)}
       >
         {/* Left Side: Content */}
-        <div className="flex w-full flex-col justify-center p-12 md:w-1/2 lg:w-3/5 lg:p-24">
+        <div className="flex w-full flex-col justify-center p-8 md:p-12 lg:w-3/5 lg:p-24">
             <div>
                 {logo && (
                     <motion.header className="mb-12" variants={itemVariants}>
@@ -87,18 +87,33 @@ const HeroSection2 = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                 )}
 
                 <motion.main variants={containerVariants}>
-                    <motion.h2 className="text-5xl md:text-6xl font-black leading-[1.1] tracking-tight text-[#1D1D1F]" variants={itemVariants}>
+                    <motion.h2
+                      className="font-black leading-[1.1] tracking-tight text-[#1D1D1F]"
+                      style={{ fontSize: 'clamp(28px, 5vw, 60px)', wordBreak: 'break-word', overflowWrap: 'break-word' }}
+                      variants={itemVariants}
+                    >
                         {title}
                     </motion.h2>
                     <motion.div className="my-8 h-1.5 w-24 bg-primary" variants={itemVariants}></motion.div>
-                    <motion.p className="mb-10 max-w-lg text-xl text-black/60 font-medium leading-relaxed" variants={itemVariants}>
+                    <motion.p
+                        className="mb-10 max-w-lg text-black/60 font-medium leading-relaxed"
+                        style={{ fontSize: 'clamp(14px, 2.5vw, 20px)' }}
+                        variants={itemVariants}
+                      >
                         {subtitle}
                     </motion.p>
                     <motion.a 
                         href={callToAction.href} 
-                        className="inline-flex items-center gap-3 bg-black text-white px-10 py-5 rounded-full text-lg font-bold tracking-tight transition-all hover:scale-105 active:scale-95 shadow-xl"
+                        className="inline-flex items-center gap-3 text-white px-8 py-5 rounded-full text-base font-bold tracking-tight transition-all hover:scale-105 active:scale-95 shadow-xl"
+                        style={{
+                          background: '#0a3d2e',
+                          whiteSpace: 'nowrap',
+                          minWidth: '220px',
+                          justifyContent: 'center',
+                          fontSize: 'clamp(14px, 2vw, 18px)',
+                        }}
                         variants={itemVariants}
-                    >
+                      >
                         {callToAction.text}
                         {callToAction.icon}
                     </motion.a>

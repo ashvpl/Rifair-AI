@@ -224,8 +224,9 @@ export default function DashboardPage() {
   return (
     <div className="max-w-[1240px] mx-auto space-y-5 md:space-y-8 pb-4 pt-4 px-0 lg:px-6">
       
-      <div className="flex items-center justify-between gap-2">
-        <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-[#1D1D1F] tracking-tight">Hiring intelligence dashboard</h1>
+      {/* Dashboard Title Row — stacks vertically on mobile */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2">
+        <h1 className="font-bold text-[#1D1D1F] tracking-tight" style={{ fontSize: 'clamp(16px, 4vw, 24px)' }}>Hiring intelligence dashboard</h1>
         <p className="text-[10px] font-semibold text-[#86868B] uppercase tracking-wider whitespace-nowrap">Last updated: today</p>
       </div>
 
@@ -239,32 +240,37 @@ export default function DashboardPage() {
           heroContent.border
         )}
       >
-        <div className="relative z-10 flex flex-row items-center justify-between gap-4 md:gap-8">
-          <div className="space-y-2 md:space-y-3">
-            <h2 className={cn("text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight", heroContent.titleColor)}>
+        {/* Hero banner: keep-row flex — text left, button right. Shrinks gracefully */}
+        <div className="relative z-10 flex flex-row items-center justify-between gap-3 md:gap-8">
+          <div className="space-y-1.5 md:space-y-3 flex-1 min-w-0">
+            <h2
+              className={cn("font-extrabold tracking-tight", heroContent.titleColor)}
+              style={{ fontSize: 'clamp(14px, 3.5vw, 36px)', wordBreak: 'break-word' }}
+            >
               {heroContent.title}
             </h2>
-            <p className={cn("text-sm md:text-lg font-medium", heroContent.subtitleColor)}>
+            <p className={cn("text-sm md:text-base font-medium", heroContent.subtitleColor)} style={{ fontSize: 'clamp(11px, 2.5vw, 16px)' }}>
               {heroContent.subtitle}
             </p>
           </div>
-          <Link href={heroContent.ctaLink}>
+          <Link href={heroContent.ctaLink} className="flex-shrink-0">
             <button className={cn(
-              "w-full md:w-auto whitespace-nowrap flex items-center justify-center gap-2 md:gap-3 px-5 md:px-8 py-3 md:py-4 transition-all rounded-full text-white font-bold shadow-md hover:shadow-lg group active:scale-95 text-sm md:text-base min-h-[44px]",
+              "whitespace-nowrap flex items-center justify-center gap-2 px-4 md:px-8 py-2.5 md:py-4 transition-all rounded-full text-white font-bold shadow-md hover:shadow-lg group active:scale-95 min-h-[44px]",
               heroContent.buttonBg
-            )}>
-              {heroContent.cta} <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
+            )} style={{ fontSize: 'clamp(11px, 2vw, 15px)' }}>
+              {heroContent.cta} <ArrowRight className="w-3.5 h-3.5 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
             </button>
           </Link>
         </div>
       </motion.div>
 
-      {/* 4-Metric Grid - Horizontal Scroll on Mobile */}
+      {/* 4-Metric Grid */}
+      {/* Mobile: 2x2 grid | Tablet: 2x2 grid | Desktop: 1x4 grid */}
       <motion.div 
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="flex lg:grid lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6 overflow-x-auto pb-4 snap-x snap-mandatory hide-scrollbar [&>div]:min-w-[200px] sm:[&>div]:min-w-[240px] lg:[&>div]:min-w-0"
+        className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6"
       >
         {/* TOTAL ANALYSES */}
         <motion.div variants={itemVariants} className="bg-[#F5F5F7] p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-black/[0.03] shadow-sm snap-start shrink-0">
