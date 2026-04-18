@@ -54,6 +54,43 @@ const Menu = ({ children, items }: { children: React.ReactNode; items: MenuItem[
   );
 };
 
+// ─── Bottom Navigation Bar (Mobile/Tablet only) ───
+export function BottomNav() {
+  const pathname = usePathname();
+
+  const navItems = [
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { name: "Analyze", href: "/analyze", icon: ShieldAlert },
+    { name: "Kits", href: "/kit", icon: FileText },
+    { name: "History", href: "/history", icon: History },
+  ];
+
+  return (
+    <nav className="bottom-nav lg:hidden" aria-label="Bottom navigation">
+      {navItems.map((item) => {
+        const isActive = pathname === item.href;
+        return (
+          <Link
+            key={item.name}
+            href={item.href}
+            className={cn("bottom-nav-item", isActive && "active")}
+            aria-label={item.name}
+          >
+            <item.icon
+              style={{
+                width: 22,
+                height: 22,
+                strokeWidth: isActive ? 2.5 : 1.75,
+              }}
+            />
+            <span>{item.name}</span>
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
+
 const SidebarWithSubmenu = () => {
   const pathname = usePathname();
 
@@ -78,8 +115,8 @@ const SidebarWithSubmenu = () => {
 
   return (
     <>
-      {/* Mobile Top Bar */}
-      <div className="md:hidden fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md border-b border-black/5 z-40 px-4 h-16 flex items-center justify-between shadow-sm">
+      {/* Mobile Top Bar — visible below lg */}
+      <div className="lg:hidden fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md border-b border-black/5 z-40 px-4 h-16 flex items-center justify-between shadow-sm">
         <Link href="/" className="flex items-center h-[32px]">
           <Image 
             src="/rifair-logo.png" 
@@ -92,9 +129,10 @@ const SidebarWithSubmenu = () => {
         </Link>
         <button 
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="p-2 border border-black/5 rounded-xl active:scale-95 transition-transform min-h-[44px] min-w-[44px] flex items-center justify-center bg-black/5 hover:bg-black/10"
+          className="p-2 rounded-xl active:scale-95 transition-transform min-h-[44px] min-w-[44px] flex items-center justify-center hover:bg-black/5"
+          aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
         >
-          <svg className="w-5 h-5 text-[#1D1D1F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 text-[#1D1D1F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {isMobileMenuOpen ? (
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
             ) : (
@@ -107,19 +145,23 @@ const SidebarWithSubmenu = () => {
       {/* Mobile Overlay Backdrop */}
       {isMobileMenuOpen && (
         <div 
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
 
-      {/* Sidebar Container */}
+      {/* Sidebar Container — hidden on mobile/tablet, visible on lg+ */}
       <nav className={cn(
-        "flex flex-col w-[280px] md:w-72 h-screen border-r bg-white fixed md:sticky top-0 left-0 z-50 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-xl md:shadow-none",
-        isMobileMenuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+        "flex flex-col w-[280px] md:w-72 h-screen border-r bg-white z-50 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-xl lg:shadow-none",
+        // On desktop (lg+): always visible, sticky
+        "lg:static lg:translate-x-0 lg:flex",
+        // On mobile/tablet: fixed, slide in from left
+        "fixed top-0 left-0",
+        isMobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
         <div className="flex flex-col h-full">
           {/* Logo Section */}
-          <div className="flex items-center justify-center h-[80px] border-b border-black/[0.03] shrink-0 mt-2 md:mt-0">
+          <div className="flex items-center justify-center h-[80px] border-b border-black/[0.03] shrink-0 mt-2 lg:mt-0">
             <Link href="/dashboard" className="flex items-center justify-center group w-full relative h-[40px]">
               <Image 
                 src="/rifair-logo.png" 
@@ -145,7 +187,7 @@ const SidebarWithSubmenu = () => {
                     <Link
                       href={item.href}
                       className={cn(
-                        "flex items-center gap-x-2 p-3 rounded-xl transition-all duration-150",
+                        "flex items-center gap-x-2 p-3 rounded-xl transition-all duration-150 min-h-[44px]",
                         isActive
                           ? "bg-black/[0.03] text-foreground font-semibold"
                           : "text-gray-600 hover:text-foreground hover:bg-gray-50 active:bg-gray-100"
@@ -171,7 +213,7 @@ const SidebarWithSubmenu = () => {
                       <Link
                         href={item.href}
                         className={cn(
-                          "flex items-center gap-x-2 p-3 rounded-xl transition-all duration-150",
+                          "flex items-center gap-x-2 p-3 rounded-xl transition-all duration-150 min-h-[44px]",
                           isActive
                             ? "bg-black/[0.03] text-foreground font-semibold"
                             : "text-gray-600 hover:text-foreground hover:bg-gray-50 active:bg-gray-100"
@@ -212,6 +254,9 @@ const SidebarWithSubmenu = () => {
           </div>
         </div>
       </nav>
+
+      {/* Bottom Nav — shown on mobile/tablet, hidden on desktop */}
+      <BottomNav />
     </>
   );
 };

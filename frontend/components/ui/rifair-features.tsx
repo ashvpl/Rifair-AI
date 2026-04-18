@@ -192,16 +192,16 @@ export function RifairCoreFeatures() {
   ]
 
   return (
-    <section id="core-features" className="py-32 px-6 lg:px-12 relative bg-[#FAFAFA] border-y border-black/[0.03] overflow-hidden">
+    <section id="core-features" className="py-16 md:py-32 relative bg-[#FAFAFA] border-y border-black/[0.03] overflow-hidden" style={{ paddingLeft: 'clamp(16px, 5vw, 80px)', paddingRight: 'clamp(16px, 5vw, 80px)' }}>
         {/* Background decorative elements */}
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-10" />
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-10" />
 
         <div className="max-w-7xl mx-auto space-y-16">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8">
                 <div className="space-y-4">
-                  <h2 className="text-4xl md:text-6xl font-black text-[#1D1D1F] tracking-tight">Core Features</h2>
-                  <p className="text-xl text-[#86868B] font-medium max-w-xl">Enterprise-grade capabilities for modern hiring teams obsessed with quality.</p>
+                  <h2 className="font-black text-[#1D1D1F] tracking-tight">Core Features</h2>
+                  <p className="text-[#86868B] font-medium max-w-xl" style={{ fontSize: 'clamp(14px, 2.5vw, 20px)' }}>Enterprise-grade capabilities for modern hiring teams obsessed with quality.</p>
                 </div>
                 <motion.div
                     whileHover={{ scale: 1.05 }}
@@ -214,28 +214,37 @@ export function RifairCoreFeatures() {
                 </motion.div>
             </div>
             
-            <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
                 {features.map((feature, idx) => (
                     <motion.div
                         key={idx}
-                        className={`group relative p-1 rounded-[3rem] ${feature.dark ? 'bg-black' : 'bg-white'} border border-black/[0.05] shadow-[0_20px_60px_rgba(0,0,0,0.02)] overflow-hidden`}
+                        className={`group relative p-1 rounded-[2rem] md:rounded-[3rem] ${feature.dark ? 'bg-black' : 'bg-white'} border border-black/[0.05] shadow-[0_20px_60px_rgba(0,0,0,0.02)] overflow-hidden`}
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: idx * 0.1 }}
                         whileHover={{ y: -8 }}
                     >
-                        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 items-center min-h-[340px]">
-                            <div className="p-10 flex flex-col h-full justify-between border-b lg:border-b-0 lg:border-r border-black/[0.03]">
-                                <div>
-                                    <h3 className={`text-2xl font-bold ${feature.dark ? 'text-white' : 'text-[#1D1D1F]'} mb-4`}>{feature.title}</h3>
-                                    <p className={`${feature.dark ? 'text-white/60' : 'text-[#86868B]'} text-lg leading-relaxed`}>
+                        {/* Mobile: stacked. Desktop: side-by-side */}
+                        <div className="relative z-10 flex flex-col lg:grid lg:grid-cols-2 items-stretch min-h-[280px] md:min-h-[340px]">
+                            <div className="p-6 md:p-10 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-black/[0.03]">
+                                <div className="min-w-0">
+                                    <h3
+                                      className={`font-bold ${feature.dark ? 'text-white' : 'text-[#1D1D1F]'} mb-3 md:mb-4`}
+                                      style={{ fontSize: 'clamp(16px, 3vw, 24px)', wordBreak: 'break-word' }}
+                                    >
+                                      {feature.title}
+                                    </h3>
+                                    <p
+                                      className={`${feature.dark ? 'text-white/60' : 'text-[#86868B]'} leading-relaxed`}
+                                      style={{ fontSize: 'clamp(13px, 2vw, 18px)' }}
+                                    >
                                         {feature.description}
                                     </p>
                                 </div>
 
                                 <motion.div 
-                                    className={`mt-8 flex items-center gap-2 text-xs font-black uppercase tracking-widest ${feature.dark ? 'text-white' : 'text-primary'} cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity`}
+                                    className={`mt-6 md:mt-8 flex items-center gap-2 text-xs font-black uppercase tracking-widest ${feature.dark ? 'text-white' : 'text-primary'} cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity`}
                                 >
                                     <Link href={feature.href} className="flex items-center gap-2">
                                         Learn More <ArrowUpRight className="h-3 w-3" />
@@ -243,7 +252,7 @@ export function RifairCoreFeatures() {
                                 </motion.div>
                             </div>
 
-                            <div className="h-full min-h-[240px] flex items-center justify-center bg-[#FAFAFA]/50 overflow-hidden relative">
+                            <div className="min-h-[200px] md:min-h-[240px] flex items-center justify-center bg-[#FAFAFA]/50 overflow-hidden relative">
                                 {feature.animation}
                                 {/* Glass shine overlay */}
                                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
