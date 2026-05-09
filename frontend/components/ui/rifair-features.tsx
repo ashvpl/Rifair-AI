@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Zap, Sparkles, Activity, Layers, ArrowUpRight } from "lucide-react"
+import { Zap, PlusCircle, Activity, Layers, ArrowUpRight } from "lucide-react"
 import Link from "next/link"
 
 // --- Animation Components ---
@@ -184,7 +184,7 @@ export function RifairCoreFeatures() {
     {
       title: "Fair Question Generator",
       description: "Auto-generates inclusive and unbiased alternatives that accurately assess candidate skills.",
-      icon: Sparkles,
+      icon: PlusCircle,
       animation: <QuestionGenAnimation />,
       color: "bg-white",
       href: "/kit"

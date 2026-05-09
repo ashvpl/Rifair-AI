@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { BACKEND_URL } from "@/lib/server-config";
+import {
+  getPersonalisedPromptAdjustments,
+  serialiseAdjustments,
+} from "@/lib/intelligence/personalisation-engine";
 
 export async function POST(req: Request) {
   try {
@@ -15,14 +19,24 @@ export async function POST(req: Request) {
     }
 
     const token = await getToken();
+
+    // ── Layer 3: Fetch personalisation adjustments (non-blocking on failure) ──
+    const adjustments = await getPersonalisedPromptAdjustments(userId);
+    const personalisationHeader = serialiseAdjustments(adjustments);
+
     console.log(`Proxying request to backend: ${BACKEND_URL}/api/analyze`);
+
+    const backendHeaders: Record<string, string> = {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    };
+    if (personalisationHeader) {
+      backendHeaders["X-Personalisation"] = personalisationHeader;
+    }
 
     const response = await fetch(`${BACKEND_URL}/api/analyze`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      },
+      headers: backendHeaders,
       body: JSON.stringify({ text, name }),
     });
 
@@ -45,6 +59,27 @@ export async function POST(req: Request) {
         { status: response.status }
       );
     }
+
+    // ── Layer 1: Track completion event (fire-and-forget) ──────────────────
+    fetch("/api/intelligence/track", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId,
+        event: "analysis.completed",
+        properties: {
+          overall_score:    data.report?.bias_score ?? 0,
+          has_personalisation: !!personalisationHeader,
+        },
+      }),
+    }).catch(() => {});
+
+    // ── Layer 2: Async profile rebuild (fire-and-forget) ───────────────────
+    fetch("/api/intelligence/rebuild-profile", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId }),
+    }).catch(() => {});
 
     return NextResponse.json({ report: data.report }, { status: 200 });
   } catch (error: unknown) {

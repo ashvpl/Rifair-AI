@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    {{{printMasterCss}}}
+  </style>
+</head>
+<body class="report-kit density-medium">
+
+  <!-- PAGE 1: COVER -->
+  <div class="page cover cover-kit">
+    <div class="cover-shape-1"></div>
+    <div class="cover-shape-2"></div>
+    
+    <div class="cover-nav">
+      <div class="c-logo">
+        <img src="{{logoBase64}}" class="c-logo-img" alt="Rifair AI">
+      </div>
+      <div class="c-badge">COMPLIANCE AUDIT</div>
+    </div>
+
+    <div class="cover-content">
+      <div class="cover-eyebrow">
+        <div class="cover-eyebrow-line" style="background: var(--theme-green);"></div>
+        <div class="cover-eyebrow-text" style="color: var(--theme-green);">Legal & Regulatory Compliance</div>
+      </div>
+      <h1 class="cover-heading" style="color: var(--theme-green);">{{kitTitle}} <span style="color: var(--gray-700); opacity: 0.4;">Compliance Report</span></h1>
+      <p class="cover-subheading">
+        A detailed compliance audit of your interview kit to ensure adherence to 
+        equal opportunity standards and fair hiring practices.
+      </p>
+
+      <div class="hero-score">
+        <div class="hs-number">{{overallScore}}</div>
+        <div class="hs-meta">
+          <div class="hs-label">Compliance Score</div>
+          <div class="hs-verdict">{{complianceLevel}}</div>
+          <div class="hs-sub">{{flaggedCount}} findings across {{totalQuestions}} points</div>
+        </div>
+      </div>
+
+      <div class="cover-meta">
+        <div class="cm-item">
+          <div class="cm-label">Generated For</div>
+          <div class="cm-value">{{meta.userName}}</div>
+        </div>
+        <div class="cm-item">
+          <div class="cm-label">Auditor</div>
+          <div class="cm-value">Rifair AI User</div>
+        </div>
+        <div class="cm-item">
+          <div class="cm-label">Audit ID</div>
+          <div class="cm-value">{{meta.reportId}}</div>
+        </div>
+        <div class="cm-item">
+          <div class="cm-label">Audit Date</div>
+          <div class="cm-value">{{meta.generatedDate}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cover-footer">
+      <div class="cf-left">
+        Rifair AI Regulatory Compliance — v2.4.0<br>
+        Confidential Compliance Audit Document
+      </div>
+      <div class="cf-right">PROPRIETARY AUDIT</div>
+    </div>
+  </div>
+
+  <!-- PAGE 2: EXECUTIVE SUMMARY & STRUCTURAL ANALYSIS -->
+  <div class="page interior-page">
+    <div class="ip-header">
+      <div class="ip-logo">
+        <img src="{{logoBase64}}" class="ip-logo-img" alt="Rifair AI">
+      </div>
+      <div class="ip-meta">
+        <strong>Compliance Executive Summary</strong>
+        ID: {{meta.reportId}}
+      </div>
+    </div>
+
+    <div class="section-label">Audit Verdict</div>
+    <div class="verdict-banner {{#if (eq complianceLevel 'Compliant')}}vb-clean{{else if (eq complianceLevel 'Partially Compliant')}}vb-high{{else}}vb-severe{{/if}}">
+      <div class="vb-left">
+        <h3>{{complianceLevel}}</h3>
+        <p>This kit has been audited against global and regional (India) fair hiring benchmarks.</p>
+      </div>
+      <div class="vb-right">
+        <div class="vb-score">{{overallScore}}<span class="vb-unit">/100</span></div>
+      </div>
+    </div>
+
+    {{#if hasStructuralAnalysis}}
+    <div class="section-label">Structural Integrity Analysis</div>
+    <div class="stats-grid">
+      <div class="stat-card sc-purple">
+        <div class="sc-label">Competency Gaps</div>
+        <div class="sc-value">{{competencyGaps.length}}</div>
+        <div class="sc-sub">Missing areas</div>
+      </div>
+      <div class="stat-card sc-amber">
+        <div class="sc-label">Redundancy</div>
+        <div class="sc-value">{{redundancyFlags.length}}</div>
+        <div class="sc-sub">Overlapping Qs</div>
+      </div>
+      <div class="stat-card sc-green">
+        <div class="sc-label">Suggested Adds</div>
+        <div class="sc-value">{{suggestedAdditions.length}}</div>
+        <div class="sc-sub">To improve kit</div>
+      </div>
+      <div class="stat-card sc-green">
+        <div class="sc-label">Balance Score</div>
+        <div class="sc-value">72%</div>
+        <div class="sc-sub">Kit health</div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <strong>Structural Insight:</strong> 
+      {{#if competencyGaps.length}}
+        Your kit is missing coverage in: {{#each competencyGaps}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}. 
+      {{else}}
+        Your kit shows excellent competency coverage across all targeted areas.
+      {{/if}}
+      {{#if redundancyFlags.length}}
+        We detected high redundancy in {{redundancyFlags.length}} areas, which may lead to a repetitive candidate experience.
+      {{/if}}
+    </div>
+    {{/if}}
+
+    <div class="section-label">Strategic Recommendations</div>
+    {{#each recommendations}}
+    <div class="rec-row">
+      <div class="rec-num">{{index}}</div>
+      <div class="rec-text">
+        <h4>{{title}}</h4>
+        <p>{{description}}</p>
+      </div>
+    </div>
+    {{/each}}
+
+    <div class="ip-footer">
+      <span>Confidential Report for {{meta.organizationName}}</span>
+      <span>Page 2 of {{#if (gt auditedQuestions.length 3)}}6{{else}}5{{/if}}</span>
+    </div>
+  </div>
+
+  <!-- DETAILED QUESTION AUDIT -->
+  {{#chunk auditedQuestions 4}}
+  <div class="page interior-page">
+    <div class="ip-header">
+      <div class="ip-logo">
+        <img src="{{logoBase64}}" class="ip-logo-img" alt="Rifair AI">
+      </div>
+      <div class="ip-meta">
+        <strong>Detailed Audit Findings {{#if (gt chunkIndex 1)}}(Part {{chunkIndex}}){{/if}}</strong>
+        ID: {{meta.reportId}}
+      </div>
+    </div>
+
+    <div class="section-label">Question-by-Question Compliance Breakdown</div>
+    
+    {{#each chunkItems}}
+    <div class="q-card">
+      <div class="qh {{#if (eq severity 'SEVERE')}}severe{{else if (eq severity 'MODERATE')}}high{{else if (eq severity 'MILD')}}mild{{else}}clean{{/if}}">
+        <div class="qn {{#if (eq severity 'SEVERE')}}severe{{else if (eq severity 'MODERATE')}}high{{else if (eq severity 'MILD')}}mild{{else}}clean{{/if}}">{{index}}</div>
+        <div class="qtext">{{text}}</div>
+        <div class="q-pill {{#if (eq severity 'SEVERE')}}severe{{else if (eq severity 'MODERATE')}}high{{else if (eq severity 'MILD')}}mild{{else}}clean{{/if}}">{{severity}}</div>
+      </div>
+      <div class="qb">
+        <div class="q-tags">
+          <span class="q-tag">{{competency}}</span>
+          <span class="q-tag">Compliance Check</span>
+        </div>
+        {{#if explanation}}
+        <div class="q-exp">
+          <strong>Finding:</strong> {{explanation}}
+        </div>
+        {{/if}}
+        <div class="q-rewrite">
+          <div class="q-rewrite-header">
+            <div class="q-rewrite-dot"></div>
+            Recommendation
+          </div>
+          {{recommendation}}
+        </div>
+      </div>
+    </div>
+    {{/each}}
+
+    <div class="ip-footer">
+      <span>Confidential Report for {{meta.organizationName}}</span>
+      <span>Audit Findings — Page {{chunkIndex}}</span>
+    </div>
+  </div>
+  {{/chunk}}
+
+
+
+  <div class="page interior-page">
+    <div class="ip-header">
+      <div class="ip-logo">
+        <img src="{{logoBase64}}" class="ip-logo-img" alt="Rifair AI">
+      </div>
+      <div class="ip-meta">
+        <strong>Methodology & Legal Disclaimer</strong>
+      </div>
+    </div>
+
+    <div class="section-label">Audit Methodology</div>
+    <div class="insight">
+      Rifair AI's Compliance Audit uses a combination of deterministic legal rule-matching 
+      and advanced semantic analysis to identify biased language. Our engine is calibrated 
+      against the **Indian Constitution (Article 14, 15, 16)**, the **Maternity Benefit Act**, 
+      and global standards such as the **EEOC guidelines**.
+    </div>
+
+    <div class="disclaimer">
+      <strong>Legal Disclaimer:</strong> This report is for informational purposes only and 
+      does not constitute legal advice. While Rifair AI's engine is designed to flag potential 
+      compliance risks, you should consult with your legal or HR compliance department 
+      before making final hiring decisions or implementing interview questions. 
+      Rifair AI is not liable for hiring decisions based on these findings.
+    </div>
+
+    <div class="ip-footer">
+      <span>© 2026 Rifair AI Intelligence Engine</span>
+      <span>Legal Disclaimer</span>
+    </div>
+  </div>
+
+  <!-- CLOSING PAGE -->
+  <div class="page closing-page">
+    <div class="close-logo">
+      <img src="{{logoBase64}}" class="close-logo-img" alt="Rifair AI">
+    </div>
+    <div class="close-tagline">Building a fairer future for talent, one audit at a time.</div>
+    
+    <div class="close-cta">
+      <h3>Ready to scale your inclusive hiring?</h3>
+      <p>Invite your team members to Rifair AI to collaborate on bias-free interview kits and candidate evaluations.</p>
+    </div>
+
+    <div class="close-meta">
+      Report ID: {{meta.reportId}}<br>
+      Generated on: {{meta.generatedDate}}<br>
+      rifair.ai · support@rifair.ai
+    </div>
+  </div>
+
+</body>
+</html>

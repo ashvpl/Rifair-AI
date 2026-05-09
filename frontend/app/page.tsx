@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Sparkles, CheckCircle, ShieldAlert, Cpu, Layers, Scale, Zap, Search, Users, Briefcase, FileText, BookOpen, Activity, Building2 } from "lucide-react";
+import { ArrowRight, CheckCircle, ShieldAlert, Cpu, Layers, Scale, Zap, Search, Users, Briefcase, FileText, BookOpen, Activity, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { NavBarDemo } from "@/components/ui/navbar-demo";
@@ -16,6 +16,7 @@ import { BlurTextAnimation } from "@/components/ui/blur-text-animation";
 import { HeroSection2 } from "@/components/ui/hero-section-2";
 import FooterSection from "@/components/ui/footer-section";
 import Image from "next/image";
+import { TestimonialsSection } from "@/components/ui/testimonial-v2";
 
 export default function LandingPage() {
   return (
@@ -87,13 +88,13 @@ export default function LandingPage() {
                     <span
                         className="absolute top-0 left-[30px] w-1/2 h-full rounded-3xl transform skew-x-[12deg] transition-all duration-500 group-hover:skew-x-0 group-hover:left-[10px] group-hover:w-[calc(100%-20px)]"
                         style={{
-                            background: 'linear-gradient(315deg, #6366f1, #ec4899)',
+                            background: 'linear-gradient(315deg, #0a3d2e, #1D1D1F)',
                         }}
                     />
                     <span
                         className="absolute top-0 left-[30px] w-1/2 h-full rounded-3xl transform skew-x-[12deg] blur-[40px] transition-all duration-500 group-hover:skew-x-0 group-hover:left-[10px] group-hover:w-[calc(100%-20px)] opacity-50"
                         style={{
-                            background: 'linear-gradient(315deg, #6366f1, #ec4899)',
+                            background: 'linear-gradient(315deg, #0a3d2e, #1D1D1F)',
                         }}
                     />
 
@@ -153,7 +154,7 @@ export default function LandingPage() {
 
 
         {/* WHY / WHO ADVANCED SECTIONS */}
-        <section id="about-us" className="py-32 px-6 lg:px-12 relative w-full bg-[#F5F5F7] border-y border-black/[0.05]">
+        <section id="about-us" className="py-16 md:py-24 lg:py-32 px-6 lg:px-12 relative w-full bg-[#F5F5F7] border-y border-black/[0.05]">
             <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20">
                 <div className="space-y-8 md:space-y-12">
                     <h2 className="text-4xl md:text-5xl font-black text-[#1D1D1F] tracking-tight">Why Rifair AI</h2>
@@ -216,8 +217,11 @@ export default function LandingPage() {
             </div>
         </section>
 
+        {/* TESTIMONIALS SECTION */}
+        <TestimonialsSection />
+
         {/* TRUST SECTION & BOTTOM CTA */}
-        <section className="py-24 px-6 lg:px-12 relative w-full bg-[#F5F5F7] border-t border-black/[0.05]">
+        <section className="py-16 md:py-24 px-6 lg:px-12 relative w-full bg-[#F5F5F7] border-t border-black/[0.05]">
             <div className="max-w-7xl mx-auto space-y-12">
                 {/* Trust / Authority Section inside the bottom CTA */}
                 <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 pb-12 md:pb-24 border-b border-black/[0.03]">

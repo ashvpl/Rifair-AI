@@ -12,8 +12,13 @@ export function Header() {
   const isDashboard = pathname?.split('/')[1] === 'dashboard' || 
                       pathname?.split('/')[1] === 'analyze' || 
                       pathname?.split('/')[1] === 'kit' || 
+                      pathname?.split('/')[1] === 'jd-analyser' ||
+                      pathname?.split('/')[1] === 'jd' ||
                       pathname?.split('/')[1] === 'history' || 
                       pathname?.split('/')[1] === 'settings' ||
+                      pathname?.split('/')[1] === 'evaluations' ||
+                      pathname?.split('/')[1] === 'simulate' ||
+                      pathname?.split('/')[1] === 'test-loader' ||
                       pathname?.split('/')[1] === 'report';
 
   if (isDashboard) return null;

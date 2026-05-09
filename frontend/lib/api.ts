@@ -24,16 +24,22 @@ async function fetchWithAuth(endpoint: string, options: RequestInit = {}, token?
   }
 
   if (!response.ok) {
-    throw new Error(data?.error || `Request failed with status ${response.status}`);
+    const error: any = new Error(data?.message || data?.error || `Request failed with status ${response.status}`);
+    error.status = response.status;
+    error.code = data?.error;
+    error.planId = data?.planId;
+    error.upgradeUrl = data?.upgradeUrl;
+    error.teaser = data?.teaser;
+    throw error;
   }
 
   return data;
 }
 
-export async function analyzeQuestions(text: string, token?: string | null, name?: string) {
+export async function analyzeQuestions(text: string, token?: string | null, name?: string, mode?: string) {
   return fetchWithAuth("/analyze", {
     method: "POST",
-    body: JSON.stringify({ text, name }),
+    body: JSON.stringify({ text, name, mode: mode || "full" }),
   }, token);
 }
 
@@ -73,4 +79,33 @@ export async function deleteReportById(id: string, token?: string | null) {
   return fetchWithAuth(`/report/${id}`, {
     method: "DELETE",
   }, token);
+}
+
+export async function updateReportById(id: string, categories: any, token?: string | null) {
+  return fetchWithAuth(`/report/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify({ categories }),
+  }, token);
+}
+
+export async function evaluateCandidate(data: any, token?: string | null) {
+  return fetchWithAuth("/evaluate-candidate", {
+    method: "POST",
+    body: JSON.stringify(data),
+  }, token);
+}
+
+export async function getBiasSession(token?: string | null) {
+  return fetchWithAuth("/bias-session", { method: "GET" }, token);
+}
+
+export async function batchAnalyze(questions: string[], token?: string | null, name?: string) {
+  return fetchWithAuth("/analyze/batch", {
+    method: "POST",
+    body: JSON.stringify({ questions, name }),
+  }, token);
+}
+
+export async function getBiasDna(token?: string | null) {
+  return fetchWithAuth("/bias-dna", { method: "GET" }, token);
 }

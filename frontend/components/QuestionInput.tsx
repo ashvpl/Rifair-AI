@@ -6,6 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { LiquidLoader } from "@/components/ui/LiquidLoader";
 import { cn } from "@/lib/utils";
+import { useContentModeration } from "@/hooks/useContentModeration";
+import { ContentWarning } from "@/components/moderation/ContentWarning";
 
 interface QuestionInputProps {
   onAnalyze: (text: string, name: string) => Promise<void>;
@@ -27,8 +29,31 @@ export function QuestionInput({ onAnalyze, isLoading, initialText = "", initialN
     setName(initialName);
   }, [initialName]);
 
+  const {
+    isChecking,
+    isBlocked,
+    warning,
+    severity,
+    category,
+    checkContent,
+    clearModeration
+  } = useContentModeration('analyze');
+
+  const handleInputChange = async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setText(value);
+
+    if (value.trim().length > 10) {
+      await checkContent(value);
+    } else {
+      clearModeration();
+    }
+  };
+
   const handleSubmit = async () => {
     if (!text.trim()) return;
+    const isClean = await checkContent(text);
+    if (!isClean) return;
     await onAnalyze(text, name);
   };
 
@@ -44,21 +69,32 @@ export function QuestionInput({ onAnalyze, isLoading, initialText = "", initialN
         />
         <Textarea
           placeholder="Paste your interview questions here..."
-          className="min-h-[200px] md:min-h-[220px] text-base md:text-lg p-4 md:p-6 transition-all resize-none rounded-2xl bg-surface border-border text-foreground focus:ring-2 focus:ring-primary/50 focus:border-primary/50 placeholder:text-muted-foreground shadow-md group-hover:shadow-lg"
+          className={cn(
+            "min-h-[200px] md:min-h-[220px] text-base md:text-lg p-4 md:p-6 transition-all resize-none rounded-2xl focus:ring-2 focus:ring-primary/50 focus:border-primary/50 shadow-md group-hover:shadow-lg",
+            isBlocked
+              ? "border-red-300 bg-red-50/30 text-red-900 placeholder:text-red-900/40"
+              : "bg-surface border-border text-foreground placeholder:text-muted-foreground"
+          )}
           value={text}
-          onChange={(e) => setText(e.target.value)}
+          onChange={handleInputChange}
           disabled={isLoading}
         />
         <div className="absolute bottom-4 right-4 text-[10px] md:text-xs text-muted-foreground font-medium bg-background/50 px-3 py-1 rounded-full backdrop-blur-md border border-border">
           {text.length} / 5000 chars
         </div>
       </div>
+      <ContentWarning
+        warning={warning}
+        severity={severity}
+        category={category}
+        isChecking={isChecking}
+      />
 
       <div className="pt-2">
         <Button
           size="lg"
           onClick={handleSubmit}
-          disabled={isLoading || !text.trim()}
+          disabled={isLoading || !text.trim() || isBlocked || isChecking}
           className="w-full relative p-0.5 inline-flex overflow-hidden rounded-2xl group shadow-md hover:shadow-lg active:scale-95 transition-all min-h-[44px] disabled:opacity-50"
         >
           <span
@@ -69,10 +105,13 @@ export function QuestionInput({ onAnalyze, isLoading, initialText = "", initialN
           />
           <span
             className={cn(
-              "inline-flex size-full min-h-[44px] items-center text-black justify-center rounded-2xl px-4 py-3 backdrop-blur-3xl font-semibold transition-all bg-white/90 group-hover:bg-white"
+              "inline-flex size-full min-h-[44px] items-center text-black justify-center rounded-2xl px-4 py-3 backdrop-blur-3xl font-semibold transition-all",
+              !isBlocked && "bg-white/90 group-hover:bg-white"
             )}
           >
-            <span className="relative z-10">Analyse</span>
+            <span className="relative z-10">
+              {isBlocked ? 'Fix content to continue' : 'Analyse'}
+            </span>
           </span>
         </Button>
       </div>

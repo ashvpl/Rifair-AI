@@ -1,0 +1,278 @@
+{{!-- candidate_evaluation.hbs --}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>{{{printMasterCss}}}</style>
+</head>
+<body class="report-eval density-medium">
+
+  <!-- COVER PAGE -->
+  <div class="page cover cover-eval">
+    <div class="cover-shape-1"></div>
+    <div class="cover-shape-2"></div>
+    <div class="cover-shape-3"></div>
+    
+    <div class="cover-nav">
+      <div class="c-logo">
+        <img src="{{logoBase64}}" class="c-logo-img" alt="Rifair AI">
+      </div>
+      <div class="c-badge">Hiring Decision Intel</div>
+    </div>
+
+    <div class="cover-content">
+      <div class="cover-eyebrow">
+        <div class="cover-eyebrow-line" style="background: var(--theme-blue);"></div>
+        <div class="cover-eyebrow-text" style="color: var(--theme-blue);">Candidate Evaluation Audit</div>
+      </div>
+      
+      <h1 class="cover-heading" style="color: var(--theme-blue);">{{candidateName}} <span style="color: var(--gray-700); opacity: 0.4;">Evaluation</span></h1>
+      <p class="cover-subheading">Comprehensive interview analysis for the <strong>{{role}}</strong> position at <strong>{{companyContext}}</strong>.</p>
+
+      <div class="hero-score">
+        <div class="hs-number">{{overallScore}}</div>
+        <div class="hs-meta">
+          <div class="hs-label">Overall Match Score</div>
+          <div class="hs-verdict">{{recommendationLabel}}</div>
+          <div class="hs-sub">Confidence: {{confidence}} · {{questionsScored}}/{{totalQuestions}} questions scored</div>
+        </div>
+      </div>
+
+      <div class="cover-meta">
+        <div class="cm-item">
+          <div class="cm-label">Hiring Org</div>
+          <div class="cm-value">{{meta.organizationName}}</div>
+        </div>
+        <div class="cm-item">
+          <div class="cm-label">Interviewer</div>
+          <div class="cm-value">{{interviewerName}}</div>
+        </div>
+        <div class="cm-item">
+          <div class="cm-label">Interview Date</div>
+          <div class="cm-value">{{interviewDate}}</div>
+        </div>
+        <div class="cm-item">
+          <div class="cm-label">Report ID</div>
+          <div class="cm-value">{{meta.reportId}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cover-footer">
+      <div class="cf-left">
+        Rifair AI Evaluation Engine — v2.4.0<br>
+        Predictive Performance Analytics
+      </div>
+      <div class="cf-right">Proprietary Evaluation</div>
+    </div>
+  </div>
+
+  <!-- EXECUTIVE SUMMARY -->
+  <div class="page interior-page">
+    <div class="ip-header">
+      <div class="ip-logo">
+        <img src="{{logoBase64}}" class="ip-logo-img" alt="Rifair AI">
+      </div>
+      <div class="ip-meta">
+        <strong>EVALUATION SUMMARY</strong>
+        {{meta.reportId}} · {{meta.generatedDate}}
+      </div>
+    </div>
+
+    <div class="section-label">Hiring Verdict</div>
+    <div class="verdict-banner {{verdictClass}}">
+      <div class="vb-left">
+        <h3>{{verdictHeadline}}</h3>
+        <p>{{verdictDescription}}</p>
+      </div>
+      <div class="vb-right">
+        <div class="vb-score">{{overallScore}}<span class="vb-unit">/100</span></div>
+      </div>
+    </div>
+
+    <div class="section-label">Competency Match Analysis</div>
+    <div style="margin-bottom: 24px;">
+      {{#each competencies}}
+      <div class="comp-row">
+        <div class="cr-top">
+          <div class="cr-name">{{name}}</div>
+          <div class="cr-badge {{scoreClass}}">{{levelLabel}}</div>
+        </div>
+        <div class="cr-track">
+          <div class="cr-fill {{scoreClass}}" style="width: {{percent}}%;"></div>
+        </div>
+        <div class="cr-note">{{assessment}}</div>
+      </div>
+      {{/each}}
+    </div>
+
+    <div class="insight">
+      <strong>Auditor Summary:</strong> {{summaryText}}
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card sc-gray">
+        <div class="sc-label">Avg. Rating</div>
+        <div class="sc-value">{{avgScore}}</div>
+        <div class="sc-sub">Out of 4.0</div>
+      </div>
+      <div class="stat-card sc-gray">
+        <div class="sc-label">Points Covered</div>
+        <div class="sc-value">{{questionsScored}}</div>
+        <div class="sc-sub">Of {{totalQuestions}} planned</div>
+      </div>
+      <div class="stat-card sc-gray">
+        <div class="sc-label">Consistency</div>
+        <div class="sc-value">{{confidence}}</div>
+        <div class="sc-sub">Rating reliability</div>
+      </div>
+      <div class="stat-card sc-gray">
+        <div class="sc-label">Bias Check</div>
+        <div class="sc-value">{{#if hasBiasCheck}}⚠{{else}}✓{{/if}}</div>
+        <div class="sc-sub">{{#if hasBiasCheck}}Flagged{{else}}Clean{{/if}}</div>
+      </div>
+    </div>
+
+    <div class="ip-footer">
+      <div>© 2026 Rifair AI Intelligence. All rights reserved.</div>
+      <div>Page 2 of 4</div>
+    </div>
+  </div>
+
+  <!-- STRENGTHS & GAPS -->
+  <div class="page interior-page">
+    <div class="ip-header">
+      <div class="ip-logo">
+        <img src="{{logoBase64}}" class="ip-logo-img" alt="Rifair AI">
+      </div>
+      <div class="ip-meta">
+        <strong>STRENGTHS & GAPS</strong>
+        {{meta.reportId}} · {{meta.generatedDate}}
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="sg sg-str">
+        <div class="sg-header">Key Strengths & Competitive Advantages</div>
+        {{#each strengths}}
+        <div class="sg-item">
+          <div class="sg-icon">✓</div>
+          <div class="sg-text">
+            <strong>{{title}}</strong>
+            <span>{{description}}</span>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+
+      <div class="sg sg-gap">
+        <div class="sg-header">Identified Gaps & Development Areas</div>
+        {{#each gaps}}
+        <div class="sg-item">
+          <div class="sg-icon">!</div>
+          <div class="sg-text">
+            <strong>{{title}} <span class="sev-tag {{severityClass}}">{{severityLabel}}</span></strong>
+            <span>{{description}}</span>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+
+    {{#if hasQuestionScores}}
+    <div class="section-label">Detailed Question Scoring</div>
+    <table class="qs-table">
+      <thead>
+        <tr>
+          <th style="width: 50px; background: var(--theme-blue);">#</th>
+          <th style="background: var(--theme-blue);">Assessment Point / Question</th>
+          <th style="width: 60px; background: var(--theme-blue);">Score</th>
+          <th style="background: var(--theme-blue);">Evidence / Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each questionScores}}
+        <tr>
+          <td>{{index}}</td>
+          <td><strong>{{summary}}</strong></td>
+          <td>
+            <div class="score-circle {{scoreClass}}">{{score}}</div>
+          </td>
+          <td>{{note}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{/if}}
+
+    <div class="ip-footer">
+      <div>Candidate Evaluation Document</div>
+      <div>Page 3 of 4</div>
+    </div>
+  </div>
+
+  <!-- NEXT STEPS -->
+  <div class="page interior-page">
+    <div class="ip-header">
+      <div class="ip-logo">
+        <img src="{{logoBase64}}" class="ip-logo-img" alt="Rifair AI">
+      </div>
+      <div class="ip-meta">
+        <strong>ACTION PLAN</strong>
+        {{meta.reportId}} · {{meta.generatedDate}}
+      </div>
+    </div>
+
+    <div class="section-label">Recommended Next Steps</div>
+    <div style="margin-bottom: 32px;">
+      {{#each nextSteps}}
+      <div class="ns-row">
+        <div class="ns-arrow">→</div>
+        <div class="ns-text">{{this}}</div>
+      </div>
+      {{/each}}
+    </div>
+
+    {{#if hasBiasCheck}}
+    <div class="section-label">Auditor Neutrality Warning</div>
+    <div class="legal-box" style="background: #fffbeb; border-color: #fde68a;">
+      <div class="lb-title" style="color: #92400e;">Potential Rating Bias Detected</div>
+      <div class="lb-item" style="color: #78350f;">
+        <span>⚠</span>
+        <div>{{biasCheckMessage}}</div>
+      </div>
+    </div>
+    {{/if}}
+
+    <div class="section-label">Evaluation Disclaimer</div>
+    <div class="disclaimer">
+      <strong>Predictive Accuracy:</strong> This evaluation is based on structured data points collected during the interview process. While Rifair AI's recommendation models correlate with long-term job performance, human judgment remains the final deciding factor. This report does not constitute a legal guarantee of job performance or culture fit.
+    </div>
+
+    <div class="ip-footer">
+      <div>End of Candidate Evaluation Report</div>
+      <div>Page 4 of 4</div>
+    </div>
+  </div>
+
+  <!-- CLOSING PAGE -->
+  <div class="page closing-page">
+    <div class="close-logo">
+      <img src="{{logoBase64}}" class="close-logo-img" alt="Rifair AI">
+    </div>
+    <div class="close-tagline">Building a fairer future for talent, one audit at a time.</div>
+    
+    <div class="close-cta">
+      <h3>Ready to scale your inclusive hiring?</h3>
+      <p>Invite your team members to Rifair AI to collaborate on bias-free interview kits and candidate evaluations.</p>
+    </div>
+
+    <div class="close-meta">
+      Report ID: {{meta.reportId}}<br>
+      Generated on: {{meta.generatedDate}}<br>
+      rifair.ai · support@rifair.ai
+    </div>
+  </div>
+
+</body>
+</html>

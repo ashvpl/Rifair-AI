@@ -182,8 +182,8 @@ export const RevealCardContainer = forwardRef<HTMLDivElement, RevealCardProps>(
     },
     ref
   ) => {
-    const holderRef = useRef<HTMLDivElement>(null);
-    const overlayRef = useRef<HTMLDivElement>(null);
+    const holderRef = useRef<HTMLDivElement | null>(null);
+    const overlayRef = useRef<HTMLDivElement | null>(null);
     const { resolvedTheme } = useTheme();
     const overlayMode = resolvedTheme === "dark" ? "light" : "dark";
 

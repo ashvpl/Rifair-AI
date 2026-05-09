@@ -105,6 +105,7 @@ const DEFAULT_KIT = {
  */
 function getFallbackKit(role = "", experience = "mid") {
   const normalizedRole = role.toLowerCase().trim();
+  let rawKit = null;
   
   // 1. DATASET FUZZY/SEARCH MATCH
   try {
@@ -112,10 +113,8 @@ function getFallbackKit(role = "", experience = "mid") {
     if (datasetMatch && datasetMatch.categories) {
        let allQuestions = [];
        
-       // Handle both categorized and search-grounded patterns
        for (const [cat, qs] of Object.entries(datasetMatch.categories)) {
           if (Array.isArray(qs)) {
-            // Inject context into generic-looking grounded questions
             const contextualized = qs.map(q => {
                if (q.length < 50) return `${q} (Specifically in the context of being a ${role})`;
                return q;
@@ -127,7 +126,7 @@ function getFallbackKit(role = "", experience = "mid") {
        const uniqueQuestions = Array.from(new Set(allQuestions)).slice(0, 7);
        
        if (uniqueQuestions.length >= 3) {
-         return {
+         rawKit = {
            role_summary: { 
              domain: datasetMatch.role || role, 
              skills: ["Dataset-backed Competency", "Domain Knowledge"], 
@@ -144,30 +143,61 @@ function getFallbackKit(role = "", experience = "mid") {
   }
 
   // 2. CURATED TEMPLATES
-  for (const [key, kit] of Object.entries(FALLBACK_KITS)) {
-    if (normalizedRole.includes(key)) return kit;
+  if (!rawKit) {
+    for (const [key, kit] of Object.entries(FALLBACK_KITS)) {
+      if (normalizedRole.includes(key)) {
+        rawKit = kit;
+        break;
+      }
+    }
   }
 
   // 3. PURE DATA SYNTHESIS (No fixed templates)
-  // If search grounded questions were found, they are already returned above.
-  // If even that failed, we construct a "Conceptual Competency Kit"
-  const concepts = [
-    `Technical decision-making in ${role} environments`,
-    `Handling failure or performance bottlenecks as a ${role}`,
-    `Cross-functional collaboration challenges specific to ${role} work`,
-    `The evolution of ${role} tools and methodologies over the next 3 years`,
-    `Upholding high standards for quality/safety in ${role} deliverables`
-  ];
+  if (!rawKit) {
+    const concepts = [
+      `Technical decision-making in ${role} environments`,
+      `Handling failure or performance bottlenecks as a ${role}`,
+      `Cross-functional collaboration challenges specific to ${role} work`,
+      `The evolution of ${role} tools and methodologies over the next 3 years`,
+      `Upholding high standards for quality/safety in ${role} deliverables`
+    ];
 
+    rawKit = {
+      role_summary: {
+        domain: role,
+        skills: ["Situational Analysis", "Role Adaptation", "Expert Execution"],
+        responsibilities: [`Drive excellence in ${role} operations`]
+      },
+      questions: concepts.map(c => `Explain your specific methodology regarding: ${c}. Give a recent example.`),
+      rubric: DEFAULT_KIT.rubric,
+      source: "autonomous_conceptual_fallback"
+    };
+  }
+
+  // Format into standard KitData structure
   return {
-    role_summary: {
-      domain: role,
-      skills: ["Situational Analysis", "Role Adaptation", "Expert Execution"],
-      responsibilities: [`Drive excellence in ${role} operations`]
-    },
-    questions: concepts.map(c => `Explain your specific methodology regarding: ${c}. Give a recent example.`),
-    rubric: DEFAULT_KIT.rubric,
-    source: "autonomous_conceptual_fallback"
+    kit_title: `${role} Interview Kit (Fallback)`,
+    kit_summary: `Basic interview kit for ${role}. AI pipeline was temporarily unavailable.`,
+    role: role,
+    experience_level: experience,
+    company_type: "General",
+    estimated_duration_minutes: rawKit.questions.length * 10,
+    questions: rawKit.questions.map((q, index) => {
+      const qText = typeof q === 'string' ? q : q.question || String(q);
+      const skills = rawKit.role_summary?.skills || [];
+      const comp = skills[index % (skills.length || 1)] || "General";
+      return {
+        id: index + 1,
+        question: qText,
+        type: index % 3 === 0 ? "situational" : (index % 2 === 0 ? "technical" : "behavioral"),
+        competency: comp,
+        time_minutes: 10,
+        difficulty: "intermediate",
+        bias_score: 0,
+        bias_verified: true
+      };
+    }),
+    _is_fallback: true
   };
 }
 

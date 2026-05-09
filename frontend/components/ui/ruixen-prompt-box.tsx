@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { useAutoResizeTextarea } from "@/hooks/use-auto-resize-textarea";
-import { Sparkles, BadgeCheck, SendHorizontal, Zap, ZapOff, Scale } from "lucide-react";
+import { BadgeCheck, SendHorizontal, Zap, ZapOff, Scale } from "lucide-react";
 import { Loader2 } from "lucide-react";
 
 const TRANSFORM_OPTIONS = [
@@ -53,14 +53,7 @@ export default function RuixenPromptBox({ onSubmit, isLoading }: RuixenPromptBox
   return (
     <div className="w-full">
       <div className="max-w-4xl mx-auto space-y-3">
-        <div className="relative p-0.5 rounded-2xl overflow-hidden shadow-sm transition-all duration-300">
-          <span
-            className={cn(
-              "absolute inset-[-300%] animate-[spin_3s_linear_infinite]",
-              "bg-[conic-gradient(from_90deg_at_50%_50%,var(--primary)_0%,#fff_50%,var(--primary)_100%)] dark:bg-[conic-gradient(from_90deg_at_50%_50%,var(--primary)_0%,#000_50%,var(--primary)_100%)]"
-            )}
-          />
-          <div className="relative z-10 w-full h-full bg-background rounded-[15px] p-4 backdrop-blur-3xl">
+          <div className="relative z-10 w-full h-full bg-background rounded-[15px] p-4 border border-black/[0.08] shadow-sm">
           {currentOption && (
             <div
               className={cn(
@@ -142,6 +135,5 @@ export default function RuixenPromptBox({ onSubmit, isLoading }: RuixenPromptBox
           })}
         </div>
       </div>
-    </div>
   );
 }

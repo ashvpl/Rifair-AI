@@ -11,15 +11,15 @@ interface BiasScoreCardProps {
 export function BiasScoreCard({ score, type = 'analysis' }: BiasScoreCardProps) {
   const getScoreColor = (s: number) => {
     if (type === 'kit') {
-      if (s === 0) return { stroke: "#22C55E", text: "text-success", bg: "bg-success/[0.03]", border: "border-success/10", label: "BIAS FREE" };
-      if (s <= 15) return { stroke: "#22C55E", text: "text-success", bg: "bg-success/[0.03]", border: "border-success/10", label: "CLEAN" };
-      if (s >= 40) return { stroke: "#EF4444", text: "text-danger", bg: "bg-danger/[0.03]", border: "border-danger/10", label: "REVIEW NEEDED" };
-      return { stroke: "#22C55E", text: "text-success", bg: "bg-success/[0.03]", border: "border-success/10", label: "LOW BIAS" };
+      if (s === 0) return { stroke: "#22C55E", text: "text-emerald-600", bg: "bg-emerald-50", border: "border-emerald-200", label: "BIAS FREE" };
+      if (s <= 15) return { stroke: "#22C55E", text: "text-emerald-600", bg: "bg-emerald-50", border: "border-emerald-200", label: "CLEAN" };
+      if (s >= 40) return { stroke: "#EF4444", text: "text-red-600", bg: "bg-red-50", border: "border-red-200", label: "REVIEW NEEDED" };
+      return { stroke: "#22C55E", text: "text-emerald-600", bg: "bg-emerald-50", border: "border-emerald-200", label: "LOW BIAS" };
     }
 
-    if (s >= 65) return { stroke: "#EF4444", text: "text-danger", bg: "bg-danger/[0.03]", border: "border-danger/10", label: "HIGH BIAS" };
-    if (s >= 40) return { stroke: "#F59E0B", text: "text-warning", bg: "bg-warning/[0.03]", border: "border-warning/10", label: "MODERATE" };
-    return { stroke: "#22C55E", text: "text-slate-500", bg: "bg-slate-50", border: "border-slate-200", label: "LOW BIAS" };
+    if (s >= 60) return { stroke: "#EF4444", text: "text-red-600", bg: "bg-red-50", border: "border-red-200", label: "CRITICAL" };
+    if (s >= 25) return { stroke: "#F97316", text: "text-orange-600", bg: "bg-orange-50", border: "border-orange-200", label: "MODERATE" };
+    return { stroke: "#22C55E", text: "text-emerald-600", bg: "bg-emerald-50", border: "border-emerald-200", label: "SAFE" };
   };
 
   const style = getScoreColor(score);

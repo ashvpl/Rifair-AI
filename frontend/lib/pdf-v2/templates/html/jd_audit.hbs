@@ -1,0 +1,261 @@
+{{!-- jd_audit.hbs --}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>{{{printMasterCss}}}</style>
+</head>
+<body class="report-jd density-medium">
+
+  <!-- COVER PAGE -->
+  <div class="page cover cover-jd">
+    <div class="cover-shape-1"></div>
+    <div class="cover-shape-2"></div>
+    <div class="cover-shape-3"></div>
+    
+    <div class="cover-nav">
+      <div class="c-logo">
+        <img src="{{logoBase64}}" class="c-logo-img" alt="Rifair AI">
+      </div>
+      <div class="c-badge">JD Intelligence Audit</div>
+    </div>
+
+    <div class="cover-content">
+      <div class="cover-eyebrow">
+        <div class="cover-eyebrow-line" style="background: var(--theme-yellow);"></div>
+        <div class="cover-eyebrow-text" style="color: var(--theme-yellow);">Talent Acquisition Optimization</div>
+      </div>
+      
+      <h1 class="cover-heading" style="color: var(--theme-yellow);">{{jobTitle}} <span style="color: var(--gray-700); opacity: 0.4;">Audit Report</span></h1>
+      <p class="cover-subheading">A comprehensive audit of your job description for inclusivity, market reach, and conversion optimization.</p>
+
+      <div class="hero-score">
+        <div class="hs-number">{{inclusivityScore}}</div>
+        <div class="hs-meta">
+          <div class="hs-label">Inclusivity Score</div>
+          <div class="hs-verdict">{{talentPoolVerdict}}</div>
+          <div class="hs-sub">Talent Pool Reach: {{talentPoolReach}}%</div>
+        </div>
+      </div>
+
+      <div class="cover-meta">
+        <div class="cm-item">
+          <div class="cm-label">Generated For</div>
+          <div class="cm-value">{{meta.organizationName}}</div>
+        </div>
+        <div class="cm-item">
+          <div class="cm-label">Lead Recruiter</div>
+          <div class="cm-value">{{meta.userName}}</div>
+        </div>
+        <div class="cm-item">
+          <div class="cm-label">Market Impact</div>
+          <div class="cm-value" style="color: #34d399">+{{improvedReach}}% Reach Potential</div>
+        </div>
+        <div class="cm-item">
+          <div class="cm-label">Audit Date</div>
+          <div class="cm-value">{{meta.generatedDate}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cover-footer">
+      <div class="cf-left">
+        Rifair AI Content Intelligence — v2.4.0<br>
+        Talent Attraction Optimization Audit
+      </div>
+      <div class="cf-right">ID: {{meta.reportId}}</div>
+    </div>
+  </div>
+
+  <!-- EXECUTIVE SUMMARY -->
+  <div class="page interior-page">
+    <div class="ip-header">
+      <div class="ip-logo">
+        <img src="{{logoBase64}}" class="ip-logo-img" alt="Rifair AI">
+      </div>
+      <div class="ip-meta">
+        <strong>JD AUDIT SUMMARY</strong>
+        {{meta.reportId}} · {{meta.generatedDate}}
+      </div>
+    </div>
+
+    <div class="section-label">Executive Audit Summary</div>
+    <div class="verdict-banner {{#if isClean}}vb-clean{{else}}vb-high{{/if}}">
+      <div class="vb-left">
+        <h3>{{jobTitle}}</h3>
+        <p>This job description has an inclusivity score of {{inclusivityScore}}%. Based on our analysis, {{#if isClean}}it is well-optimized for a diverse talent pool.{{else}}it contains language that may restrict your talent pool reach by up to {{biasScore}}%.{{/if}}</p>
+      </div>
+      <div class="vb-right">
+        <div class="vb-score">{{inclusivityScore}}<span class="vb-unit">/100</span></div>
+      </div>
+    </div>
+
+    <div class="section-label">Business & Hiring Impact</div>
+    <div class="impact-grid">
+      <div class="impact-card" style="background: var(--theme-yellow); color: white;">
+        <div class="ic-label">Extra Days to Hire</div>
+        <div class="ic-val">+{{extraDaysToHire}}</div>
+        <div class="ic-sub">Due to restrictive language and bias</div>
+      </div>
+      <div class="impact-card ic-light">
+        <div class="ic-label">Estimated Vacancy Cost</div>
+        <div class="ic-val">{{vacancyCost}}</div>
+        <div class="ic-sub">Loss in productivity over 60 days</div>
+      </div>
+    </div>
+
+    <div class="section-label">Talent Funnel Attrition Analysis</div>
+    <div class="funnel">
+      {{#each funnelSteps}}
+      <div class="funnel-row">
+        <div class="funnel-label {{#if isBold}}bold{{/if}}">{{label}}</div>
+        <div class="funnel-track">
+          <div class="funnel-fill {{fillClass}}" style="width: {{percent}}%;"></div>
+        </div>
+        <div class="funnel-pct">{{percent}}%</div>
+      </div>
+      {{/each}}
+    </div>
+
+    <div class="insight">
+      <strong>Talent Insight:</strong> By addressing the {{biasScore}}% bias score, you can increase your qualified applicant pool by up to <strong>{{improvedReach}}%</strong>. This represents a <strong>{{roiMultiplier}} ROI</strong> on time spent optimizing this JD.
+    </div>
+
+    <div class="ip-footer">
+      <div>© 2026 Rifair AI Intelligence. All rights reserved.</div>
+      <div>Page 2 of 4</div>
+    </div>
+  </div>
+
+  <!-- SECTION ANALYSIS -->
+  <div class="page interior-page">
+    <div class="ip-header">
+      <div class="ip-logo">
+        <img src="{{logoBase64}}" class="ip-logo-img" alt="Rifair AI">
+      </div>
+      <div class="ip-meta">
+        <strong>SECTIONAL AUDIT</strong>
+        {{meta.reportId}} · {{meta.generatedDate}}
+      </div>
+    </div>
+
+    <div class="section-label">Sectional Analysis & Findings</div>
+
+    {{#each sections}}
+    <div class="jd-section-card">
+      <div class="jds-header">
+        <div class="jds-name">{{name}}</div>
+        <div class="jds-score {{scoreClass}}">{{scoreLabel}}</div>
+      </div>
+      <div class="jds-body">
+        {{#if isClean}}
+          <p style="font-size: 12px; color: var(--gray-500);">{{cleanMessage}}</p>
+        {{else}}
+          {{#each issues}}
+          <div class="jd-issue {{severity}}">
+            <div class="ji-label">{{severity}}</div>
+            <div class="ji-content">
+              <strong>"{{phrase}}"</strong>
+              <p>{{explanation}}</p>
+              <div class="ji-fix">✓ Fix: {{fix}}</div>
+            </div>
+          </div>
+          {{/each}}
+        {{/if}}
+      </div>
+    </div>
+    {{/each}}
+
+    <div class="ip-footer">
+      <div>JD Intelligence Audit Document</div>
+      <div>Page 3 of 4</div>
+    </div>
+  </div>
+
+  <!-- GENDER & ACTION PLAN -->
+  <div class="page interior-page">
+    <div class="ip-header">
+      <div class="ip-logo">
+        <img src="{{logoBase64}}" class="ip-logo-img" alt="Rifair AI">
+      </div>
+      <div class="ip-meta">
+        <strong>OPTIMIZATION PLAN</strong>
+        {{meta.reportId}} · {{meta.generatedDate}}
+      </div>
+    </div>
+
+    <div class="section-label">Gender Coding & Tone Balance</div>
+    <div class="stats-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 24px;">
+      <div class="stat-card sc-blue">
+        <div class="sc-label">Masculine-Coded Terms</div>
+        <div class="sc-value">{{masculineCount}}</div>
+        <div class="sc-sub">Terms: {{masculineWords}}</div>
+      </div>
+      <div class="stat-card sc-purple">
+        <div class="sc-label">Feminine-Coded Terms</div>
+        <div class="sc-value">{{feminineCount}}</div>
+        <div class="sc-sub">Tone: {{genderBalance}}</div>
+      </div>
+    </div>
+
+    <div class="gender-bar">
+      <div class="gb-label">Masculine {{masculinePercent}}%</div>
+      <div class="gb-track">
+        <div class="gb-male" style="width: {{masculinePercent}}%;"></div>
+        <div class="gb-female" style="width: {{femininePercent}}%;"></div>
+      </div>
+      <div class="gb-right-label">Feminine {{femininePercent}}%</div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">Prioritized Action Plan</div>
+    {{#each recommendations}}
+    <div class="rec-row">
+      <div class="rec-num">{{index}}</div>
+      <div class="rec-text">
+        <h4>{{title}}</h4>
+        <p>{{description}}</p>
+      </div>
+    </div>
+    {{/each}}
+
+    {{#if showLegalBox}}
+    <div class="legal-box" style="margin-top: 24px;">
+      <div class="lb-title">Compliance Risk Notice</div>
+      {{#each legalRisks}}
+      <div class="lb-item">
+        <span>•</span>
+        <div><strong>{{law}}:</strong> {{description}}</div>
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    <div class="ip-footer">
+      <div>End of JD Audit Report</div>
+      <div>Page 4 of 4</div>
+    </div>
+  </div>
+
+  <!-- CLOSING PAGE -->
+  <div class="page closing-page">
+    <div class="close-logo">
+      <img src="{{logoBase64}}" class="close-logo-img" alt="Rifair AI">
+    </div>
+    <div class="close-tagline">Building a fairer future for talent, one audit at a time.</div>
+    
+    <div class="close-cta">
+      <h3>Ready to scale your inclusive hiring?</h3>
+      <p>Invite your team members to Rifair AI to collaborate on bias-free interview kits and candidate evaluations.</p>
+    </div>
+
+    <div class="close-meta">
+      Report ID: {{meta.reportId}}<br>
+      Generated on: {{meta.generatedDate}}<br>
+      rifair.ai · support@rifair.ai
+    </div>
+  </div>
+
+</body>
+</html>

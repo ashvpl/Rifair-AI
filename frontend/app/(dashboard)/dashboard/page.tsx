@@ -11,17 +11,25 @@ import {
   ShieldCheck,
   ChevronRight,
   ArrowRight,
+  FileSearch,
+  Lock,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import Link from "next/link";
 import { BiasTrendChart } from "@/components/ui/bias-trend-chart";
+import { FeatureGate, UsageLimitBanner } from "@/components/pricing/FeatureGate";
 import { format } from "date-fns";
 import { cn, safeParseReport } from "@/lib/utils";
+import { useSubscription } from "@/hooks/useSubscription";
+import { PLANS } from "@/lib/pricing/plans";
+import { PersonalisedInsights } from "@/components/intelligence/PersonalisedInsights";
 
 export default function DashboardPage() {
   const { getToken, isLoaded, userId } = useAuth();
+  const { usage, planId, usagePercent, isLoading: isSubLoading } = useSubscription();
   const [history, setHistory] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [intelligenceProfile, setIntelligenceProfile] = useState<any>(null);
 
   useEffect(() => {
     const fetchDashboardHistory = async () => {
@@ -45,6 +53,15 @@ export default function DashboardPage() {
     if (isLoaded && !userId) {
       setIsLoading(false);
     }
+  }, [isLoaded, userId]);
+
+  // Fetch intelligence profile (silently — never blocks dashboard render)
+  useEffect(() => {
+    if (!isLoaded || !userId) return;
+    fetch('/api/intelligence/profile')
+      .then(r => r.json())
+      .then(data => setIntelligenceProfile(data?.profile ?? null))
+      .catch(() => {});
   }, [isLoaded, userId]);
 
   const stats = useMemo(() => {
@@ -202,7 +219,12 @@ export default function DashboardPage() {
     return { bg: 'bg-[#FEF2F2]', border: 'border-red-100', text: 'text-red-600', label: 'text-red-950/40' };
   }, [stats]);
 
-  if (isLoading) {
+  const currentPlan = PLANS.find(p => p.id === planId)!;
+  const analysesPercent = usagePercent("analyses");
+  const kitsPercent = usagePercent("kits");
+  const jdAnalysesPercent = usagePercent("jdAnalyses");
+
+  if (isLoading || isSubLoading) {
     return (
       <div className="flex flex-col justify-center items-center py-40 space-y-6">
         <Loader2 className="w-12 h-12 animate-spin text-primary" />
@@ -211,12 +233,12 @@ export default function DashboardPage() {
     );
   }
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     show: { opacity: 1, transition: { staggerChildren: 0.1 } }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
   };
@@ -230,31 +252,31 @@ export default function DashboardPage() {
         <p className="text-[10px] font-semibold text-[#86868B] uppercase tracking-wider whitespace-nowrap">Last updated: today</p>
       </div>
 
-      {/* Hero Banner Strip */}
-      <motion.div 
+      <div className="mb-2"><UsageLimitBanner /></div>
+
+      {/* Hero Banner Strip — stacks on mobile */}
+      <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         className={cn(
-          "relative overflow-hidden border rounded-[2rem] p-8 lg:p-12 shadow-sm transition-colors duration-500",
+          "relative overflow-hidden border rounded-[1.5rem] md:rounded-[2rem] p-5 sm:p-8 lg:p-12 shadow-sm transition-colors duration-500",
           heroContent.bg,
           heroContent.border
         )}
       >
-        {/* Hero banner: keep-row flex — text left, button right. Shrinks gracefully */}
-        <div className="relative z-10 flex flex-row items-center justify-between gap-3 md:gap-8">
+        {/* Mobile: column layout; desktop: row */}
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 md:gap-8">
           <div className="space-y-1.5 md:space-y-3 flex-1 min-w-0">
-            <h2
-              className={cn("text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight", heroContent.titleColor)}
-            >
+            <h2 className={cn("text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight", heroContent.titleColor)}>
               {heroContent.title}
             </h2>
             <p className={cn("text-sm md:text-lg font-medium", heroContent.subtitleColor)}>
               {heroContent.subtitle}
             </p>
           </div>
-          <Link href={heroContent.ctaLink} className="flex-shrink-0">
+          <Link href={heroContent.ctaLink} className="w-full sm:w-auto flex-shrink-0">
             <button className={cn(
-              "w-full md:w-auto whitespace-nowrap flex items-center justify-center gap-2 md:gap-3 px-5 md:px-8 py-3 md:py-4 transition-all rounded-full text-white font-bold shadow-md hover:shadow-lg group active:scale-95 text-sm md:text-base min-h-[44px]",
+              "w-full sm:w-auto whitespace-nowrap flex items-center justify-center gap-2 md:gap-3 px-6 md:px-8 py-3.5 md:py-4 transition-all rounded-full text-white font-bold shadow-md hover:shadow-lg group active:scale-95 text-sm md:text-base min-h-[52px]",
               heroContent.buttonBg
             )}>
               {heroContent.cta} <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
@@ -277,11 +299,6 @@ export default function DashboardPage() {
             <p className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.15em]">TOTAL ANALYSES</p>
             <div className="space-y-1">
               <p className="text-3xl md:text-5xl font-bold text-[#1D1D1F] tracking-tighter">{stats.analysisCount}</p>
-              {stats.analysisCount > 0 && (
-                <p className="text-sm font-bold text-[#86868B] flex items-center gap-1">
-                  <span className="text-[#059669]">+2</span> this week
-                </p>
-              )}
             </div>
           </div>
         </motion.div>
@@ -360,75 +377,144 @@ export default function DashboardPage() {
         </motion.div>
       </motion.div>
 
+      {/* ── Personalised Insights Panel (Layer 3/2 output) ─────────────── */}
+      {intelligenceProfile && (
+        <PersonalisedInsights profile={intelligenceProfile} />
+      )}
+
       {/* Main Panels */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        {/* Trend Panel */}
+      <FeatureGate 
+        feature="bias_trends" 
+        requiredPlan="starter"
+        customPrompt={"Want detailed analysis insights?\nupgrade to Starter"}
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          {/* Trend Panel */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="lg:col-span-2 bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-10 border border-black/[0.03] shadow-sm space-y-6 md:space-y-10"
+          >
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <h3 className="text-lg md:text-2xl font-bold text-[#1D1D1F] tracking-tight">Bias Trend Analysis</h3>
+              <div className="flex items-center gap-6">
+                 <div className="flex items-center gap-2">
+                   <div className="w-3 h-3 rounded-full bg-[#10b981]" />
+                   <span className="text-xs font-bold text-[#86868B]">Fairness</span>
+                 </div>
+                 <div className="flex items-center gap-2">
+                   <div className="w-4 h-4 rounded-full border-2 border-slate-200" />
+                   <span className="text-xs font-bold text-[#86868B]">Daily Score</span>
+                 </div>
+              </div>
+            </div>
+            <div className="h-[300px] w-full">
+              <BiasTrendChart data={stats.trendData} />
+            </div>
+          </motion.div>
+          
+          {/* Category Panel */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-10 border border-black/[0.03] shadow-sm space-y-6 md:space-y-10"
+          >
+            <h3 className="text-lg md:text-2xl font-bold text-[#1D1D1F] tracking-tight">Bias by category</h3>
+            <div className="space-y-6">
+              {Object.entries(stats.categoryBreakdown).length > 0 ? (
+                Object.entries(stats.categoryBreakdown).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([cat, count], idx) => (
+                  <div key={cat} className="space-y-3">
+                    <div className="flex justify-between items-end">
+                      <span className="text-xs font-black text-[#1D1D1F] uppercase tracking-[0.1em]">{cat.replace('_', ' ')}</span>
+                      <span className="text-xs font-bold text-[#86868B]">{count} hits</span>
+                    </div>
+                    <div className="h-3 w-full bg-[#F5F5F7] rounded-full overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${Math.min(100, (count / Math.max(1, stats.highBiasFlags)) * 100)}%` }}
+                        className={cn(
+                          "h-full rounded-full",
+                          idx === 0 ? "bg-[#EF4444]" : idx === 1 ? "bg-[#F59E0B]" : "bg-[#10B981]"
+                        )}
+                      />
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="h-[200px] flex items-center justify-center border border-dashed border-slate-200 rounded-2xl bg-slate-50">
+                  <p className="text-[#86868B] text-sm font-medium">No activity data yet.</p>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </div>
+      </FeatureGate>
+
+      {/* Usage & Quick Stats for All Plans Except Enterprise */}
+      {planId !== 'enterprise' && (
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="lg:col-span-2 bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-10 border border-black/[0.03] shadow-sm space-y-6 md:space-y-10"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          <div className="flex items-center justify-between flex-wrap gap-3">
-            <h3 className="text-lg md:text-2xl font-bold text-[#1D1D1F] tracking-tight">Bias Trend Analysis</h3>
-            <div className="flex items-center gap-6">
-               <div className="flex items-center gap-2">
-                 <div className="w-3 h-3 rounded-full bg-[#10b981]" />
-                 <span className="text-xs font-bold text-[#86868B]">Fairness</span>
-               </div>
-               <div className="flex items-center gap-2">
-                 <div className="w-4 h-4 rounded-full border-2 border-slate-200" />
-                 <span className="text-xs font-bold text-[#86868B]">Daily Score</span>
-               </div>
-            </div>
-          </div>
-          <div className="h-[300px] w-full">
-            <BiasTrendChart data={stats.trendData} />
-          </div>
-        </motion.div>
-
-        {/* Category Panel */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-10 border border-black/[0.03] shadow-sm space-y-6 md:space-y-10"
-        >
-          <h3 className="text-lg md:text-2xl font-bold text-[#1D1D1F] tracking-tight">Bias by category</h3>
-          <div className="space-y-6">
-            {Object.entries(stats.categoryBreakdown).length > 0 ? (
-              Object.entries(stats.categoryBreakdown).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([cat, count], idx) => (
-                <div key={cat} className="space-y-3">
-                  <div className="flex justify-between items-end">
-                    <span className="text-xs font-black text-[#1D1D1F] uppercase tracking-[0.1em]">{cat.replace('_', ' ')}</span>
-                    <span className="text-xs font-bold text-[#86868B]">{count} hits</span>
-                  </div>
-                  <div className="h-3 w-full bg-[#F5F5F7] rounded-full overflow-hidden">
-                    <motion.div 
-                      initial={{ width: 0 }}
-                      animate={{ width: `${Math.min(100, (count / Math.max(1, stats.highBiasFlags)) * 100)}%` }}
-                      className={cn(
-                        "h-full rounded-full",
-                        idx === 0 ? "bg-[#EF4444]" : idx === 1 ? "bg-[#F59E0B]" : "bg-[#10B981]"
-                      )}
-                    />
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="h-[200px] flex items-center justify-center border border-dashed border-slate-200 rounded-2xl bg-slate-50">
-                <p className="text-[#86868B] text-sm font-medium">No activity data yet.</p>
+          <div className="bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-6 border border-black/[0.03] shadow-sm flex flex-col justify-between h-full">
+            <div className="space-y-4">
+              <h3 className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em]">Monthly Usage</h3>
+              <div className="space-y-6">
+                <UsageMeter 
+                  label="Analyses" 
+                  used={usage?.analysesUsed ?? 0} 
+                  limit={currentPlan.analysesLimit} 
+                  percent={analysesPercent} 
+                />
+                <UsageMeter 
+                  label="Kit Generations" 
+                  used={usage?.kitsUsed ?? 0} 
+                  limit={currentPlan.kitLimit} 
+                  percent={kitsPercent} 
+                />
+                <UsageMeter 
+                  label="Candidate Evaluations" 
+                  used={usage?.evaluationsUsed ?? 0} 
+                  limit={currentPlan.evaluationsLimit} 
+                  percent={usagePercent("evaluations")} 
+                />
+                {planId === 'growth' && (
+                  <UsageMeter 
+                    label="JD Operations" 
+                    used={usage?.jdAnalysesUsed ?? 0} 
+                    limit={currentPlan.jdAnalysesLimit} 
+                    percent={jdAnalysesPercent} 
+                  />
+                )}
               </div>
-            )}
+            </div>
+            <Link href="/pricing" className="mt-6 text-xs font-bold text-[#86868B] hover:text-black transition-colors flex items-center gap-1">
+              View plan limits <ChevronRight className="w-3 h-3" />
+            </Link>
           </div>
-          <div className="pt-6 border-t border-slate-100">
-             <p className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] text-center">
-               D&I Intelligence Core Active
-             </p>
+          
+          {/* Placeholder for Quick Action / Tips */}
+          <div className="bg-gradient-to-br from-[#1D1D1F] to-[#434343] rounded-[1.5rem] md:rounded-[2.5rem] p-6 text-white flex flex-col justify-between h-full">
+            <div className="space-y-2">
+              <h3 className="text-lg font-bold">Pro Tip</h3>
+              <p className="text-xs text-white/70 leading-relaxed">
+                Using inclusive language in interview questions increases the quality of candidates by 25%.
+              </p>
+            </div>
+            <button 
+              onClick={() => (window as any).location = '/analyze'}
+              className="mt-6 w-full py-3 bg-white text-black rounded-xl text-xs font-bold hover:bg-white/90 transition-all active:scale-95"
+            >
+              Analyze new questions
+            </button>
           </div>
         </motion.div>
-      </div>
+      )}
 
       {/* Flagged Questions Panel */}
       <motion.div 
@@ -482,6 +568,97 @@ export default function DashboardPage() {
         </div>
       </motion.div>
 
+      {/* ── JD Analyser Section ─────────────────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.55 }}
+      >
+        {planId === 'growth' || planId === 'enterprise' ? (
+          <div className="relative overflow-hidden bg-gradient-to-br from-[#f59e0b] via-[#d97706] to-[#b45309] rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-10 text-white shadow-md">
+            <div className="absolute -right-8 -top-8 w-48 h-48 rounded-full border border-white/[0.07]" />
+            <div className="absolute -right-2 -top-2 w-32 h-32 rounded-full border border-white/[0.07]" />
+            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div className="space-y-3 flex-1">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
+                    <FileSearch className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-[0.15em] text-white/60">Premium Feature</span>
+                </div>
+                <h3 className="text-xl md:text-2xl font-bold tracking-tight">JD Analyser</h3>
+                <p className="text-sm text-white/70 leading-relaxed max-w-md">
+                  Paste any job description and get a complete bias audit — section scores, coded language decoder, legal risk assessment, and a fully rewritten inclusive version.
+                </p>
+                <div className="flex flex-wrap gap-2 pt-1">
+                  {['Bias by section', 'Coded language', 'Legal risk', 'Full rewrite'].map(tag => (
+                    <span key={tag} className="text-[10px] font-black px-2.5 py-1 rounded-full bg-white/10 text-white/80 uppercase tracking-wider">{tag}</span>
+                  ))}
+                </div>
+              </div>
+              <Link href="/jd-analyser" className="flex-shrink-0">
+                <button className="flex items-center gap-2 px-6 py-3.5 bg-white text-[#f59e0b] rounded-full text-sm font-bold hover:bg-white/90 active:scale-95 transition-all shadow-lg whitespace-nowrap">
+                  Analyse a JD <ArrowRight className="w-4 h-4" />
+                </button>
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="relative overflow-hidden bg-[#F5F5F7] border border-black/[0.05] rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-10">
+            <div className="absolute -right-6 -top-6 w-40 h-40 rounded-full border border-black/[0.04]" />
+            <div className="absolute -right-1 -top-1 w-28 h-28 rounded-full border border-black/[0.04]" />
+            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div className="space-y-3 flex-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <div className="w-8 h-8 rounded-xl bg-black/[0.05] flex items-center justify-center">
+                    <FileSearch className="w-4 h-4 text-[#86868B]" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-[0.15em] text-[#86868B]">Premium Feature</span>
+                  <span className="flex items-center gap-1 text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
+                    <Lock className="w-2.5 h-2.5" /> Locked
+                  </span>
+                </div>
+                <h3 className="text-xl md:text-2xl font-bold text-[#1D1D1F] tracking-tight">JD Analyser</h3>
+                <p className="text-sm text-[#86868B] leading-relaxed max-w-md">
+                  Detect bias in any job description. Section-by-section scoring, coded language detection, legal risk assessment, and a complete bias-free rewrite.
+                </p>
+                <div className="flex flex-wrap gap-2 pt-1">
+                  {['Bias by section', 'Coded language', 'Legal risk', 'Full rewrite'].map(tag => (
+                    <span key={tag} className="text-[10px] font-black px-2.5 py-1 rounded-full bg-black/[0.05] text-[#86868B] uppercase tracking-wider">{tag}</span>
+                  ))}
+                </div>
+              </div>
+              <Link href="/pricing?highlight=growth&feature=jd_analyser" className="flex-shrink-0">
+                <button className="flex items-center gap-2 px-6 py-3.5 bg-[#1D1D1F] text-white rounded-full text-sm font-bold hover:bg-black active:scale-95 transition-all shadow-sm whitespace-nowrap">
+                  Upgrade to Growth <ArrowRight className="w-4 h-4" />
+                </button>
+              </Link>
+            </div>
+          </div>
+        )}
+      </motion.div>
+
+    </div>
+  );
+}
+
+function UsageMeter({ label, used, limit, percent }: { label: string; used: number; limit: number | null; percent: number }) {
+  return (
+    <div className="space-y-2">
+      <div className="flex justify-between text-[11px] font-bold">
+        <span className="text-[#86868B]">{label}</span>
+        <span className="text-foreground">{used} / {limit || '∞'}</span>
+      </div>
+      <div className="h-2 bg-[#F5F5F7] rounded-full overflow-hidden">
+        <motion.div 
+          initial={{ width: 0 }}
+          animate={{ width: `${percent}%` }}
+          className={cn(
+            "h-full rounded-full transition-colors",
+            percent >= 90 ? "bg-red-500" : percent >= 70 ? "bg-amber-500" : "bg-[#10b981]"
+          )}
+        />
+      </div>
     </div>
   );
 }

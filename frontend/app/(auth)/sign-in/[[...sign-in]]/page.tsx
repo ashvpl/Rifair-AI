@@ -1,48 +1,44 @@
-import { SignIn } from "@clerk/nextjs";
+"use client";
+
+import { useState } from "react";
+import LegalConsent from "@/components/auth/LegalConsent";
+import { AuthUI, AuthFormContainer } from "@/components/ui/auth-fuse";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
+  const [agreed, setAgreed] = useState(false);
+  const router = useRouter();
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white relative overflow-hidden">
-      <div className="w-full max-w-md z-10 px-6 py-12">
-        {/* Logo only — no title, no subtitle */}
+    <AuthUI initialIsSignIn={true}>
+      <div className="w-full max-w-md z-10 px-6">
         <div className="mb-10 flex justify-center">
           <Image
             src="/rifair-logo.png"
             alt="Rifair AI"
-            width={90}
-            height={90}
-            className="h-[90px] w-auto object-contain"
+            width={70}
+            height={70}
+            className="h-[70px] w-auto object-contain"
             priority
           />
         </div>
 
-        {/* Clerk Sign In */}
-        <SignIn
-          forceRedirectUrl="/dashboard"
-          appearance={{
-            elements: {
-              rootBox: "w-full",
-              card: "w-full bg-white border border-black/[0.05] shadow-none rounded-[2rem] p-4",
-              headerTitle: "hidden",
-              headerSubtitle: "hidden",
-              header: "hidden",
-              socialButtonsBlockButton:
-                "border-black/[0.05] hover:bg-[#F5F5F7] transition-all rounded-2xl shadow-sm",
-              socialButtonsBlockButtonText: "font-bold text-[#1D1D1F]",
-              formButtonPrimary:
-                "bg-black hover:bg-black/90 text-white font-semibold transition-all h-12 rounded-2xl",
-              formFieldLabel:
-                "text-[#86868B] font-black uppercase text-[9px] tracking-widest",
-              formFieldInput:
-                "border-black/[0.05] bg-[#F5F5F7]/30 focus:bg-white rounded-2xl h-12 shadow-inner",
-              footerActionText: "text-[#86868B] font-bold",
-              footerActionLink:
-                "text-black font-black hover:text-black/70 transition-colors",
-            },
-          }}
-        />
+        {/* Legal Consent First */}
+        <LegalConsent agreed={agreed} setAgreed={setAgreed} />
+
+        {/* Custom Auth Form — only interactable if agreed */}
+        <div className={cn(
+          "transition-all duration-700 mt-6",
+          !agreed ? "opacity-40 blur-[2px] pointer-events-none grayscale" : "opacity-100 blur-0"
+        )}>
+          <AuthFormContainer 
+            isSignIn={true} 
+            onToggle={() => router.push("/sign-up")} 
+          />
+        </div>
       </div>
-    </div>
+    </AuthUI>
   );
 }

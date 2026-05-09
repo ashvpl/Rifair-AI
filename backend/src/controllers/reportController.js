@@ -61,6 +61,7 @@ const getReportById = async (req, res) => {
 const deleteReportById = async (req, res) => {
   try {
     const userId = req.auth?.userId || req.auth?.claims?.sub;
+    if (!userId) return res.status(401).json({ error: "Unauthorized" });
     const { id } = req.params;
     const { error } = await supabase
       .from("analysis_reports")
@@ -76,9 +77,33 @@ const deleteReportById = async (req, res) => {
   }
 };
 
+const updateReportById = async (req, res) => {
+  try {
+    const userId = req.auth?.userId || req.auth?.claims?.sub;
+    if (!userId) return res.status(401).json({ error: "Unauthorized" });
+    const { id } = req.params;
+    const { categories } = req.body;
+
+    const { data, error } = await supabase
+      .from("analysis_reports")
+      .update({ categories })
+      .eq("id", id)
+      .eq("user_id", userId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    res.json({ report: data });
+  } catch (error) {
+    console.error("Update Report Error:", error);
+    res.status(500).json({ error: "Failed to update report" });
+  }
+};
+
 module.exports = {
   getReports,
   deleteReports,
   getReportById,
   deleteReportById,
+  updateReportById,
 };

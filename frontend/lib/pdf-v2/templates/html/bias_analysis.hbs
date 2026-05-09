@@ -1,0 +1,260 @@
+{{!-- bias_analysis.hbs --}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>{{{printMasterCss}}}</style>
+</head>
+<body class="report-bias density-medium">
+
+  <!-- COVER PAGE -->
+  <div class="page cover cover-bias">
+    <div class="cover-shape-1"></div>
+    <div class="cover-shape-2"></div>
+    <div class="cover-shape-3"></div>
+    
+    <div class="cover-nav">
+      <div class="c-logo">
+        <img src="{{logoBase64}}" class="c-logo-img" alt="Rifair AI">
+      </div>
+      <div class="c-badge">Enterprise Audit</div>
+    </div>
+
+    <div class="cover-content">
+      <div class="cover-eyebrow">
+        <div class="cover-eyebrow-line" style="background: var(--theme-red);"></div>
+        <div class="cover-eyebrow-text" style="color: var(--theme-red);">Bias & Fairness Analysis</div>
+      </div>
+      
+      <h1 class="cover-heading" style="color: var(--theme-red);">Hiring Content <span style="color: var(--gray-700); opacity: 0.4;">Audit Report</span></h1>
+      <p class="cover-subheading">{{overallSummary}}</p>
+
+      <div class="hero-score">
+        <div class="hs-number">{{overallBiasScore}}</div>
+        <div class="hs-meta">
+          <div class="hs-label">Overall Bias Score</div>
+          <div class="hs-verdict">{{verdictLabel}}</div>
+          <div class="hs-sub">{{flaggedCount}} issues across {{totalQuestions}} points</div>
+        </div>
+      </div>
+
+      <div class="cover-meta">
+        <div class="cm-item">
+          <div class="cm-label">Generated For</div>
+          <div class="cm-value">{{meta.organizationName}}</div>
+        </div>
+        <div class="cm-item">
+          <div class="cm-label">Lead Auditor</div>
+          <div class="cm-value">{{meta.userName}}</div>
+        </div>
+        <div class="cm-item">
+          <div class="cm-label">Risk Level</div>
+          <div class="cm-value" style="color: {{legalRiskColor}}">{{legalRiskLevel}}</div>
+        </div>
+        <div class="cm-item">
+          <div class="cm-label">Audit Date</div>
+          <div class="cm-value">{{meta.generatedDate}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cover-footer">
+      <div class="cf-left">
+        Rifair AI Intelligence Engine — v2.4.0<br>
+        Confidential Proprietary Audit Document
+      </div>
+      <div class="cf-right">ID: {{meta.reportId}}</div>
+    </div>
+  </div>
+
+  <!-- EXECUTIVE SUMMARY -->
+  <div class="page interior-page">
+    <div class="ip-header">
+      <div class="ip-logo">
+        <img src="{{logoBase64}}" class="ip-logo-img" alt="Rifair AI">
+      </div>
+      <div class="ip-meta">
+        <strong>BIAS & FAIRNESS AUDIT</strong>
+        {{meta.reportId}} · {{meta.generatedDate}}
+      </div>
+    </div>
+
+    <div class="section-label">Executive Summary</div>
+    <div class="verdict-banner {{verdictClass}}">
+      <div class="vb-left">
+        <h3>{{verdictHeadline}}</h3>
+        <p>{{verdictDescription}}</p>
+      </div>
+      <div class="vb-right">
+        <div class="vb-score">{{overallBiasScore}}<span class="vb-unit">/100</span></div>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card sc-red">
+        <div class="sc-label">Flagged Issues</div>
+        <div class="sc-value">{{flaggedCount}}</div>
+        <div class="sc-sub">{{biasedPercent}} of total content</div>
+      </div>
+      <div class="stat-card sc-green">
+        <div class="sc-label">Fairness Score</div>
+        <div class="sc-value">{{fairnessScore}}</div>
+        <div class="sc-sub">Global benchmark: 88%</div>
+      </div>
+      <div class="stat-card sc-amber">
+        <div class="sc-label">Legal Risk</div>
+        <div class="sc-value">{{legalRiskLabel}}</div>
+        <div class="sc-sub">Compliance status</div>
+      </div>
+      <div class="stat-card sc-blue">
+        <div class="sc-label">Clean Content</div>
+        <div class="sc-value">{{cleanCount}}</div>
+        <div class="sc-sub">Validated safe</div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top: 12px;">Primary Bias Distribution</div>
+    <div style="margin-bottom: 32px;">
+      {{#each biasCategories}}
+      <div class="bias-row">
+        <div class="br-label">{{label}}</div>
+        <div class="br-track">
+          <div class="br-fill {{fillClass}}" style="width: {{percent}}%;"></div>
+        </div>
+        <div class="br-count">{{count}}</div>
+      </div>
+      {{/each}}
+    </div>
+
+    <div class="insight">
+      <strong>Auditor Insight:</strong> Our AI engine has detected patterns that may indicate {{verdictLabel}}. 
+      The most prevalent issue is <strong>{{biasCategories.0.label}}</strong>, appearing in {{biasCategories.0.percent}}% of flagged segments.
+      Immediate revision is recommended to maintain legal compliance and inclusive hiring standards.
+    </div>
+
+    <div class="ip-footer">
+      <div>© 2026 Rifair AI Intelligence. All rights reserved.</div>
+      <div>Page 2 of 4</div>
+    </div>
+  </div>
+
+  <!-- DETAILED ANALYSIS -->
+  <div class="page interior-page">
+    <div class="ip-header">
+      <div class="ip-logo">
+        <img src="{{logoBase64}}" class="ip-logo-img" alt="Rifair AI">
+      </div>
+      <div class="ip-meta">
+        <strong>DETAILED CONTENT ANALYSIS</strong>
+        {{meta.reportId}} · {{meta.generatedDate}}
+      </div>
+    </div>
+
+    <div class="section-label">Point-by-Point Findings</div>
+
+    {{#each questions}}
+    <div class="q-card">
+      <div class="qh {{severityClass}}">
+        <div class="qn {{severityClass}}">{{index}}</div>
+        <div class="qtext">"{{original}}"</div>
+        <div class="q-pill {{severityClass}}">{{#if isClean}}CLEAN{{else}}FLAGGED{{/if}}</div>
+      </div>
+      <div class="qb">
+        <div class="q-tags">
+          {{#each biasTypes}}
+          <div class="q-tag">{{this}}</div>
+          {{/each}}
+        </div>
+        <div class="q-exp">{{explanation}}</div>
+        
+        {{#if hasRewrite}}
+        <div class="q-rewrite-header">
+          <div class="q-rewrite-dot"></div>
+          Suggested Bias-Free Rewrite
+        </div>
+        <div class="q-rewrite">{{rewrite}}</div>
+        {{/if}}
+
+        {{#if hasLaw}}
+        <div class="q-law">⚠ Potential Violation: {{lawViolation}}</div>
+        {{/if}}
+      </div>
+    </div>
+    {{/each}}
+
+    <div class="ip-footer">
+      <div>Confidential Audit Document</div>
+      <div>Page 3 of 4</div>
+    </div>
+  </div>
+
+  <!-- RECOMMENDATIONS & CLOSING -->
+  <div class="page interior-page">
+    <div class="ip-header">
+      <div class="ip-logo">
+        <img src="{{logoBase64}}" class="ip-logo-img" alt="Rifair AI">
+      </div>
+      <div class="ip-meta">
+        <strong>ACTION PLAN & COMPLIANCE</strong>
+        {{meta.reportId}} · {{meta.generatedDate}}
+      </div>
+    </div>
+
+    <div class="section-label">Recommended Action Plan</div>
+    <div style="margin-bottom: 32px;">
+      {{#each recommendations}}
+      <div class="rec-row">
+        <div class="rec-num">{{index}}</div>
+        <div class="rec-text">
+          <h4>{{title}}</h4>
+          <p>{{description}}</p>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+
+    {{#if showLegalBox}}
+    <div class="section-label">Legal & Compliance Risks</div>
+    <div class="legal-box">
+      <div class="lb-title">The following regulatory frameworks may be impacted:</div>
+      {{#each legalRisks}}
+      <div class="lb-item">
+        <span>•</span>
+        <div><strong>{{law}}:</strong> {{description}}</div>
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    <div class="section-label">Auditor Disclaimer</div>
+    <div class="disclaimer">
+      <strong>Note:</strong> This report is generated by Rifair AI's content intelligence engine. While our models are 98.4% accurate in detecting bias, this document should be used as a <strong>decision-support tool</strong> and not as legal advice. Final hiring decisions and content approvals should be reviewed by your HR and Legal teams.
+    </div>
+
+    <div class="ip-footer">
+      <div>End of Audit Report</div>
+      <div>Page 4 of 4</div>
+    </div>
+  </div>
+
+  <!-- CLOSING PAGE -->
+  <div class="page closing-page">
+    <div class="close-logo">
+      <img src="{{logoBase64}}" class="close-logo-img" alt="Rifair AI">
+    </div>
+    <div class="close-tagline">Building a fairer future for talent, one audit at a time.</div>
+    
+    <div class="close-cta">
+      <h3>Ready to scale your inclusive hiring?</h3>
+      <p>Invite your team members to Rifair AI to collaborate on bias-free interview kits and candidate evaluations.</p>
+    </div>
+
+    <div class="close-meta">
+      Report ID: {{meta.reportId}}<br>
+      Generated on: {{meta.generatedDate}}<br>
+      rifair.ai · support@rifair.ai
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo ""
+echo "🔐 Rifair AI — Pre-Commit Security Gate"
+echo "========================================"
+
+# ─── Block .env files from being staged ──────────────────────────────────────
+STAGED_ENV=$(git diff --cached --name-only | grep -E '(^|/)\.env(\.|$)' | grep -v '\.example$' || true)
+if [ -n "$STAGED_ENV" ]; then
+  echo ""
+  echo "🚨 COMMIT BLOCKED — Secret file staged:"
+  echo "$STAGED_ENV"
+  echo ""
+  echo "Remove it with: git reset HEAD <file>"
+  echo "Then add the filename to .gitignore."
+  exit 1
+fi
+
+# ─── Block files containing raw API key patterns ─────────────────────────────
+STAGED_FILES=$(git diff --cached --name-only | grep -E '\.(ts|tsx|js|jsx|mjs)$' || true)
+
+if [ -n "$STAGED_FILES" ]; then
+  # Check for Groq keys
+  GROQ_HIT=$(git diff --cached -- $STAGED_FILES | grep -E '^\+.*gsk_[a-zA-Z0-9]{40,}' || true)
+  if [ -n "$GROQ_HIT" ]; then
+    echo "🚨 COMMIT BLOCKED — Groq API key detected in staged diff"
+    exit 1
+  fi
+
+  # Check for Gemini keys
+  GEMINI_HIT=$(git diff --cached -- $STAGED_FILES | grep -E '^\+.*AIzaSy[a-zA-Z0-9_-]{33}' || true)
+  if [ -n "$GEMINI_HIT" ]; then
+    echo "🚨 COMMIT BLOCKED — Gemini API key detected in staged diff"
+    exit 1
+  fi
+
+  # Check for OpenAI keys
+  OPENAI_HIT=$(git diff --cached -- $STAGED_FILES | grep -E '^\+.*sk-proj-[a-zA-Z0-9_-]{80,}' || true)
+  if [ -n "$OPENAI_HIT" ]; then
+    echo "🚨 COMMIT BLOCKED — OpenAI API key detected in staged diff"
+    exit 1
+  fi
+
+  # Check for Clerk secret keys
+  CLERK_HIT=$(git diff --cached -- $STAGED_FILES | grep -E '^\+.*sk_(test|live)_[a-zA-Z0-9]{30,}' || true)
+  if [ -n "$CLERK_HIT" ]; then
+    echo "🚨 COMMIT BLOCKED — Clerk secret key detected in staged diff"
+    exit 1
+  fi
+
+  # Check for Supabase service role JWTs
+  SUPA_HIT=$(git diff --cached -- $STAGED_FILES | grep -E '^\+.*eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.[a-zA-Z0-9_-]{80,}' || true)
+  if [ -n "$SUPA_HIT" ]; then
+    echo "🚨 COMMIT BLOCKED — Supabase service role JWT detected in staged diff"
+    exit 1
+  fi
+fi
+
+# ─── Run full security audit ─────────────────────────────────────────────────
+echo ""
+echo "🔍 Running full security audit..."
+node scripts/security-audit.js
+
+AUDIT_EXIT=$?
+if [ $AUDIT_EXIT -ne 0 ]; then
+  echo ""
+  echo "🚨 COMMIT BLOCKED — Security audit failed."
+  echo "Fix all CRITICAL issues before committing."
+  exit 1
+fi
+
+echo ""
+echo "✅ Security gate passed. Proceeding with commit."
+echo ""

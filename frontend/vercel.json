@@ -1,6 +1,12 @@
 {
   "version": 2,
   "framework": "nextjs",
+  "crons": [
+    {
+      "path": "/api/cron/daily-intelligence",
+      "schedule": "0 2 * * *"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

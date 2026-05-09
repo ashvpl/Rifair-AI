@@ -26,7 +26,15 @@ export default function FooterSection({
       title: "Company",
       links: [
         { text: "About Us", url: "/#about-us" },
-        { text: "Contact", url: "mailto:support@rifair.ai" },
+        { text: "Contact", url: "mailto:rifairaiteam@gmail.com" },
+      ],
+    },
+    {
+      title: "Legal",
+      links: [
+        { text: "Privacy Policy", url: "/privacy" },
+        { text: "Terms of Service", url: "/terms" },
+        { text: "Refund Policy", url: "/refund" },
       ],
     },
   ],

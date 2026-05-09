@@ -13,19 +13,25 @@ const menus = [
   {
     id: 0,
     title: 'About Us',
-    url: '#about-us',
+    url: '/#about-us',
     dropdown: false,
   },
   {
     id: 1,
-    title: 'Analyze',
-    url: '/analyze',
+    title: 'Dashboard',
+    url: '/dashboard',
+    dropdown: false,
+  },
+  {
+    id: 2,
+    title: 'Pricing',
+    url: '/pricing',
     dropdown: false,
   },
   {
     id: 3,
     title: 'Features',
-    url: '#core-features',
+    url: '/#core-features',
     dropdown: false,
   },
 ];

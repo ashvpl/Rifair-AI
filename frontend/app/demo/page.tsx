@@ -1,10 +1,5 @@
-"use client";
-import FeatureCarousel from "@/components/ui/feature-carousel";
+import Component from "@/components/ui/testimonial-v2";
 
-export default function Demo() {
-  return (
-    <div className="flex items-center justify-center w-full min-h-screen bg-background p-8">
-      <FeatureCarousel />
-    </div>
-  );
+export default function DemoOne() {
+  return <Component />;
 }

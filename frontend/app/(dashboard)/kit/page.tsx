@@ -3,22 +3,31 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { generateKit, getReportById } from "@/lib/api";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
+import { UsageLimitBanner } from "@/components/pricing/FeatureGate";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { Loader2, FileText, CheckCircle2, AlertCircle, PlusCircle } from "lucide-react";
+import { AlertCircle, ArrowRight, Zap, ClipboardCheck } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Typewriter } from "@/components/ui/typewriter";
 import { KitFeatureCards } from "@/components/kit-generator/KitFeatureCards";
 import { LoadingState } from "@/components/LoadingState";
-import HolographicCard from "@/components/ui/holographic-card";
-import { BiasScoreCard } from "@/components/BiasScoreCard";
+import { KitDisplay } from "@/components/kit-generator/KitDisplay";
+import { BottomSheet } from "@/components/ui/BottomSheet";
+import { useContentModeration } from "@/hooks/useContentModeration";
+import { ContentWarning } from "@/components/moderation/ContentWarning";
+import KitAuditUploader from "@/components/kit-generator/KitAuditUploader";
+import ExportButton from "@/components/pdf/ExportButton";
+import { useSubscription } from "@/hooks/useSubscription";
+
+
+type ActiveTab = "generate" | "audit";
 
 export default function KitGeneratorPage() {
   const { getToken } = useAuth();
+  const [activeTab, setActiveTab] = useState<ActiveTab>("generate");
   const [formData, setFormData] = useState({
     role: "Senior Frontend Engineer",
     experience_level: "5+ years",
@@ -28,8 +37,12 @@ export default function KitGeneratorPage() {
   
   const [isLoading, setIsLoading] = useState(false);
   const [kit, setKit] = useState<any>(null);
-  const [biasValidation, setBiasValidation] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const [errorCode, setErrorCode] = useState<string | null>(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [upgradeReason, setUpgradeReason] = useState("");
+  const { planId } = useSubscription();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const reportId = searchParams.get("reportId");
 
@@ -53,14 +66,14 @@ export default function KitGeneratorPage() {
 
         if (fetchedReport && fetchedReport.categories && fetchedReport.categories.kit_data) {
           setKit(fetchedReport.categories.kit_data);
-          setBiasValidation(fetchedReport.categories.validation);
           if (fetchedReport.categories.inputs) {
-            setFormData(fetchedReport.categories.inputs);
+            setFormData(prev => ({
+              ...prev,
+              ...fetchedReport.categories.inputs,
+            }));
           }
         } else if (fetchedReport && fetchedReport.categories) {
-          // Fallback if structure is slightly different
           setKit(fetchedReport.categories);
-          setBiasValidation(fetchedReport.validation || { riskLevel: "low", overallScore: 0 });
         }
       } catch (err: any) {
         setError(err.message || "Failed to load report");
@@ -71,72 +84,179 @@ export default function KitGeneratorPage() {
     fetchReport();
   }, [reportId, getToken]);
 
+  const kitModeration = useContentModeration('kit');
+
   const handleGenerate = async () => {
+    const combinedInput = `${formData.role} ${formData.experience_level} ${formData.company_type} ${formData.diversity_goals}`;
+    const isClean = await kitModeration.checkContent(combinedInput);
+    if (!isClean) return;
+
     setIsLoading(true);
     setError(null);
+    setErrorCode(null);
     setKit(null);
-    setBiasValidation(null);
 
     try {
       const token = await getToken();
       const data = await generateKit(formData, token);
-      setKit(data.kit);
-      setBiasValidation(data.bias_validation);
+      const kitData = data.kit || {};
+      if (data.reportId) {
+        router.push(`/kit?reportId=${data.reportId}`);
+        return;
+      }
+      setKit(kitData);
     } catch (err: any) {
+      if (err.code === 'limit_reached') {
+        setShowUpgradeModal(true);
+        setUpgradeReason(err.message || "Monthly kit limit reached");
+        return;
+      }
+      setErrorCode(err.code || null);
       setError(err.message || "AI service temporarily unavailable");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 300, damping: 24 } }
+  const handleNewKit = () => {
+    setKit(null);
+    setError(null);
+    setErrorCode(null);
   };
 
   return (
-    <div className="animate-in fade-in duration-1000 -mt-6 pb-20 -mb-28 -mx-8 px-8 bg-[#F5F5F7] min-h-[calc(100vh-80px)]">
-      <div className="max-w-6xl mx-auto space-y-8 pt-10 pb-20">
+    <div className="kit-page-wrapper">
+      <div className="relative max-w-6xl mx-auto space-y-6 pt-6 pb-16 px-0">
+        {isLoading && <LoadingState text="Generating" />}
       
       {/* Header section */}
       <div className="relative">
         <div className="space-y-1">
-          <h1 className="text-4xl font-extrabold text-foreground tracking-tight">Structured Interview Kits</h1>
-          <p className="text-[#86868B] max-w-2xl text-lg font-medium">
-            Create role-specific interview kits that are consistent, fair, and ready to use.
+          <h1 className={cn(
+            "text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight",
+            searchParams.get("evaluate") === "true" ? "text-[#1e1b4b]" : "text-[#062c21]"
+          )}>
+            {searchParams.get("evaluate") === "true" ? "Candidate Evaluation" : "Interview Kits"}
+          </h1>
+          <p className="text-[#86868B] max-w-2xl text-base md:text-lg font-medium">
+            {searchParams.get("evaluate") === "true" 
+              ? "Precision scoring to ensure accurate, merit-based hiring while detecting subtle interview biases."
+              : "Generate role-specific kits or audit your existing questions for bias."}
           </p>
         </div>
       </div>
 
-      <AnimatePresence mode="wait">
-        {isLoading ? (
-          <motion.div 
-            key="loading-state"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.05 }}
-            className="py-24"
+      {/* ── Tab Switcher (only shown outside evaluate mode) ─────────────── */}
+      {searchParams.get("evaluate") !== "true" && (
+        <div className="flex bg-[#F5F5F7]/80 rounded-2xl p-1 max-w-sm border border-black/[0.04]">
+          <button
+            onClick={() => setActiveTab("generate")}
+            className={cn(
+              "flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all",
+              activeTab === "generate"
+                ? "bg-[#10b981] text-white shadow-md"
+                : "text-[#86868B] hover:text-[#10b981]"
+            )}
           >
-            <div className="flex flex-col items-center justify-center space-y-8 max-w-4xl mx-auto">
-              <LoadingState />
-            </div>
+            <Zap className="w-3.5 h-3.5" />
+            Generate
+          </button>
+          <button
+            onClick={() => setActiveTab("audit")}
+            className={cn(
+              "flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all",
+              activeTab === "audit"
+                ? "bg-[#10b981] text-white shadow-md"
+                : "text-[#86868B] hover:text-[#10b981]"
+            )}
+          >
+            <ClipboardCheck className="w-3.5 h-3.5" />
+            Audit My Kit
+          </button>
+        </div>
+      )}
+
+      {/* ── Audit Tab ──────────────────────────────────────────────────── */}
+      {activeTab === "audit" && searchParams.get("evaluate") !== "true" && (
+        <AnimatePresence mode="wait">
+          <motion.div
+            key="audit-tab"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+          >
+            <KitAuditUploader />
+          </motion.div>
+        </AnimatePresence>
+      )}
+
+      {/* ── Generate Tab (existing content) ────────────────────────────── */}
+      {(activeTab === "generate" || searchParams.get("evaluate") === "true") && (
+        <>
+      <UsageLimitBanner type="kits" />
+
+      <AnimatePresence mode="wait">
+        {kit ? (
+          /* ── Kit Results — Full Width ─────────────────────────────────── */
+          <motion.div
+            key="kit-results"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ type: "spring", stiffness: 200, damping: 25 }}
+          >
+            {/* Action bar - hide when evaluating */}
+            {searchParams.get("evaluate") !== "true" && (
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+                <div>
+                  <p className="text-xs font-bold text-[#86868B] uppercase tracking-[0.1em]">
+                    Generated Kit
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center gap-3">
+                  {reportId && (
+                    <>
+                      <ExportButton 
+                        type="kit" 
+                        id={reportId} 
+                        planTier={planId || 'free'} 
+                        label="Export Kit"
+                        variant="secondary"
+                        className="w-auto"
+                      />
+                      <ExportButton 
+                        type="audit" 
+                        id={reportId} 
+                        planTier={planId || 'free'} 
+                        label="Audit Report"
+                        variant="primary"
+                        className="w-auto"
+                      />
+                    </>
+                  )}
+                  <Button
+                    onClick={handleNewKit}
+                    variant="outline"
+                    className="bg-white hover:bg-[#F5F5F7] border-black/[0.06] rounded-xl font-bold text-[10px] uppercase tracking-widest px-6"
+                  >
+                    New Kit
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            <KitDisplay kit={kit} />
           </motion.div>
         ) : (
+          /* ── Form + How It Works Side by Side ─────────────────────────── */
           <motion.div 
             key="interface-grid"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-stretch"
           >
-            {/* Form Section - Restored on Left */}
+            {/* Form Section - Left */}
             <div className="lg:col-span-1 h-full">
               <div className="bg-white border border-black/[0.05] p-6 sm:p-8 md:p-12 h-full min-h-[500px] md:min-h-[700px] rounded-[2rem] md:rounded-[3.5rem] shadow-[0_4px_24px_rgba(0,0,0,0.02)] relative overflow-hidden transition-all duration-500 hover:shadow-[0_8px_32px_rgba(0,0,0,0.04)] flex flex-col">
                 <div className="mb-6 md:mb-10">
@@ -146,7 +266,7 @@ export default function KitGeneratorPage() {
                 
                 <div className="space-y-6 flex-1 flex flex-col">
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.1em] ml-1">Target Designation</Label>
+                    <Label className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.1em] ml-1">Job Role</Label>
                     <Input 
                       value={formData.role} 
                       onChange={(e) => setFormData({...formData, role: e.target.value})} 
@@ -155,7 +275,7 @@ export default function KitGeneratorPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.1em] ml-1">Seniority Tier</Label>
+                    <Label className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.1em] ml-1">Experience</Label>
                     <Input 
                       value={formData.experience_level} 
                       onChange={(e) => setFormData({...formData, experience_level: e.target.value})} 
@@ -164,7 +284,7 @@ export default function KitGeneratorPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.1em] ml-1">Organizational Archetype</Label>
+                    <Label className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.1em] ml-1">Company type</Label>
                     <Input 
                       value={formData.company_type} 
                       onChange={(e) => setFormData({...formData, company_type: e.target.value})} 
@@ -173,7 +293,7 @@ export default function KitGeneratorPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.1em] ml-1">Strategic Constraints</Label>
+                    <Label className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.1em] ml-1">additional requirement</Label>
                     <Textarea 
                       value={formData.diversity_goals} 
                       onChange={(e) => setFormData({...formData, diversity_goals: e.target.value})} 
@@ -182,132 +302,125 @@ export default function KitGeneratorPage() {
                     />
                   </div>
                   
+                  <ContentWarning
+                    warning={kitModeration.warning}
+                    severity={kitModeration.severity}
+                    category={kitModeration.category}
+                    isChecking={kitModeration.isChecking}
+                  />
+                  
                   <Button 
                     onClick={handleGenerate}
-                    disabled={isLoading || !formData.role}
-                    className="w-full relative p-0.5 inline-flex overflow-hidden rounded-2xl group shadow-xl transition-all h-auto mt-auto active:scale-95"
+                    disabled={isLoading || !formData.role || kitModeration.isBlocked || kitModeration.isChecking}
+                    className={cn(
+                      "w-full relative p-0.5 inline-flex overflow-hidden rounded-2xl group shadow-xl transition-all h-auto mt-auto active:scale-95 text-white",
+                      searchParams.get("evaluate") === "true" ? "bg-[#3b82f6] hover:bg-[#2563eb]" : "bg-[#10b981] hover:bg-[#059669]"
+                    )}
                   >
-                    <span
-                      className={cn(
-                        "absolute inset-[-300%] animate-[spin_3s_linear_infinite]",
-                        "bg-[conic-gradient(from_90deg_at_50%_50%,var(--primary)_0%,#fff_50%,var(--primary)_100%)] dark:bg-[conic-gradient(from_90deg_at_50%_50%,var(--primary)_0%,#000_50%,var(--primary)_100%)]"
-                      )}
-                    />
-                    <span className="inline-flex size-full items-center text-black justify-center rounded-2xl px-6 py-4 backdrop-blur-3xl font-semibold transition-all">
-                      <span className="font-black text-xs tracking-widest relative z-10 uppercase">Generate Kit</span>
+                    <span className="inline-flex size-full items-center justify-center rounded-2xl px-6 py-4 font-semibold transition-all">
+                      <span className="font-black text-xs tracking-widest relative z-10 uppercase">
+                        {kitModeration.isBlocked ? 'Fix content to continue' : 'Generate Kit'}
+                      </span>
                     </span>
                   </Button>
                 </div>
               </div>
             </div>
 
-            {/* Right Side Content (Initial Empty State or Final Kit Output) */}
+            {/* Right Side Content */}
             <div className="lg:col-span-1 h-full">
-              <AnimatePresence mode="wait">
-                {!kit ? (
-                  <motion.div 
-                    key="how-it-works"
-                    initial={{ opacity: 0, scale: 0.98 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.5 }}
-                    className="h-full min-h-[500px] md:min-h-[700px] bg-white border border-black/[0.05] flex flex-col items-stretch p-6 sm:p-8 md:p-12 text-foreground rounded-[2rem] md:rounded-[3.5rem] shadow-[0_8px_48px_rgba(0,0,0,0.02)] relative overflow-hidden"
-                  >
-                    <div className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-black/[0.01] rounded-full blur-[120px] -mr-32 -mt-32 md:-mr-48 md:-mt-48" />
-                    <div className="relative z-10 flex flex-col items-center justify-center flex-1 py-10">
-                      {error ? (
-                        <div className="text-center space-y-4 max-w-sm mx-auto">
-                          <div className="bg-destructive/10 text-destructive p-4 rounded-2xl border border-destructive/20 mb-4">
-                            <AlertCircle className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                            <h3 className="font-black text-xs uppercase tracking-widest mb-1">Critical Backend Error</h3>
-                            <p className="text-xs font-bold opacity-80">{error}</p>
-                          </div>
-                          <Button 
-                            variant="outline" 
+              <div className="h-full min-h-[500px] md:min-h-[700px] bg-white border border-black/[0.05] flex flex-col items-stretch p-6 sm:p-8 md:p-12 text-foreground rounded-[2rem] md:rounded-[3.5rem] shadow-[0_8px_48px_rgba(0,0,0,0.02)] relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-black/[0.01] rounded-full blur-[120px] -mr-32 -mt-32 md:-mr-48 md:-mt-48" />
+                <div className="relative z-10 flex flex-col items-center justify-center flex-1 py-10">
+                  {error ? (
+                    errorCode === 'api_quota_exceeded' ? (
+                      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 text-center max-w-sm mx-auto">
+                        <div className="text-3xl mb-3">⏳</div>
+                        <h3 className="text-sm font-semibold text-amber-900 mb-2">
+                          AI is cooling down
+                        </h3>
+                        <p className="text-xs text-amber-700 mb-4">
+                          Our AI quota resets every hour. 
+                          Your kit generation will work again shortly.
+                        </p>
+                        <div className="flex gap-2 justify-center">
+                          <button
                             onClick={handleGenerate}
-                            className="bg-white hover:bg-[#F5F5F7] border-black/[0.05] rounded-xl font-black text-[10px] uppercase tracking-widest px-8"
+                            className="text-xs font-medium bg-amber-600 text-white px-4 py-2 rounded-full hover:bg-amber-700 transition"
                           >
-                            Retry Generation
-                          </Button>
-                        </div>
-                      ) : (
-                        <>
-                          <div className="text-center mb-12 space-y-3">
-                            <h3 className="text-4xl font-extrabold text-[#1D1D1F] tracking-tight uppercase">How it works</h3>
-                            <p className="text-[#86868B] font-bold max-w-sm mx-auto leading-relaxed uppercase text-[11px] tracking-widest">Explore the core capabilities of the Rifair interview engine.</p>
-                          </div>
-                          <KitFeatureCards />
-                        </>
-                      )}
-                    </div>
-                  </motion.div>
-                ) : (
-                  <motion.div 
-                    key="kit-results"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 25 }}
-                    className="h-full"
-                  >
-                    <HolographicCard 
-                      intensity={45} 
-                      biasLevel="neutral"
-                      className="h-full min-h-[500px] md:min-h-[700px] flex flex-col items-stretch rounded-[2rem] md:rounded-[3.5rem] shadow-[0_8px_64px_rgba(0,0,0,0.04)] relative overflow-hidden"
-                    >
-                      {/* Results Header */}
-                      <div className="p-6 md:p-10 border-b border-black/[0.03] bg-white/40 backdrop-blur-sm flex items-center justify-between shrink-0 relative z-10 flex-col sm:flex-row gap-4">
-                        <div className="flex-1">
-                          <h2 className="text-2xl font-extrabold text-foreground tracking-tight">
-                            Validated Kit Output
-                          </h2>
-                          <div className="flex items-center gap-3 mt-1">
-                            <div className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
-                            <span className="text-[9px] font-black text-[#86868B] uppercase tracking-[0.2em]">Risk Grade: {biasValidation?.risk_level || biasValidation?.riskLevel || "LOW"}</span>
-                          </div>
-                        </div>
-                        
-                        <div className="scale-75 sm:scale-50 sm:-mr-20 sm:-my-10">
-                           <BiasScoreCard 
-                             score={biasValidation?.overall_bias_score || biasValidation?.overallScore || 0} 
-                             type="kit"
-                           />
+                            Try again
+                          </button>
+                          <button
+                            onClick={() => router.push('/pricing')}
+                            className="text-xs font-medium border border-amber-300 text-amber-700 px-4 py-2 rounded-full hover:bg-amber-100 transition"
+                          >
+                            Upgrade for more quota →
+                          </button>
                         </div>
                       </div>
-
-                      {/* Results Scrollable Area */}
-                      <div className="flex-1 overflow-y-auto p-0 scrollbar-hide relative z-10">
-                        <ul className="divide-y divide-black/[0.03]">
-                          {kit.questions?.map((q: string, idx: number) => (
-                            <li key={idx} className="p-4 sm:p-6 md:p-8 hover:bg-white/40 backdrop-blur-[1px] transition-all flex gap-4 md:gap-8 group cursor-default items-start flex-col sm:flex-row">
-                              <div className="flex flex-col items-center min-w-[30px] md:min-w-[40px] pt-1">
-                                <span className="text-2xl md:text-[40px] font-black text-black tracking-tighter leading-none group-hover:scale-110 transition-transform">{idx + 1}</span>
-                              </div>
-                              <p className="text-base sm:text-lg md:text-xl text-foreground font-semibold leading-relaxed tracking-tight pt-1">
-                                <Typewriter text={q} speed={30} delay={idx * 500} />
-                              </p>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      {/* Quality Assurance Badge */}
-                      <div className="p-8 border-t border-black/[0.03] bg-white/60 backdrop-blur-md flex items-center gap-4 shrink-0 relative z-10">
-                        <div className="h-10 w-10 bg-success rounded-2xl flex items-center justify-center text-white shadow-lg shadow-success/20">
-                          <CheckCircle2 className="w-5 h-5" />
+                    ) : (
+                      <div className="text-center space-y-4 max-w-sm mx-auto">
+                        <div className="bg-destructive/10 text-destructive p-4 rounded-2xl border border-destructive/20 mb-4">
+                          <AlertCircle className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                          <h3 className="font-black text-xs uppercase tracking-widest mb-1">Generation Error</h3>
+                          <p className="text-xs font-bold opacity-80">{error}</p>
                         </div>
-                        <div className="flex flex-col">
-                          <span className="text-[10px] font-black text-success uppercase tracking-[0.1em]">Compliance Secured</span>
-                          <p className="text-xs font-bold text-[#86868B]">AI has neutralized linguistic bias patterns for this role kit.</p>
-                        </div>
+                        <Button 
+                          variant="outline" 
+                          onClick={handleGenerate}
+                          className="bg-white hover:bg-[#F5F5F7] border-black/[0.05] rounded-xl font-black text-[10px] uppercase tracking-widest px-8"
+                        >
+                          Retry Generation
+                        </Button>
                       </div>
-                    </HolographicCard>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                    )
+                  ) : (
+                    <>
+                      <div className="text-center mb-12 space-y-3">
+                        <h3 className="text-4xl font-extrabold text-[#1D1D1F] tracking-tight uppercase">How it works</h3>
+                        <p className="text-[#86868B] font-bold max-w-sm mx-auto leading-relaxed uppercase text-[11px] tracking-widest">Explore the core capabilities of the Rifair interview engine.</p>
+                      </div>
+                      <KitFeatureCards />
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
+        </>
+      )}
+      <BottomSheet
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        title="Monthly limit reached"
+      >
+        <div className="space-y-5">
+          <div className="flex justify-center">
+            <div className="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center border border-amber-100">
+              <span className="text-3xl">⚡</span>
+            </div>
+          </div>
+          <p className="text-center text-sm font-medium text-[#86868B] leading-relaxed">
+            {upgradeReason} Upgrade to continue generating without interruption.
+          </p>
+          <div className="space-y-2.5">
+            <button
+              onClick={() => router.push('/pricing')}
+              className="w-full bg-[#10b981] text-white py-4 rounded-2xl text-sm font-bold hover:bg-[#059669] transition-colors shadow-md active:scale-[0.98] flex items-center justify-center gap-2 min-h-[52px]"
+            >
+              View upgrade options <ArrowRight className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setShowUpgradeModal(false)}
+              className="w-full text-[#86868B] py-3 text-sm hover:text-[#424245] transition-colors font-medium min-h-[44px]"
+            >
+              Maybe later
+            </button>
+          </div>
+        </div>
+      </BottomSheet>
     </div>
   </div>
 );

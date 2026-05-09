@@ -24,6 +24,17 @@ export function safeParseReport(report: any) {
   if (!processed.categories.questions && Array.isArray(processed.flagged_phrases)) {
     processed.categories.questions = processed.flagged_phrases;
   }
+
+  // Unified report property access for kits and evaluations
+  if (processed.categories) {
+    if (processed.categories.analysis_type === "kit" && processed.categories.kit_data) {
+      processed.report = processed.categories.kit_data;
+    } else if (processed.categories.analysis_type === "evaluation" && processed.categories.evaluation_data) {
+      processed.report = processed.categories.evaluation_data;
+    } else {
+      processed.report = processed.categories;
+    }
+  }
   
   return processed;
 }

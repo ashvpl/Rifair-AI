@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Zap, AlertTriangle, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function SimulatePage() {
+  const { getToken } = useAuth();
   const [question, setQuestion] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [simulation, setSimulation] = useState<any>(null);
@@ -19,9 +21,13 @@ export default function SimulatePage() {
     setSimulation(null);
 
     try {
+      const token = await getToken();
       const response = await fetch("/api/simulate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify({ neutral_question: question }),
       });
 

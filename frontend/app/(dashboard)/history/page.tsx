@@ -8,36 +8,34 @@ import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { getVerdict } from "@/lib/verdict";
-import { 
-  ShieldCheck, 
-  Check, 
-  Trash2, 
-  Loader2, 
-  Calendar, 
-  ChevronRight, 
-  AlertTriangle 
+import {
+  ShieldCheck,
+  Check,
+  Trash2,
+  Loader2,
+  Calendar,
+  ChevronRight,
+  AlertTriangle,
+  Search,
 } from "lucide-react";
 import { cn, safeParseReport } from "@/lib/utils";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { BottomSheet } from "@/components/ui/BottomSheet";
+
+// ─── Types ─────────────────────────────────────────────────────────────────────
+type FilterType = "All" | "Analysis" | "JD Analysis" | "JD Generated" | "Kit" | "Evaluation" | "Kit Audit";
 
 export default function HistoryPage() {
   const { getToken, isLoaded, userId } = useAuth();
   const [history, setHistory] = useState<Record<string, any>[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showConfirmSheet, setShowConfirmSheet] = useState(false);
   const [targetId, setTargetId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeFilter, setActiveFilter] = useState<FilterType>("All");
 
   const fetchHistory = async () => {
     if (!isLoaded || !userId) return;
-    
     setIsLoading(true);
     try {
       const token = await getToken();
@@ -62,16 +60,16 @@ export default function HistoryPage() {
     e.preventDefault();
     e.stopPropagation();
     setTargetId(id);
-    setShowConfirmModal(true);
+    setShowConfirmSheet(true);
   };
 
   const confirmDelete = async () => {
     if (!targetId) return;
-
     const token = await getToken();
+
     if (targetId === "ALL") {
       setDeletingId("ALL");
-      setShowConfirmModal(false);
+      setShowConfirmSheet(false);
       try {
         await deleteReports(token);
         setHistory([]);
@@ -86,7 +84,7 @@ export default function HistoryPage() {
     }
 
     setDeletingId(targetId);
-    setShowConfirmModal(false);
+    setShowConfirmSheet(false);
     try {
       await deleteReportById(targetId, token);
       setHistory((prev) => prev.filter((r) => r.id !== targetId));
@@ -99,152 +97,286 @@ export default function HistoryPage() {
     }
   };
 
+  // ── Filtered + searched list ─────────────────────────────────────────────────
+  const filteredHistory = history.filter((report) => {
+    const isKit =
+      report.categories?.analysis_type === "kit" ||
+      report.input_text?.startsWith("Interview Kit: ");
+    const isEvaluation =
+      report.categories?.analysis_type === "evaluation" ||
+      report.input_text?.startsWith("Candidate Evaluation: ");
+    const isKitAudit =
+      report.categories?.analysis_type === "kit_audit" ||
+      report.input_text?.startsWith("Kit Audit: ");
+    const isJdAnalysis =
+      report.categories?.analysis_type === "jd_analysis" ||
+      report.input_text?.startsWith("JD Analysis");
+    const isJdGenerated =
+      report.categories?.analysis_type === "jd_generated" ||
+      report.input_text?.startsWith("JD Generated");
+    const isAnalysis = !isKit && !isEvaluation && !isKitAudit && !isJdAnalysis;
+
+    if (activeFilter === "Kit" && !isKit) return false;
+    if (activeFilter === "Analysis" && !isAnalysis) return false;
+    if (activeFilter === "JD Analysis" && !isJdAnalysis) return false;
+    if (activeFilter === "JD Generated" && !isJdGenerated) return false;
+    if (activeFilter === "Evaluation" && !isEvaluation) return false;
+    if (activeFilter === "Kit Audit" && !isKitAudit) return false;
+
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      return (
+        report.input_text?.toLowerCase().includes(q) ||
+        report.categories?.analysis_type?.toLowerCase().includes(q)
+      );
+    }
+
+    return true;
+  });
+
+  // ── Animation variants ───────────────────────────────────────────────────────
   const containerVariants = {
     hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 }
-    }
+    show: { opacity: 1, transition: { staggerChildren: 0.07 } },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    show: { opacity: 1, scale: 1, transition: { type: "spring" as const, stiffness: 300, damping: 24 } }
+    hidden: { opacity: 0, y: 16, scale: 0.97 },
+    show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring" as const, stiffness: 350, damping: 28 } },
   };
 
+  const filters: FilterType[] = ["All", "Analysis", "JD Analysis", "JD Generated", "Kit", "Evaluation", "Kit Audit"];
+
   return (
-    <div className="max-w-6xl mx-auto space-y-6 md:space-y-10 animate-in fade-in duration-1000 pb-4 pt-0">
-      
-      {/* Header section */}
-      <div className="relative">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 md:gap-8">
-          <div className="space-y-1">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-foreground tracking-tight">History</h1>
-            <p className="text-[#86868B] max-w-xl text-sm md:text-lg font-medium">
-              View and manage all your past bias analyses in one place.
-            </p>
+    <div className="max-w-6xl mx-auto animate-in fade-in duration-700 pb-4 pt-0">
+
+      {/* ── Page Header ──────────────────────────────────────────────────────── */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-3 mb-5">
+        <div className="space-y-0.5">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-foreground tracking-tight">
+            History
+          </h1>
+          <p className="text-[#86868B] text-sm md:text-base font-medium">
+            All your past bias analyses in one place.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.15em] text-[#86868B] bg-[#F5F5F7] px-3 py-1.5 rounded-full border border-black/[0.03] whitespace-nowrap">
+            {filteredHistory.length} / {history.length} reports
           </div>
-          <div className="flex items-center gap-2 md:gap-3">
-            <div className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.15em] text-[#86868B] bg-[#F5F5F7] px-3 md:px-4 py-1.5 md:py-2 rounded-full border border-black/[0.03]">
-              {history.length} Reports
-            </div>
-            {history.length > 0 && (
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-danger border-danger/10 bg-danger/5 hover:bg-danger/10 hover:border-danger/30 shadow-sm transition-all h-9 md:h-10 px-4 md:px-6 rounded-full font-bold text-xs md:text-sm"
-                onClick={() => {
-                  setTargetId("ALL");
-                  setShowConfirmModal(true);
-                }}
-                disabled={deletingId === "ALL"}
-              >
-                {deletingId === "ALL" ? (
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                ) : (
-                  <Trash2 className="h-4 w-4 mr-2" />
-                )}
-                Delete
-              </Button>
-            )}
-          </div>
+          {history.length > 0 && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-danger border-danger/10 bg-danger/5 hover:bg-danger/10 hover:border-danger/30 shadow-sm transition-all h-9 md:h-10 px-4 rounded-full font-bold text-xs"
+              onClick={() => {
+                setTargetId("ALL");
+                setShowConfirmSheet(true);
+              }}
+              disabled={deletingId === "ALL"}
+            >
+              {deletingId === "ALL" ? (
+                <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+              ) : (
+                <Trash2 className="h-3.5 w-3.5 mr-1.5" />
+              )}
+              Delete all
+            </Button>
+          )}
         </div>
       </div>
 
-      {isLoading ? (
-        <div className="flex justify-center py-48">
-          <div className="relative">
-            <div className="absolute inset-0 bg-primary/10 rounded-full blur-2xl animate-pulse"></div>
-            <Loader2 className="w-16 h-16 animate-spin text-primary relative z-10" />
-          </div>
+      {/* ── Sticky Search + Filter Bar ────────────────────────────────────── */}
+      <div className="sticky top-0 sticky-below-topbar z-20 bg-background/95 backdrop-blur-sm pt-1 pb-3 -mx-3 px-3 sm:-mx-4 sm:px-4 md:-mx-6 md:px-6 mb-4"
+      >
+        {/* Search input */}
+        <div className="relative mb-3">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#86868B] pointer-events-none" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search history..."
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-black/[0.08] bg-white text-sm font-medium placeholder:text-[#86868B] focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-black/20 transition-all"
+          />
         </div>
-      ) : history.length === 0 ? (
-        <motion.div 
+
+        {/* Filter chips */}
+        <div className="chip-row">
+          {filters.map((filter) => (
+            <button
+              key={filter}
+              onClick={() => setActiveFilter(filter)}
+              className={cn(
+                "px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all duration-150 min-h-[36px] touch-target",
+                activeFilter === filter
+                  ? "bg-[#1D1D1F] text-white shadow-sm"
+                  : "bg-white text-[#86868B] border border-black/[0.08] hover:border-black/[0.15] active:bg-[#F5F5F7]"
+              )}
+            >
+              {filter}
+              {filter === "All" && history.length > 0 && (
+                <span className={cn("ml-1.5 text-[10px]", activeFilter === "All" ? "text-white/60" : "text-[#86868B]/60")}>
+                  {history.length}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Content ──────────────────────────────────────────────────────────── */}
+      {isLoading ? (
+        /* Skeleton loading */
+        <div className="space-y-3">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="bg-white border border-black/[0.05] rounded-[1.5rem] p-4 md:p-6">
+              <div className="flex items-center gap-4">
+                <div className="skeleton h-4 w-3/5 rounded-lg" />
+                <div className="ml-auto skeleton h-6 w-16 rounded-full" />
+              </div>
+              <div className="skeleton h-3 w-2/5 rounded-lg mt-3" />
+            </div>
+          ))}
+        </div>
+      ) : filteredHistory.length === 0 ? (
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-[#F5F5F7]/30 border-2 border-dashed border-black/[0.05] p-12 md:p-24 text-center rounded-[2rem] md:rounded-[3rem]"
+          className="bg-[#F5F5F7]/30 border-2 border-dashed border-black/[0.05] p-10 md:p-20 text-center rounded-[2rem] md:rounded-[3rem]"
         >
-          <div className="space-y-8">
-            <div className="mx-auto h-24 w-24 bg-white rounded-full flex items-center justify-center border border-black/[0.03] shadow-[inset_0_4px_12px_rgba(0,0,0,0.01)]">
-              <Calendar className="h-10 w-10 text-black/10" />
+          <div className="space-y-6">
+            <div className="mx-auto h-20 w-20 bg-white rounded-full flex items-center justify-center border border-black/[0.03] shadow-inner">
+              <Calendar className="h-8 w-8 text-black/10" />
             </div>
-            <div className="space-y-2 md:space-y-3">
-              <h3 className="text-xl md:text-2xl font-extrabold text-foreground">Nothing here yet</h3>
+            <div className="space-y-2">
+              <h3 className="text-xl md:text-2xl font-extrabold text-foreground">
+                {searchQuery ? "No results found" : "Nothing here yet"}
+              </h3>
+              {searchQuery && (
+                <p className="text-[#86868B] text-sm font-medium">
+                  Try a different search term or clear the filter.
+                </p>
+              )}
             </div>
-            <Link href="/analyze" className="inline-flex items-center justify-center h-12 px-6 md:px-8 mt-6 rounded-full bg-black text-white font-bold hover:bg-black/90 transition-all shadow-lg active:scale-95 text-sm md:text-base">
-              Start Analysis <ChevronRight className="w-4 h-4 ml-1" />
-            </Link>
+            {!searchQuery && (
+              <Link
+                href="/analyze"
+                className="inline-flex items-center justify-center h-12 px-7 rounded-full bg-black text-white font-bold hover:bg-black/90 transition-all shadow-lg active:scale-95 text-sm"
+              >
+                Start Analysis <ChevronRight className="w-4 h-4 ml-1" />
+              </Link>
+            )}
           </div>
         </motion.div>
       ) : (
-        <motion.div 
+        <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="show"
-          className="grid gap-6"
+          className="space-y-3"
         >
           <AnimatePresence>
-            {history.map((report) => {
+            {filteredHistory.map((report) => {
               const typeInCategories = report.categories?.analysis_type;
-              const isKit = typeInCategories === 'kit' || report.input_text?.startsWith("Interview Kit: ");
-              const detailUrl = isKit ? `/kit?reportId=${report.id}` : `/analyze?reportId=${report.id}`;
-              const verdict = getVerdict(report.bias_score, isKit ? 'kit' : 'analysis');
-              
+              const isKit =
+                typeInCategories === "kit" ||
+                report.input_text?.startsWith("Interview Kit: ");
+              const isEvaluation =
+                typeInCategories === "evaluation" ||
+                report.input_text?.startsWith("Candidate Evaluation: ");
+              const isKitAudit =
+                typeInCategories === "kit_audit" ||
+                report.input_text?.startsWith("Kit Audit: ");
+              const isJdAnalysis =
+                typeInCategories === "jd_analysis" ||
+                report.input_text?.startsWith("JD Analysis");
+              const isJdGenerated =
+                typeInCategories === "jd_generated" ||
+                report.input_text?.startsWith("JD Generated");
+
+              const detailUrl = isKitAudit
+                ? `/kit/audit/${report.categories?.audit_id}`
+                : isKit
+                  ? `/kit?reportId=${report.id}`
+                  : isEvaluation
+                    ? `/evaluations/${report.id}`
+                    : isJdAnalysis || isJdGenerated
+                      ? `/jd/${report.id}`
+                      : `/analyze?reportId=${report.id}`;
+              const verdict = getVerdict(report.bias_score, isKit ? "kit" : "analysis");
+
               return (
-                <motion.div 
-                  key={report.id} 
+                <motion.div
+                  key={report.id}
                   variants={itemVariants}
-                  exit={{ opacity: 0, x: -20 }}
+                  exit={{ opacity: 0, x: -20, scale: 0.96 }}
                   layout
                 >
                   <Link href={detailUrl} className="block group">
-                    <div className="bg-white border border-black/[0.05] p-4 md:p-7 transition-all duration-500 rounded-[1.5rem] md:rounded-[2rem] shadow-[0_4px_24px_rgba(0,0,0,0.02)] group-hover:shadow-[0_8px_32px_rgba(0,0,0,0.06)] group-hover:border-primary/20 relative overflow-hidden">
-                      <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/[0.005] transition-colors" />
-                      
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-4 md:gap-8 relative z-10 w-full">
-                        <div className="flex-1 min-w-0">
-                          <h4 className="text-[#1D1D1F] font-bold truncate mb-2 md:mb-3 text-sm md:text-xl tracking-tight">
-                            &ldquo;{report.input_text?.slice(0, 60)}...&rdquo;
-                          </h4>
-                          <div className="flex items-center gap-2 flex-wrap text-xs font-bold text-[#86868B]">
-                            <span className="flex items-center gap-1.5 px-3 py-1 bg-[#F5F5F7] rounded-full border border-black/[0.02]">
-                              <Calendar className="h-3 w-3 opacity-40" />
-                              {report.created_at && !isNaN(new Date(report.created_at).getTime())
-                                ? format(new Date(report.created_at), "MMM d, yyyy")
-                                : "—"}
-                            </span>
-                            <div className={cn(
-                              "px-3 py-1 text-[10px] font-black uppercase tracking-[0.15em] flex items-center gap-2 rounded-full border shadow-sm",
-                              verdict.bg,
-                              verdict.color,
-                              verdict.border
-                            )}>
-                              {verdict.showCheck ? (
-                                <Check className="h-3 w-3" />
-                              ) : (
-                                <span className="opacity-70">{report.bias_score}</span>
-                              )}
-                              {verdict.label}
+                    <div className="card-pressable bg-white border border-black/[0.05] rounded-[1.5rem] p-4 md:p-6 shadow-[0_2px_16px_rgba(0,0,0,0.02)] group-hover:shadow-[0_6px_24px_rgba(0,0,0,0.06)] group-hover:border-primary/20 transition-all duration-300 relative overflow-hidden">
+                      <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/[0.005] transition-colors rounded-[1.5rem]" />
+
+                      <div className="relative z-10 flex flex-row items-center gap-3 md:gap-6 w-full">
+
+                        {/* Left: type dot + text */}
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <div className={cn(
+                            "w-2.5 h-2.5 rounded-full shrink-0",
+                            isKitAudit ? "bg-teal-400" : isKit ? "bg-purple-400" : isEvaluation ? "bg-indigo-500" : (isJdAnalysis || isJdGenerated) ? "bg-emerald-400" : "bg-blue-400"
+                          )} />
+                          <div className="min-w-0 flex-1">
+                            <h4 className="text-[#1D1D1F] font-bold truncate text-sm md:text-base tracking-tight">
+                              &ldquo;{report.input_text?.slice(0, 70)}
+                              {report.input_text?.length > 70 ? "…" : ""}&rdquo;
+                            </h4>
+                            <div className="flex items-center gap-2 flex-wrap mt-1.5">
+                              <span className="flex items-center gap-1.5 text-[10px] md:text-[11px] font-bold text-[#86868B]">
+                                <Calendar className="h-3 w-3 opacity-40" />
+                                {report.created_at && !isNaN(new Date(report.created_at).getTime())
+                                  ? format(new Date(report.created_at), "MMM d, yyyy")
+                                  : "—"}
+                              </span>
+                              <div className={cn(
+                                "px-2.5 py-0.5 text-[10px] font-black uppercase tracking-[0.12em] flex items-center gap-1.5 rounded-full border",
+                                verdict.bg,
+                                verdict.color,
+                                verdict.border
+                              )}>
+                                {verdict.showCheck ? (
+                                  <Check className="h-2.5 w-2.5" />
+                                ) : (
+                                  <span className="opacity-70">{report.bias_score}</span>
+                                )}
+                                {verdict.label}
+                              </div>
                             </div>
                           </div>
                         </div>
 
-                        {/* Delete button — always visible on mobile */}
-                        <div className="flex items-center gap-4 sm:gap-4 mt-2 sm:mt-0 sm:ml-auto md:ml-0">
-                          <button
-                            onClick={(e) => promptDelete(e, report.id)}
-                            disabled={deletingId === report.id}
-                            className="p-2 sm:p-2.5 md:p-3 text-[#86868B] hover:text-danger hover:bg-danger/5 border border-transparent hover:border-danger/10 rounded-xl md:rounded-2xl transition-all sm:opacity-0 sm:group-hover:opacity-100 disabled:opacity-50 shadow-sm bg-white relative z-20 min-h-[40px] md:min-h-[44px] min-w-[40px] md:min-w-[44px] flex items-center justify-center ml-auto"
-                            title="Delete Entry"
-                          >
-                            {deletingId === report.id ? (
-                              <Loader2 className="h-4 w-4 animate-spin" />
-                            ) : (
-                              <Trash2 className="h-4 w-4 md:h-5 md:w-5" />
-                            )}
-                          </button>
-                        </div>
-                        
+                        {/* Right: delete button — always visible on mobile */}
+                        <button
+                          onClick={(e) => promptDelete(e, report.id)}
+                          disabled={deletingId === report.id}
+                          className={cn(
+                            "flex-shrink-0 w-10 h-10 md:w-11 md:h-11 flex items-center justify-center",
+                            "text-[#86868B] hover:text-danger",
+                            "bg-white border border-transparent hover:border-danger/15 hover:bg-danger/5",
+                            "rounded-xl md:rounded-2xl transition-all active:scale-90",
+                            // On tablet/desktop: hide until hover on card
+                            "md:opacity-0 md:group-hover:opacity-100",
+                            "disabled:opacity-40 touch-target relative z-20"
+                          )}
+                          title="Delete"
+                          aria-label="Delete entry"
+                        >
+                          {deletingId === report.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="h-4 w-4" />
+                          )}
+                        </button>
                       </div>
                     </div>
                   </Link>
@@ -255,44 +387,45 @@ export default function HistoryPage() {
         </motion.div>
       )}
 
-      {/* Modernised Dialog */}
-      <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
-        <DialogContent className="sm:max-w-[440px] bg-white border border-black/[0.05] shadow-[0_32px_128px_rgba(0,0,0,0.1)] rounded-[3rem] p-0 overflow-hidden outline-none">
-          <div className="p-10">
-            <DialogHeader className="space-y-6">
-              <div className="mx-auto w-20 h-20 bg-danger/5 rounded-[2.25rem] flex items-center justify-center border border-danger/10">
-                <AlertTriangle className="h-10 w-10 text-danger" />
-              </div>
-              <div className="space-y-2">
-                <DialogTitle className="text-center text-3xl font-extrabold text-[#1D1D1F] tracking-tight">
-                  {targetId === "ALL" ? "Delete History?" : "Delete Entry?"}
-                </DialogTitle>
-                <DialogDescription className="text-center text-sm font-medium text-[#86868B] leading-relaxed px-4">
-                  {targetId === "ALL" 
-                    ? "Are you sure you want to delete all your history? This action cannot be undone."
-                    : "Are you sure you want to delete this entry? This action cannot be undone."}
-                </DialogDescription>
-              </div>
-            </DialogHeader>
-            <DialogFooter className="flex flex-col sm:flex-row gap-4 mt-10">
-              <Button
-                variant="outline"
-                className="flex-1 bg-[#F5F5F7] border-black/[0.03] text-foreground hover:bg-[#E8E8ED] h-14 rounded-full font-bold shadow-sm transition-all"
-                onClick={() => setShowConfirmModal(false)}
-              >
-                Keep it
-              </Button>
-              <Button
-                variant="default"
-                className="flex-1 bg-danger hover:bg-danger/90 text-white font-heavy border-none shadow-lg h-14 rounded-full font-extrabold transition-all active:scale-95"
-                onClick={confirmDelete}
-              >
-                Delete it
-              </Button>
-            </DialogFooter>
+      {/* ── Delete Confirm Bottom Sheet ───────────────────────────────────── */}
+      <BottomSheet
+        isOpen={showConfirmSheet}
+        onClose={() => setShowConfirmSheet(false)}
+        title={targetId === "ALL" ? "Delete all history?" : "Delete this entry?"}
+        disableBackdropClose={false}
+      >
+        <div className="space-y-5">
+          {/* Icon */}
+          <div className="flex justify-center">
+            <div className="w-16 h-16 bg-danger/8 rounded-[1.5rem] flex items-center justify-center border border-danger/12">
+              <AlertTriangle className="h-8 w-8 text-danger" />
+            </div>
           </div>
-        </DialogContent>
-      </Dialog>
+
+          {/* Description */}
+          <p className="text-center text-sm font-medium text-[#86868B] leading-relaxed">
+            {targetId === "ALL"
+              ? "This will permanently delete all your analysis history. This cannot be undone."
+              : "This will permanently delete this entry. This cannot be undone."}
+          </p>
+
+          {/* Actions */}
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            <button
+              className="flex-1 py-3.5 rounded-2xl bg-[#F5F5F7] border border-black/[0.05] text-[#1D1D1F] font-bold text-sm hover:bg-[#EBEBEB] transition-colors active:scale-95 min-h-[48px]"
+              onClick={() => setShowConfirmSheet(false)}
+            >
+              Keep it
+            </button>
+            <button
+              className="flex-1 py-3.5 rounded-2xl bg-danger text-white font-extrabold text-sm hover:bg-danger/90 transition-all active:scale-95 shadow-md min-h-[48px]"
+              onClick={confirmDelete}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </BottomSheet>
     </div>
   );
 }

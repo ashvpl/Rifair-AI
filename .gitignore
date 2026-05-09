@@ -1,46 +1,98 @@
-# Dependencies
-node_modules/
+# ============================================================
+# Rifair AI — Enterprise .gitignore
+# ============================================================
+# Zero-tolerance for secrets, keys, or credentials in version control.
+# Pre-commit hook also enforces this programmatically.
+# ============================================================
 
-# Backend test/scratch scripts (never commit these - may contain API keys)
+# ── Dependencies ─────────────────────────────────────────────
+node_modules/
+node_modules_backup/
+.pnp
+.pnp.js
+
+# ── Secrets & Credentials — NEVER COMMIT ────────────────────
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.p12
+*.crt
+*.pfx
+*.secret
+*.secrets
+credentials.json
+service-account.json
+*.keystore
+*.jks
+gcp-credentials.json
+firebase-adminsdk*.json
+
+# ── Database Dumps & Backups ─────────────────────────────────
+*.sql
+*.sqlite
+*.sqlite3
+*.db
+dump.rdb
+/backups/
+/dumps/
+*.backup
+*.bak
+
+# ── Debug & Logs ─────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+error_logs.txt
+test_log.txt
+dev_error.log
+dev_error_log.txt
+
+# ── Next.js ──────────────────────────────────────────────────
+.next/
+out/
+.next/cache/
+.next/analyze/
+
+# ── Build Output ─────────────────────────────────────────────
+build/
+dist/
+.turbo/
+
+# ── OS ───────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.DS_Store
+
+# ── Testing ──────────────────────────────────────────────────
+coverage/
+.nyc_output/
+
+# ── IDE ──────────────────────────────────────────────────────
+.vscode/settings.json
+.idea/
+
+# ── Backend scratch/test files ───────────────────────────────
 backend/test_*.js
 backend/tester*.js
 backend/list_models.js
 backend/scratch/
 backend/*.pid
-backend/test_log.txt
-.pnp
-.pnp.js
+backend/fix_sub.js
+backend/scratch_*.js
 
-# Testing
-coverage/
+# ── Frontend scratch/test files ──────────────────────────────
+frontend/test_*.js
+frontend/test_*.ts
+frontend/test-*.js
+frontend/test_adapter*.js
 
-# Next.js
-.next/
-out/
-
-# Production
-build/
-dist/
-
-# Misc
-.DS_Store
-*.pem
-
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Environment Variables — NEVER COMMIT ANY .env FILE
-.env
-.env.local
-.env.production
-.env.development
-.env.staging
-.env*.local
-backend/.env*
-frontend/.env*
-
-
-# Vercel
+# ── Vercel ───────────────────────────────────────────────────
 .vercel
+
+# ── TypeScript build info ────────────────────────────────────
+*.tsbuildinfo

@@ -4,7 +4,8 @@ const requireAuth = ClerkExpressRequireAuth();
 
 const authErrorHandler = (err, req, res, next) => {
   if (err.message === "Unauthenticated") {
-    return res.status(401).json({ error: "Unauthorized" });
+    console.error("Auth Middleware Rejected Request:", err);
+    return res.status(401).json({ error: "Backend Auth Middleware: Unauthorized" });
   }
   next(err);
 };

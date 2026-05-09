@@ -1,9 +1,12 @@
+import 'server-only';
+
 /**
  * Server-side environment variables
  */
 export const env = {
   BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5001",
   NODE_ENV: process.env.NODE_ENV || "development",
+  CRON_SECRET: process.env.CRON_SECRET,
 };
 
 /**
@@ -14,6 +17,7 @@ export const publicEnv = {
   NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL || "",
   NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || "",
+  NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || "https://rifair.in",
 };
 
 // Validation for production

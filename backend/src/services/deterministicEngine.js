@@ -1,5 +1,21 @@
 const { getFallback } = require("./fallback");
 
+// ─── TIER -1: CONTENT SAFETY (runs BEFORE all hiring-bias checks) ─────────
+// Catches sexual, profane, violent, and harassment content that the
+// hiring-bias keyword engine would score 0 on (because it has no such
+// vocabulary). A match here immediately returns score=100 and bypasses
+// all further analysis.
+const CONTENT_SAFETY_TERMS = [
+  // Sexual / explicit
+  { rx: /\b(dick|cock|pussy|vagina|penis|anus|anal|boob|breast|nipple|naked|nude|sex|sexual|sexy|fuck|fucking|fucked|bitch|slut|whore|porn|pornographic|masturbat|erection|orgasm|intercourse|blowjob|handjob|cum\b|cumshot|genitals?)\b/i, tag: "sexual_content" },
+  // Harassment / coercion phrases
+  { rx: /\b(in your mouth|take my|suck my|lick my|show me your|sleep with|have sex|hook up)\b/i, tag: "sexual_harassment" },
+  // Strong profanity
+  { rx: /\b(shit|ass\b|asshole|bastard|motherfucker|son of a bitch|cunt|piss off|damn you|go to hell)\b/i, tag: "profanity" },
+  // Violence / threats
+  { rx: /\b(kill you|hurt you|beat you|threaten|assault|attack you|rape|molest)\b/i, tag: "threatening_content" },
+];
+
 // ─── CRITICAL BIAS TERMS ──────────────────────────────────────────────
 // Any match = minimum score floor as specified. These take priority over
 // the regex tiers below. Phrases sorted longest-first to catch multi-word
@@ -37,6 +53,9 @@ const CRITICAL_BIAS_TERMS = [
   { phrase: "ninja",                       cat: "culture_coded",       floor: 55 },
   { phrase: "hustle",                      cat: "culture_coded",       floor: 60 },
   { phrase: "grind",                       cat: "culture_coded",       floor: 55 },
+  { phrase: "native place",                cat: "india_region",        floor: 75 },
+  { phrase: "home town",                   cat: "india_region",        floor: 70 },
+  { phrase: "mother tongue",               cat: "india_language",      floor: 75 },
 ];
 
 // Rewrite map for critical terms
@@ -95,8 +114,16 @@ const explanations = {
   work_life: "This question implies high-pressure expectations that may target specific demographics or caregivers. It creates a 'barrier to entry'.",
   socioeconomic: "This question uses financial or educational status as a proxy for talent. [DATASET INSIGHT]: Such inquiries often perpetuate historical pay gaps.",
   tone: "The phrasing uses doubting or coercive language which can be intimidating to candidates.",
-  health: "Asks about physical or mental capabilities which can be exclusionary to candidates with disabilities."
+  health: "Asks about physical or mental capabilities which can be exclusionary to candidates with disabilities.",
+  india_region: "This question targets a candidate's regional background, which is a common proxy for exclusion in localized hiring markets.",
+  india_language: "Mother tongue inquiries are often used to screen for cultural or regional 'fit' rather than technical proficiency."
 };
+
+const INDIA_BIAS_SIGNALS = [
+    { rx: /\b(native place|home town|caste|religion|mother tongue)\b/i, flag: "Regional/Cultural Exclusionist" },
+    { rx: /\b(married|children|husband's profession|family planning)\b/i, flag: "Marital/Gender Barrier" },
+    { rx: /\b(current ctc|previous salary|last drawn)\b/i, flag: "Pay Disparity Risk" }
+];
 
 function analyzeDeterministally(text) {
   let keywordScore = 0;
@@ -109,6 +136,28 @@ function analyzeDeterministally(text) {
   let criticalExplanation = null;
 
   const lowerText = text.toLowerCase();
+
+  // ── TIER -1: Content safety check (runs FIRST, highest priority) ───────────
+  // Catches sexual, profane, harassing, or threatening content that the
+  // hiring-bias engine would silently score as 0.
+  for (const { rx, tag } of CONTENT_SAFETY_TERMS) {
+    if (rx.test(text)) {
+      return {
+        original:           text,
+        keywordScore:       100,
+        structuralScore:    100,
+        bias_score:         100,
+        bias_types:         [tag, 'inappropriate_content'],
+        signals:            [],
+        explanation:        `This question contains ${tag.replace(/_/g, ' ')} and is completely inappropriate for a professional interview. It must be removed immediately.`,
+        improved_question:  'Please replace this question with a professional, job-relevant question.',
+        source:             'content_safety_engine',
+        confidence:         1.0,
+        india_flags:        [],
+        _content_safety_flag: true,
+      };
+    }
+  }
 
   // ── TIER 0: Critical phrase lookup (highest priority) ──────────────────
   // Longest phrases are listed first in CRITICAL_BIAS_TERMS, so multi-word
@@ -187,7 +236,8 @@ function analyzeDeterministally(text) {
       (primaryType ? (explanations[primaryType] || explanations.cultural) : "No obvious bias detected."),
     improved_question: criticalRewrite || getFallback({ bias_types }, text) || text,
     source: "deterministic_engine",
-    confidence: 0.82
+    confidence: 0.82,
+    india_flags: INDIA_BIAS_SIGNALS.filter(s => s.rx.test(text)).map(s => s.flag)
   };
 }
 

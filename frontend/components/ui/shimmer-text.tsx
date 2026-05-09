@@ -81,7 +81,7 @@ export function ShimmerText({
             backgroundClip: "text",
             backgroundRepeat: "no-repeat",
             backgroundSize: "50% 200%",
-          } as React.CSSProperties}
+          } as any}
           initial={{
             backgroundPositionX: "250%",
           }}

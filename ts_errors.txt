@@ -1,0 +1,81 @@
+app/(dashboard)/dashboard/page.tsx(297,21): error TS2322: Type '{ hidden: { opacity: number; y: number; }; show: { opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }; }' is not assignable to type 'Variants'.
+  Property 'show' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues$1 | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ type: string; stiffness: number; damping: number; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ type: string; stiffness: number; damping: number; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ type: string; stiffness: number; damping: number; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'type' are incompatible.
+                    Type 'string' is not assignable to type 'AnimationGeneratorType | undefined'.
+app/(dashboard)/dashboard/page.tsx(312,21): error TS2322: Type '{ hidden: { opacity: number; y: number; }; show: { opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }; }' is not assignable to type 'Variants'.
+  Property 'show' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues$1 | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ type: string; stiffness: number; damping: number; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ type: string; stiffness: number; damping: number; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ type: string; stiffness: number; damping: number; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'type' are incompatible.
+                    Type 'string' is not assignable to type 'AnimationGeneratorType | undefined'.
+app/(dashboard)/dashboard/page.tsx(342,21): error TS2322: Type '{ hidden: { opacity: number; y: number; }; show: { opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }; }' is not assignable to type 'Variants'.
+  Property 'show' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues$1 | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ type: string; stiffness: number; damping: number; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ type: string; stiffness: number; damping: number; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ type: string; stiffness: number; damping: number; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'type' are incompatible.
+                    Type 'string' is not assignable to type 'AnimationGeneratorType | undefined'.
+app/(dashboard)/dashboard/page.tsx(355,21): error TS2322: Type '{ hidden: { opacity: number; y: number; }; show: { opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }; }' is not assignable to type 'Variants'.
+  Property 'show' is incompatible with index signature.
+    Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }' is not assignable to type 'Variant'.
+      Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }' is not assignable to type 'TargetAndTransition'.
+        Type '{ opacity: number; y: number; transition: { type: string; stiffness: number; damping: number; }; }' is not assignable to type '{ transition?: Transition<any> | undefined; transitionEnd?: ResolvedValues$1 | undefined; }'.
+          Types of property 'transition' are incompatible.
+            Type '{ type: string; stiffness: number; damping: number; }' is not assignable to type 'Transition<any> | undefined'.
+              Type '{ type: string; stiffness: number; damping: number; }' is not assignable to type 'TransitionWithValueOverrides<any>'.
+                Type '{ type: string; stiffness: number; damping: number; }' is not assignable to type 'ValueAnimationTransition<any>'.
+                  Types of property 'type' are incompatible.
+                    Type 'string' is not assignable to type 'AnimationGeneratorType | undefined'.
+app/(dashboard)/settings/page.tsx(548,9): error TS2741: Property 'lite' is missing in type '{ free: string; starter: string; growth: string; enterprise: string; }' but required in type 'Record<PlanId, string>'.
+app/api/export/pdf/route.ts(129,33): error TS2345: Argument of type 'Buffer<ArrayBufferLike>' is not assignable to parameter of type 'BodyInit | null | undefined'.
+  Type 'Buffer<ArrayBufferLike>' is missing the following properties from type 'URLSearchParams': size, append, delete, get, and 2 more.
+components/kit-generator/KitDisplay.tsx(88,26): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+components/pdf/ExportButton.tsx(80,31): error TS2339: Property 'charAt' does not exist on type 'never'.
+components/pdf/ExportButton.tsx(80,62): error TS2339: Property 'slice' does not exist on type 'never'.
+components/pdf/RifairLogo.tsx(23,27): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(props: PropsWithChildren<TextProps> | SVGTextProps): Text', gave the following error.
+    Type '{ children: string; x: string; y: string; fontFamily: string; fontWeight: number; fontSize: string; fill: string; }' is not assignable to type 'IntrinsicAttributes & (IntrinsicClassAttributes<Text> & Readonly<PropsWithChildren<TextProps> | SVGTextProps>)'.
+      Property 'fontFamily' does not exist on type 'IntrinsicAttributes & (IntrinsicClassAttributes<Text> & Readonly<PropsWithChildren<TextProps> | SVGTextProps>)'.
+  Overload 2 of 2, '(props: PropsWithChildren<TextProps> | SVGTextProps, context: any): Text', gave the following error.
+    Type '{ children: string; x: string; y: string; fontFamily: string; fontWeight: number; fontSize: string; fill: string; }' is not assignable to type 'IntrinsicAttributes & (IntrinsicClassAttributes<Text> & Readonly<PropsWithChildren<TextProps> | SVGTextProps>)'.
+      Property 'fontFamily' does not exist on type 'IntrinsicAttributes & (IntrinsicClassAttributes<Text> & Readonly<PropsWithChildren<TextProps> | SVGTextProps>)'.
+components/pdf/RifairLogo.tsx(24,27): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(props: PropsWithChildren<TextProps> | SVGTextProps): Text', gave the following error.
+    Type '{ children: string; x: string; y: string; fontFamily: string; fontWeight: number; fontSize: string; fill: string; letterSpacing: number; }' is not assignable to type 'IntrinsicAttributes & (IntrinsicClassAttributes<Text> & Readonly<PropsWithChildren<TextProps> | SVGTextProps>)'.
+      Property 'fontFamily' does not exist on type 'IntrinsicAttributes & (IntrinsicClassAttributes<Text> & Readonly<PropsWithChildren<TextProps> | SVGTextProps>)'.
+  Overload 2 of 2, '(props: PropsWithChildren<TextProps> | SVGTextProps, context: any): Text', gave the following error.
+    Type '{ children: string; x: string; y: string; fontFamily: string; fontWeight: number; fontSize: string; fill: string; letterSpacing: number; }' is not assignable to type 'IntrinsicAttributes & (IntrinsicClassAttributes<Text> & Readonly<PropsWithChildren<TextProps> | SVGTextProps>)'.
+      Property 'fontFamily' does not exist on type 'IntrinsicAttributes & (IntrinsicClassAttributes<Text> & Readonly<PropsWithChildren<TextProps> | SVGTextProps>)'.
+components/pricing/FeatureGate.tsx(97,31): error TS2367: This comparison appears to be unintentional because the types '"free" | "lite"' and '"growth"' have no overlap.
+components/ui/animated-profile-card.tsx(192,19): error TS2540: Cannot assign to 'current' because it is a read-only property.
+components/ui/auth-fuse.tsx(183,11): error TS2339: Property 'isLoaded' does not exist on type 'SignInSignalValue'.
+components/ui/auth-fuse.tsx(183,29): error TS2339: Property 'setActive' does not exist on type 'SignInSignalValue'.
+components/ui/auth-fuse.tsx(203,18): error TS2339: Property 'status' does not exist on type '{ error: ClerkError | null; }'.
+components/ui/auth-fuse.tsx(204,43): error TS2339: Property 'createdSessionId' does not exist on type '{ error: ClerkError | null; }'.
+components/ui/auth-fuse.tsx(257,11): error TS2339: Property 'isLoaded' does not exist on type 'SignUpSignalValue'.
+components/ui/auth-fuse.tsx(257,29): error TS2339: Property 'setActive' does not exist on type 'SignUpSignalValue'.
+components/ui/auth-fuse.tsx(281,20): error TS2339: Property 'prepareEmailAddressVerification' does not exist on type 'SignUpFutureResource'.
+components/ui/dialog.tsx(69,17): error TS2322: Type '"icon-sm"' is not assignable to type '"lg" | "sm" | "default" | "icon" | null | undefined'.
+lib/abuse/detectRewriteAbuse.ts(36,8): error TS2551: Property 'catch' does not exist on type 'PostgrestFilterBuilder<any, any, any, null, "user_flags", unknown, "POST">'. Did you mean 'match'?
+lib/abuse/detectRewriteAbuse.ts(36,14): error TS7006: Parameter 'e' implicitly has an 'any' type.
+lib/pdf-v2/config/layout-rules.ts(29,3): error TS2739: Type '{ defaultOrientation: "portrait"; maxTableRowsPerPage: number; requiresTwoColumn: false; sectionOrder: string[]; density: "medium"; keepTogetherSelectors: string[]; specialRules: { highSeverityFinding: string; }; }' is missing the following properties from type 'LayoutRuleSet': chartMinHeight, chartMaxHeight
+lib/pdf-v2/config/layout-rules.ts(43,3): error TS2739: Type '{ defaultOrientation: "portrait"; maxTableRowsPerPage: number; requiresTwoColumn: false; sectionOrder: string[]; density: "medium"; keepTogetherSelectors: string[]; }' is missing the following properties from type 'LayoutRuleSet': chartMinHeight, chartMaxHeight
+lib/pdf-v2/config/layout-rules.ts(52,3): error TS2739: Type '{ defaultOrientation: "portrait"; maxTableRowsPerPage: number; requiresTwoColumn: true; sectionOrder: string[]; density: "low"; keepTogetherSelectors: string[]; specialRules: { recommendation: string; }; }' is missing the following properties from type 'LayoutRuleSet': chartMinHeight, chartMaxHeight
+lib/pdf-v2/normalization/normalizeComplianceAudit.ts(3,55): error TS2305: Module '"../types/report-schemas"' has no exported member 'AuditFinding'.
+lib/pdf-v2/types/report-schemas.ts(284,13): error TS2304: Cannot find name 'AuditFinding'.

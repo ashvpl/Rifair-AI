@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
+import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 import { BiasScoreCard } from "@/components/BiasScoreCard";
 import { RiskIndicator } from "@/components/RiskIndicator";
@@ -10,9 +11,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Calendar, Loader2, Info, ChevronRight, Share2, Download } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
+import { useSubscription } from "@/hooks/useSubscription";
+import ExportButton from "@/components/pdf/ExportButton";
 
-export default function ReportPage({ params }: { params: { id: string } }) {
+
+export default function ReportPage({ params }: { params: Promise<{ id: string }> }) {
+  const { getToken } = useAuth();
+  const { id } = use(params);
+  const { planId } = useSubscription();
   const [report, setReport] = useState<Record<string, any> | null>(null);
+
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -23,25 +31,26 @@ export default function ReportPage({ params }: { params: { id: string } }) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleExport = () => {
-    window.print();
-  };
 
   useEffect(() => {
-    fetch(`/api/report/${params.id}`)
-      .then((res) => {
+    (async () => {
+      try {
+        const token = await getToken();
+        const res = await fetch(`/api/report/${id}`, {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
         if (!res.ok) throw new Error("Report not found");
-        return res.json();
-      })
-      .then((data) => {
+        const data = await res.json();
         setReport(data.report);
-        setIsLoading(false);
-      })
-      .catch((err) => {
+      } catch (err: any) {
         setError(err.message);
+      } finally {
         setIsLoading(false);
-      });
-  }, [params.id]);
+      }
+    })();
+  }, [id, getToken]);
 
   if (isLoading) {
     return (
@@ -97,9 +106,12 @@ export default function ReportPage({ params }: { params: { id: string } }) {
           <Button variant="outline" size="sm" className="bg-white border-slate-200" onClick={handleShare}>
             <Share2 className="h-4 w-4 mr-2" /> {copied ? "Copied Link!" : "Share Link"}
           </Button>
-          <Button variant="outline" size="sm" className="bg-white border-slate-200" onClick={handleExport}>
-            <Download className="h-4 w-4 mr-2" /> Export PDF
-          </Button>
+          <ExportButton 
+            type="analysis" 
+            id={report.id} 
+            planTier={planId} 
+          />
+
         </div>
       </div>
 

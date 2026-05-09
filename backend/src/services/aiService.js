@@ -1,15 +1,40 @@
-const OpenAI = require("openai");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-require("dotenv").config();
+/**
+ * aiService.js
+ *
+ * Central AI service module.
+ *
+ * Architecture:
+ *   - CircuitBreaker   — prevents hammering a dead provider
+ *   - Key rotation     — cycles through multiple Gemini API keys on quota errors
+ *   - Provider cascade — Gemini → Grok → OpenAI
+ *   - Master prompts   — role/industry-aware prompts (analysisMasterPrompt, kitMasterPrompt)
+ *   - Quality gating   — AIGenerationPipeline validates output and retries on failure
+ *   - Cost optimizer   — model routing + caching
+ */
+
+"use strict";
+
+const OpenAI                             = require("openai");
+const { GoogleGenerativeAI }             = require("@google/generative-ai");
+const { secrets }                        = require("../core/secrets/secretManager");
+
+const { buildAnalysisPrompt }            = require("../prompts/analysisMasterPrompt");
+const { buildKitPrompt, validateKitQuality } = require("../prompts/kitMasterPrompt");
+const { AIGenerationPipeline }           = require("../quality/aiPipeline");
+const { getCachedAnalysis, setCachedAnalysis,
+        getCachedKit, setCachedKit,
+        estimateTokenCostINR }           = require("../cost/apiOptimizer");
+const { callAIWithFallback }             = require("../ai/universalCaller");
 
 // ─── Circuit Breaker ──────────────────────────────────────────────────────────
+
 class CircuitBreaker {
   constructor(failureThreshold = 3, recoveryTimeoutMs = 60000) {
-    this.failureThreshold = failureThreshold;
+    this.failureThreshold  = failureThreshold;
     this.recoveryTimeoutMs = recoveryTimeoutMs;
-    this.failures = 0;
-    this.state = "closed";
-    this.lastFailureTime = null;
+    this.failures          = 0;
+    this.state             = "closed";
+    this.lastFailureTime   = null;
   }
 
   async execute(action) {
@@ -22,9 +47,9 @@ class CircuitBreaker {
       }
     }
     try {
-      const result = await action();
+      const result  = await action();
       this.failures = 0;
-      this.state = "closed";
+      this.state    = "closed";
       return result;
     } catch (e) {
       this.failures++;
@@ -38,14 +63,9 @@ class CircuitBreaker {
 const aiBreaker = new CircuitBreaker(3, 60000);
 
 // ─── Key Rotation ─────────────────────────────────────────────────────────────
-// All available Gemini keys. Loaded once at startup from .env.
-// currentGeminiIndex persists in-process — once a key is exhausted it stays
-// at the next valid index until the process restarts or recovers.
-const GEMINI_KEYS = [
-  process.env.GEMINI_API_KEY,
-  process.env.GEMINI_API_KEY_SECONDARY,
-  process.env.GEMINI_API_KEY_TERTIARY,
-].filter(Boolean);
+
+// Gemini key pool — sourced exclusively via SecretManager
+const GEMINI_KEYS = secrets.getLegacyGeminiKeys();
 
 let currentGeminiIndex = 0;
 
@@ -60,6 +80,7 @@ function rotateGeminiKey() {
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
+
 async function withTimeout(promise, ms) {
   return Promise.race([
     promise,
@@ -73,58 +94,11 @@ function cleanJsonString(str) {
   return str.replace(/```json\n?|```\n?/g, "").trim();
 }
 
-// ─── Strict Bias Audit Prompt ─────────────────────────────────────────────────
-// This prompt is what the user specified must be used — never lenient.
-const STRICT_BIAS_PROMPT = `You are a strict hiring bias auditor with zero tolerance for discriminatory language.
-Your job is to find bias, not to clear questions.
+// ─── Low-level Gemini caller ──────────────────────────────────────────────────
+// Used by both the legacy pipeline AND the new master-prompt pipeline.
 
-BIAS CATEGORIES AND TRIGGER TERMS:
-- age_bias: "young", "energetic", "fresh", "dynamic", "fast-paced", "keep up", "digital native", "recent grad"
-- gender_bias: "male-dominated", "bro culture", "manpower", "guys", "he/she assumptions"
-- family_status: "family", "kids", "children", "planning to", "start a family", "pregnant", "spouse"
-- work_life_intrusion: "late nights", "nights and weekends", "always available", "24/7", "no boundaries"
-- culture_coded: "bro culture", "fraternity", "rockstar", "ninja", "hustle", "grind"
-- aggressive_framing: "aggressive enough", "tough enough", "can you handle", "survive"
-- background_bias: "background", "where are you from", "adapt here", "fit in here"
-
-SCORING RULES — FOLLOW EXACTLY:
-1. Score each question individually from 0-100
-2. If ANY critical term is present → minimum score of 65
-3. If question implies age preference → minimum 70
-4. If question implies gender context → minimum 75
-5. If question asks about family plans → minimum 85
-6. "bro culture" = gender bias, score minimum 75
-7. "male-dominated" = severe gender bias, score minimum 85
-8. "late nights regularly" = work-life intrusion, score minimum 60
-9. "young and energetic" = age bias, score minimum 80
-10. "planning to start a family" = family status discrimination, score minimum 90
-11. "background might make it hard" = background/origin bias, score minimum 80
-12. NEVER mark a question NEUTRAL if it contains any term from the categories above
-13. Overall score = weighted average. If 5+ questions are biased, overall minimum is 75
-
-REWRITE RULES:
-- Replace "aggressive enough to handle deadlines" → "How do you prioritize when multiple deadlines compete?"
-- Replace "fit into bro culture" → "How do you collaborate with diverse teams under pressure?"
-- Replace "late nights regularly" → "This role sometimes requires flexibility in hours. Are you able to meet those requirements?"
-- Replace "young and energetic" framing → focus on motivation and adaptability instead
-- Replace "male-dominated team" → remove entirely, ask about cross-functional collaboration
-- Replace "planning to start a family" → NEVER ask this. Rewrite as availability confirmation only
-- Replace "background might make it hard" → "What experience do you have adapting to new work environments?"
-
-Return ONLY a valid JSON object, no markdown, no explanation outside JSON:
-{
-  "results": [
-    {
-      "semantic_score": <0-100 integer, following scoring rules above>,
-      "bias_categories": ["<category from list above>"],
-      "reasoning": "<one sentence: what makes it biased and why it is legally/ethically problematic>",
-      "rewritten": "<completely rewritten version that assesses the same competency without any bias>"
-    }
-  ]
-}`;
-
-// ─── Gemini Call (with per-key retry) ────────────────────────────────────────
-async function callGeminiBatch(questionsTextList, timeoutMs = 10000) {
+async function callGeminiRaw(prompt, options = {}, timeoutMs = 15000) {
+  const temperature = options.temperature ?? 0.1;
   const attemptsMax = GEMINI_KEYS.length;
   let lastError;
 
@@ -137,15 +111,16 @@ async function callGeminiBatch(questionsTextList, timeoutMs = 10000) {
       const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({
         model: "gemini-2.0-flash",
-        generationConfig: { responseMimeType: "application/json", temperature: 0.1 },
+        generationConfig: {
+          responseMimeType: "application/json",
+          temperature,
+        },
       });
-      const prompt = `${STRICT_BIAS_PROMPT}\n\nQuestions to analyze:\n${JSON.stringify(questionsTextList)}`;
-      const result = await withTimeout(model.generateContent(prompt), timeoutMs);
+
+      const result  = await withTimeout(model.generateContent(prompt), timeoutMs);
       const rawText = (await result.response).text();
-      const parsed = JSON.parse(cleanJsonString(rawText));
-      if (!parsed.results) throw new Error("Missing 'results' key in Gemini response");
       console.log(`[GEMINI] Success with key index ${currentGeminiIndex}`);
-      return parsed;
+      return rawText;
     } catch (e) {
       const isQuotaError =
         e.message?.includes("429") ||
@@ -156,10 +131,9 @@ async function callGeminiBatch(questionsTextList, timeoutMs = 10000) {
       lastError = e;
 
       if (isQuotaError || e.message?.includes("timed out")) {
-        rotateGeminiKey(); // try next key
+        rotateGeminiKey();
       } else {
-        // Non-quota error (bad request, malformed JSON) — no point rotating
-        break;
+        break; // Non-quota error — no point rotating
       }
     }
   }
@@ -167,145 +141,262 @@ async function callGeminiBatch(questionsTextList, timeoutMs = 10000) {
   throw lastError || new Error("All Gemini keys exhausted");
 }
 
-// ─── Grok Call ────────────────────────────────────────────────────────────────
-async function callGrokBatch(questionsTextList, timeoutMs = 10000) {
-  if (!process.env.GROK_API_KEY) throw new Error("No Grok API key configured");
+// ─── Low-level Groq caller ───────────────────────────────────────────────────
+async function callGrokRaw(prompt, options = {}, timeoutMs = 15000) {
+  // Use PRIMARY key; ProviderRouter handles full fallback chain for new code
+  const groqKey = secrets.get('GROQ_API_KEY_PRIMARY');
+  if (!groqKey) throw new Error("No Groq API key configured");
 
   const openai = new OpenAI({
-    apiKey: process.env.GROK_API_KEY,
-    baseURL: "https://api.x.ai/v1",
+    apiKey:  groqKey,
+    baseURL: "https://api.groq.com/openai/v1",
   });
 
   const result = await withTimeout(
     openai.chat.completions.create({
-      model: "grok-3-mini",
+      model:           "llama-3.3-70b-versatile",
       response_format: { type: "json_object" },
-      temperature: 0.1,
+      temperature:     options.temperature ?? 0.1,
       messages: [
-        { role: "system", content: STRICT_BIAS_PROMPT },
-        { role: "user", content: `Questions to analyze:\n${JSON.stringify(questionsTextList)}` },
+        { role: "user", content: prompt },
       ],
     }),
     timeoutMs
   );
 
-  const parsed = JSON.parse(result.choices[0].message.content);
-  if (!parsed.results) throw new Error("Missing 'results' key in Grok response");
-  return parsed;
+  return result.choices[0].message.content;
 }
 
-// ─── OpenAI Call ──────────────────────────────────────────────────────────────
-async function callOpenAIBatch(questionsTextList, timeoutMs = 10000) {
-  if (!process.env.OPENAI_API_KEY) throw new Error("No OpenAI API key configured");
+// ─── Low-level OpenAI caller ──────────────────────────────────────────────────
+async function callOpenAIRaw(prompt, options = {}, timeoutMs = 15000) {
+  const openAIKey = secrets.get('OPENAI_API_KEY');
+  if (!openAIKey) throw new Error("No OpenAI API key configured");
 
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const openai = new OpenAI({ apiKey: openAIKey });
   const result = await withTimeout(
     openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model:           "gpt-4o-mini",
       response_format: { type: "json_object" },
-      temperature: 0.1,
+      temperature:     options.temperature ?? 0.1,
       messages: [
-        { role: "system", content: STRICT_BIAS_PROMPT },
-        { role: "user", content: `Questions to analyze:\n${JSON.stringify(questionsTextList)}` },
+        { role: "user", content: prompt },
       ],
     }),
     timeoutMs
   );
 
-  const parsed = JSON.parse(result.choices[0].message.content);
-  if (!parsed.results) throw new Error("Missing 'results' key in OpenAI response");
-  return parsed;
+  return result.choices[0].message.content;
 }
 
-// ─── Main batch entrypoint (with full provider cascade) ───────────────────────
-async function callAIBatch(sysPrompt, userPrompt) {
-  // Legacy interface — wrap into the new batch call
-  // This is called by batchAnalyzeOptimized below
-  throw new Error("Use batchAnalyzeOptimized directly");
-}
+// ─── Legacy alias helper (reads primary Groq key for cascade) ─────────────────
 
-async function batchAnalyzeOptimized(questionsTextList) {
-  const timeoutMs = 10000;
+// ─── Provider cascade wrapper ─────────────────────────────────────────────────
+// Tries Gemini → Grok → OpenAI in order, returns raw string.
 
+async function callWithCascade(prompt, options = {}) {
   return await aiBreaker.execute(async () => {
     let lastError;
 
-    // 1. Try Gemini with key rotation
     if (GEMINI_KEYS.length > 0) {
       try {
-        return await callGeminiBatch(questionsTextList, timeoutMs);
+        return await callGeminiRaw(prompt, options);
       } catch (e) {
-        console.error("[PIPELINE] All Gemini keys failed:", e.message);
+        console.error("[CASCADE] All Gemini keys failed");
         lastError = e;
       }
     }
 
-    // 2. Try Grok
-    if (process.env.GROK_API_KEY) {
+    const groqKey = secrets.get('GROQ_API_KEY_PRIMARY');
+    if (groqKey) {
       try {
-        console.log("[PIPELINE] Falling back to Grok...");
-        return await callGrokBatch(questionsTextList, timeoutMs);
+        console.log("[CASCADE] Falling back to Groq...");
+        return await callGrokRaw(prompt, options);
       } catch (e) {
-        console.error("[PIPELINE] Grok failed:", e.message);
+        console.error("[CASCADE] Groq failed");
         lastError = e;
       }
     }
 
-    // 3. Try OpenAI
-    if (process.env.OPENAI_API_KEY) {
+    const openAIKey = secrets.get('OPENAI_API_KEY');
+    if (openAIKey) {
       try {
-        console.log("[PIPELINE] Falling back to OpenAI...");
-        return await callOpenAIBatch(questionsTextList, timeoutMs);
+        console.log("[CASCADE] Falling back to OpenAI...");
+        return await callOpenAIRaw(prompt, options);
       } catch (e) {
-        console.error("[PIPELINE] OpenAI failed:", e.message);
+        console.error("[CASCADE] OpenAI failed");
         lastError = e;
       }
     }
 
-    throw lastError || new Error("All AI providers exhausted — using rule-based fallback");
+    throw lastError || new Error("AI_UNAVAILABLE");
   });
 }
 
-// ─── Kit generation (unchanged contract) ─────────────────────────────────────
-const { generateInterviewKit } = require("./fallback");
+// ─── Master Analysis ──────────────────────────────────────────────────────────
 
-async function generateKitOptimized(role, experience, company, goals) {
-  const grounded = generateInterviewKit(role, experience);
-  const examples = grounded?.categories ? Object.values(grounded.categories).flat().slice(0, 3) : [];
+/**
+ * Run the master analysis prompt for a list of question strings.
+ * Returns the rich new schema, plan-gated appropriately.
+ *
+ * @param {string[]} questions  - Individual question strings
+ * @param {object}   context    - { role, industry, company_type, country }
+ * @param {string}   planId     - User plan for gating
+ * @returns {object}            - Validated, plan-gated analysis result
+ */
+async function runMasterAnalysis(questions, context = {}, planId = "free") {
+  const prompt = buildAnalysisPrompt(questions, context);
 
-  const sysPrompt = `Generate a structured interview kit for a ${role} (${experience}) at ${company}.
-RULES:
-1. No questions about age, family, health, nationality, religion, or personal life. Focus only on demonstrated skills, past behavior, and problem-solving.
-2. Every question must require ${role} domain expertise.
-3. Use JSON only.
-SCHEMA:
-{
-  "role_summary": { "focus": "", "skills": [], "tasks": [] },
-  "questions": ["Specific Question 1", "Specific Question 2", "Specific Question 3", "Specific Question 4", "Specific Question 5"],
-  "rubric": [{ "skill": "", "criteria": "", "levels": { "basic": "", "good": "", "excellent": "" } }]
-}
-EXAMPLES: ${examples.join(" | ")}`;
+  const pipeline = new AIGenerationPipeline(
+    async (p, opts) => callAIWithFallback(p, opts)
+  );
 
-  const userPrompt = `Role: ${role}, Experience: ${experience}, Company: ${company}`;
+  const result = await pipeline.generateAnalysis(prompt, planId, {
+    temperature: 0.1,
+    maxTokens:   4000,
+  });
 
+  // Log estimated cost for observability (best-effort)
   try {
-    // For kit gen we use Gemini directly (no bias prompt needed)
-    const genAI = new GoogleGenerativeAI(getNextGeminiKey() || "");
-    const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
-      generationConfig: { responseMimeType: "application/json", temperature: 0.2 },
-    });
-    const result = await withTimeout(model.generateContent(`${sysPrompt}\n\nINPUT:\n${userPrompt}`), 10000);
-    const rawText = (await result.response).text();
-    return JSON.parse(cleanJsonString(rawText));
-  } catch (error) {
-    console.error("[KIT] AI generation failed:", error.message);
-    throw error;
-  }
+    const costINR = estimateTokenCostINR(prompt, JSON.stringify(result));
+    console.log(`[COST] Analysis estimated cost: ₹${costINR}`);
+  } catch (_) { /* non-critical */ }
+
+  return result;
 }
+
+// ─── Legacy batch entrypoint (for pipeline.js compatibility) ──────────────────
+
+/**
+ * Kept for backward compatibility with pipeline.js.
+ * Submits questions through the legacy strict-bias prompt path
+ * (now proxied through the master prompt when context is provided).
+ *
+ * @param {string[]} questionsTextList
+ * @param {object}   context            - Optional role context
+ * @returns {{ results: object[] }}     - Legacy format for pipeline.js
+ */
+async function batchAnalyzeOptimized(questionsTextList, context = {}) {
+  // Use master analysis prompt — richer output, backward-compatible fallback
+  const masterResult = await runMasterAnalysis(questionsTextList, context, "free");
+
+  // Map master schema → legacy schema that pipeline.js expects
+  const results = (masterResult.questions || []).map((q) => ({
+    semantic_score:   q.bias_score    || 0,
+    bias_categories:  q.bias_categories || [],
+    reasoning:        q.primary_issue || q.detailed_explanation || "",
+    rewritten:        q.rewritten     || "",
+    // carry through new fields so pipeline.js can attach them
+    _master:          q,
+  }));
+
+  return {
+    results,
+    // Pass through top-level fields for enhanced pipeline support
+    overall_score:        masterResult.overall_score,
+    overall_verdict:      masterResult.overall_verdict,
+    overall_summary:      masterResult.overall_summary,
+    hiring_health_report: masterResult.hiring_health_report,
+  };
+}
+
+// ─── Master Kit Generation ────────────────────────────────────────────────────
+
+/**
+ * Generate a structured interview kit using the master kit prompt.
+ *
+ * @param {string}   role
+ * @param {string}   experienceLevel
+ * @param {string}   companyType
+ * @param {string}   industry
+ * @param {string[]} specificSkills
+ * @param {string}   interviewRound
+ * @param {number}   count
+ * @param {string}   planId
+ * @returns {object}  - Validated, plan-gated kit
+ */
+async function generateKitOptimized(
+  role,
+  experienceLevel,
+  companyType,
+  industry        = "general",
+  specificSkills  = [],
+  interviewRound  = "general",
+  count           = 10,
+  planId          = "free",
+  constraints     = ""
+) {
+  // Check cache first
+  const cacheParams = { role, experienceLevel, companyType, industry, interviewRound, count, constraints };
+  const cached = getCachedKit(cacheParams);
+  if (cached) {
+    console.log("[KIT] Cache hit — returning cached kit");
+    return cached;
+  }
+
+  const prompt = buildKitPrompt(
+    role,
+    experienceLevel,
+    companyType,
+    industry,
+    specificSkills,
+    interviewRound,
+    count,
+    constraints
+  );
+
+  const pipeline = new AIGenerationPipeline(
+    async (p, opts) => callAIWithFallback(p, opts)
+  );
+
+  let kit = await pipeline.generateKit(prompt, planId, {
+    temperature: 0.4,   // needs creativity but consistency
+    maxTokens:   6000,
+  });
+
+  // ── Post-generation quality gate: catch banned patterns ──────────────
+  const qualityIssues = validateKitQuality(kit, role);
+  if (qualityIssues.length > 0) {
+    console.warn(`[KIT-QUALITY] ${qualityIssues.length} issues detected — retrying once:`,
+      qualityIssues);
+
+    const retryPrompt = prompt + `\n\n
+CRITICAL: Your previous response was REJECTED for these reasons:
+${qualityIssues.map((i) => `- ${i}`).join("\n")}
+Fix ALL of these issues. Do not repeat these patterns.`;
+
+    try {
+      kit = await pipeline.generateKit(retryPrompt, planId, {
+        temperature: 0.5,
+        maxTokens:   6000,
+      });
+    } catch (retryErr) {
+      console.error("[KIT-QUALITY] Retry failed, serving original:", retryErr.message);
+      // Fall through with original kit
+    }
+  }
+
+  // Cache only clean results
+  if (!kit.quality_warning) {
+    setCachedKit(cacheParams, kit);
+  }
+
+  // Log cost
+  try {
+    const costINR = estimateTokenCostINR(prompt, JSON.stringify(kit));
+    console.log(`[COST] Kit generation estimated cost: ₹${costINR}`);
+  } catch (_) { /* non-critical */ }
+
+  return kit;
+}
+
+// ─── Exports ──────────────────────────────────────────────────────────────────
 
 module.exports = {
-  callAIBatch,
   batchAnalyzeOptimized,
   generateKitOptimized,
+  runMasterAnalysis,
+  // Expose low-level cascade for direct use if needed
+  callWithCascade,
+  // Legacy export expected by older imports
+  callAIBatch: () => { throw new Error("Use batchAnalyzeOptimized directly"); },
 };
