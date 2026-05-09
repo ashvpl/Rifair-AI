@@ -12,13 +12,14 @@ export async function regenerateQuestion(data: {
 }) {
   const { role, experience, companyType, industry, originalQuestion, focus, exclude } = data;
 
-  const focusInstruction = focus ? {
+  const focusMap: Record<string, string> = {
     technical: 'Make this more technically deep and specific. Include implementation details.',
     behavioral: 'Make this more focused on past behavior and soft skills. Use STAR format.',
     simplified: 'Simplify the language. Shorter, clearer, more direct.',
     probing: 'Add a natural follow-up probe that digs deeper into the answer.',
     role_specific: `Make this highly specific to ${role} at ${companyType} in ${industry}.`
-  }[focus as keyof typeof focus] || '' : 'Generate a fresh variation that tests the same competency but from a different angle.';
+  };
+  const focusInstruction = focus ? focusMap[focus] || '' : 'Generate a fresh variation that tests the same competency but from a different angle.';
 
   const prompt = `You are an expert interviewer regenerating a question for a ${role} position (${experience} years experience, ${companyType}, ${industry}).
 

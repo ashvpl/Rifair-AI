@@ -4,7 +4,7 @@ import { AIGateway } from '../core/ai/aiGateway';
 import { analyzeBias } from '../core/ai/tasks/biasAnalysis';
 import { regenerateQuestion } from '../core/ai/tasks/kitRegen';
 import { rewriteQuestion } from '../core/ai/tasks/rewriteQuestion';
-import { AI_ERRORS, SAFE_ERROR_MESSAGES } from '../../../shared/constants/errors';
+import { AI_ERRORS, SAFE_ERROR_MESSAGES } from '../constants/errors';
 
 const router = Router();
 
@@ -81,7 +81,7 @@ router.post('/analyze', async (req: Request, res: Response) => {
   }
 
   try {
-    const analysis = await analyzeBias(text, hints);
+    const analysis = await analyzeBias(text, hints as string[] | undefined);
     res.json({ success: true, ...analysis });
   } catch (err: unknown) {
     console.error('[/analyze] Analysis failed');

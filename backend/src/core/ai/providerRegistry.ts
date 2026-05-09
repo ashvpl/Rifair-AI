@@ -57,7 +57,7 @@ class ProviderRegistry {
     });
 
     // Legacy openai / claude slots (optional)
-    const s = secrets.getAll ? undefined : undefined; // not exposing getAll
+    // Legacy openai / claude slots (optional)
     const openaiKey = secrets.get('OPENAI_API_KEY');
     const claudeKey = secrets.get('ANTHROPIC_API_KEY');
 

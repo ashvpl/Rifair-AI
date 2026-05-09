@@ -1,6 +1,6 @@
 import 'server-only';
 import { ProviderRouter, type AICallOptions } from './router/providerRouter';
-import { AI_ERRORS, SAFE_ERROR_MESSAGES } from '../../../shared/constants/errors';
+import { AI_ERRORS, SAFE_ERROR_MESSAGES } from '../../constants/errors';
 
 // ─── Re-export options type for callers ──────────────────────────────────────
 
