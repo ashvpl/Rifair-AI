@@ -1,4 +1,4 @@
-import 'server-only';
+
 import { env, type Env } from '../config/env';
 
 // ─── Types ───────────────────────────────────────────────────────────────────

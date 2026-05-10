@@ -1,5 +1,5 @@
 import { AIGateway } from '../aiGateway';
-import 'server-only';
+
 
 export async function rewriteQuestion(data: {
   question: string;

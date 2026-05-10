@@ -1,4 +1,4 @@
-import 'server-only';
+
 import { secrets } from '../secrets/secretManager';
 
 /**

@@ -1,5 +1,5 @@
 import { AIGateway } from '../aiGateway';
-import 'server-only';
+
 
 const SYSTEM_PROMPT = `You are an AI system designed to deeply detect bias in interview questions.
 DO NOT rely on keywords. Instead, analyze:

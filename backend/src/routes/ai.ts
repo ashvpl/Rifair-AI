@@ -1,5 +1,5 @@
 import { Router, type Request, type Response } from 'express';
-import 'server-only';
+
 import { AIGateway } from '../core/ai/aiGateway';
 import { analyzeBias } from '../core/ai/tasks/biasAnalysis';
 import { regenerateQuestion } from '../core/ai/tasks/kitRegen';
