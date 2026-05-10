@@ -1,3 +1,5 @@
+// ─── Load .env FIRST — must be before any import that reads process.env ────────────
+import 'dotenv/config';
 
 import express from 'express';
 import cors from 'cors';

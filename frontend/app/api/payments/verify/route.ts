@@ -16,6 +16,10 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     const token = await getToken()
 
+    if (!token) {
+      return NextResponse.json({ error: 'Session expired. Please sign in again.' }, { status: 401 })
+    }
+
     const response = await fetch(`${BACKEND_URL}/api/payments/verify`, {
       method: 'POST',
       headers: {
