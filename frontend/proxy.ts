@@ -20,7 +20,7 @@ const isPublicRoute = createRouteMatcher([
 ]);
 
 // 2. Main Proxy Handler
-export default clerkMiddleware((auth, req) => {
+export default clerkMiddleware(async (auth, req) => {
   const { pathname } = req.nextUrl;
   
   // Production-safe diagnostic logging
@@ -36,7 +36,8 @@ export default clerkMiddleware((auth, req) => {
   if (!isPublicRoute(req)) {
     console.log(`[CLERK_PROXY] Protecting route: ${pathname}`);
     // This will redirect to sign-in automatically if unauthorized
-    auth().protect();
+    // Note: auth() is async in recent Clerk versions
+    await auth().protect();
   }
 
   return NextResponse.next();
