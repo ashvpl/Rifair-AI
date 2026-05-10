@@ -5,6 +5,9 @@ import { analyzeBias } from '../core/ai/tasks/biasAnalysis';
 import { regenerateQuestion } from '../core/ai/tasks/kitRegen';
 import { rewriteQuestion } from '../core/ai/tasks/rewriteQuestion';
 import { AI_ERRORS, SAFE_ERROR_MESSAGES } from '../constants/errors';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { requireAuth } = require('../middleware/auth');
+
 
 const router = Router();
 
@@ -33,7 +36,7 @@ function safeErrorResponse(res: Response, err: unknown): void {
  * POST /api/ai/simulate
  * Bias simulation — generates biased variants of a neutral question.
  */
-router.post('/simulate', async (req: Request, res: Response) => {
+router.post('/simulate', requireAuth, async (req: Request, res: Response) => {
   const { neutral_question } = req.body as { neutral_question?: string };
 
   if (!neutral_question?.trim()) {
@@ -73,7 +76,7 @@ Return strict JSON only:
  * POST /api/ai/analyze
  * Bias analysis gateway.
  */
-router.post('/analyze', async (req: Request, res: Response) => {
+router.post('/analyze', requireAuth, async (req: Request, res: Response) => {
   const { text, hints } = req.body as { text?: string; hints?: unknown };
 
   if (!text?.trim()) {
@@ -93,7 +96,7 @@ router.post('/analyze', async (req: Request, res: Response) => {
  * POST /api/ai/kit/regenerate-question
  * Kit question regeneration.
  */
-router.post('/kit/regenerate-question', async (req: Request, res: Response) => {
+router.post('/kit/regenerate-question', requireAuth, async (req: Request, res: Response) => {
   try {
     const result = await regenerateQuestion(req.body);
     res.json({ success: true, ...result });
@@ -107,7 +110,7 @@ router.post('/kit/regenerate-question', async (req: Request, res: Response) => {
  * POST /api/ai/rewrite-question
  * Question rewrite gateway.
  */
-router.post('/rewrite-question', async (req: Request, res: Response) => {
+router.post('/rewrite-question', requireAuth, async (req: Request, res: Response) => {
   try {
     const result = await rewriteQuestion(req.body);
     res.json({ success: true, ...result });
@@ -122,7 +125,7 @@ router.post('/rewrite-question', async (req: Request, res: Response) => {
  * Internal health endpoint — returns provider status summary.
  * Must be protected by auth middleware in production.
  */
-router.get('/health', (_req: Request, res: Response) => {
+router.get('/health', requireAuth, (_req: Request, res: Response) => {
   const summary = AIGateway.getHealthSummary();
   res.json({ success: true, providers: summary });
 });

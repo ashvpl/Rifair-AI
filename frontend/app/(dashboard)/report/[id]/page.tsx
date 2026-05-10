@@ -35,7 +35,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
   useEffect(() => {
     (async () => {
       try {
-        const token = await getToken();
+        const token = await getToken({ template: "backend" });
         const res = await fetch(`/api/report/${id}`, {
           headers: {
             "Authorization": `Bearer ${token}`

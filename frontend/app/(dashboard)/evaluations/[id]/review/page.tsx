@@ -21,7 +21,7 @@ export default function CustomEvalReviewPage({ params }: { params: Promise<{ id:
       if (!isLoaded || !userId) return;
       setIsLoading(true);
       try {
-        const token = await getToken();
+        const token = await getToken({ template: "backend" });
         const res = await fetch(`/api/custom-eval/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });

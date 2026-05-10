@@ -30,7 +30,7 @@ export function BiasDnaPanel() {
     const fetch = async () => {
       setLoading(true);
       try {
-        const token = await getToken();
+        const token = await getToken({ template: "backend" });
         const result = await getBiasDna(token);
         setData(result);
       } catch (e) {

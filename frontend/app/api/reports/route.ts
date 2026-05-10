@@ -11,7 +11,7 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const token = await getToken();
+    const token = await getToken({ template: "backend" });
     
     console.log(`[Proxy] Fetching reports from: ${BACKEND_URL}/api/reports`);
 
@@ -57,7 +57,7 @@ export async function DELETE() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const token = await getToken();
+    const token = await getToken({ template: "backend" });
 
     console.log(`[Proxy] Deleting all reports via: ${BACKEND_URL}/api/reports`);
 

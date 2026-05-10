@@ -38,7 +38,7 @@ export default function EvaluationsPage() {
       if (!isLoaded || !userId) return;
       setIsLoading(true);
       try {
-        const token = await getToken();
+        const token = await getToken({ template: "backend" });
         const data = await getReports(token);
         if (Array.isArray(data)) {
           const parsed = data.map(safeParseReport);

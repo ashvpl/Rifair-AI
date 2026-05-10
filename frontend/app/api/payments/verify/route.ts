@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json()
-    const token = await getToken()
+    const token = await getToken({ template: 'backend' })
 
     if (!token) {
       return NextResponse.json({ error: 'Session expired. Please sign in again.' }, { status: 401 })

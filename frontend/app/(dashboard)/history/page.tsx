@@ -38,7 +38,7 @@ export default function HistoryPage() {
     if (!isLoaded || !userId) return;
     setIsLoading(true);
     try {
-      const token = await getToken();
+      const token = await getToken({ template: "backend" });
       const data = await getReports(token);
       if (Array.isArray(data)) {
         setHistory(data.map(safeParseReport));
@@ -65,7 +65,7 @@ export default function HistoryPage() {
 
   const confirmDelete = async () => {
     if (!targetId) return;
-    const token = await getToken();
+    const token = await getToken({ template: "backend" });
 
     if (targetId === "ALL") {
       setDeletingId("ALL");

@@ -63,6 +63,15 @@ const requireAuth = (req, res, next) => {
 
     // Success
     console.log(`[AUTH DEBUG] Success: User ${auth.userId} authenticated for ${req.originalUrl}`);
+    
+    // Log custom claims from the 'backend' template if present
+    if (auth.claims) {
+      const { email, first_name, last_name } = auth.claims;
+      if (email || first_name || last_name) {
+        console.log(`[AUTH DEBUG] Template 'backend' detected. Identity: ${first_name || ''} ${last_name || ''} <${email || 'no-email'}>`);
+      }
+    }
+
     next();
   });
 };

@@ -15,7 +15,7 @@ export async function GET(
     }
 
     const { id } = await params;
-    const token = await getToken();
+    const token = await getToken({ template: "backend" });
     console.log(`[Proxy] Fetching report ${id} from: ${BACKEND_URL}/api/reports/${id}`);
 
     const response = await fetch(`${BACKEND_URL}/api/reports/${id}`, {
@@ -52,7 +52,7 @@ export async function DELETE(
     }
 
     const { id } = await params;
-    const token = await getToken();
+    const token = await getToken({ template: "backend" });
     console.log(`[Proxy] Deleting report ${id} via: ${BACKEND_URL}/api/reports/${id}`);
 
     const response = await fetch(`${BACKEND_URL}/api/reports/${id}`, {
@@ -88,7 +88,7 @@ export async function PATCH(
 
     const { id } = await params;
     const body = await req.json();
-    const token = await getToken();
+    const token = await getToken({ template: "backend" });
 
     const response = await fetch(`${BACKEND_URL}/api/reports/${id}`, {
       method: "PATCH",

@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     }
 
     const body  = await req.json();
-    const token = await getToken();
+    const token = await getToken({ template: "backend" });
 
     const response = await fetch(`${BACKEND_URL}/api/custom-eval`, {
       method:  "POST",

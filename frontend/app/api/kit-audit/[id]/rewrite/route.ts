@@ -20,7 +20,7 @@ export async function POST(
     }
 
     const body  = await req.json();
-    const token = await getToken();
+    const token = await getToken({ template: "backend" });
     const { id } = await params;
 
     const response = await fetch(`${BACKEND_URL}/api/kit-audit/${id}/rewrite`, {

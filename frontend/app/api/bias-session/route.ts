@@ -11,7 +11,7 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const token = await getToken();
+    const token = await getToken({ template: "backend" });
     
     console.log(`[Proxy] Fetching bias session from: ${BACKEND_URL}/api/bias-session`);
 

@@ -35,7 +35,7 @@ export default function DashboardPage() {
     const fetchDashboardHistory = async () => {
       if (!isLoaded || !userId) return;
       try {
-        const token = await getToken();
+        const token = await getToken({ template: "backend" });
         const data = await getReports(token);
         const parsedData = Array.isArray(data) ? data.map(safeParseReport) : [];
         setHistory(parsedData);

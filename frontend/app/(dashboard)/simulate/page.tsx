@@ -21,7 +21,7 @@ export default function SimulatePage() {
     setSimulation(null);
 
     try {
-      const token = await getToken();
+      const token = await getToken({ template: "backend" });
       const response = await fetch("/api/simulate", {
         method: "POST",
         headers: { 

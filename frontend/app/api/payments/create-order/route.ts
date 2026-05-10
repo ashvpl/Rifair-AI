@@ -15,12 +15,12 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json()
-    const token = await getToken()
+    const token = await getToken({ template: 'backend' })
 
     console.log(`[PROXY] Creating order for user: ${userId}`);
     console.log(`[PROXY] Token present: ${!!token} (length: ${token?.length || 0})`);
 
-    // getToken() returns null when the session is stale/expired
+    // getToken({ template: "backend" }) returns null when the session is stale/expired
     // Sending "Bearer null" causes Clerk on the backend to reject with Unauthenticated
     if (!token) {
       console.error('[PROXY] No token found — session might be expired');

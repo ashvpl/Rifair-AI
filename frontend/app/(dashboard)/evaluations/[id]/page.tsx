@@ -39,7 +39,7 @@ export default function EvaluationReportPage({ params }: { params: Promise<{ id:
       if (!isLoaded || !userId) return;
       setIsLoading(true);
       try {
-        const token = await getToken();
+        const token = await getToken({ template: "backend" });
         const data = await getReportById(id, token);
         if (data.report) {
           setReport(safeParseReport(data.report));

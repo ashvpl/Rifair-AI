@@ -17,7 +17,7 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const token = await getToken();
+    const token = await getToken({ template: "backend" });
     const { id } = await params;
 
     const response = await fetch(`${BACKEND_URL}/api/kit-audit/${id}`, {

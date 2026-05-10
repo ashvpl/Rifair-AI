@@ -37,7 +37,7 @@ export function useSubscription(): SubscriptionState {
 
     try {
       setError(null)
-      const token = await getToken()
+      const token = await getToken({ template: "backend" })
       
       const res = await fetch(`/api/subscription?t=${Date.now()}`, {
         headers: {

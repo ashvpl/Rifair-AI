@@ -51,7 +51,7 @@ export default function KitGeneratorPage() {
       if (!reportId) return;
       setIsLoading(true);
       try {
-        const token = await getToken();
+        const token = await getToken({ template: "backend" });
         const data = await getReportById(reportId, token);
         let fetchedReport = data.report;
 
@@ -97,7 +97,7 @@ export default function KitGeneratorPage() {
     setKit(null);
 
     try {
-      const token = await getToken();
+      const token = await getToken({ template: "backend" });
       const data = await generateKit(formData, token);
       const kitData = data.kit || {};
       if (data.reportId) {

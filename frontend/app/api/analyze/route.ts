@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Input text is too short" }, { status: 400 });
     }
 
-    const token = await getToken();
+    const token = await getToken({ template: "backend" });
 
     // ── Layer 3: Fetch personalisation adjustments (non-blocking on failure) ──
     const adjustments = await getPersonalisedPromptAdjustments(userId);
