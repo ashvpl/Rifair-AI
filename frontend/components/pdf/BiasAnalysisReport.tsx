@@ -1,10 +1,11 @@
 import { Document, Page, View, Text } from '@react-pdf/renderer';
 import { RifairLogo } from './RifairLogo';
 import { styles, colors, type, spacing } from '@/lib/pdf/design-system';
+import { BiasAnalysisData, BiasIssue } from '@/lib/pdf/types';
 
-export const BiasAnalysisReport = ({ data, logoSrc }: { data: any, logoSrc?: string }) => {
+export const BiasAnalysisReport = ({ data, logoSrc }: { data: BiasAnalysisData, logoSrc?: string }) => {
   // Filter real bias issues (exclude "LACK OF INFORMATION" and placeholders)
-  const realIssues = (data.issues || []).filter((issue: any) => {
+  const realIssues = (data.issues || []).filter((issue: BiasIssue) => {
     const hasContent = issue.explanation && !issue.explanation.includes('[Insert');
     const isRealBias = issue.tag !== 'LACK_OF_INFORMATION' && issue.score > 30;
     return hasContent && isRealBias;

@@ -1,11 +1,12 @@
 import { Document, Page, View, Text } from '@react-pdf/renderer';
 import { RifairLogo } from './RifairLogo';
 import { styles, colors, type, spacing } from '@/lib/pdf/design-system';
+import { KitAuditData, BiasIssue } from '@/lib/pdf/types';
 
-export const KitAuditReport = ({ data, logoSrc }: { data: any, logoSrc?: string }) => {
+export const KitAuditReport = ({ data, logoSrc }: { data: KitAuditData, logoSrc?: string }) => {
   if (!data) return null;
 
-  const d = data || {};
+  const d = data;
   const issues = Array.isArray(d.issues) ? d.issues : [];
   const score = typeof d.score === 'number' ? d.score : 0;
   const scoreColor = score > 70 ? colors.danger : score > 40 ? colors.warning : colors.success;

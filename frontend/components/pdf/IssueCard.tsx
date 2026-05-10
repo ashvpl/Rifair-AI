@@ -1,5 +1,5 @@
 import { View, Text } from '@react-pdf/renderer';
-import { styles, colors } from '@/lib/pdf/styles';
+import { styles, colors, type, spacing } from '@/lib/pdf/design-system';
 
 export const IssueCard = ({ 
   severity, 
@@ -12,32 +12,41 @@ export const IssueCard = ({
   description: string;
   rewrite?: string;
 }) => {
-  const statusStyle = severity === 'high' ? styles.statusDanger : 
-                      severity === 'medium' ? styles.statusWarning : styles.statusGood;
+  const isHigh = severity === 'high';
+  const isMedium = severity === 'medium';
+  
+  const scoreColor = isHigh ? colors.danger : isMedium ? colors.warning : colors.success;
+  const scoreBg = isHigh ? colors.dangerBg : isMedium ? colors.warningBg : colors.successBg;
   
   return (
-    <View style={statusStyle}>
-      <View style={[styles.row, { marginBottom: 4 }]}>
+    <View style={{
+      marginBottom: spacing.md,
+      padding: spacing.md,
+      borderLeftWidth: 3,
+      borderLeftColor: scoreColor,
+      backgroundColor: scoreBg,
+    }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
         <Text style={{ 
           fontSize: 7, 
           fontWeight: 700, 
-          color: severity === 'high' ? colors.danger : severity === 'medium' ? colors.warning : colors.success,
+          color: scoreColor,
           textTransform: 'uppercase',
           letterSpacing: 0.5,
         }}>
           {severity} Severity
         </Text>
-        <Text style={{ fontSize: 7, color: colors.textMuted, marginLeft: 6 }}>
+        <Text style={{ fontSize: 7, color: colors.silver, marginLeft: 6 }}>
           {tag.replace(/_/g, ' ').toUpperCase()}
         </Text>
       </View>
-      <Text style={{ fontSize: 9.5, color: colors.text, marginBottom: rewrite ? 6 : 0, lineHeight: 1.3 }}>
+      <Text style={{ ...type.bodySmall, color: colors.ink, marginBottom: rewrite ? 6 : 0 }}>
         {description}
       </Text>
       {rewrite && (
-        <View style={{ marginTop: 4, paddingTop: 4, borderTopWidth: 1, borderTopColor: colors.border, opacity: 0.8 }}>
-          <Text style={{ fontSize: 7, color: colors.textMuted, marginBottom: 2 }}>SUGGESTED REWRITE</Text>
-          <Text style={{ fontSize: 9.5, color: colors.primary, fontStyle: 'italic' }}>{rewrite}</Text>
+        <View style={{ marginTop: 4, paddingTop: 4, borderTopWidth: 0.5, borderTopColor: colors.silver, opacity: 0.8 }}>
+          <Text style={{ ...type.caption, fontSize: 7, marginBottom: 2 }}>SUGGESTED REWRITE</Text>
+          <Text style={{ ...type.bodySmall, color: colors.mint, fontStyle: 'italic' }}>{rewrite}</Text>
         </View>
       )}
     </View>

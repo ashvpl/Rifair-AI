@@ -1,8 +1,9 @@
 import { Document, Page, View, Text } from '@react-pdf/renderer';
 import { RifairLogo } from './RifairLogo';
 import { styles, colors, type, spacing } from '@/lib/pdf/design-system';
+import { InterviewKitData } from '@/lib/pdf/types';
 
-export const InterviewKitReport = ({ data, logoSrc }: { data: any, logoSrc?: string }) => {
+export const InterviewKitReport = ({ data, logoSrc }: { data: InterviewKitData, logoSrc?: string }) => {
   const questions = data.questions || [];
   const role = data.role || 'Role';
   const experience = data.experience || 'N/A';

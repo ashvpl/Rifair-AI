@@ -1,15 +1,14 @@
-import type { Config } from "tailwindcss";
-
-const config: Config = {
-    darkMode: ["class"],
-    content: [
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: ["class"],
+  content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-  	extend: {
-  		colors: {
+    extend: {
+      colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
         surface: "var(--surface)",
@@ -73,41 +72,36 @@ const config: Config = {
           "4": "var(--chart-4)",
           "5": "var(--chart-5)",
         },
-  		},
-  		borderRadius: {
-  			lg: "var(--radius)",
-  			md: "calc(var(--radius) - 2px)",
-  			sm: "calc(var(--radius) - 4px)",
-  		},
-        fontFamily: {
-          sans: ["var(--font-sans)"],
-          mono: ["var(--font-mono)"],
-        },
-
-        /* Mobile-optimized font size scale */
-        fontSize: {
-          'xs':   ['0.75rem',   { lineHeight: '1rem' }],
-          'sm':   ['0.8125rem', { lineHeight: '1.25rem' }],
-          'base': ['0.9375rem', { lineHeight: '1.5625rem' }],
-          'lg':   ['1.0625rem', { lineHeight: '1.5625rem' }],
-          'xl':   ['1.25rem',   { lineHeight: '1.75rem' }],
-          '2xl':  ['1.5rem',    { lineHeight: '2rem' }],
-          '3xl':  ['1.875rem',  { lineHeight: '2.25rem' }],
-          '4xl':  ['2.25rem',   { lineHeight: '2.5rem' }],
-          '5xl':  ['3rem',      { lineHeight: '1' }],
-        },
-
-        /* Extra small screen support */
-        screens: {
-          'xs': '375px',
-        },
-        animation: {
-          'spin-slow': 'spin 3s linear infinite',
-        }
-
-  	},
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+      fontFamily: {
+        sans: ["var(--font-sans)"],
+        mono: ["var(--font-mono)"],
+      },
+      /* Mobile-optimized font size scale */
+      fontSize: {
+        'xs':   ['0.75rem',   { lineHeight: '1rem' }],
+        'sm':   ['0.8125rem', { lineHeight: '1.25rem' }],
+        'base': ['0.9375rem', { lineHeight: '1.5625rem' }],
+        'lg':   ['1.0625rem', { lineHeight: '1.5625rem' }],
+        'xl':   ['1.25rem',   { lineHeight: '1.75rem' }],
+        '2xl':  ['1.5rem',    { lineHeight: '2rem' }],
+        '3xl':  ['1.875rem',  { lineHeight: '2.25rem' }],
+        '4xl':  ['2.25rem',   { lineHeight: '2.5rem' }],
+        '5xl':  ['3rem',      { lineHeight: '1' }],
+      },
+      /* Extra small screen support */
+      screens: {
+        'xs': '375px',
+      },
+      animation: {
+        'spin-slow': 'spin 3s linear infinite',
+      }
+    },
   },
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 };
-export default config;
-

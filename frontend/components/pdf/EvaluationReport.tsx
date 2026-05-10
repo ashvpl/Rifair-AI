@@ -1,8 +1,9 @@
 import { Document, Page, View, Text } from '@react-pdf/renderer';
 import { RifairLogo } from './RifairLogo';
 import { styles, colors, type, spacing } from '@/lib/pdf/design-system';
+import { CandidateEvaluationData } from '@/lib/pdf/types';
 
-export const EvaluationReport = ({ data, logoSrc }: { data: any, logoSrc?: string }) => {
+export const EvaluationReport = ({ data, logoSrc }: { data: CandidateEvaluationData & { candidate_name?: string, questions?: string[], notes?: string[] }, logoSrc?: string }) => {
   const rec = data.recommendation || 'HOLD';
   const recColor = rec === 'HIRE' ? colors.success : rec === 'HOLD' ? colors.warning : colors.danger;
   const recBg = rec === 'HIRE' ? colors.successBg : rec === 'HOLD' ? colors.warningBg : colors.dangerBg;
