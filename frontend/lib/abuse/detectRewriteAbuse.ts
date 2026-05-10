@@ -1,8 +1,9 @@
-import { supabaseAdmin } from '../supabase-admin';
+import { getSupabaseAdmin } from '../supabase-admin';
 
 export async function logRewrite(userId: string, evalId: string, questionIndex: number) {
+  const supabase = getSupabaseAdmin()
   // Insert log
-  const { error: insertError } = await supabaseAdmin
+  const { error: insertError } = await supabase
     .from('rewrite_logs')
     .insert({
       user_id: userId,
@@ -19,7 +20,7 @@ export async function logRewrite(userId: string, evalId: string, questionIndex: 
   // Check for patterns
   const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
   
-  const { count: rewriteCount, error: countError } = await supabaseAdmin
+  const { count: rewriteCount, error: countError } = await supabase
     .from('rewrite_logs')
     .select('id', { count: 'exact', head: true })
     .eq('user_id', userId)
@@ -29,7 +30,7 @@ export async function logRewrite(userId: string, evalId: string, questionIndex: 
     console.warn(`[ABUSE ALERT] User ${userId} has performed ${rewriteCount} rewrites in 24h.`);
     
     // Optional: soft flag account for review
-    const { error: flagError } = await supabaseAdmin.from('user_flags').insert({
+    const { error: flagError } = await supabase.from('user_flags').insert({
       user_id: userId,
       reason: 'excessive_rewrites',
       count: rewriteCount

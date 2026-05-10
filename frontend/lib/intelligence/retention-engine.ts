@@ -8,7 +8,7 @@
  * Email delivery is deferred to a future pass.
  */
 
-import { supabaseAdmin } from '@/lib/supabase-admin'
+import { getSupabaseAdmin } from '@/lib/supabase-admin'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -32,7 +32,8 @@ export async function getRetentionAction(
   if (!userId) return null
 
   try {
-    const { data: profile, error } = await supabaseAdmin
+    const supabase = getSupabaseAdmin()
+    const { data: profile, error } = await supabase
       .from('user_intelligence')
       .select('*')
       .eq('user_id', userId)

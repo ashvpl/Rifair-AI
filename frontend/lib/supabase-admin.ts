@@ -41,7 +41,3 @@ export function getSupabaseAdmin() {
 
   return _supabaseAdmin;
 }
-
-// Keep export for backwards compatibility, but it will be initialized on first import
-// Better to use getSupabaseAdmin() in new code
-export const supabaseAdmin = getSupabaseAdmin();

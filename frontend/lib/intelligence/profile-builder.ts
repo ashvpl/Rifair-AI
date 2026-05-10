@@ -10,7 +10,7 @@
  * Never awaited from the critical path — always fire-and-forget.
  */
 
-import { supabaseAdmin } from '@/lib/supabase-admin'
+import { getSupabaseAdmin } from '@/lib/supabase-admin'
 
 // ─── Public API ─────────────────────────────────────────────────────────────
 
@@ -18,17 +18,18 @@ export async function rebuildUserProfile(userId: string): Promise<void> {
   if (!userId) return
 
   try {
+    const supabase = getSupabaseAdmin()
     // Fetch last 90 days of events
     const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString()
 
     const [{ data: events }, { data: analyses }] = await Promise.all([
-      supabaseAdmin
+      supabase
         .from('user_events')
         .select('*')
         .eq('user_id', userId)
         .gte('created_at', ninetyDaysAgo)
         .order('created_at', { ascending: false }),
-      supabaseAdmin
+      supabase
         .from('analysis_reports')
         .select('*')
         .eq('user_id', userId)
@@ -40,7 +41,7 @@ export async function rebuildUserProfile(userId: string): Promise<void> {
 
     const profile = computeProfile(userId, events, analyses ?? [])
 
-    await supabaseAdmin
+    await supabase
       .from('user_intelligence')
       .upsert(profile, { onConflict: 'user_id' })
   } catch (err) {

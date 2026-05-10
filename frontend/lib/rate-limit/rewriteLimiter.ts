@@ -1,10 +1,11 @@
-import { supabaseAdmin } from '../supabase-admin';
+import { getSupabaseAdmin } from '../supabase-admin';
 
 export async function checkRewriteLimit(
   userId: string,
   evalId: string,
   questionIndex: number
 ) {
+  const supabase = getSupabaseAdmin()
   const now = new Date();
   
   // We use Supabase to check the number of rewrites in the last hour and day
@@ -12,7 +13,7 @@ export async function checkRewriteLimit(
   const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
 
   // Get recent rewrites for the specific question
-  const { count: questionCount, error: qError } = await supabaseAdmin
+  const { count: questionCount, error: qError } = await supabase
     .from('rewrite_logs')
     .select('id', { count: 'exact', head: true })
     .eq('user_id', userId)
@@ -21,7 +22,7 @@ export async function checkRewriteLimit(
     .gte('created_at', oneHourAgo);
 
   // Get recent rewrites for the whole session today
-  const { count: sessionCount, error: sError } = await supabaseAdmin
+  const { count: sessionCount, error: sError } = await supabase
     .from('rewrite_logs')
     .select('id', { count: 'exact', head: true })
     .eq('user_id', userId)
