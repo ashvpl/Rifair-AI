@@ -1,4 +1,4 @@
-const { ClerkExpressWithAuth } = require("@clerk/clerk-sdk-node");
+const { ClerkExpressWithAuth } = require("@clerk/clerk-sdk-node"); // Trigger Railway backend redeploy
 
 // Helper to mask secrets for logging
 const mask = (str) => {

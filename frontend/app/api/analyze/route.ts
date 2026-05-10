@@ -22,13 +22,20 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Input text is too short" }, { status: 400 });
     }
 
+    console.log(`[PROXY /analyze] Requesting backend token...`);
     const token = await getToken({ template: "backend" });
+    console.log(`[PROXY /analyze] Token generated: ${token ? 'YES (length: ' + token.length + ')' : 'NO'}`);
+    
+    if (!token) {
+      console.error('[PROXY /analyze] Failed to generate token');
+      return NextResponse.json({ error: 'Session expired. Please sign in again.' }, { status: 401 });
+    }
 
     // ── Layer 3: Fetch personalisation adjustments (non-blocking on failure) ──
     const adjustments = await getPersonalisedPromptAdjustments(userId);
     const personalisationHeader = serialiseAdjustments(adjustments);
 
-    console.log(`Proxying request to backend: ${BACKEND_URL}/api/analyze`);
+    console.log(`[PROXY /analyze] Proxying request to backend: ${BACKEND_URL}/api/analyze`);
 
     const backendHeaders: Record<string, string> = {
       "Content-Type": "application/json",
@@ -43,6 +50,8 @@ export async function POST(req: Request) {
       headers: backendHeaders,
       body: JSON.stringify({ text, name }),
     });
+
+    console.log(`[PROXY /analyze] Backend responded with status: ${response.status}`);
 
     let data;
     const rawText = await response.text();

@@ -3,11 +3,23 @@ import { API_BASE_URL } from "./config";
 export const API_BASE = API_BASE_URL;
 
 async function fetchWithAuth(endpoint: string, options: RequestInit = {}, token?: string | null) {
+  console.log(`[FRONTEND API DEBUG] Calling endpoint: ${endpoint}`);
+  console.log(`[FRONTEND API DEBUG] Token passed to fetchWithAuth: ${token ? 'YES (length: ' + token.length + ')' : 'NO'}`);
+
+  const isNextJsProxy = API_BASE === "/api" || API_BASE.startsWith("/");
+  
+  // NEVER send Authorization header to Next.js API routes.
+  // Next.js uses the __session cookie to authenticate, and generates a fresh token server-side.
+  // Passing the client token in the header forces Clerk to use stateless auth, which forwards the (potentially stale) client token to the backend.
+  const includeAuthHeader = token && !isNextJsProxy;
+
   const headers = {
     "Content-Type": "application/json",
-    ...(token ? { "Authorization": `Bearer ${token}` } : {}),
+    ...(includeAuthHeader ? { "Authorization": `Bearer ${token}` } : {}),
     ...options.headers,
   };
+
+  console.log(`[FRONTEND API DEBUG] Authorization header attached: ${'Authorization' in headers ? 'YES' : 'NO'}`);
 
   const response = await fetch(`${API_BASE}${endpoint}`, {
     ...options,
