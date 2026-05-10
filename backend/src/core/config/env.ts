@@ -13,7 +13,7 @@ const envSchema = z.object({
 
   // ── Database ──────────────────────────────────────────────────────────────
   SUPABASE_URL: z.string().url('SUPABASE_URL must be a valid URL'),
-  SUPABASE_SERVICE_ROLE_KEY: z.string().min(50, 'Supabase service role key is too short'),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(40, 'Supabase service role key is too short'),
 
   // ── AI Providers — 5-slot fallback chain (GROQ x3, GEMINI x2) ────────────
   // At least one Groq key is required
