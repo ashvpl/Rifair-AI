@@ -1,0 +1,111 @@
+npm warn config ignoring workspace config at /Users/ayushpatil/Documents/Rifair AI/frontend/.npmrc
+
+> rifair-ai@0.1.0 build
+> next build
+
+▲ Next.js 16.2.2 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 13.9s
+  Running TypeScript ...
+  Finished TypeScript in 5.9s ...
+  Collecting page data using 7 workers ...
+CRITICAL ERROR: BACKEND_URL is missing or set to localhost in production.
+This will cause all API calls to fail.
+FIX: Add BACKEND_URL to your Vercel Project Settings > Environment Variables.
+CRITICAL ERROR: BACKEND_URL is missing or set to localhost in production.
+This will cause all API calls to fail.
+FIX: Add BACKEND_URL to your Vercel Project Settings > Environment Variables.
+CRITICAL ERROR: BACKEND_URL is missing or set to localhost in production.
+This will cause all API calls to fail.
+FIX: Add BACKEND_URL to your Vercel Project Settings > Environment Variables.
+CRITICAL ERROR: BACKEND_URL is missing or set to localhost in production.
+This will cause all API calls to fail.
+FIX: Add BACKEND_URL to your Vercel Project Settings > Environment Variables.
+CRITICAL ERROR: BACKEND_URL is missing or set to localhost in production.
+This will cause all API calls to fail.
+FIX: Add BACKEND_URL to your Vercel Project Settings > Environment Variables.
+CRITICAL ERROR: BACKEND_URL is missing or set to localhost in production.
+This will cause all API calls to fail.
+FIX: Add BACKEND_URL to your Vercel Project Settings > Environment Variables.
+CRITICAL ERROR: BACKEND_URL is missing or set to localhost in production.
+This will cause all API calls to fail.
+FIX: Add BACKEND_URL to your Vercel Project Settings > Environment Variables.
+  Generating static pages using 7 workers (0/43) ...
+  Generating static pages using 7 workers (10/43) 
+  Generating static pages using 7 workers (21/43) 
+  Generating static pages using 7 workers (32/43) 
+✓ Generating static pages using 7 workers (43/43) in 503ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /analyze
+├ ƒ /api/analyse-jd
+├ ƒ /api/analyze
+├ ƒ /api/bias-dna
+├ ƒ /api/bias-session
+├ ƒ /api/cron/daily-intelligence
+├ ƒ /api/custom-eval
+├ ƒ /api/custom-eval/[id]
+├ ƒ /api/custom-eval/[id]/score
+├ ƒ /api/evaluate-candidate
+├ ƒ /api/evaluations/[id]/autosave
+├ ƒ /api/evaluations/[id]/rewrite
+├ ƒ /api/export/pdf
+├ ƒ /api/generate-jd
+├ ƒ /api/history
+├ ƒ /api/intelligence/profile
+├ ƒ /api/intelligence/rebuild-profile
+├ ƒ /api/intelligence/retention
+├ ƒ /api/intelligence/track
+├ ƒ /api/kit
+├ ƒ /api/kit-audit
+├ ƒ /api/kit-audit/[id]
+├ ƒ /api/kit-audit/[id]/rewrite
+├ ƒ /api/kits/[id]/regenerate
+├ ƒ /api/moderate
+├ ƒ /api/payments/create-order
+├ ƒ /api/payments/verify
+├ ƒ /api/realtime
+├ ƒ /api/report/[id]
+├ ƒ /api/reports
+├ ƒ /api/simulate
+├ ƒ /api/subscription
+├ ƒ /api/subscription/cancel
+├ ƒ /dashboard
+├ ○ /demo
+├ ○ /demo-features
+├ ○ /demo-hero
+├ ○ /demo-navbar
+├ ○ /demo-shimmer
+├ ○ /demo-sign-in
+├ ƒ /evaluations
+├ ƒ /evaluations/[id]
+├ ƒ /evaluations/[id]/review
+├ ƒ /evaluations/[id]/score
+├ ƒ /history
+├ ƒ /jd-analyser
+├ ƒ /jd/[id]
+├ ƒ /kit
+├ ƒ /kit/audit/[id]
+├ ○ /pricing
+├ ○ /privacy
+├ ○ /refund
+├ ƒ /report/[id]
+├ ƒ /settings
+├ ƒ /sign-in/[[...sign-in]]
+├ ƒ /sign-up/[[...sign-up]]
+├ ƒ /simulate
+├ ○ /sso-callback
+├ ○ /terms
+└ ƒ /test-loader
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

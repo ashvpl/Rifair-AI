@@ -20,7 +20,7 @@ export function useContentModeration(context: string) {
     severity: null
   })
 
-  const debounceRef = useRef<NodeJS.Timeout>()
+  const debounceRef = useRef<NodeJS.Timeout | null>(null)
 
   const checkContent = useCallback(async (
     input: string

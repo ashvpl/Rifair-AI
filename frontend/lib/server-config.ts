@@ -11,12 +11,22 @@ export const BACKEND_URL =
   process.env.NEXT_PUBLIC_BACKEND_URL ||
   "http://localhost:5001";
 
-if (!BACKEND_URL || BACKEND_URL.includes("localhost")) {
-  if (process.env.NODE_ENV === "production") {
-    console.error(
-      "CRITICAL ERROR: BACKEND_URL is missing or set to localhost in production.\n" +
-      "This will cause all API calls to fail.\n" +
-      "FIX: Add BACKEND_URL to your Vercel Project Settings > Environment Variables."
-    );
+// Production runtime validation
+if (process.env.NODE_ENV === "production") {
+  const isVercelBuild = process.env.VERCEL === "1" && process.env.CI === "1";
+  
+  if (!BACKEND_URL || BACKEND_URL.includes("localhost")) {
+    if (isVercelBuild) {
+      console.warn(
+        "⚠️ WARNING: BACKEND_URL is set to localhost or missing during build.\n" +
+        "Ensure you have set this in Vercel Project Settings for the deployment to work."
+      );
+    } else {
+      console.error(
+        "CRITICAL ERROR: BACKEND_URL is missing or set to localhost in production.\n" +
+        "This will cause all API calls to fail.\n" +
+        "FIX: Add BACKEND_URL to your Vercel Project Settings > Environment Variables."
+      );
+    }
   }
 }

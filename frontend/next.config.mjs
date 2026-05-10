@@ -7,7 +7,7 @@ const __dirname = path.dirname(__filename);
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  serverExternalPackages: ['@react-pdf/renderer', 'playwright', 'pdf-lib', 'fontkit'],
+  serverExternalPackages: ['@react-pdf/renderer', 'playwright-core', '@sparticuz/chromium-min', 'pdf-lib', 'fontkit'],
   turbopack: {
     root: path.resolve(__dirname, ".."),
   },

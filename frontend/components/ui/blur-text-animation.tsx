@@ -38,8 +38,8 @@ export function BlurTextAnimation({
   once = true
 }: BlurTextAnimationProps) {
   const [isAnimating, setIsAnimating] = useState(false);
-  const animationTimeoutRef = useRef<NodeJS.Timeout>();
-  const resetTimeoutRef = useRef<NodeJS.Timeout>();
+  const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const resetTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   
   // Use framer-motion's useInView to detect when the section is visible

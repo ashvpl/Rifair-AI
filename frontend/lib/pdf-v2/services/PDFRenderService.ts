@@ -1,9 +1,10 @@
-// PDFRenderService.ts — Headless browser rendering engine (Playwright)
-
-import { chromium, Browser, Page } from 'playwright';
+import { Browser, Page } from 'playwright-core';
+import { chromium } from 'playwright-core';
 import { TemplateAdapter } from './TemplateAdapter';
 import { PDFOptimizer } from '../optimization/PDFOptimizer';
 import type { AnyReport } from '../types/report-schemas';
+
+const isProduction = process.env.NODE_ENV === 'production';
 
 export interface RenderOptions {
   templateName: string;
@@ -24,18 +25,31 @@ export class PDFRenderService {
   
   async initialize() {
     if (this.browser) return;
-    this.browser = await chromium.launch({
-      headless: true,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-gpu',
-        '--disable-dev-shm-usage',
-        '--disable-web-security',
-        '--font-render-hinting=none',
-        '--force-color-profile=srgb',
-      ]
-    });
+
+    if (isProduction) {
+      // Production (Vercel) uses @sparticuz/chromium
+      const chromiumPack = await import('@sparticuz/chromium-min');
+      this.browser = await chromium.launch({
+        args: chromiumPack.default.args,
+        executablePath: await chromiumPack.default.executablePath('https://github.com/sparticuz/chromium/releases/download/v131.0.1/chromium-v131.0.1-pack.tar'),
+        headless: true,
+      });
+    } else {
+      // Local development uses standard playwright
+      const playwright = await import('playwright');
+      this.browser = await playwright.chromium.launch({
+        headless: true,
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-gpu',
+          '--disable-dev-shm-usage',
+          '--disable-web-security',
+          '--font-render-hinting=none',
+          '--force-color-profile=srgb',
+        ]
+      });
+    }
   }
   
   async render(options: RenderOptions): Promise<RenderResult> {
