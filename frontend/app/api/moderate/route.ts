@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
-import { supabaseAdmin } from '@/lib/supabase-admin'
+import { getSupabaseAdmin } from '@/lib/supabase-admin'
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 // Extended server-side blocked patterns
 const SERVER_PATTERNS = {
