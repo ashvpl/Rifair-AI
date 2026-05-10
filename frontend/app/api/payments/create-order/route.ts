@@ -10,15 +10,20 @@ export async function POST(req: NextRequest) {
   try {
     const { userId, getToken } = await auth()
     if (!userId) {
+      console.log('[PROXY] Unauthorized: No userId found');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const body = await req.json()
     const token = await getToken()
 
+    console.log(`[PROXY] Creating order for user: ${userId}`);
+    console.log(`[PROXY] Token present: ${!!token} (length: ${token?.length || 0})`);
+
     // getToken() returns null when the session is stale/expired
     // Sending "Bearer null" causes Clerk on the backend to reject with Unauthenticated
     if (!token) {
+      console.error('[PROXY] No token found — session might be expired');
       return NextResponse.json({ error: 'Session expired. Please sign in again.' }, { status: 401 })
     }
     
@@ -32,7 +37,10 @@ export async function POST(req: NextRequest) {
     })
 
     const data = await response.json()
+    console.log(`[PROXY] Backend responded with status: ${response.status}`);
+
     if (!response.ok) {
+      console.error('[PROXY] Backend Error:', data);
       return NextResponse.json(
         { error: data.error || 'Failed to create payment order' },
         { status: response.status }

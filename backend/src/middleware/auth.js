@@ -1,26 +1,78 @@
-const { ClerkExpressRequireAuth } = require("@clerk/clerk-sdk-node");
+const { ClerkExpressWithAuth } = require("@clerk/clerk-sdk-node");
 
-// Wrapper to log incoming headers before Clerk processes them
-const logAuthHeaders = (req, res, next) => {
-  console.log(`[AUTH DEBUG] Request to ${req.originalUrl}`);
-  console.log(`[AUTH DEBUG] Authorization header: ${req.headers.authorization ? 'Present (length: ' + req.headers.authorization.length + ')' : 'MISSING'}`);
-  if (req.headers.authorization) {
-    console.log(`[AUTH DEBUG] Header prefix: ${req.headers.authorization.substring(0, 15)}...`);
-  }
-  next();
+// Helper to mask secrets for logging
+const mask = (str) => {
+  if (!str) return 'MISSING';
+  if (str.length <= 8) return '********';
+  return `${str.slice(0, 4)}****${str.slice(-4)}`;
 };
 
-const requireAuth = ClerkExpressRequireAuth();
+// Clean environment variables (remove potential quotes/spaces from Railway dashboard)
+const cleanEnvVar = (val) => {
+  if (!val) return val;
+  return val.replace(/^['"]|['"]$/g, '').trim();
+};
+
+const secretKey = cleanEnvVar(process.env.CLERK_SECRET_KEY);
+const publishableKey = cleanEnvVar(process.env.CLERK_PUBLISHABLE_KEY);
+
+console.log(`[AUTH] Initializing Clerk WithAuth Middleware`);
+console.log(`[AUTH] Secret Key: ${mask(secretKey)}`);
+console.log(`[AUTH] Publishable Key: ${mask(publishableKey)}`);
+
+const withAuth = ClerkExpressWithAuth({
+  secretKey: secretKey,
+  publishableKey: publishableKey
+});
+
+/**
+ * Robust Auth Middleware
+ * 1. Wraps ClerkExpressWithAuth
+ * 2. Provides detailed logging for debugging
+ * 3. Handles both userId and session-based auth
+ */
+const requireAuth = (req, res, next) => {
+  withAuth(req, res, (err) => {
+    if (err) {
+      console.error("[AUTH DEBUG] Clerk internal error:", err);
+      return res.status(401).json({ error: "Authentication Service Error", details: err.message });
+    }
+
+    const auth = req.auth;
+    const authHeader = req.headers.authorization;
+
+    if (!auth || !auth.userId) {
+      console.error(`[AUTH DEBUG] Rejection on ${req.method} ${req.originalUrl}`);
+      console.log(`[AUTH DEBUG] Auth Header Present: ${!!authHeader}`);
+      
+      if (authHeader) {
+        console.error("[AUTH DEBUG] Token present but verification failed. Possible reasons:");
+        console.error("  1. Secret Key mismatch (Frontend/Backend Clerk instance mismatch)");
+        console.error("  2. Token expired (Check server clock)");
+        console.error("  3. Token malformed or wrong audience");
+      } else {
+        console.error("[AUTH DEBUG] Missing Authorization header");
+      }
+
+      return res.status(401).json({ 
+        error: "Unauthenticated",
+        details: "Your session could not be verified. Please sign in again.",
+        code: "CLERK_UNAUTHENTICATED"
+      });
+    }
+
+    // Success
+    console.log(`[AUTH DEBUG] Success: User ${auth.userId} authenticated for ${req.originalUrl}`);
+    next();
+  });
+};
 
 const authErrorHandler = (err, req, res, next) => {
-  if (err.message === "Unauthenticated") {
-    console.error("Auth Middleware Rejected Request:", err);
-    return res.status(401).json({ error: "Backend Auth Middleware: Unauthorized" });
-  }
-  next(err);
+  console.error("[AUTH ERROR] Unexpected error in auth chain:", err);
+  res.status(401).json({ error: "Authentication Error", details: err.message });
 };
 
 module.exports = { 
-  requireAuth: [logAuthHeaders, requireAuth], 
+  requireAuth, 
   authErrorHandler 
 };
