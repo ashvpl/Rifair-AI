@@ -27,6 +27,7 @@
     "@sparticuz/chromium-min": "^148.0.0",
     "@supabase/supabase-js": "^2.101.0",
     "@swc/helpers": "^0.5.20",
+    "@tailwindcss/typography": "^0.5.19",
     "@types/three": "^0.183.1",
     "autoprefixer": "^10.4.27",
     "class-variance-authority": "^0.7.1",
