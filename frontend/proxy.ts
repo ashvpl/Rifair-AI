@@ -36,8 +36,8 @@ export default clerkMiddleware(async (auth, req) => {
   if (!isPublicRoute(req)) {
     console.log(`[CLERK_PROXY] Protecting route: ${pathname}`);
     // This will redirect to sign-in automatically if unauthorized
-    // Note: auth() is async in recent Clerk versions
-    await auth().protect();
+    // Note: Use the latest async protection pattern
+    await auth.protect();
   }
 
   return NextResponse.next();
