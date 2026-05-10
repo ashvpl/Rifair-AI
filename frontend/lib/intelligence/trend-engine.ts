@@ -8,7 +8,7 @@
  * profile rebuild for all active users.
  */
 
-import { supabaseAdmin } from '@/lib/supabase-admin'
+import { getSupabaseAdmin } from '@/lib/supabase-admin'
 import { rebuildUserProfile } from './profile-builder'
 
 // ─── Public API ──────────────────────────────────────────────────────────────
@@ -22,10 +22,11 @@ export async function computeDailyTrends(): Promise<{
   bias_trend_direction: string
 }> {
   const today = new Date().toISOString().split('T')[0]
+  const supabase = getSupabaseAdmin()
 
   // Fetch all analyses from last 7 days
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
-  const { data: analyses } = await supabaseAdmin
+  const { data: analyses } = await supabase
     .from('analysis_reports')
     .select('user_id, bias_score, categories')
     .gte('created_at', sevenDaysAgo)
@@ -63,7 +64,7 @@ export async function computeDailyTrends(): Promise<{
 
   const avgBiasScore = scoredCount > 0 ? totalBiasScore / scoredCount : 0
   const topBiasType  = Object.entries(biasTypeFreq).sort(([, a], [, b]) => b - a)[0]?.[0] ?? null
-  const uniqueUsers  = new Set(analyses.map(a => a.user_id)).size
+  const uniqueUsers  = new Set(analyses.map((a: { user_id: string }) => a.user_id)).size
   const biasTrend    = await computeBiasTrend()
 
   const trendRow = {
@@ -75,7 +76,7 @@ export async function computeDailyTrends(): Promise<{
     unique_users:          uniqueUsers,
   }
 
-  await supabaseAdmin
+  await supabase
     .from('platform_trends')
     .upsert(trendRow, { onConflict: 'trend_date' })
 
@@ -89,21 +90,22 @@ export async function computeDailyTrends(): Promise<{
  */
 export async function rebuildActiveUserProfiles(): Promise<number> {
   const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+  const supabase = getSupabaseAdmin()
 
-  const { data: activeRows } = await supabaseAdmin
+  const { data: activeRows } = await supabase
     .from('user_events')
     .select('user_id')
     .gte('created_at', oneDayAgo)
 
   if (!activeRows || activeRows.length === 0) return 0
 
-  const uniqueUsers = [...new Set(activeRows.map(r => r.user_id as string))]
+  const uniqueUsers: string[] = [...new Set(activeRows.map((r: any) => r.user_id as string))] as string[]
 
   // Rebuild profiles with limited concurrency to avoid rate-limiting Supabase
   const CONCURRENCY = 5
   for (let i = 0; i < uniqueUsers.length; i += CONCURRENCY) {
     const batch = uniqueUsers.slice(i, i + CONCURRENCY)
-    await Promise.allSettled(batch.map(uid => rebuildUserProfile(uid)))
+    await Promise.allSettled(batch.map((uid: string) => rebuildUserProfile(uid)))
   }
 
   return uniqueUsers.length
@@ -115,13 +117,14 @@ async function computeBiasTrend(): Promise<string> {
   const now           = Date.now()
   const thisWeekStart = new Date(now - 7 * 86400000).toISOString().split('T')[0]
   const lastWeekStart = new Date(now - 14 * 86400000).toISOString().split('T')[0]
+  const supabase = getSupabaseAdmin()
 
   const [{ data: thisWeek }, { data: lastWeek }] = await Promise.all([
-    supabaseAdmin
+    supabase
       .from('platform_trends')
       .select('avg_bias_score')
       .gte('trend_date', thisWeekStart),
-    supabaseAdmin
+    supabase
       .from('platform_trends')
       .select('avg_bias_score')
       .gte('trend_date', lastWeekStart)
@@ -130,8 +133,8 @@ async function computeBiasTrend(): Promise<string> {
 
   if (!thisWeek?.length || !lastWeek?.length) return 'stable'
 
-  const thisAvg = thisWeek.reduce((s, r) => s + (r.avg_bias_score ?? 0), 0) / thisWeek.length
-  const lastAvg = lastWeek.reduce((s, r) => s + (r.avg_bias_score ?? 0), 0) / lastWeek.length
+  const thisAvg = thisWeek.reduce((s: number, r: any) => s + (r.avg_bias_score ?? 0), 0) / thisWeek.length
+  const lastAvg = lastWeek.reduce((s: number, r: any) => s + (r.avg_bias_score ?? 0), 0) / lastWeek.length
 
   if (thisAvg < lastAvg - 2) return 'improving'
   if (thisAvg > lastAvg + 2) return 'worsening'

@@ -7,16 +7,20 @@
 
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
-import { supabaseAdmin } from '@/lib/supabase-admin'
+import { getSupabaseAdmin } from '@/lib/supabase-admin'
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
     const { userId } = await auth()
+    const supabase = getSupabaseAdmin()
     if (!userId) {
       return NextResponse.json({ profile: null }, { status: 200 })
     }
 
-    const { data: profile } = await supabaseAdmin
+    const { data: profile } = await supabase
       .from('user_intelligence')
       .select('*')
       .eq('user_id', userId)

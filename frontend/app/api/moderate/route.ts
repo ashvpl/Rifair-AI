@@ -33,6 +33,7 @@ const SERVER_PATTERNS = {
 
 export async function POST(req: NextRequest) {
   const { userId } = await auth()
+  const supabase = getSupabaseAdmin()
 
   const { input, context } = await req.json()
 
@@ -51,7 +52,7 @@ export async function POST(req: NextRequest) {
     if (pattern.test(text)) {
       // Log attempt
       if (userId) {
-        await supabaseAdmin.from('moderation_logs').insert({
+        await supabase.from('moderation_logs').insert({
           user_id: userId,
           input: input.slice(0, 200),
           category: 'prompt_injection',
@@ -79,7 +80,7 @@ export async function POST(req: NextRequest) {
       if (pattern.test(text)) {
         // Log violation
         if (userId) {
-          await supabaseAdmin.from('moderation_logs').insert({
+          await supabase.from('moderation_logs').insert({
             user_id: userId,
             input: input.slice(0, 200),
             category,
