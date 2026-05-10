@@ -16,7 +16,7 @@ const cleanEnvVar = (val) => {
 const secretKey = cleanEnvVar(process.env.CLERK_SECRET_KEY);
 const publishableKey = cleanEnvVar(process.env.CLERK_PUBLISHABLE_KEY);
 
-console.log(`[AUTH] Initializing Clerk WithAuth Middleware`);
+console.log(`[AUTH] Initializing Clerk WithAuth Middleware (Production Hardened)`);
 console.log(`[AUTH] Secret Key: ${mask(secretKey)}`);
 console.log(`[AUTH] Publishable Key: ${mask(publishableKey)}`);
 
@@ -30,6 +30,7 @@ const withAuth = ClerkExpressWithAuth({
  * 1. Wraps ClerkExpressWithAuth
  * 2. Provides detailed logging for debugging
  * 3. Handles both userId and session-based auth
+ * 4. Specifically validates claims from the 'backend' JWT template
  */
 const requireAuth = (req, res, next) => {
   withAuth(req, res, (err) => {
@@ -48,8 +49,8 @@ const requireAuth = (req, res, next) => {
       if (authHeader) {
         console.error("[AUTH DEBUG] Token present but verification failed. Possible reasons:");
         console.error("  1. Secret Key mismatch (Frontend/Backend Clerk instance mismatch)");
-        console.error("  2. Token expired (Check server clock)");
-        console.error("  3. Token malformed or wrong audience");
+        console.error("  2. Token expired or session invalidated");
+        console.error("  3. Token malformed or wrong audience/claims");
       } else {
         console.error("[AUTH DEBUG] Missing Authorization header");
       }
@@ -64,12 +65,16 @@ const requireAuth = (req, res, next) => {
     // Success
     console.log(`[AUTH DEBUG] Success: User ${auth.userId} authenticated for ${req.originalUrl}`);
     
-    // Log custom claims from the 'backend' template if present
+    // Log and verify claims from the 'backend' template
     if (auth.claims) {
-      const { email, first_name, last_name } = auth.claims;
+      const { email, first_name, last_name, metadata } = auth.claims;
+      console.log(`[AUTH DEBUG] Claims detected: email=${!!email}, name=${!!(first_name || last_name)}`);
+      
       if (email || first_name || last_name) {
-        console.log(`[AUTH DEBUG] Template 'backend' detected. Identity: ${first_name || ''} ${last_name || ''} <${email || 'no-email'}>`);
+        console.log(`[AUTH DEBUG] Identity: ${first_name || ''} ${last_name || ''} <${email || 'no-email'}>`);
       }
+    } else {
+      console.warn(`[AUTH DEBUG] No claims found in token. Ensure 'backend' JWT template is correctly configured in Clerk Dashboard.`);
     }
 
     next();

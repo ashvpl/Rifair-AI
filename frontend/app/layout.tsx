@@ -17,6 +17,11 @@ export const viewport: Viewport = {
   themeColor: "#1D1D1F",
 };
 
+// Validate Clerk Environment Variables
+if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) {
+  console.warn("[CLERK] Warning: NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY is not defined.");
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -32,7 +37,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ClerkProvider
-            publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!}
+            publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
             appearance={{
               variables: {
                 colorPrimary: "#737373",
