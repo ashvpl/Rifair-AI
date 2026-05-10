@@ -21,6 +21,12 @@ secrets.logStartupSummary();
 
 const app = express();
 
+// ─── Proxy trust — REQUIRED for Railway / any reverse-proxy deployment ────────
+// Tells Express to trust the first hop's X-Forwarded-For header.
+// Without this, express-rate-limit v7+ throws ERR_ERL_UNEXPECTED_X_FORWARDED_FOR
+// and Clerk cannot verify the client IP, causing 401 Unauthenticated errors.
+app.set('trust proxy', 1);
+
 // ─── CORS ─────────────────────────────────────────────────────────────────────
 const allowedOrigins = [env.FRONTEND_URL, 'http://localhost:3000'].filter(Boolean);
 app.use(cors({
@@ -42,6 +48,8 @@ app.use(rateLimit({
   max: 100,
   standardHeaders: true,
   legacyHeaders: false,
+  // Disable strict X-Forwarded-For validation — trust proxy (above) handles it
+  validate: { xForwardedForHeader: false },
   message: { error: 'Too many requests. Please try again later.' },
 }));
 
@@ -51,6 +59,7 @@ const aiRateLimit = rateLimit({
   max: 20,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { xForwardedForHeader: false },
   message: { error: 'AI generation limit reached. Please wait 1 minute.' },
 });
 
