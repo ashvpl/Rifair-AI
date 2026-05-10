@@ -42,8 +42,8 @@ export default clerkMiddleware((auth, req) => {
   return NextResponse.next();
 }, {
   // Explicitly passing keys to ensure no development leak or loading issues
-  publishableKey: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
-  secretKey: process.env.CLERK_SECRET_KEY,
+  publishableKey: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!,
+  secretKey: process.env.CLERK_SECRET_KEY!,
 });
 
 // 4. Matcher Configuration
