@@ -11,6 +11,9 @@ const nextConfig = {
   turbopack: {
     root: path.resolve(__dirname, ".."),
   },
+  generateBuildId: async () => {
+    return `build-${Date.now()}`
+  },
 };
 
 export default nextConfig;
