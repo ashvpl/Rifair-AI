@@ -1,9 +1,12 @@
 import 'server-only';
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { z } from 'zod';
 import { BACKEND_URL } from '@/lib/server-config';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 const regenerateSchema = z.object({
   questionIndex: z.number().min(0).max(19),
@@ -17,6 +20,7 @@ export async function POST(
 ) {
   try {
     const { userId } = await auth();
+    const supabase = getSupabaseAdmin();
     if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { id: kitId } = await params;

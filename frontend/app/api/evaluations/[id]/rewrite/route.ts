@@ -1,8 +1,11 @@
 import 'server-only';
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { env } from '@/lib/env';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function POST(
   req: NextRequest,
@@ -10,6 +13,7 @@ export async function POST(
 ) {
   try {
     const { userId } = await auth();
+    const supabase = getSupabaseAdmin();
     if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { id: evalId } = await params;

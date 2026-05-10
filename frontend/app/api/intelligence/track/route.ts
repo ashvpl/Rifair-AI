@@ -7,11 +7,15 @@
 
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
-import { supabaseAdmin } from '@/lib/supabase-admin'
+import { getSupabaseAdmin } from '@/lib/supabase-admin'
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
   try {
     const { userId } = await auth()
+    const supabase = getSupabaseAdmin()
     if (!userId) {
       // Return 200 even on auth failure — this is a telemetry endpoint
       return NextResponse.json({ ok: false }, { status: 200 })
@@ -24,7 +28,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false }, { status: 200 })
     }
 
-    await supabaseAdmin.from('user_events').insert({
+    await supabase.from('user_events').insert({
       user_id:    userId,
       event,
       properties: properties ?? {},
