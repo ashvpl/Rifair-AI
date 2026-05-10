@@ -27,6 +27,20 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Production Safety: Prevent crash if keys are missing
+  if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) {
+    return (
+      <html lang="en">
+        <body className="bg-black text-white flex items-center justify-center min-h-screen font-sans">
+          <div className="max-w-md p-8 border border-white/10 rounded-3xl bg-white/5 backdrop-blur-xl text-center space-y-4">
+            <h1 className="text-2xl font-bold text-red-500">Configuration Error</h1>
+            <p className="text-white/60">NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY is missing. Please check your Vercel environment variables.</p>
+          </div>
+        </body>
+      </html>
+    );
+  }
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="font-sans antialiased overflow-x-hidden" suppressHydrationWarning>
