@@ -1,13 +1,17 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { BACKEND_URL } from "@/lib/server-config";
+import { BACKEND_URL, validateBackendConfig } from "@/lib/server-config";
 import {
   getPersonalisedPromptAdjustments,
   serialiseAdjustments,
 } from "@/lib/intelligence/personalisation-engine";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 export async function POST(req: Request) {
   try {
+    validateBackendConfig();
     const { userId, getToken } = await auth();
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

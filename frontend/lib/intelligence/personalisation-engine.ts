@@ -10,7 +10,7 @@
  * Server-side only — called from Next.js API route handlers.
  */
 
-import { supabaseAdmin } from '@/lib/supabase-admin'
+import { getSupabaseAdmin } from '@/lib/supabase-admin'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -36,7 +36,8 @@ export async function getPersonalisedPromptAdjustments(
   if (!userId) return {}
 
   try {
-    const { data: profile, error } = await supabaseAdmin
+    const supabase = getSupabaseAdmin()
+    const { data: profile, error } = await supabase
       .from('user_intelligence')
       .select('*')
       .eq('user_id', userId)

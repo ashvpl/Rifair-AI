@@ -1,13 +1,11 @@
-// app/api/export/pdf/route.ts — Production-grade PDF Orchestration
-
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { PDFRenderService } from '@/lib/pdf-v2/services/PDFRenderService';
 import { composeReport } from '@/lib/pdf-v2/services/ReportComposer';
 
-// Singleton instance for the rendering service
-const pdfService = new PDFRenderService();
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 const TABLE_MAP: Record<string, string> = {
   analysis:   'analysis_reports',
@@ -19,6 +17,9 @@ const TABLE_MAP: Record<string, string> = {
 
 export async function POST(req: NextRequest) {
   try {
+    const supabase = getSupabaseAdmin();
+    const pdfService = new PDFRenderService();
+    
     // 1. Authentication
     const { userId } = await auth();
     if (!userId) {
