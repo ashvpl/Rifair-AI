@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils"
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSubscription } from "@/hooks/useSubscription";
 
 const MENU_ITEMS = {
   status: [
@@ -29,10 +30,7 @@ const MENU_ITEMS = {
     { value: "offline", icon: "solar:moon-sleep-line-duotone", label: "Appear Offline" }
   ],
   profile: [
-    { icon: "solar:user-circle-line-duotone", label: "Manage account", action: "profile" },
-    { icon: "solar:sun-line-duotone", label: "Appearance", action: "appearance" },
     { icon: "solar:settings-line-duotone", label: "Settings", action: "settings" },
-    { icon: "solar:bell-line-duotone", label: "Notifications", action: "notifications" }
   ],
   premium: [
     { 
@@ -42,16 +40,8 @@ const MENU_ITEMS = {
       iconClass: "text-amber-600",
       badge: { text: "20% off", className: "bg-amber-600 text-white text-[11px]" }
     },
-    { icon: "solar:gift-line-duotone", label: "Referrals", action: "referrals" }
   ],
   support: [
-    { icon: "solar:download-line-duotone", label: "Download app", action: "download" },
-    { 
-      icon: "solar:letter-unread-line-duotone", 
-      label: "What's new?", 
-      action: "whats-new",
-      rightIcon: "solar:square-top-down-line-duotone"
-    },
     { 
       icon: "solar:question-circle-line-duotone", 
       label: "Get help?", 
@@ -60,12 +50,6 @@ const MENU_ITEMS = {
     }
   ],
   account: [
-    { 
-      icon: "solar:users-group-rounded-bold-duotone", 
-      label: "Switch account", 
-      action: "switch",
-      showAvatar: false
-    },
     { icon: "solar:logout-2-bold-duotone", label: "Log out", action: "logout" }
   ]
 };
@@ -74,6 +58,7 @@ export function UserDropdown() {
   const { user } = useUser();
   const { signOut, openUserProfile } = useClerk();
   const router = useRouter();
+  const { planId } = useSubscription();
   const [selectedStatus, setSelectedStatus] = useState("online");
 
   if (!user) return null;
@@ -91,7 +76,6 @@ export function UserDropdown() {
       case "logout":
         signOut(() => router.push("/"));
         break;
-      case "profile":
       case "settings":
         openUserProfile();
         break;
@@ -213,7 +197,14 @@ export function UserDropdown() {
 
         <DropdownMenuSeparator className="my-1.5 bg-gray-100 dark:bg-white/5" />
         <DropdownMenuGroup>
-          {MENU_ITEMS.premium.map(renderMenuItem)}
+          {MENU_ITEMS.premium.map((item, index) => {
+            let label = item.label;
+            if (item.action === "upgrade") {
+              if (planId === "free") label = "Upgrade to Starter";
+              else if (planId === "starter") label = "Upgrade to Growth";
+            }
+            return renderMenuItem({ ...item, label }, index);
+          })}
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator className="my-1.5 bg-gray-100 dark:bg-white/5" />
