@@ -30,7 +30,7 @@ export const SupportInfo = () => {
       initial={{ opacity: 0, x: 20 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as any }}
       className="lg:sticky lg:top-24 space-y-6"
     >
       <div className="p-8 rounded-3xl bg-white/5 backdrop-blur-sm border border-border/50 space-y-8">

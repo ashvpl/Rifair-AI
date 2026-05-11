@@ -41,7 +41,7 @@ const AccordionItem = ({ question, answer, isOpen, onClick }: { question: string
         <span className="text-lg font-medium group-hover:text-primary transition-colors">{question}</span>
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] as any }}
           className="text-muted-foreground group-hover:text-primary"
         >
           <ChevronDown className="w-5 h-5" />
@@ -53,7 +53,7 @@ const AccordionItem = ({ question, answer, isOpen, onClick }: { question: string
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] as any }}
           >
             <div className="pb-6 text-muted-foreground leading-relaxed">
               {answer}
