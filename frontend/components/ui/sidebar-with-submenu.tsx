@@ -16,6 +16,7 @@ import {
   FileSearch,
   ClipboardCheck,
   X,
+  LifeBuoy,
 } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { UserDropdown } from "@/components/ui/user-dropdown";
@@ -126,6 +127,7 @@ const SidebarWithSubmenu = () => {
   const navsFooter = [
     { name: "Settings",      href: "/settings", icon: Settings },
     { name: "Back to Home",  href: "/",         icon: Home },
+    { name: "Get Help",      href: "/help",     icon: LifeBuoy },
   ];
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
