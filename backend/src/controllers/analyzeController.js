@@ -173,16 +173,45 @@ const analyzeText = async (req, res) => {
 
     // ── Usage increment ───────────────────────────────────────────────────────
     if (userId !== "anonymous") {
-      const currentMonth = new Date().toISOString().slice(0, 7);
-      const usage        = await getUsage(userId);
-      await supabase
-        .from("usage")
-        .update({
-          analyses_used: (usage.analyses_used ?? 0) + 1,
-          updated_at:    new Date().toISOString(),
-        })
-        .eq("user_id", userId)
-        .eq("month",   currentMonth);
+      try {
+        const currentMonth = new Date().toISOString().slice(0, 7);
+        
+        // Log user ID consistency check
+        console.log('[USER ID CHECK]', {
+          userId,
+          userIdType: typeof userId,
+          month: currentMonth
+        });
+
+        const usageData = await getUsage(userId);
+        const currentUsed = usageData?.analyses_used ?? 0;
+
+        console.log('[USAGE FETCH]', { 
+          usageData, userId, currentMonth 
+        });
+
+        const { error: upsertError } = await supabase
+          .from('usage')
+          .upsert(
+            {
+              user_id: userId,
+              month: currentMonth,
+              analyses_used: currentUsed + 1,
+              kits_used: usageData?.kits_used ?? 0,
+              updated_at: new Date().toISOString()
+            },
+            { 
+              onConflict: 'user_id,month',
+              ignoreDuplicates: false 
+            }
+          );
+
+        if (upsertError) {
+          console.error('[USAGE UPDATE FAILED]', upsertError);
+        }
+      } catch (usageErr) {
+        console.error('[USAGE INCREMENT FATAL ERROR]', usageErr);
+      }
     }
 
     res.json({ report: insertedData });

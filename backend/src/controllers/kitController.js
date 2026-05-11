@@ -260,16 +260,35 @@ Return corrected JSON only.`;
 
     // ── Usage increment ──────────────────────────────────────────────────────
     if (userId && userId !== "anonymous") {
-      const currentMonth = new Date().toISOString().slice(0, 7);
-      const usage        = await getUsage(userId);
-      await supabase
-        .from("usage")
-        .update({
-          kits_used:  (usage.kits_used ?? 0) + 1,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("user_id", userId)
-        .eq("month",   currentMonth);
+      try {
+        const currentMonth = new Date().toISOString().slice(0, 7);
+        const usageData = await getUsage(userId);
+        const currentUsed = usageData?.kits_used ?? 0;
+
+        const { error: upsertError } = await supabase
+          .from('usage')
+          .upsert(
+            {
+              user_id: userId,
+              month: currentMonth,
+              kits_used: currentUsed + 1,
+              analyses_used: usageData?.analyses_used ?? 0,
+              jd_analyses_used: usageData?.jd_analyses_used ?? 0,
+              evaluations_used: usageData?.evaluations_used ?? 0,
+              updated_at: new Date().toISOString()
+            },
+            { 
+              onConflict: 'user_id,month',
+              ignoreDuplicates: false 
+            }
+          );
+
+        if (upsertError) {
+          console.error('[USAGE UPDATE FAILED (kit)]', upsertError);
+        }
+      } catch (usageErr) {
+        console.error('[USAGE INCREMENT FATAL ERROR (kit)]', usageErr);
+      }
     }
 
     if (dbData?.id) {

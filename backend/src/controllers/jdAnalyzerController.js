@@ -281,16 +281,32 @@ const analyzeJd = async (req, res) => {
     if (userId !== "anonymous") {
       try {
         const currentMonth = new Date().toISOString().slice(0, 7);
-        await supabase
-          .from("usage")
-          .update({
-            // jd_analyses_used omitted due to schema missing
-            updated_at:    new Date().toISOString(),
-          })
-          .eq("user_id", userId)
-          .eq("month",   currentMonth);
+        const usageData = await getUsage(userId);
+        const currentUsed = usageData?.jd_analyses_used ?? 0;
+
+        const { error: upsertError } = await supabase
+          .from('usage')
+          .upsert(
+            {
+              user_id: userId,
+              month: currentMonth,
+              jd_analyses_used: currentUsed + 1,
+              analyses_used: usageData?.analyses_used ?? 0,
+              kits_used: usageData?.kits_used ?? 0,
+              evaluations_used: usageData?.evaluations_used ?? 0,
+              updated_at: new Date().toISOString()
+            },
+            { 
+              onConflict: 'user_id,month',
+              ignoreDuplicates: false 
+            }
+          );
+
+        if (upsertError) {
+          console.error('[USAGE UPDATE FAILED (jd)]', upsertError);
+        }
       } catch (usageErr) {
-        console.warn("[JD_ANALYSER] Usage increment failed:", usageErr.message);
+        console.error('[USAGE INCREMENT FATAL ERROR (jd)]', usageErr);
       }
     }
 

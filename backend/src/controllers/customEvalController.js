@@ -440,16 +440,37 @@ const submitScores = async (req, res) => {
     }]);
 
     // ── Increment analyses_used ──────────────────────────────────────
-    const currentMonth = new Date().toISOString().slice(0, 7);
-    const usage        = await getUsage(userId);
-    await supabase
-      .from('usage')
-      .update({
-        analyses_used: (usage.analyses_used ?? 0) + 1,
-        updated_at:       new Date().toISOString(),
-      })
-      .eq('user_id', userId)
-      .eq('month',   currentMonth);
+    if (userId !== "anonymous") {
+      try {
+        const currentMonth = new Date().toISOString().slice(0, 7);
+        const usageData = await getUsage(userId);
+        const currentUsed = usageData?.analyses_used ?? 0;
+
+        const { error: upsertError } = await supabase
+          .from('usage')
+          .upsert(
+            {
+              user_id: userId,
+              month: currentMonth,
+              analyses_used: currentUsed + 1,
+              kits_used: usageData?.kits_used ?? 0,
+              jd_analyses_used: usageData?.jd_analyses_used ?? 0,
+              evaluations_used: usageData?.evaluations_used ?? 0,
+              updated_at: new Date().toISOString()
+            },
+            { 
+              onConflict: 'user_id,month',
+              ignoreDuplicates: false 
+            }
+          );
+
+        if (upsertError) {
+          console.error('[USAGE UPDATE FAILED (custom-eval)]', upsertError);
+        }
+      } catch (usageErr) {
+        console.error('[USAGE INCREMENT FATAL ERROR (custom-eval)]', usageErr);
+      }
+    }
 
     return res.json({ evaluation });
   } catch (err) {
