@@ -33,8 +33,8 @@ export function BlurTextAnimation({
   containerClassName = ""
 }: BlurTextAnimationProps) {
   const [isAnimating, setIsAnimating] = useState(false);
-  const animationTimeoutRef = useRef<NodeJS.Timeout>();
-  const resetTimeoutRef = useRef<NodeJS.Timeout>();
+  const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const resetTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const textWords = useMemo(() => {
     if (words) return words;
