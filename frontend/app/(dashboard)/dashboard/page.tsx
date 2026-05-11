@@ -586,7 +586,7 @@ export default function DashboardPage() {
                   </div>
                   <span className="text-[10px] font-black uppercase tracking-[0.15em] text-white/60">Premium Feature</span>
                 </div>
-                <h3 className="text-xl md:text-2xl font-bold tracking-tight">JD Analyser</h3>
+                <h3 className="text-xl md:text-2xl font-bold tracking-tight">Job Descriptions</h3>
                 <p className="text-sm text-white/70 leading-relaxed max-w-md">
                   Paste any job description and get a complete bias audit — section scores, coded language decoder, legal risk assessment, and a fully rewritten inclusive version.
                 </p>
@@ -618,7 +618,7 @@ export default function DashboardPage() {
                     <Lock className="w-2.5 h-2.5" /> Locked
                   </span>
                 </div>
-                <h3 className="text-xl md:text-2xl font-bold text-[#1D1D1F] tracking-tight">JD Analyser</h3>
+                <h3 className="text-xl md:text-2xl font-bold text-[#1D1D1F] tracking-tight">Job Descriptions</h3>
                 <p className="text-sm text-[#86868B] leading-relaxed max-w-md">
                   Detect bias in any job description. Section-by-section scoring, coded language detection, legal risk assessment, and a complete bias-free rewrite.
                 </p>

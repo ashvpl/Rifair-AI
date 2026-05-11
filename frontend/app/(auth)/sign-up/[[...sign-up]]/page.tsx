@@ -18,9 +18,9 @@ export default function SignUpPage() {
           <Image
             src="/rifair-logo.png"
             alt="Rifair AI"
-            width={70}
-            height={70}
-            className="h-[70px] w-auto object-contain"
+            width={120}
+            height={120}
+            className="h-[120px] w-auto object-contain"
             priority
           />
         </div>

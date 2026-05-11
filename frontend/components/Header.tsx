@@ -1,6 +1,7 @@
 "use client";
 
-import { UserButton, useAuth } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
+import { UserDropdown } from "@/components/ui/user-dropdown";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -47,18 +48,7 @@ export function Header() {
       <div className="flex items-center space-x-6 md:space-x-12">
         {isLoaded && userId ? (
           <div className="flex items-center gap-6 md:gap-12">
-            <UserButton 
-              appearance={{ 
-                elements: { 
-                  userButtonAvatarBox: "border border-black/10 shadow-lg hover:ring-4 hover:ring-black/5 transition-all w-11 h-11",
-                  userButtonPopoverMain: "bg-white border border-black/5 shadow-2xl rounded-3xl overflow-hidden",
-                  userButtonBox: "gap-3",
-                  userButtonPopoverCard: "rounded-3xl",
-                  userButtonPopoverActionButtonText: "text-[#1D1D1F] font-bold",
-                  userButtonPopoverFooter: "bg-[#F5F5F7] border-t border-black/[0.03]"
-                } 
-              }} 
-            />
+            <UserDropdown />
           </div>
         ) : (
           <div className="flex items-center gap-10 md:gap-16">

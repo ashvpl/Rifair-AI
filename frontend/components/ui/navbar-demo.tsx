@@ -4,7 +4,8 @@ import React, { useState, useEffect } from "react";
 import NavBar from "@/components/ui/navbar";
 import Image from "next/image";
 import Link from "next/link";
-import { useAuth, UserButton } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
+import { UserDropdown } from "@/components/ui/user-dropdown";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { X, Menu } from "lucide-react";
@@ -102,13 +103,7 @@ export function NavBarDemo() {
               <div className="w-20 h-10 animate-pulse bg-[#F5F5F7] rounded-full" />
             ) : isSignedIn ? (
               <>
-                <UserButton 
-                  appearance={{
-                    elements: {
-                      userButtonAvatarBox: "w-10 h-10 border border-black/5 hover:border-black/10 transition-all shadow-lg hover:scale-105"
-                    }
-                  }}
-                />
+                <UserDropdown />
               </>
             ) : (
               <>

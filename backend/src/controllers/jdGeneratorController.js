@@ -106,7 +106,7 @@ const generateJd = async (req, res) => {
         .upsert({
           user_id:           userId,
           month:             currentMonth,
-          jd_analyses_used:  used + 1,
+          // jd_analyses_used omitted due to schema missing
           updated_at:        new Date().toISOString()
         }, { onConflict: "user_id, month" });
     } catch (usageErr) {

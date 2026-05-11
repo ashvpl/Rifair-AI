@@ -187,7 +187,7 @@ export default function JDAnalyserPage() {
               <FileSearch className="w-5 h-5 text-[#f59e0b]" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-[#f59e0b] tracking-tight">JD Analyser</h1>
+              <h1 className="text-xl font-bold text-[#f59e0b] tracking-tight">Job Descriptions</h1>
             </div>
           </div>
         </motion.div>

@@ -48,7 +48,7 @@ export default function JDReportPage({ params }: { params: Promise<{ id: string 
       <AlertTriangle className="w-12 h-12 text-red-500 opacity-50" />
       <h2 className="text-xl font-bold">{error || "Report not found"}</h2>
       <Link href="/jd-analyser" className="text-sm font-bold text-primary hover:underline flex items-center gap-2">
-        <ArrowLeft className="w-4 h-4" /> Back to JD Analyser
+        <ArrowLeft className="w-4 h-4" /> Back to Job Descriptions
       </Link>
     </div>
   );

@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from "next/image";
-import { UserButton, useAuth } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
+import { UserDropdown } from "@/components/ui/user-dropdown";
 
 const AnimatedNavLink = ({ href, children }: { href: string; children: React.ReactNode }) => {
   const defaultTextColor = 'text-[#86868B]';
@@ -68,13 +69,7 @@ export function MiniNavbar() {
           <Link href="/dashboard" className="text-[13px] font-black text-[#1D1D1F] uppercase tracking-[0.2em] hover:text-primary transition-colors hidden sm:block">
             Dashboard
           </Link>
-          <UserButton 
-            appearance={{ 
-              elements: { 
-                userButtonAvatarBox: "w-10 h-10 border border-black/5 hover:border-black/10 transition-all shadow-lg" 
-              } 
-            }} 
-          />
+          <UserDropdown />
         </div>
       );
     }

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
+import { useAuth } from "@clerk/nextjs";
 
 interface MenuItem {
   title: string;
@@ -16,10 +17,12 @@ export default function FooterSection({
   tagline = "Empowering teams with precision AI hiring solutions.",
   menuItems = [
     {
-      title: "Product",
+      title: "Products",
       links: [
-        { text: "Bias Audit", url: "/analyze" },
-        { text: "Dashboard", url: "/dashboard" },
+        { text: "Bias Analysis", url: "/analyze" },
+        { text: "Interview Kits", url: "/kit" },
+        { text: "Job Descriptions", url: "/jd-analyser" },
+        { text: "Candidate Evaluations", url: "/evaluations" },
       ],
     },
     {
@@ -39,6 +42,7 @@ export default function FooterSection({
     },
   ],
 }) {
+  const { isSignedIn } = useAuth();
   return (
     <footer className="bg-white py-24 border-t border-black/[0.03] relative z-10">
       <div className="max-w-7xl mx-auto px-6">
@@ -77,12 +81,21 @@ export default function FooterSection({
                     <li
                       key={linkIdx}
                     >
-                      <Link 
-                        href={link.url}
-                        className="text-sm font-bold text-black/40 hover:text-primary transition-all duration-300 inline-block"
-                      >
-                        {link.text}
-                      </Link>
+                      {(() => {
+                        const isProductLink = section.title === "Products";
+                        const finalUrl = (!isSignedIn && isProductLink) 
+                          ? `/sign-in?redirect_url=${encodeURIComponent(link.url)}` 
+                          : link.url;
+
+                        return (
+                          <Link 
+                            href={finalUrl}
+                            className="text-sm font-bold text-black/40 hover:text-primary transition-all duration-300 inline-block"
+                          >
+                            {link.text}
+                          </Link>
+                        );
+                      })()}
                     </li>
                   ))}
                 </ul>

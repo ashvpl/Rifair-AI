@@ -1,6 +1,9 @@
 "use client";
 
 import * as React from "react";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+
 interface LoaderProps {
   size?: number; 
   text?: string | undefined;
@@ -8,9 +11,25 @@ interface LoaderProps {
 
 export const AILoader: React.FC<LoaderProps> = ({ size = 180, text = "Loading" }) => {
   const letters = text.split("");
+  const pathname = usePathname();
+  
+  // Routes that have the dashboard sidebar (offset required on lg screens)
+  const isDashboardRoute = 
+    pathname?.startsWith("/dashboard") || 
+    pathname?.startsWith("/kit") || 
+    pathname?.startsWith("/analyze") || 
+    pathname?.startsWith("/evaluations") || 
+    pathname?.startsWith("/history") || 
+    pathname?.startsWith("/jd") || 
+    pathname?.startsWith("/settings") ||
+    pathname?.startsWith("/report") ||
+    pathname?.startsWith("/simulate");
 
   return (
-    <div className="fixed inset-0 lg:left-72 z-[100] flex items-center justify-center bg-white/80 backdrop-blur-[4px] dark:bg-black/80">
+    <div className={cn(
+      "fixed inset-0 z-[100] flex items-center justify-center bg-white/80 backdrop-blur-[4px] dark:bg-black/80",
+      isDashboardRoute && "lg:left-72"
+    )}>
       <div
         className="relative flex items-center justify-center font-sans select-none"
         style={{ width: size, height: size }}

@@ -12,6 +12,7 @@ import { Check, ChevronRight, Crown, Heart, Shield, ShoppingCart, Star, Sparkles
 import { Plan } from "@/lib/pricing/types"
 import { CheckoutButton } from "@/components/pricing/CheckoutButton"
 import { useSubscription } from "@/hooks/useSubscription"
+import { TrustedByRotator } from "@/components/ui/trusted-by-rotator"
 import {
   Dialog,
   DialogContent,
@@ -429,10 +430,7 @@ export function ApplePricing({
           transition={{ delay: 0.8, duration: 0.6 }}
           className="mt-24 text-center border-t border-border/50 pt-12"
         >
-          <div className="inline-flex items-center justify-center gap-2 text-sm font-medium text-muted-foreground">
-            <Heart className="h-5 w-5 text-primary/60" />
-            <span>Trusted by 10 Million + customers</span>
-          </div>
+          <TrustedByRotator />
         </motion.div>
       </div>
     </div>

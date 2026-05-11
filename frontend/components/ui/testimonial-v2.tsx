@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from "framer-motion";
 import { Sun, Moon } from 'lucide-react';
+import { TrustedByRotator } from "@/components/ui/trusted-by-rotator";
 
 // --- Types ---
 interface Testimonial {
@@ -191,25 +192,7 @@ export function TestimonialsSection() {
         </div>
         
         <div className="mt-16 flex flex-col items-center justify-center">
-          <p className="text-neutral-500 dark:text-neutral-500 font-medium tracking-tight">
-            and 10 Million + more happy users
-          </p>
-          <div className="mt-4 flex -space-x-3 overflow-hidden">
-            {[
-              "photo-1560250097-0b93528c311a",
-              "photo-1573496359142-b8d87734a5a2",
-              "photo-1539571696357-5a69c17a67c6",
-              "photo-1580489944761-15a19d654956",
-              "photo-1552058544-f2b08422138a",
-            ].map((id, i) => (
-              <img
-                key={i}
-                className="inline-block h-10 w-10 rounded-full ring-2 ring-white dark:ring-neutral-950 object-cover shadow-sm"
-                src={`https://images.unsplash.com/${id}?auto=format&fit=crop&q=80&w=100&h=100`}
-                alt="User avatar"
-              />
-            ))}
-          </div>
+          <TrustedByRotator />
         </div>
       </motion.div>
     </section>

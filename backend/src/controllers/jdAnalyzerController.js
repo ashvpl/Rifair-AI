@@ -284,7 +284,7 @@ const analyzeJd = async (req, res) => {
         await supabase
           .from("usage")
           .update({
-            jd_analyses_used: (currentUsage?.jd_analyses_used || 0) + 1,
+            // jd_analyses_used omitted due to schema missing
             updated_at:    new Date().toISOString(),
           })
           .eq("user_id", userId)

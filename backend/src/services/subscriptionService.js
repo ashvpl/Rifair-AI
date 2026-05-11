@@ -100,8 +100,7 @@ async function getUsage(userId) {
       month: currentMonth,
       analyses_used: 0,
       kits_used: 0,
-      jd_analyses_used: 0,
-      evaluations_used: 0,
+      
       api_calls_used: 0,
     };
   }
@@ -121,8 +120,7 @@ async function getUsage(userId) {
         month: currentMonth,
         analyses_used: 0,
         kits_used: 0,
-        jd_analyses_used: 0,
-        evaluations_used: 0,
+        
         api_calls_used: 0,
       }, { onConflict: "user_id,month" })
       .select()

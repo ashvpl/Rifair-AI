@@ -31,22 +31,28 @@ async function getDetails(req, res) {
     if (typeof supabase !== 'undefined') {
       try {
         // 1. Count Candidate Evaluations
-        const { count: evalsCount } = await supabase
+        const { count: evalsCount, error: evalsError } = await supabase
           .from('candidate_evaluations')
           .select('*', { count: 'exact', head: true })
           .eq('user_id', userId)
           .gte('created_at', startOfMonthISO);
         
-        if (evalsCount !== null) dynamicEvalsUsed = evalsCount;
+        if (evalsError) {
+          console.error(`[getDetails] Dynamic count evals error:`, evalsError);
+        } else if (evalsCount !== null) {
+          dynamicEvalsUsed = evalsCount;
+        }
 
-        // 2. Count Analysis Reports (Analyses, Kits, JD operations)
-        const { data: reports } = await supabase
+        // 2. Count Analysis Reports (Analyses, Kits, JD operations, Evaluations)
+        const { data: reports, error: reportsError } = await supabase
           .from('analysis_reports')
           .select('categories')
           .eq('user_id', userId)
           .gte('created_at', startOfMonthISO);
 
-        if (reports) {
+        if (reportsError) {
+          console.error(`[getDetails] Dynamic count reports error:`, reportsError);
+        } else if (reports) {
           dynamicAnalysesUsed = reports.filter(r => 
             !r.categories?.analysis_type || r.categories?.analysis_type === 'analysis'
           ).length;
@@ -59,6 +65,12 @@ async function getDetails(req, res) {
             r.categories?.analysis_type === 'jd_analysis' || 
             r.categories?.analysis_type === 'jd_generated'
           ).length;
+          
+          // Optionally also count evaluations from analysis_reports if candidate_evaluations query failed or returned 0
+          const evaluationReportsCount = reports.filter(r => r.categories?.analysis_type === 'evaluation').length;
+          if (evalsError || dynamicEvalsUsed === 0) {
+             dynamicEvalsUsed = Math.max(dynamicEvalsUsed, evaluationReportsCount);
+          }
         }
 
         console.log(`[getDetails] Dynamic counts for ${userId}: Analyses=${dynamicAnalysesUsed}, Kits=${dynamicKitsUsed}, JD=${dynamicJdUsed}, Evals=${dynamicEvalsUsed}`);

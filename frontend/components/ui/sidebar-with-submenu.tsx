@@ -17,7 +17,8 @@ import {
   ClipboardCheck,
   X,
 } from "lucide-react";
-import { UserButton, useUser } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
+import { UserDropdown } from "@/components/ui/user-dropdown";
 import { cn } from "@/lib/utils";
 import { useSubscription } from "@/hooks/useSubscription";
 import { motion, AnimatePresence } from "framer-motion";
@@ -112,12 +113,12 @@ const SidebarWithSubmenu = () => {
     { name: "Dashboard",    href: "/dashboard",   icon: LayoutDashboard, badge: null },
     { name: "Analyze",      href: "/analyze",      icon: ShieldAlert,     badge: null },
     { name: "Kit Generator",href: "/kit",           icon: FileText,        badge: null },
-    { name: "JD Analyser",  href: "/jd-analyser",  icon: FileSearch,      badge: null },
+    { name: "Job Descriptions",  href: "/jd-analyser",  icon: FileSearch,      badge: null },
     { 
       name: "Candidate Evaluations", 
       href: "/evaluations",  
       icon: ClipboardCheck,  
-      badge: !isLoading && !canUse('candidate_analysis') ? 'PRO' : null 
+      badge: null 
     },
     { name: "History",      href: "/history",       icon: History,         badge: null },
   ];
@@ -328,15 +329,7 @@ const SidebarWithSubmenu = () => {
             {/* Profile footer */}
             <div className="px-4 py-4 border-t border-black/[0.06] shrink-0">
               <div className="flex items-center gap-3 px-3 py-2 rounded-2xl hover:bg-[#F5F5F7] transition-colors">
-                <UserButton
-                  appearance={{
-                    elements: {
-                      userButtonAvatarBox: "h-9 w-9 border border-black/10 shadow-sm",
-                      userButtonPopoverCard: "rounded-3xl border border-black/[0.05] shadow-2xl",
-                      userButtonPopoverActionButtonText: "font-bold text-foreground",
-                    }
-                  }}
-                />
+                <UserDropdown />
                 <div className="flex flex-col min-w-0">
                   <span className="text-[11px] font-black text-[#1D1D1F] uppercase tracking-[0.12em] leading-none mb-0.5">
                     Account
@@ -466,15 +459,7 @@ const SidebarWithSubmenu = () => {
             <div className="flex items-center gap-x-3 transition-opacity">
               <div className="relative group p-1">
                 <div className="absolute inset-0 bg-primary/10 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
-                <UserButton
-                  appearance={{
-                    elements: {
-                      userButtonAvatarBox: "h-9 w-9 border border-black/10 shadow-sm transition-all hover:scale-105 active:scale-95",
-                      userButtonPopoverCard: "rounded-3xl border border-black/[0.05] shadow-2xl",
-                      userButtonPopoverActionButtonText: "font-bold text-foreground",
-                    }
-                  }}
-                />
+                <UserDropdown />
               </div>
               <div className="flex flex-col">
                 <span className="text-[11px] font-black text-foreground uppercase tracking-[0.15em] mb-0.5">Account Profile</span>

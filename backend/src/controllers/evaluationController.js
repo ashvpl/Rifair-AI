@@ -189,7 +189,7 @@ const evaluateCandidate = async (req, res) => {
     await supabase
       .from('usage')
       .update({
-        analyses_used: (usage.analyses_used ?? 0) + 1,
+        // evaluations_used omitted due to schema missing
         updated_at:       new Date().toISOString(),
       })
       .eq('user_id', userId)
