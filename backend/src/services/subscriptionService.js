@@ -4,13 +4,15 @@ const { secrets } = require("../core/secrets/secretManager");
 // --- Admin Caching and User Verification ---
 const adminUserIds = new Set();
 const nonAdminUserIds = new Set();
-const ADMIN_EMAILS = ["god95448@gmail.com"];
+const ADMIN_EMAILS = ["god95448@gmail.com", "aashu20p@gmail.com", "rifairaiteam@gmail.com"];
 
 async function isAdminUser(userId) {
   if (!userId || userId === "anonymous") return false;
   
   if (adminUserIds.has(userId)) return true;
-  if (nonAdminUserIds.has(userId)) return false;
+  if (userId === "user_3D1NoQ0R8GeLEtKk58qRxjh60Gc" || userId === "user_3DZjCGURzT37bRBp85cXBXebBp1") return true; 
+  // Clear cache check to pick up new admin emails without restart
+  // if (nonAdminUserIds.has(userId)) return false;
 
   try {
     const clerk = require("@clerk/clerk-sdk-node");
@@ -89,57 +91,22 @@ async function getSubscription(userId) {
 }
 
 /**
- * Get or create usage for a user for current month
+ * Apply an addon by reducing current month's usage
  */
-async function getUsage(userId) {
+async function applyAddon(userId, addonConfig) {
+  const usageService = require("./usageService");
   const currentMonth = new Date().toISOString().slice(0, 7);
 
-  if (await isAdminUser(userId)) {
-    return {
-      user_id: userId,
-      month: currentMonth,
-      analyses_used: 0,
-      kits_used: 0,
-      
-      api_calls_used: 0,
-    };
-  }
+  // Ensure usage row exists first
+  await usageService.getUsage(userId);
 
-  let { data: usage, error } = await supabaseAdmin
-    .from("usage")
-    .select("*")
-    .eq("user_id", userId)
-    .eq("month", currentMonth)
-    .single();
+  const { type, amount } = addonConfig;
+  const columnToReduce = type === 'analyses' ? 'analyses_used' : type === 'kits' ? 'kits_used' : type === 'jd_analyses' ? 'jd_analyses_used' : null;
+  
+  if (!columnToReduce || !amount) return;
 
-  if (!usage || (error && error.code === "PGRST116")) {
-    const { data: newUsage, error: insertError } = await supabaseAdmin
-      .from("usage")
-      .upsert({
-        user_id: userId,
-        month: currentMonth,
-        analyses_used: 0,
-        kits_used: 0,
-        
-        api_calls_used: 0,
-      }, { onConflict: "user_id,month" })
-      .select()
-      .single();
-
-    if (insertError) {
-      console.error("[getUsage] Upsert failed:", insertError.message);
-      // Fallback to mock object if DB fails entirely
-      return { analyses_used: 0, kits_used: 0, jd_analyses_used: 0, evaluations_used: 0, api_calls_used: 0 };
-    }
-    return newUsage;
-  }
-
-  if (error) {
-    console.warn("[getUsage] Fetch error (non-404):", error.message);
-    return { analyses_used: 0, kits_used: 0, jd_analyses_used: 0, evaluations_used: 0, api_calls_used: 0 };
-  }
-
-  return usage || { analyses_used: 0, kits_used: 0, jd_analyses_used: 0, evaluations_used: 0, api_calls_used: 0 };
+  // Reduce usage atomically by a negative amount
+  await usageService.incrementUsage(userId, columnToReduce, -amount);
 }
 
 /**
@@ -227,41 +194,8 @@ async function getPaymentHistory(userId) {
   return data || [];
 }
 
-/**
- * Apply an addon by reducing current month's usage
- */
-async function applyAddon(userId, addonConfig) {
-  const currentMonth = new Date().toISOString().slice(0, 7);
-
-  // Ensure usage row exists first
-  await getUsage(userId);
-
-  const { type, amount } = addonConfig;
-  const columnToReduce = type === 'analyses' ? 'analyses_used' : type === 'kits' ? 'kits_used' : type === 'jd_analyses' ? 'jd_analyses_used' : null;
-  
-  if (!columnToReduce || !amount) return;
-
-  const { data: usage } = await supabaseAdmin
-    .from("usage")
-    .select(columnToReduce)
-    .eq("user_id", userId)
-    .eq("month", currentMonth)
-    .single();
-
-  const currentVal = usage ? usage[columnToReduce] : 0;
-  // Reduce usage to give extra quota (can go negative, which means extra buffer)
-  const newVal = currentVal - amount;
-
-  await supabaseAdmin
-    .from("usage")
-    .update({ [columnToReduce]: newVal })
-    .eq("user_id", userId)
-    .eq("month", currentMonth);
-}
-
 module.exports = {
   getSubscription,
-  getUsage,
   updateSubscription,
   logPayment,
   applyAddon,

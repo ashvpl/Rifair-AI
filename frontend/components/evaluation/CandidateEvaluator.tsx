@@ -166,7 +166,7 @@ export function CandidateEvaluator({
 
       // ── Standard kit evaluation path ─────────────────────────────────
       } else {
-        const token = await getToken({ template: "backend" })
+        const token = await getToken({ template: "backend" }).catch(() => getToken())
         data = await evaluateCandidate({
           kitId:         kit.id ?? 'unknown',
           role:          kit.role,

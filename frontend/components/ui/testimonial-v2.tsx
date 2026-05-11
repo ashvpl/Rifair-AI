@@ -174,7 +174,7 @@ export function TestimonialsSection() {
           </div>
 
           <h2 id="testimonials-heading" className="text-4xl md:text-5xl font-extrabold tracking-tight mt-6 text-center text-neutral-900 dark:text-white transition-colors">
-            Trusted by Fair Hiring Leaders
+            Used by Fair Hiring Leaders
           </h2>
           <p className="text-center mt-5 text-neutral-500 dark:text-neutral-400 text-lg leading-relaxed max-w-sm transition-colors">
             Discover how forward-thinking teams are institutionalizing fairness with Rifair AI.

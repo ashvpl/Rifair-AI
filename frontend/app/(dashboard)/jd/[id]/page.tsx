@@ -24,7 +24,7 @@ export default function JDReportPage({ params }: { params: Promise<{ id: string 
       if (!isLoaded || !userId) return;
       setIsLoading(true);
       try {
-        const token = await getToken({ template: "backend" });
+        const token = await getToken({ template: "backend" }).catch(() => getToken());
         const data = await getReportById(id, token);
         if (data.report) {
           const parsed = safeParseReport(data.report);

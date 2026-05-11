@@ -7,7 +7,8 @@
 const { supabase }              = require('../config/supabase');
 const { callAIWithFallback }    = require('../ai/universalCaller');
 const { buildEvaluationPrompt } = require('../prompts/evaluationPrompt');
-const { getSubscription, getUsage }       = require('../services/subscriptionService');
+const { getSubscription }       = require('../services/subscriptionService');
+const { getUsage, incrementUsage } = require('../services/usageService');
 const { parseJSON }             = require('../utils/parseJSON');
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -37,19 +38,13 @@ const evaluateCandidate = async (req, res) => {
     const limit = EVAL_LIMITS[planId];
 
     if (limit !== null) {
-      // Get first day of current month
-      const startOfMonth = new Date();
-      startOfMonth.setDate(1);
-      startOfMonth.setHours(0, 0, 0, 0);
+      // ── USAGE TABLE is the single source of truth ──────────────────────────
+      // We read from the dedicated `usage` table, NOT from candidate_evaluations.
+      // This means deleting evaluation history NEVER resets this counter.
+      const usageForCheck = await getUsage(userId);
+      const evalsUsed     = usageForCheck?.evaluations_used ?? 0;
 
-      // Count evaluations this month
-      const { count, error: countError } = await supabase
-        .from('candidate_evaluations')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', userId)
-        .gte('interview_date', startOfMonth.toISOString().split('T')[0]);
-
-      if (!countError && count >= limit) {
+      if (evalsUsed >= limit) {
         return res.status(403).json({
           error:      'limit_reached',
           message:    `You have used all ${limit} candidate evaluations this month.`,
@@ -183,34 +178,12 @@ const evaluateCandidate = async (req, res) => {
       console.error('[Evaluate] History insert error:', historyError.message);
     }
 
-    // ── Increment usage ────────────────────────────────────────────────────
-    if (userId !== "anonymous") {
+    // ── Increment usage (evaluations_used) ───────────────────────────────────
+    // Uses atomic increment — safe against race conditions and unaffected by
+    // history deletion. This is the ONLY place evaluations_used is incremented.
+    if (userId !== 'anonymous') {
       try {
-        const currentMonth = new Date().toISOString().slice(0, 7);
-        const usageData = await getUsage(userId);
-        const currentUsed = usageData?.evaluations_used ?? 0;
-
-        const { error: upsertError } = await supabase
-          .from('usage')
-          .upsert(
-            {
-              user_id: userId,
-              month: currentMonth,
-              evaluations_used: currentUsed + 1,
-              analyses_used: usageData?.analyses_used ?? 0,
-              kits_used: usageData?.kits_used ?? 0,
-              jd_analyses_used: usageData?.jd_analyses_used ?? 0,
-              updated_at: new Date().toISOString()
-            },
-            { 
-              onConflict: 'user_id,month',
-              ignoreDuplicates: false 
-            }
-          );
-
-        if (upsertError) {
-          console.error('[USAGE UPDATE FAILED (evaluation)]', upsertError);
-        }
+        await incrementUsage(userId, 'evaluations_used');
       } catch (usageErr) {
         console.error('[USAGE INCREMENT FATAL ERROR (evaluation)]', usageErr);
       }

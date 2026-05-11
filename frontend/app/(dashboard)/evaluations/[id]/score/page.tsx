@@ -21,7 +21,7 @@ export default function CustomEvalScorePage({ params }: { params: Promise<{ id: 
       if (!isLoaded || !userId) return;
       setIsLoading(true);
       try {
-        const token = await getToken({ template: "backend" });
+        const token = await getToken({ template: "backend" }).catch(() => getToken());
         const res = await fetch(`/api/custom-eval/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });

@@ -35,7 +35,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
   useEffect(() => {
     (async () => {
       try {
-        const token = await getToken({ template: "backend" });
+        const token = await getToken({ template: "backend" }).catch(() => getToken());
         const res = await fetch(`/api/report/${id}`, {
           headers: {
             "Authorization": `Bearer ${token}`
@@ -77,6 +77,34 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
             Back to History
           </Button>
         </Link>
+      </div>
+    );
+  }
+
+  if (planId === 'free' || planId === 'starter') {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 text-center space-y-6 max-w-lg mx-auto">
+        <div className="h-20 w-20 bg-amber-50 rounded-[2rem] flex items-center justify-center text-amber-600 shadow-sm border border-amber-100">
+          <Download className="h-10 w-10" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Detailed Reports are Premium</h2>
+          <p className="text-slate-500 leading-relaxed">
+            Detailed PDF exports and archived deep-dive reports are available exclusively on our **Growth** and **Enterprise** plans.
+          </p>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+          <Link href="/pricing" className="w-full sm:w-auto">
+            <Button className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-6 rounded-2xl shadow-lg shadow-indigo-200 transition-all">
+              Upgrade to Growth
+            </Button>
+          </Link>
+          <Link href="/analyze" className="w-full sm:w-auto">
+            <Button variant="outline" className="w-full sm:w-auto font-bold px-8 py-6 rounded-2xl border-slate-200">
+              Back to Analysis
+            </Button>
+          </Link>
+        </div>
       </div>
     );
   }

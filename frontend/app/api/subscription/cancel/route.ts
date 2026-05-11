@@ -13,7 +13,7 @@ export async function POST() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const token = await getToken({ template: "backend" })
+    const token = await getToken({ template: "backend" }).catch(() => getToken())
     const response = await fetch(`${BACKEND_URL}/api/subscriptions/cancel`, {
       method: 'POST',
       headers: {

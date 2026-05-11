@@ -59,7 +59,7 @@ export function JDGeneratorResult({
       
       // 2. Persist if we have a reportId (history mode)
       if (reportId) {
-        const token = await getToken({ template: "backend" })
+        const token = await getToken({ template: "backend" }).catch(() => getToken())
         await updateReportById(reportId, {
           ...updatedResult,
           analysis_type: 'jd_generated'

@@ -35,7 +35,7 @@ export default function DashboardPage() {
     const fetchDashboardHistory = async () => {
       if (!isLoaded || !userId) return;
       try {
-        const token = await getToken({ template: "backend" });
+        const token = await getToken({ template: "backend" }).catch(() => getToken());
         const data = await getReports(token);
         const parsedData = Array.isArray(data) ? data.map(safeParseReport) : [];
         setHistory(parsedData);
@@ -453,17 +453,16 @@ export default function DashboardPage() {
         </div>
       </FeatureGate>
 
-      {/* Usage & Quick Stats for All Plans Except Enterprise */}
-      {planId !== 'enterprise' && (
-        <motion.div 
+      {/* Usage & Quick Stats for All Plans */}
+      <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          <div className="bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-6 border border-black/[0.03] shadow-sm flex flex-col justify-between h-full">
+          <div className="bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-6 border border-black/20 shadow-md flex flex-col justify-between h-full">
             <div className="space-y-4">
-              <h3 className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em]">Monthly Usage</h3>
+              <h3 className="text-[10px] font-black text-black uppercase tracking-[0.2em]">Monthly Usage</h3>
               <div className="space-y-6">
                 <UsageMeter 
                   label="Analyses" 
@@ -514,9 +513,6 @@ export default function DashboardPage() {
             </button>
           </div>
         </motion.div>
-      )}
-
-      {/* Flagged Questions Panel */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -646,17 +642,20 @@ function UsageMeter({ label, used, limit, percent }: { label: string; used: numb
   return (
     <div className="space-y-2">
       <div className="flex justify-between text-[11px] font-bold">
-        <span className="text-[#86868B]">{label}</span>
-        <span className="text-foreground">{used} / {limit || '∞'}</span>
+        <span className="text-[#333333]">{label}</span>
+        <span className="text-black font-extrabold">{used} / {limit || '∞'}</span>
       </div>
       <div className="h-2 bg-[#F5F5F7] rounded-full overflow-hidden">
         <motion.div 
           initial={{ width: 0 }}
-          animate={{ width: `${percent}%` }}
+          animate={{ width: limit ? `${percent}%` : "100%" }}
           className={cn(
             "h-full rounded-full transition-colors",
-            percent >= 90 ? "bg-red-500" : percent >= 70 ? "bg-amber-500" : "bg-[#10b981]"
+            limit && percent >= 90 ? "bg-red-500" : 
+            limit && percent >= 70 ? "bg-amber-500" : 
+            "bg-[#10b981]"
           )}
+          style={{ width: limit ? `${percent}%` : "100%" }}
         />
       </div>
     </div>

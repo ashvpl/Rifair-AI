@@ -12,7 +12,8 @@
 "use strict";
 
 const { runUnifiedPipeline } = require("../utils/pipeline");
-const { getSubscription, getUsage } = require("../services/subscriptionService");
+const { getSubscription } = require("../services/subscriptionService");
+const { getUsage, incrementUsage } = require("../services/usageService");
 const { supabase }                  = require("../config/supabase");
 
 const GROWTH_PLANS = ["growth", "enterprise"];
@@ -80,34 +81,11 @@ const batchAnalyze = async (req, res) => {
       return res.json({ report: reportData, warning: "Persistence failed" });
     }
 
-    // Increment usage
+    // ── Usage increment (atomic) ──────────────────────────────────────────────
+    // Consumes 1 'analyses_used' credit per audit run.
     if (userId !== "anonymous") {
       try {
-        const currentMonth = new Date().toISOString().slice(0, 7);
-        const usageData = await getUsage(userId);
-        const currentUsed = usageData?.analyses_used ?? 0;
-
-        const { error: upsertError } = await supabase
-          .from('usage')
-          .upsert(
-            {
-              user_id: userId,
-              month: currentMonth,
-              analyses_used: currentUsed + 1,
-              kits_used: usageData?.kits_used ?? 0,
-              jd_analyses_used: usageData?.jd_analyses_used ?? 0,
-              evaluations_used: usageData?.evaluations_used ?? 0,
-              updated_at: new Date().toISOString()
-            },
-            { 
-              onConflict: 'user_id,month',
-              ignoreDuplicates: false 
-            }
-          );
-
-        if (upsertError) {
-          console.error('[USAGE UPDATE FAILED (batch)]', upsertError);
-        }
+        await incrementUsage(userId, 'analyses_used');
       } catch (usageErr) {
         console.error('[USAGE INCREMENT FATAL ERROR (batch)]', usageErr);
       }

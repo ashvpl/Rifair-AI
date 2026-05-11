@@ -87,6 +87,12 @@ app.use('/api/evaluate-candidate', moderationMiddleware, aiRateLimit, require('.
 app.use('/api/analyze/jd',         moderationMiddleware, aiRateLimit, require('./routes/jdAnalyzer'));
 app.use('/api/generate-jd',        moderationMiddleware, aiRateLimit, require('./routes/jdGenerator'));
 
+// --- New Features & Intelligence ---
+app.use('/api/bias-session',       require('./routes/biasSession'));
+app.use('/api/bias-dna',           require('./routes/biasDna'));
+app.use('/api/kit-audit',          require('./routes/kitAudit'));
+app.use('/api/custom-eval',         require('./routes/customEval'));
+
 // ─── 404 handler ──────────────────────────────────────────────────────────────
 app.use((_req, res) => {
   res.status(404).json({ error: 'Not found' });

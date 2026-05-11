@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     }
 
     console.log(`[PROXY /analyze] Requesting backend token...`);
-    const token = await getToken({ template: "backend" });
+    const token = await getToken({ template: "backend" }).catch(() => getToken());
     console.log(`[PROXY /analyze] Token generated: ${token ? 'YES (length: ' + token.length + ')' : 'NO'}`);
     
     if (!token) {

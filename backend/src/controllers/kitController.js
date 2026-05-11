@@ -20,17 +20,18 @@ const { supabase }                          = require("../config/supabase");
 const { getFallbackKit }                    = require("../services/fallbackService");
 const { runUnifiedPipeline }                = require("../utils/pipeline");
 const { withTimeout, logger }               = require("../utils/helpers");
-const { getSubscription, getUsage }         = require("../services/subscriptionService");
+const { getSubscription }                  = require("../services/subscriptionService");
+const { getUsage, incrementUsage }         = require("../services/usageService");
 const { buildSingleCallKitPrompt }          = require("../ai/singleCallPrompt");
 const { callAIWithFallback }                = require("../ai/universalCaller");
 const { getCachedKit, setCachedKit }        = require("../ai/cache");
 const { parseJSON }                         = require("../utils/parseJSON");
 
 const KIT_LIMITS = {
-  free:       1,
+  free:       3,
   lite:       10,
   starter:    20,
-  growth:     80,
+  growth:     50,
   enterprise: null,
 };
 
@@ -258,34 +259,11 @@ Return corrected JSON only.`;
       throw new Error(`Failed to archive kit: ${dbError.message}`);
     }
 
-    // ── Usage increment ──────────────────────────────────────────────────────
+    // ── Usage increment (atomic) ──────────────────────────────────────────────
+    // Persists to `usage` table only — independent of analysis_reports history.
     if (userId && userId !== "anonymous") {
       try {
-        const currentMonth = new Date().toISOString().slice(0, 7);
-        const usageData = await getUsage(userId);
-        const currentUsed = usageData?.kits_used ?? 0;
-
-        const { error: upsertError } = await supabase
-          .from('usage')
-          .upsert(
-            {
-              user_id: userId,
-              month: currentMonth,
-              kits_used: currentUsed + 1,
-              analyses_used: usageData?.analyses_used ?? 0,
-              jd_analyses_used: usageData?.jd_analyses_used ?? 0,
-              evaluations_used: usageData?.evaluations_used ?? 0,
-              updated_at: new Date().toISOString()
-            },
-            { 
-              onConflict: 'user_id,month',
-              ignoreDuplicates: false 
-            }
-          );
-
-        if (upsertError) {
-          console.error('[USAGE UPDATE FAILED (kit)]', upsertError);
-        }
+        await incrementUsage(userId, 'kits_used');
       } catch (usageErr) {
         console.error('[USAGE INCREMENT FATAL ERROR (kit)]', usageErr);
       }

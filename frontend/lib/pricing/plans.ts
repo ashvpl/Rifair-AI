@@ -8,8 +8,8 @@ export const PLANS: Plan[] = [
       inr: { monthly: 0, annual: 0 },
       usd: { monthly: 0, annual: 0 },
     },
-    analysesLimit: 5,
-    kitLimit: 1,
+    analysesLimit: 10,
+    kitLimit: 3,
     jdAnalysesLimit: 0,
     evaluationsLimit: 1,
     apiCallsLimit: 0,
@@ -67,10 +67,10 @@ export const PLANS: Plan[] = [
       inr: { monthly: 2999, annual: 2399 },
       usd: { monthly: 36, annual: 29 },
     },
-    analysesLimit: 200,
-    kitLimit: 80,
+    analysesLimit: 150,
+    kitLimit: 50,
     jdAnalysesLimit: 20,
-    evaluationsLimit: 20,
+    evaluationsLimit: null,
     apiCallsLimit: 500,
     seatsLimit: 5,
     features: [
@@ -84,6 +84,27 @@ export const PLANS: Plan[] = [
     isFeatured: true,
     ctaLabel: 'Get plan',
     ctaVariant: 'primary'
+  },
+  {
+    id: 'enterprise',
+    name: 'Enterprise',
+    price: {
+      inr: { monthly: 0, annual: 0 },
+      usd: { monthly: 0, annual: 0 },
+    },
+    analysesLimit: null,
+    kitLimit: null,
+    jdAnalysesLimit: null,
+    evaluationsLimit: null,
+    apiCallsLimit: null,
+    seatsLimit: null,
+    features: [
+      'everything', 'custom_model', 'compliance_reports',
+      'sso', 'audit_logs', 'ats_integrations',
+      'dedicated_csm', 'sla'
+    ],
+    ctaLabel: 'Contact Sales',
+    ctaVariant: 'sales'
   },
 ]
 

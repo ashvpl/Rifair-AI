@@ -15,7 +15,8 @@
  */
 
 const { supabase }                  = require('../config/supabase');
-const { getSubscription, getUsage } = require('../services/subscriptionService');
+const { getSubscription }           = require('../services/subscriptionService');
+const { getUsage, incrementUsage }  = require('../services/usageService');
 const { callAIWithFallback }        = require('../ai/universalCaller');
 const { runUnifiedPipeline }        = require('../utils/pipeline');
 const { withTimeout }               = require('../utils/helpers');
@@ -335,16 +336,15 @@ const createAudit = async (req, res) => {
       created_at: new Date().toISOString(),
     }]);
 
-    // ── Step 6: Increment analyses_used ──────────────────────────────────────
-    const currentMonth = new Date().toISOString().slice(0, 7);
-    await supabase
-      .from('usage')
-      .update({
-        analyses_used: (usage?.analyses_used ?? 0) + 1,
-        updated_at:    new Date().toISOString(),
-      })
-      .eq('user_id', userId)
-      .eq('month',   currentMonth);
+    // ── Usage increment (atomic) ──────────────────────────────────────────────
+    // Consumes 1 'analyses_used' credit per audit run.
+    if (userId !== "anonymous") {
+      try {
+        await incrementUsage(userId, 'analyses_used');
+      } catch (usageErr) {
+        console.error('[USAGE INCREMENT FATAL ERROR (audit)]', usageErr);
+      }
+    }
 
     // ── Step 7: Respond ───────────────────────────────────────────────────────
     const flaggedCount = biasBreakdown.filter(b => (b.bias_score ?? b.score ?? 0) > 50).length;

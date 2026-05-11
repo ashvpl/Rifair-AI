@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json()
-    const token = await getToken({ template: 'backend' })
+    const token = await getToken({ template: 'backend' }).catch(() => getToken())
 
     console.log(`[PROXY] Creating order for user: ${userId}`);
     console.log(`[PROXY] Token present: ${!!token} (length: ${token?.length || 0})`);

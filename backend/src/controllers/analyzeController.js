@@ -18,13 +18,14 @@ const crypto                               = require("crypto");
 const { supabase }                         = require("../config/supabase");
 const { runUnifiedPipeline }               = require("../utils/pipeline");
 const { withTimeout, logger }              = require("../utils/helpers");
-const { getSubscription, getUsage }        = require("../services/subscriptionService");
+const { getSubscription }                  = require("../services/subscriptionService");
+const { getUsage, incrementUsage }         = require("../services/usageService");
 
 const LIMITS = {
-  free:       5,
+  free:       10,
   lite:       20,
   starter:    40,
-  growth:     200,
+  growth:     150,
   enterprise: null,
 };
 
@@ -171,46 +172,14 @@ const analyzeText = async (req, res) => {
       });
     }
 
-    // ── Usage increment ───────────────────────────────────────────────────────
+    // ── Usage increment (atomic) ───────────────────────────────────────────────
+    // Persists to `usage` table only — fully independent from analysis_reports.
+    // Deleting history NEVER affects this counter.
     if (userId !== "anonymous") {
       try {
-        const currentMonth = new Date().toISOString().slice(0, 7);
-        
-        // Log user ID consistency check
-        console.log('[USER ID CHECK]', {
-          userId,
-          userIdType: typeof userId,
-          month: currentMonth
-        });
-
-        const usageData = await getUsage(userId);
-        const currentUsed = usageData?.analyses_used ?? 0;
-
-        console.log('[USAGE FETCH]', { 
-          usageData, userId, currentMonth 
-        });
-
-        const { error: upsertError } = await supabase
-          .from('usage')
-          .upsert(
-            {
-              user_id: userId,
-              month: currentMonth,
-              analyses_used: currentUsed + 1,
-              kits_used: usageData?.kits_used ?? 0,
-              updated_at: new Date().toISOString()
-            },
-            { 
-              onConflict: 'user_id,month',
-              ignoreDuplicates: false 
-            }
-          );
-
-        if (upsertError) {
-          console.error('[USAGE UPDATE FAILED]', upsertError);
-        }
+        await incrementUsage(userId, 'analyses_used');
       } catch (usageErr) {
-        console.error('[USAGE INCREMENT FATAL ERROR]', usageErr);
+        console.error('[USAGE INCREMENT FATAL ERROR (analyze)]', usageErr);
       }
     }
 

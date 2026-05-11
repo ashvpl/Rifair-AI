@@ -66,7 +66,7 @@ export const SupportInfo = () => {
             <div className="space-y-0.5">
               <p className="text-sm font-semibold">Trust Line</p>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Trusted by modern recruiting teams and AI-first organizations.
+                Used by modern recruiting teams and AI-first organizations.
               </p>
             </div>
           </div>

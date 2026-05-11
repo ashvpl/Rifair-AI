@@ -32,7 +32,7 @@ export function TrustedByRotator({ className }: { className?: string }) {
     return (
       <div className={cn("flex flex-col items-center justify-center gap-1.5", className)}>
         <span className="text-xs sm:text-sm font-semibold text-muted-foreground/70 uppercase tracking-widest">
-          Trusted by
+          Used by
         </span>
         <div className="relative h-20 flex items-center justify-center w-full min-w-[280px]">
           <BlurTextAnimation 
@@ -50,7 +50,7 @@ export function TrustedByRotator({ className }: { className?: string }) {
   return (
     <div className={cn("flex flex-col items-center justify-center gap-1.5", className)}>
       <span className="text-xs sm:text-sm font-semibold text-muted-foreground/70 uppercase tracking-widest">
-        Trusted by
+        Used by
       </span>
       <div className="relative h-20 flex items-center justify-center w-full min-w-[280px]">
         <BlurTextAnimation 

@@ -15,7 +15,8 @@
 "use strict";
 
 const { supabase: supabaseAdmin } = require("../config/supabase");
-const { getSubscription, getUsage } = require("../services/subscriptionService");
+const { getSubscription } = require("../services/subscriptionService");
+const { getUsage } = require("../services/usageService");
 
 const getBiasSession = async (req, res) => {
   try {

@@ -28,7 +28,7 @@ export default function ExportButton({
 
   const handleExport = async () => {
     // Allow growth, enterprise, and starter (if it has candidate_reports)
-    const hasAccess = ['growth', 'enterprise', 'starter'].includes(planTier) || process.env.NODE_ENV === 'development';
+    const hasAccess = ['growth', 'enterprise'].includes(planTier) || process.env.NODE_ENV === 'development';
 
     if (!hasAccess) {
       window.location.href = '/pricing?reason=pdf_export';
@@ -98,7 +98,7 @@ export default function ExportButton({
   };
 
   // Locked state for non-authorised plans
-  const hasAccess = ['growth', 'enterprise', 'starter'].includes(planTier) || process.env.NODE_ENV === 'development';
+  const hasAccess = ['growth', 'enterprise'].includes(planTier) || process.env.NODE_ENV === 'development';
   if (!hasAccess) {
     return (
       <div className={cn('relative group', className)}>

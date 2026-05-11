@@ -13,7 +13,7 @@ export async function GET(
     }
 
     const { id } = await params;
-    const token = await getToken({ template: "backend" });
+    const token = await getToken({ template: "backend" }).catch(() => getToken());
 
     const response = await fetch(`${BACKEND_URL}/api/custom-eval/${id}`, {
       method: "GET",

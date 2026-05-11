@@ -68,7 +68,7 @@ export default function JDAnalyserPage() {
     setError(null)
 
     try {
-      const token = await getToken({ template: "backend" })
+      const token = await getToken({ template: "backend" }).catch(() => getToken())
       const res = await fetch('/api/analyse-jd', {
         method: 'POST',
         headers: { 
@@ -437,7 +437,7 @@ function JDGenerator({ onPassToAnalyser }: { onPassToAnalyser: (jd: string) => v
 
     setLoading(true)
     try {
-      const token = await getToken({ template: "backend" })
+      const token = await getToken({ template: "backend" }).catch(() => getToken())
       const res = await fetch('/api/generate-jd', {
         method: 'POST',
         headers: { 

@@ -530,13 +530,13 @@ function UsageMeter({
         <div
           className={cn(
             "h-full rounded-full transition-all duration-500",
-            percent >= 90
+            limit && percent >= 90
               ? "bg-red-500"
-              : percent >= 70
+              : limit && percent >= 70
               ? "bg-amber-500"
               : "bg-emerald-500"
           )}
-          style={{ width: limit ? `${percent}%` : "0%" }}
+          style={{ width: limit ? `${percent}%` : "100%" }}
         />
       </div>
     </div>

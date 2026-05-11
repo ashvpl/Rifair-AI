@@ -1,7 +1,8 @@
 "use strict";
 
 const { callAIWithFallback }              = require("../ai/universalCaller");
-const { getSubscription, getUsage }       = require("../services/subscriptionService");
+const { getSubscription }                  = require("../services/subscriptionService");
+const { getUsage, incrementUsage }         = require("../services/usageService");
 const { supabase }                        = require("../config/supabase");
 const { parseJSON }                       = require("../utils/parseJSON");
 const { buildJDGeneratorPrompt }          = require("../ai/jd-gen-prompt");
@@ -98,19 +99,14 @@ const generateJd = async (req, res) => {
       console.error("[JD_GENERATOR] DB persistence error:", dbError.message);
     }
 
-    // Increment JD usage counter
-    try {
-      const currentMonth = new Date().toISOString().slice(0, 7);
-      await supabase
-        .from("usage")
-        .upsert({
-          user_id:           userId,
-          month:             currentMonth,
-          // jd_analyses_used omitted due to schema missing
-          updated_at:        new Date().toISOString()
-        }, { onConflict: "user_id, month" });
-    } catch (usageErr) {
-      console.warn("[JD_GENERATOR] Usage increment failed:", usageErr.message);
+    // ── Usage increment (atomic) ──────────────────────────────────────────────
+    // Persists to `usage` table only — independent of analysis_reports history.
+    if (userId !== "anonymous") {
+      try {
+        await incrementUsage(userId, 'jd_analyses_used');
+      } catch (usageErr) {
+        console.error('[USAGE INCREMENT FATAL ERROR (jd-gen)]', usageErr);
+      }
     }
 
     return res.json({

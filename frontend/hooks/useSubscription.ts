@@ -37,7 +37,7 @@ export function useSubscription(): SubscriptionState {
 
     try {
       setError(null)
-      const token = await getToken({ template: "backend" })
+      const token = await getToken({ template: "backend" }).catch(() => getToken())
       
       const res = await fetch(`/api/subscription?t=${Date.now()}`, {
         headers: {
@@ -113,19 +113,19 @@ export function useSubscription(): SubscriptionState {
   const usagePercent = useCallback((type: 'analyses' | 'kits' | 'jdAnalyses' | 'evaluations'): number => {
     if (!usage || !plan) return 0
     if (type === 'analyses') {
-      if (!plan.analysesLimit) return 0
+      if (plan.analysesLimit === null) return 100
       return Math.min(100, Math.round((usage.analysesUsed / plan.analysesLimit) * 100))
     }
     if (type === 'kits') {
-      if (!plan.kitLimit) return 0
+      if (plan.kitLimit === null) return 100
       return Math.min(100, Math.round((usage.kitsUsed / plan.kitLimit) * 100))
     }
     if (type === 'jdAnalyses') {
-      if (!plan.jdAnalysesLimit) return 0
+      if (plan.jdAnalysesLimit === null) return 100
       return Math.min(100, Math.round((usage.jdAnalysesUsed / plan.jdAnalysesLimit) * 100))
     }
     if (type === 'evaluations') {
-      if (!plan.evaluationsLimit) return 0
+      if (plan.evaluationsLimit === null) return 100
       return Math.min(100, Math.round((usage.evaluationsUsed / plan.evaluationsLimit) * 100))
     }
     return 0

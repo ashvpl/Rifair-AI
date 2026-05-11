@@ -14,7 +14,8 @@
  */
 
 const { supabase }                = require('../config/supabase');
-const { getSubscription, getUsage } = require('../services/subscriptionService');
+const { getSubscription }         = require('../services/subscriptionService');
+const { getUsage, incrementUsage }= require('../services/usageService');
 const { runUnifiedPipeline }      = require('../utils/pipeline');
 const { callAIWithFallback }      = require('../ai/universalCaller');
 const { withTimeout }             = require('../utils/helpers');
@@ -165,9 +166,9 @@ const createSession = async (req, res) => {
       });
     }
 
-    // ── Quota check — same approach as evaluationController.js ─────────
-    // Counts ALL evaluations (kit + custom) from candidate_evaluations this month.
-    const [sub, usage] = await Promise.all([
+    // ── Quota check ─ reads from usage table, NOT candidate_evaluations ─────
+    // Deleting evaluation records NEVER resets this counter.
+    const [sub, usageData] = await Promise.all([
       getSubscription(userId),
       getUsage(userId),
     ]);
@@ -175,17 +176,7 @@ const createSession = async (req, res) => {
     const limit      = EVAL_LIMITS[planId];
 
     if (limit !== null) {
-      const startOfMonth = new Date();
-      startOfMonth.setDate(1);
-      startOfMonth.setHours(0, 0, 0, 0);
-
-      const { count, error: countError } = await supabase
-        .from('candidate_evaluations')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', userId)
-        .gte('interview_date', startOfMonth.toISOString().split('T')[0]);
-
-      const evalsUsed = countError ? 0 : (count ?? 0);
+      const evalsUsed = usageData?.evaluations_used ?? 0;
 
       if (evalsUsed >= limit) {
         return res.status(403).json({
@@ -197,8 +188,8 @@ const createSession = async (req, res) => {
         });
       }
 
-      // Attach remaining to response for UI display
-      req._evalsRemaining = limit - evalsUsed - 1;  // -1 for this session completing
+      // Attach remaining to response for UI display (-1 for this session)
+      req._evalsRemaining = limit - evalsUsed - 1;
     } else {
       req._evalsRemaining = null; // unlimited
     }
@@ -417,7 +408,7 @@ const submitScores = async (req, res) => {
       recommendation:  evaluation.recommendation ?? null,
       ai_evaluation:   evaluation,
       plan_id:         planId,
-      source:          'custom_questions',              // tracks custom vs kit
+      source:          'custom_questions',
       interview_date:  new Date().toISOString().split('T')[0],
     });
 
@@ -439,34 +430,12 @@ const submitScores = async (req, res) => {
       created_at: new Date().toISOString(),
     }]);
 
-    // ── Increment analyses_used ──────────────────────────────────────
-    if (userId !== "anonymous") {
+    // ── Increment evaluations_used (atomic) ─────────────────────────────────
+    // BUG FIX: Was incorrectly incrementing analyses_used. Custom evaluations
+    // must count against evaluations_used. Deleting history never decrements this.
+    if (userId !== 'anonymous') {
       try {
-        const currentMonth = new Date().toISOString().slice(0, 7);
-        const usageData = await getUsage(userId);
-        const currentUsed = usageData?.analyses_used ?? 0;
-
-        const { error: upsertError } = await supabase
-          .from('usage')
-          .upsert(
-            {
-              user_id: userId,
-              month: currentMonth,
-              analyses_used: currentUsed + 1,
-              kits_used: usageData?.kits_used ?? 0,
-              jd_analyses_used: usageData?.jd_analyses_used ?? 0,
-              evaluations_used: usageData?.evaluations_used ?? 0,
-              updated_at: new Date().toISOString()
-            },
-            { 
-              onConflict: 'user_id,month',
-              ignoreDuplicates: false 
-            }
-          );
-
-        if (upsertError) {
-          console.error('[USAGE UPDATE FAILED (custom-eval)]', upsertError);
-        }
+        await incrementUsage(userId, 'evaluations_used');
       } catch (usageErr) {
         console.error('[USAGE INCREMENT FATAL ERROR (custom-eval)]', usageErr);
       }

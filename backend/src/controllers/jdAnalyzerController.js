@@ -15,7 +15,8 @@
 "use strict";
 
 const { callAIWithFallback }              = require("../ai/universalCaller");
-const { getSubscription, getUsage }       = require("../services/subscriptionService");
+const { getSubscription }                  = require("../services/subscriptionService");
+const { getUsage, incrementUsage }         = require("../services/usageService");
 const { supabase }                        = require("../config/supabase");
 const { parseJSON }                       = require("../utils/parseJSON");
 
@@ -277,34 +278,11 @@ const analyzeJd = async (req, res) => {
       // Non-fatal — still return result
     }
 
-    // ── Increment usage ────────────────────────────────────────────────────
+    // ── Usage increment (atomic) ──────────────────────────────────────────────
+    // Persists to `usage` table only — independent of analysis_reports history.
     if (userId !== "anonymous") {
       try {
-        const currentMonth = new Date().toISOString().slice(0, 7);
-        const usageData = await getUsage(userId);
-        const currentUsed = usageData?.jd_analyses_used ?? 0;
-
-        const { error: upsertError } = await supabase
-          .from('usage')
-          .upsert(
-            {
-              user_id: userId,
-              month: currentMonth,
-              jd_analyses_used: currentUsed + 1,
-              analyses_used: usageData?.analyses_used ?? 0,
-              kits_used: usageData?.kits_used ?? 0,
-              evaluations_used: usageData?.evaluations_used ?? 0,
-              updated_at: new Date().toISOString()
-            },
-            { 
-              onConflict: 'user_id,month',
-              ignoreDuplicates: false 
-            }
-          );
-
-        if (upsertError) {
-          console.error('[USAGE UPDATE FAILED (jd)]', upsertError);
-        }
+        await incrementUsage(userId, 'jd_analyses_used');
       } catch (usageErr) {
         console.error('[USAGE INCREMENT FATAL ERROR (jd)]', usageErr);
       }

@@ -119,7 +119,7 @@ function QuestionCard({
     setLoadingRW(true);
     setRwError(null);
     try {
-      const token = await getToken({ template: "backend" });
+      const token = await getToken({ template: "backend" }).catch(() => getToken());
       const res = await fetch(`/api/kit-audit/${auditId}/rewrite`, {
         method:  "POST",
         headers: { 
@@ -425,7 +425,7 @@ export default function AuditResultPage() {
     if (!id) return;
     (async () => {
       try {
-        const token = await getToken({ template: "backend" });
+        const token = await getToken({ template: "backend" }).catch(() => getToken());
         const res  = await fetch(`/api/kit-audit/${id}`, {
           headers: {
             "Authorization": `Bearer ${token}`
@@ -455,7 +455,7 @@ export default function AuditResultPage() {
 
     // Persist to DB in the background
     try {
-      const token = await getToken({ template: "backend" });
+      const token = await getToken({ template: "backend" }).catch(() => getToken());
       await fetch(`/api/kit-audit/${id}`, {
         method: 'PATCH',
         headers: { 

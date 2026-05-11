@@ -28,15 +28,20 @@ async function fetchWithAuth(endpoint: string, options: RequestInit = {}, token?
 
   // Safely parse JSON — the response may be an HTML error page (502, 504, etc.)
   let data: any = null;
+  const text = await response.text();
+  
   try {
-    data = await response.json();
-  } catch {
-    // Non-JSON body (e.g. gateway error page)
-    throw new Error(`Request failed with status ${response.status}`);
+    if (text) {
+      data = JSON.parse(text);
+    }
+  } catch (e) {
+    console.error(`[API ERROR] Failed to parse JSON response for ${endpoint} (Status: ${response.status})`);
+    console.error(`[API ERROR] Raw response: ${text.slice(0, 200)}`);
+    throw new Error(`Request failed with status ${response.status}: Invalid JSON response`);
   }
 
   if (!response.ok) {
-    const error: any = new Error(data?.message || data?.error || `Request failed with status ${response.status}`);
+    const error: any = new Error(data?.message || data?.error || text || `Request failed with status ${response.status}`);
     error.status = response.status;
     error.code = data?.error;
     error.planId = data?.planId;

@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Frontend Auth Missing: Unauthorized' }, { status: 401 })
     }
 
-    const token = await getToken({ template: 'backend' })
+    const token = await getToken({ template: 'backend' }).catch(() => getToken())
     if (!token) {
       return NextResponse.json({ error: 'Frontend Token Missing: Unauthorized' }, { status: 401 })
     }

@@ -50,7 +50,7 @@ export default function AnalyzePage() {
   // Fetch session state for the conversion funnel
   const refreshSessionState = useCallback(async () => {
     try {
-      const token = await getToken({ template: "backend" });
+      const token = await getToken({ template: "backend" }).catch(() => getToken()).catch(() => getToken());
       const data = await getBiasSession(token);
       setSessionState({
         funnelState: (data.funnel_state as 1 | 2 | 3) || 1,
@@ -74,7 +74,7 @@ export default function AnalyzePage() {
       setIsLoading(true);
       setError(null);
       try {
-        const token = await getToken({ template: "backend" });
+        const token = await getToken({ template: "backend" }).catch(() => getToken()).catch(() => getToken());
         const data = await getReportById(reportId, token);
         const fetchedReport = safeParseReport(data.report);
         if (!fetchedReport) throw new Error("Report data missing");
@@ -95,7 +95,7 @@ export default function AnalyzePage() {
     setShowSessionBanner(false);
 
     try {
-      const token = await getToken({ template: "backend" });
+      const token = await getToken({ template: "backend" }).catch(() => getToken()).catch(() => getToken());
       const data = await analyzeQuestions(text, token, name);
       const reportData = safeParseReport(data.report);
       
