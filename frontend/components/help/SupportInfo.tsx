@@ -8,14 +8,8 @@ const infoSections = [
   {
     icon: Mail,
     title: "Email Support",
-    value: "support@rifairai.com",
-    href: "mailto:support@rifairai.com",
-  },
-  {
-    icon: Briefcase,
-    title: "Business Inquiries",
-    value: "business@rifairai.com",
-    href: "mailto:business@rifairai.com",
+    value: "rifairaiteam@gmail.com",
+    href: "https://mail.google.com/mail/?view=cm&fs=1&to=rifairaiteam@gmail.com",
   },
   {
     icon: Clock,
@@ -49,6 +43,8 @@ export const SupportInfo = () => {
             {section.href ? (
               <a
                 href={section.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-lg font-medium hover:text-primary transition-colors underline-offset-4 hover:underline"
               >
                 {section.value}

@@ -6,28 +6,28 @@ import { ChevronDown } from "lucide-react";
 
 const faqs = [
   {
-    question: "How does AI interview evaluation work?",
-    answer: "Our AI analyzes interview transcripts and audio to detect potential biases, evaluate candidate responses against job requirements, and provide objective scores based on predefined criteria.",
+    question: "What exactly does Rifair AI do?",
+    answer: "Rifair AI is an advanced hiring intelligence platform designed to eliminate unconscious bias from the recruitment process. Our AI engine analyzes interview questions and job descriptions to detect subtle signals of bias—whether gender-based, cultural, or age-related—and provides actionable rewrites to ensure a fair and skills-first evaluation.",
   },
   {
-    question: "Can recruiters invite candidates?",
-    answer: "Yes, recruiters can easily invite candidates via email or shareable links. Candidates can then complete their interviews on our platform at their convenience.",
+    question: "How does the AI analysis engine work?",
+    answer: "Our engine doesn't just block bad questions; it fundamentally rebuilds them. It identifies non-inclusive language and 'trick' questions, then suggests alternatives that focus purely on core competencies and behavioral skills, ensuring every candidate is judged on merit alone.",
   },
   {
-    question: "How do subscriptions work?",
-    answer: "We offer various tiers based on your needs—from individual recruiters to large enterprises. Each plan includes a specific number of analyses and seats.",
+    question: "What tools are included in the Rifair suite?",
+    answer: "The Rifair suite includes a JD Analyser for building inclusive job descriptions, a Candidate Evaluation tool for skills-based assessment, and an Interview Question Analyzer. All tools are integrated into a centralized dashboard with history tracking and bias-trend analysis.",
   },
   {
-    question: "Can I cancel anytime?",
-    answer: "Absolutely. You can cancel or change your subscription at any time from your billing dashboard. Your access will remain active until the end of your current billing cycle.",
+    question: "How do the different subscription plans work?",
+    answer: "We offer three main tiers: Free (for basic analysis), Starter (for growing teams), and Growth (for scaling hiring operations). Each plan increases the number of monthly analyses, kit generations, and provides more advanced features like custom branding and priority support.",
   },
   {
-    question: "Is interview data secure?",
-    answer: "Security is our top priority. All data is encrypted both at rest and in transit. We are SOC2 compliant and follow strict GDPR guidelines to ensure candidate privacy.",
+    question: "Is our interview and candidate data secure?",
+    answer: "Security is built into our core. We use enterprise-grade encryption (AES-256) for all data at rest and in transit. We strictly adhere to global privacy standards and never sell candidate data to third parties.",
   },
   {
-    question: "How quickly can I get support?",
-    answer: "Our standard response time is within 24 hours. Enterprise customers have access to priority support with guaranteed response times under 4 hours.",
+    question: "How can I get in touch with the support team?",
+    answer: "You can submit a ticket directly through the support form on this page, or email us at rifairaiteam@gmail.com. Our team typically responds within 24 hours to ensure your hiring process remains uninterrupted.",
   },
 ];
 

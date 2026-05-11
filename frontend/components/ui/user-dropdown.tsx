@@ -82,6 +82,9 @@ export function UserDropdown() {
       case "upgrade":
         router.push("/pricing");
         break;
+      case "help":
+        router.push("/help");
+        break;
       default:
         console.log("Action:", action);
     }

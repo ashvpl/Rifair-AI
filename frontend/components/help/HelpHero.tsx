@@ -2,7 +2,6 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Search } from "lucide-react";
 
 export const HelpHero = () => {
   return (
@@ -28,22 +27,6 @@ export const HelpHero = () => {
           </p>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-2xl mx-auto relative group"
-        >
-          <div className="absolute inset-0 bg-primary/5 rounded-2xl blur-xl transition-all group-focus-within:bg-primary/10" />
-          <div className="relative flex items-center">
-            <Search className="absolute left-5 w-5 h-5 text-muted-foreground transition-colors group-focus-within:text-primary" />
-            <input
-              type="text"
-              placeholder="Search for help, billing, interviews, subscriptions..."
-              className="w-full h-14 pl-14 pr-6 bg-background/50 backdrop-blur-xl border border-border/50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all text-base placeholder:text-muted-foreground/60"
-            />
-          </div>
-        </motion.div>
       </div>
     </section>
   );

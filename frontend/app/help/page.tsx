@@ -7,40 +7,42 @@ import { SupportForm } from "@/components/help/SupportForm";
 import { SupportInfo } from "@/components/help/SupportInfo";
 import { FAQSection } from "@/components/help/FAQSection";
 import { EnterpriseCTA } from "@/components/help/EnterpriseCTA";
+import { NavBarDemo } from "@/components/ui/navbar-demo";
+import FooterSection from "@/components/ui/footer-section";
 import { motion } from "framer-motion";
 
 export default function HelpPage() {
   return (
     <main className="min-h-screen bg-background selection:bg-primary/10">
-      <HelpHero />
+      <NavBarDemo />
       
-      <HelpCards />
+      <div className="pt-20">
+        <HelpHero />
+        
+        <HelpCards />
 
-      <section className="max-w-7xl mx-auto px-6 py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
-          <div className="lg:col-span-2">
-            <SupportForm />
+        <section className="max-w-7xl mx-auto px-6 py-24">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+            <div className="lg:col-span-2">
+              <SupportForm />
+            </div>
+            <div className="lg:col-span-1">
+              <SupportInfo />
+            </div>
           </div>
-          <div className="lg:col-span-1">
-            <SupportInfo />
-          </div>
+        </section>
+
+        <FAQSection />
+
+        <EnterpriseCTA />
+
+        {/* Subtle bottom separator */}
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="h-px bg-gradient-to-r from-transparent via-border/50 to-transparent" />
         </div>
-      </section>
-
-      <FAQSection />
-
-      <EnterpriseCTA />
-
-      {/* Subtle bottom separator */}
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="h-px bg-gradient-to-r from-transparent via-border/50 to-transparent" />
+        
+        <FooterSection />
       </div>
-      
-      <footer className="py-12 text-center">
-        <p className="text-sm text-muted-foreground/60">
-          © {new Date().getFullYear()} Rifair AI. All rights reserved.
-        </p>
-      </footer>
     </main>
   );
 }

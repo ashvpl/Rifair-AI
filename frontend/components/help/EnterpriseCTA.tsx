@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { ArrowRight, Building2 } from "lucide-react";
 
 export const EnterpriseCTA = () => {
@@ -25,16 +26,24 @@ export const EnterpriseCTA = () => {
         </div>
 
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-4">
-          <button className="group relative px-8 h-14 bg-primary text-primary-foreground font-semibold rounded-2xl overflow-hidden shadow-xl hover:shadow-primary/20 transition-all">
+          <a 
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=rifairaiteam@gmail.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative px-8 h-14 bg-primary text-primary-foreground font-semibold rounded-2xl overflow-hidden shadow-xl hover:shadow-primary/20 transition-all flex items-center justify-center"
+          >
             <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
             <span className="relative z-10 flex items-center gap-2">
               Contact Sales
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </span>
-          </button>
-          <button className="px-8 h-14 bg-background/50 border border-border/50 hover:bg-background transition-all font-semibold rounded-2xl">
+          </a>
+          <Link 
+            href="/"
+            className="px-8 h-14 bg-background/50 border border-border/50 hover:bg-background transition-all font-semibold rounded-2xl flex items-center justify-center"
+          >
             Explore Platform
-          </button>
+          </Link>
         </div>
       </div>
     </section>
