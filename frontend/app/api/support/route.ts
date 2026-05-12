@@ -3,11 +3,12 @@ import { Resend } from 'resend'
 import { auth } from '@clerk/nextjs/server'
 import { getSupabaseAdmin } from '@/lib/supabase-admin'
 
-const supabase = getSupabaseAdmin()
-
-const resend = new Resend(process.env.RESEND_API_KEY)
+export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest) {
+  const supabase = getSupabaseAdmin()
+  const resend = new Resend(process.env.RESEND_API_KEY)
+
   const { userId } = await auth()
 
   const {

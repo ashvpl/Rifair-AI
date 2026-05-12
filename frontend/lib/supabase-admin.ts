@@ -29,8 +29,8 @@ export function getSupabaseAdmin() {
   }
 
   _supabaseAdmin = createClient(
-    supabaseUrl || "",
-    supabaseServiceKey || "",
+    supabaseUrl || "https://placeholder.supabase.co",
+    supabaseServiceKey || "placeholder-key",
     {
       auth: {
         autoRefreshToken: false,
