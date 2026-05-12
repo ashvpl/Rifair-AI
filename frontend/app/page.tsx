@@ -244,7 +244,7 @@ export default function LandingPage() {
                     subtitle="Join a movement of world-class organizations building the future of unbiased, skills-first recruitment."
                     callToAction={{
                         text: "Start Free Audit",
-                        href: "/analyze",
+                        href: "/sign-in?redirect_url=/analyze",
                         icon: <ArrowRight className="h-6 w-6" />
                     }}
                     backgroundImage="https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=2070&auto=format&fit=crop"

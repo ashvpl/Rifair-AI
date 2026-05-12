@@ -1,17 +1,18 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { BACKEND_URL } from "@/lib/server-config";
+import { getBackendToken } from "@/lib/server-auth";
 
 export async function POST(req: Request) {
   try {
-    const { userId, getToken } = await auth();
+    const { userId } = await auth();
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await req.json();
-    const token = await getToken({ template: "backend" }).catch(() => getToken());
+    const token = await getBackendToken("JD_GEN");
 
     console.log(`[FRONTEND JD-GENERATOR] Proxying for userId: ${userId}`);
 

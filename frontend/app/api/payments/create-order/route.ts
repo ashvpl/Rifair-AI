@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import { BACKEND_URL } from '@/lib/server-config'
+import { getBackendToken } from '@/lib/server-auth'
 
 /**
  * POST /api/payments/create-order
@@ -8,17 +9,17 @@ import { BACKEND_URL } from '@/lib/server-config'
  */
 export async function POST(req: NextRequest) {
   try {
-    const { userId, getToken } = await auth()
+    const { userId } = await auth()
     if (!userId) {
       console.log('[PROXY] Unauthorized: No userId found');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const body = await req.json()
-    const token = await getToken({ template: 'backend' }).catch(() => getToken())
+    const token = await getBackendToken("PAYMENTS");
 
     console.log(`[PROXY] Creating order for user: ${userId}`);
-    console.log(`[PROXY] Token present: ${!!token} (length: ${token?.length || 0})`);
+    console.log(`[PROXY] Token present: ${!!token}`);
 
     // getToken({ template: "backend" }) returns null when the session is stale/expired
     // Sending "Bearer null" causes Clerk on the backend to reject with Unauthenticated

@@ -65,7 +65,7 @@ export function HeroSection() {
 							</Button>
 						</Link>
 					) : (
-						<Link href="/analyze" className="w-full sm:w-auto">
+						<Link href="/sign-in?redirect_url=/analyze" className="w-full sm:w-auto">
 							<Button className="w-full sm:w-auto rounded-full font-bold h-12 px-8" size="lg">
 								Try Free Analysis{" "}
 								<ArrowRightIcon className="size-4 ms-2" />
