@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getBackendToken } from "@/lib/server-auth";
+import { getBackendToken, extractBearerToken } from "@/lib/server-auth";
 import { BACKEND_URL } from "@/lib/server-config";
 
 export const dynamic = "force-dynamic";
@@ -9,7 +9,8 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const token = await getBackendToken("REPORT_GET");
+    const incomingToken = extractBearerToken(req);
+    const token = await getBackendToken("REPORT_GET", incomingToken);
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -58,7 +59,8 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const token = await getBackendToken("REPORT_DELETE");
+    const incomingToken = extractBearerToken(req);
+    const token = await getBackendToken("REPORT_DELETE", incomingToken);
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -104,7 +106,8 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const token = await getBackendToken("REPORT_UPDATE");
+    const incomingToken = extractBearerToken(req);
+    const token = await getBackendToken("REPORT_UPDATE", incomingToken);
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

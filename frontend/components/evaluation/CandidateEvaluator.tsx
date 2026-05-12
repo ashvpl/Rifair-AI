@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils'
 import { useSubscription } from '@/hooks/useSubscription'
 import ExportButton from '@/components/pdf/ExportButton'
 import { LoadingState } from '@/components/LoadingState'
+import { useBackendToken } from '@/hooks/useBackendToken'
 
 
 interface Question {
@@ -36,7 +37,8 @@ export function CandidateEvaluator({
   onComplete?: (evaluation: any) => void
 }) {
   const router = useRouter()
-  const { getToken } = useAuth()
+  const { isLoaded, userId } = useAuth()
+  const { getAuthToken } = useBackendToken()
   const { planId } = useSubscription()
   const questions: Question[] = kit.questions ?? []
 
@@ -67,12 +69,17 @@ export function CandidateEvaluator({
   useEffect(() => {
     const saveTimer = setTimeout(async () => {
       const evalId = (kit as any)._customEvalId || kit.id;
-      if (!evalId || Object.keys(scores).length === 0) return;
+      if (!evalId || Object.keys(scores).length === 0 || !isLoaded || !userId) return;
       
       try {
+        const token = await getAuthToken()
+        if (!token) return
         await fetch(`/api/evaluations/${evalId}/autosave`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
           body: JSON.stringify({ 
             scores: scores,
             notes: Object.fromEntries(Object.entries(scores).map(([k, v]) => [k, v.notes]))
@@ -84,7 +91,7 @@ export function CandidateEvaluator({
     }, 1000);
 
     return () => clearTimeout(saveTimer);
-  }, [scores, kit]);
+  }, [scores, kit, isLoaded, userId, getAuthToken]);
 
   const scoreLabels: Record<number, {
     label: string
@@ -139,13 +146,18 @@ export function CandidateEvaluator({
 
     try {
       let data: any
+      const token = await getAuthToken()
+      if (!token) return
 
       // ── Custom evaluation path: POST /api/custom-eval/:id/score ──────
       if ((kit as any)._isCustomEval && (kit as any)._customEvalId) {
         const customId = (kit as any)._customEvalId
         const res = await fetch(`/api/custom-eval/${customId}/score`, {
           method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
           body: JSON.stringify({
             scores: questionScores.map(qs => ({
               score: qs.score,
@@ -167,7 +179,6 @@ export function CandidateEvaluator({
 
       // ── Standard kit evaluation path ─────────────────────────────────
       } else {
-        const token = await getToken({ template: "backend" }).catch(() => getToken())
         data = await evaluateCandidate({
           kitId:         kit.id ?? 'unknown',
           role:          kit.role,
@@ -402,7 +413,7 @@ function EvaluationResult({
       label: 'Recommended to Hire'
     },
     HOLD: {
-      bg:    'bg-gradient-to-br from-amber-500 to-amber-700',
+      bg:    'bg-gradient-to-br from-amber-50 to-amber-700',
       badge: 'bg-white/20 text-white backdrop-blur-md',
       icon:  '⟳',
       label: 'Hold — Further Assessment Needed'

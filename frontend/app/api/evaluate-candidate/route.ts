@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { BACKEND_URL } from "@/lib/server-config";
+import { getBackendToken, extractBearerToken } from "@/lib/server-auth";
 
 export async function POST(req: Request) {
   try {
-    const { userId, getToken } = await auth();
+    const { userId } = await auth();
     console.log(`[FRONTEND EVALUATE] User: ${userId}`);
 
     if (!userId) {
@@ -12,7 +13,15 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const token = await getToken({ template: "backend" }).catch(() => getToken());
+    
+    // Forward client token if present; fall back to server-side auth()
+    const incomingToken = extractBearerToken(req);
+    const token = await getBackendToken("EVALUATE_CANDIDATE", incomingToken);
+
+    if (!token) {
+      return NextResponse.json({ error: "Session expired. Please sign in again." }, { status: 401 });
+    }
+
     console.log(`[Proxy] Evaluating candidate via: ${BACKEND_URL}/api/evaluate-candidate`);
 
     const response = await fetch(`${BACKEND_URL}/api/evaluate-candidate`, {
@@ -48,7 +57,7 @@ export async function POST(req: Request) {
     return NextResponse.json(data, { status: 200 });
   } catch (error: any) {
     const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
-    console.error("[FRONTEND EVALUATE] Proxy error:", error.message || error);
+    console.error("[AUTH API] Evaluate Candidate Proxy error:", errorMessage);
     return NextResponse.json(
       { error: `Connection failed: ${errorMessage}. Check backend URL configuration.` },
       { status: 500 }

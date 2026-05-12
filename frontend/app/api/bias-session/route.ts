@@ -1,12 +1,24 @@
 import { NextResponse } from "next/server";
-import { getBackendToken } from "@/lib/server-auth";
+import { auth } from "@clerk/nextjs/server";
+import { getBackendToken, extractBearerToken } from "@/lib/server-auth";
 import { BACKEND_URL } from "@/lib/server-config";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    const token = await getBackendToken("BIAS_SESSION");
+    // Pre-check: ensure user is authenticated before attempting token retrieval
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({
+        error: "Unauthenticated",
+        details: "No active session found."
+      }, { status: 401 });
+    }
+
+    // Forward client token if present; fall back to server-side auth()
+    const incomingToken = extractBearerToken(req);
+    const token = await getBackendToken("BIAS_SESSION", incomingToken);
 
     if (!token) {
       return NextResponse.json({ 
@@ -46,7 +58,7 @@ export async function GET() {
     return NextResponse.json(data);
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error("Bias Session API Proxy error:", errorMessage);
+    console.error("[AUTH API] Bias Session API Proxy error:", errorMessage);
     return NextResponse.json({ error: `Internal Proxy Error: ${errorMessage}` }, { status: 500 });
   }
 }

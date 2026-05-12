@@ -13,6 +13,7 @@ import {
 import { cn } from "@/lib/utils";
 import { CandidateEvaluator } from "@/components/evaluation/CandidateEvaluator";
 import ExportButton from "@/components/pdf/ExportButton";
+import { useBackendToken } from "@/hooks/useBackendToken";
 
 
 // ── Types ────────────────────────────────────────────────────────────────────
@@ -98,7 +99,7 @@ function QuestionCard({
   planTier: string;
   onUpdateQuestion?: (index: number, newText: string) => void;
 }) {
-  const { getToken } = useAuth();
+  const { getAuthToken } = useBackendToken();
   const rawScore  = bias.bias_score ?? bias.score ?? 0;
   const originallyFlagged = rawScore > 20;
   const isPaid    = ["starter", "growth", "enterprise"].includes(planTier);
@@ -119,7 +120,8 @@ function QuestionCard({
     setLoadingRW(true);
     setRwError(null);
     try {
-      const token = await getToken({ template: "backend" }).catch(() => getToken());
+      const token = await getAuthToken();
+      if (!token) return;
       const res = await fetch(`/api/kit-audit/${auditId}/rewrite`, {
         method:  "POST",
         headers: { 
@@ -412,7 +414,8 @@ function KitActions({
 // ── Main Page ────────────────────────────────────────────────────────────────
 
 export default function AuditResultPage() {
-  const { getToken } = useAuth();
+  const { isLoaded, userId } = useAuth();
+  const { getAuthToken } = useBackendToken();
   const { id }   = useParams<{ id: string }>();
   const router   = useRouter();
   const [audit, setAudit]     = useState<AuditData | null>(null);
@@ -422,10 +425,11 @@ export default function AuditResultPage() {
   const [showEvaluator, setShowEvaluator] = useState(false);
 
   useEffect(() => {
-    if (!id) return;
+    if (!id || !isLoaded || !userId) return;
     (async () => {
       try {
-        const token = await getToken({ template: "backend" }).catch(() => getToken());
+        const token = await getAuthToken();
+        if (!token) return;
         const res  = await fetch(`/api/kit-audit/${id}`, {
           headers: {
             "Authorization": `Bearer ${token}`
@@ -440,7 +444,7 @@ export default function AuditResultPage() {
         setLoading(false);
       }
     })();
-  }, [id]);
+  }, [id, isLoaded, userId, getAuthToken]);
 
   const handleUpdateQuestion = async (index: number, newText: string) => {
     if (!audit) return;
@@ -455,7 +459,8 @@ export default function AuditResultPage() {
 
     // Persist to DB in the background
     try {
-      const token = await getToken({ template: "backend" }).catch(() => getToken());
+      const token = await getAuthToken();
+      if (!token) return;
       await fetch(`/api/kit-audit/${id}`, {
         method: 'PATCH',
         headers: { 

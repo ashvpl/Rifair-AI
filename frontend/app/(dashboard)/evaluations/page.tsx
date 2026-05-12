@@ -23,10 +23,11 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { LoadingState } from "@/components/LoadingState";
 import { CustomEvaluationFlow } from "@/components/eval/CustomEvaluationFlow";
-
+import { useBackendToken } from "@/hooks/useBackendToken";
 
 export default function EvaluationsPage() {
-  const { getToken, isLoaded, userId } = useAuth();
+  const { isLoaded, userId } = useAuth();
+  const { getAuthToken } = useBackendToken();
   const [kits, setKits] = useState<any[]>([]);
   const [evaluations, setEvaluations] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -39,7 +40,8 @@ export default function EvaluationsPage() {
       if (!isLoaded || !userId) return;
       setIsLoading(true);
       try {
-        const token = await getToken({ template: "backend" }).catch(() => getToken());
+        const token = await getAuthToken();
+        if (!token) return;
         const data = await getReports(token);
         if (Array.isArray(data)) {
           const parsed = data.map(safeParseReport);
@@ -64,7 +66,7 @@ export default function EvaluationsPage() {
       }
     }
     fetchKits();
-  }, [isLoaded, userId, getToken]);
+  }, [isLoaded, userId, getAuthToken]);
 
   const filteredKits = kits.filter(k => 
     k.input_text?.toLowerCase().includes(searchQuery.toLowerCase()) ||

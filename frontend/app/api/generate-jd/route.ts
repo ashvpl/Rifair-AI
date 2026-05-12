@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { BACKEND_URL } from "@/lib/server-config";
-import { getBackendToken } from "@/lib/server-auth";
+import { getBackendToken, extractBearerToken } from "@/lib/server-auth";
 
 export async function POST(req: Request) {
   try {
@@ -12,7 +12,14 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const token = await getBackendToken("JD_GEN");
+    
+    // Forward client token if present; fall back to server-side auth()
+    const incomingToken = extractBearerToken(req);
+    const token = await getBackendToken("JD_GEN", incomingToken);
+
+    if (!token) {
+      return NextResponse.json({ error: "Session expired. Please sign in again." }, { status: 401 });
+    }
 
     console.log(`[FRONTEND JD-GENERATOR] Proxying for userId: ${userId}`);
 
@@ -48,7 +55,7 @@ export async function POST(req: Request) {
     return NextResponse.json(data, { status: 200 });
   } catch (error: any) {
     const msg = error instanceof Error ? error.message : "Internal Server Error";
-    console.error("[FRONTEND JD-GENERATOR] Proxy error:", msg);
+    console.error("[AUTH API] JD GENERATOR Proxy error:", msg);
     return NextResponse.json(
       { error: `Connection failed: ${msg}` },
       { status: 500 }

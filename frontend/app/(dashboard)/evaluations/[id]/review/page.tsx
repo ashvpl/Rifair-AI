@@ -7,10 +7,12 @@ import { LoadingState } from "@/components/LoadingState";
 import { AlertTriangle, ArrowLeft, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useBackendToken } from "@/hooks/useBackendToken";
 
 export default function CustomEvalReviewPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const { getToken, isLoaded, userId } = useAuth();
+  const { isLoaded, userId } = useAuth();
+  const { getAuthToken } = useBackendToken();
   const [session, setSession] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +23,8 @@ export default function CustomEvalReviewPage({ params }: { params: Promise<{ id:
       if (!isLoaded || !userId) return;
       setIsLoading(true);
       try {
-        const token = await getToken({ template: "backend" }).catch(() => getToken());
+        const token = await getAuthToken();
+        if (!token) return;
         const res = await fetch(`/api/custom-eval/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -40,7 +43,7 @@ export default function CustomEvalReviewPage({ params }: { params: Promise<{ id:
       }
     }
     fetchSession();
-  }, [id, isLoaded, userId, getToken]);
+  }, [id, isLoaded, userId, getAuthToken]);
 
   if (isLoading) return <div className="py-20"><LoadingState text="Loading" /></div>;
   if (error || !session) return (

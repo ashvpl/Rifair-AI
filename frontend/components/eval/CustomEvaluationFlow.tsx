@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils'
 import { CandidateEvaluator } from '@/components/evaluation/CandidateEvaluator'
 import { LoadingState } from '@/components/LoadingState'
 import BiasCheckResults from './BiasCheckResults'
+import { useBackendToken } from '@/hooks/useBackendToken'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -444,7 +445,8 @@ export function CustomEvaluationFlow({
   initialStep?: Step,
   initialSession?: SessionData | null
 }) {
-  const { getToken } = useAuth()
+  const { isLoaded, userId } = useAuth()
+  const { getAuthToken } = useBackendToken()
   const router = useRouter()
   const [step, setStep]       = useState<Step>(initialStep)
   const [session, setSession] = useState<SessionData | null>(initialSession)
@@ -476,9 +478,14 @@ export function CustomEvaluationFlow({
   }) => {
     setError('')
     try {
+      const token = await getAuthToken()
+      if (!token) return
       const res = await fetch('/api/custom-eval', {
         method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body:    JSON.stringify(data),
       })
       const json = await res.json()

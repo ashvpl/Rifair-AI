@@ -1,18 +1,19 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { BACKEND_URL } from "@/lib/server-config";
-import { getBackendToken } from "@/lib/server-auth";
+import { getBackendToken, extractBearerToken } from "@/lib/server-auth";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const { userId } = await auth();
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const token = await getBackendToken("REPORTS_GET");
+    const incomingToken = extractBearerToken(request);
+    const token = await getBackendToken("REPORTS_GET", incomingToken);
 
     if (!token) {
       return NextResponse.json({ error: "Session expired" }, { status: 401 });
@@ -55,14 +56,15 @@ export async function GET() {
   }
 }
 
-export async function DELETE() {
+export async function DELETE(request: Request) {
   try {
     const { userId } = await auth();
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const token = await getBackendToken("REPORTS_DELETE");
+    const incomingToken = extractBearerToken(request);
+    const token = await getBackendToken("REPORTS_DELETE", incomingToken);
 
     if (!token) {
       return NextResponse.json({ error: "Session expired" }, { status: 401 });

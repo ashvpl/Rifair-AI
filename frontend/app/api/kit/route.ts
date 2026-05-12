@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { BACKEND_URL } from "@/lib/server-config";
+import { getBackendToken, extractBearerToken } from "@/lib/server-auth";
 import {
   getPersonalisedPromptAdjustments,
   serialiseAdjustments,
 } from "@/lib/intelligence/personalisation-engine";
-import { getBackendToken } from "@/lib/server-auth";
 
 export async function POST(req: Request) {
   try {
@@ -18,8 +18,9 @@ export async function POST(req: Request) {
 
     const body = await req.json();
     
-    // ── Robust Token Retrieval ──
-    const token = await getBackendToken("KIT");
+    // Forward client token if present; fall back to server-side auth()
+    const incomingToken = extractBearerToken(req);
+    const token = await getBackendToken("KIT", incomingToken);
 
     if (!token) {
       return NextResponse.json({ error: "Session expired. Please sign in again." }, { status: 401 });

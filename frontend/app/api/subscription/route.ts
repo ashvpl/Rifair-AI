@@ -1,21 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import { BACKEND_URL } from '@/lib/server-config'
+import { getBackendToken, extractBearerToken } from '@/lib/server-auth'
 
 export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/subscription
  * Proxies to backend /api/subscriptions
+ * Forwards the client's token to avoid dual-retrieval failure.
  */
 export async function GET(req: NextRequest) {
   try {
-    const { userId, getToken } = await auth()
+    const { userId } = await auth()
     if (!userId) {
       return NextResponse.json({ error: 'Frontend Auth Missing: Unauthorized' }, { status: 401 })
     }
 
-    const token = await getToken({ template: 'backend' }).catch(() => getToken())
+    // Forward client token if present; fall back to server-side auth()
+    const incomingToken = extractBearerToken(req);
+    const token = await getBackendToken('SUBSCRIPTION', incomingToken);
     if (!token) {
       return NextResponse.json({ error: 'Frontend Token Missing: Unauthorized' }, { status: 401 })
     }
@@ -38,7 +42,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(data)
   } catch (err: any) {
-    console.error('Subscription Proxy Error:', err)
+    console.error('[AUTH API] Subscription Proxy Error:', err)
     return NextResponse.json({ error: err.message }, { status: 500 })
   }
 }

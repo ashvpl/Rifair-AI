@@ -1,21 +1,23 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { BACKEND_URL } from "@/lib/server-config";
-import { getBackendToken } from "@/lib/server-auth";
+import { getBackendToken, extractBearerToken } from "@/lib/server-auth";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const { userId } = await auth();
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const token = await getBackendToken("HISTORY");
+    // Forward client token if present; fall back to server-side auth()
+    const incomingToken = extractBearerToken(req);
+    const token = await getBackendToken("HISTORY", incomingToken);
     
     if (!token) {
-      return NextResponse.json({ error: "Session expired" }, { status: 401 });
+      return NextResponse.json({ error: "Session expired. Please sign in again." }, { status: 401 });
     }
     
     console.log(`[Proxy] Fetching history from: ${BACKEND_URL}/api/reports`);
@@ -51,7 +53,7 @@ export async function GET() {
     return NextResponse.json({ history: data }, { status: 200 });
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error("History API error:", errorMessage);
+    console.error("[AUTH API] History API error:", errorMessage);
     return NextResponse.json({ error: `Internal Proxy Error: ${errorMessage}` }, { status: 500 });
   }
 }

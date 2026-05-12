@@ -21,12 +21,14 @@ import {
 import { cn, safeParseReport } from "@/lib/utils";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import { LoadingState } from "@/components/LoadingState";
+import { useBackendToken } from "@/hooks/useBackendToken";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 type FilterType = "All" | "Analysis" | "JD Analysis" | "JD Generated" | "Kit" | "Evaluation" | "Kit Audit";
 
 export default function HistoryPage() {
-  const { getToken, isLoaded, userId } = useAuth();
+  const { isLoaded, userId } = useAuth();
+  const { getAuthToken } = useBackendToken();
   const [history, setHistory] = useState<Record<string, any>[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -39,7 +41,8 @@ export default function HistoryPage() {
     if (!isLoaded || !userId) return;
     setIsLoading(true);
     try {
-      const token = await getToken({ template: "backend" }).catch(() => getToken());
+      const token = await getAuthToken();
+      if (!token) return;
       const data = await getReports(token);
       if (Array.isArray(data)) {
         setHistory(data.map(safeParseReport));
@@ -55,7 +58,7 @@ export default function HistoryPage() {
 
   useEffect(() => {
     fetchHistory();
-  }, [isLoaded, userId, getToken]);
+  }, [isLoaded, userId, getAuthToken]);
 
   const promptDelete = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
@@ -66,7 +69,8 @@ export default function HistoryPage() {
 
   const confirmDelete = async () => {
     if (!targetId) return;
-    const token = await getToken({ template: "backend" }).catch(() => getToken());
+    const token = await getAuthToken();
+    if (!token) return;
 
     if (targetId === "ALL") {
       setDeletingId("ALL");
@@ -191,7 +195,6 @@ export default function HistoryPage() {
       {/* ── Sticky Search + Filter Bar ────────────────────────────────────── */}
       <div className="sticky top-0 sticky-below-topbar z-20 bg-background/95 backdrop-blur-sm pt-1 pb-3 -mx-3 px-3 sm:-mx-4 sm:px-4 md:-mx-6 md:px-6 mb-4"
       >
-        {/* Search input */}
         <div className="relative mb-3">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#86868B] pointer-events-none" />
           <input
@@ -203,7 +206,6 @@ export default function HistoryPage() {
           />
         </div>
 
-        {/* Filter chips */}
         <div className="chip-row">
           {filters.map((filter) => (
             <button
@@ -312,7 +314,6 @@ export default function HistoryPage() {
 
                       <div className="relative z-10 flex flex-row items-center gap-3 md:gap-6 w-full">
 
-                        {/* Left: type dot + text */}
                         <div className="flex items-center gap-3 flex-1 min-w-0">
                           <div className={cn(
                             "w-2.5 h-2.5 rounded-full shrink-0",
@@ -347,7 +348,6 @@ export default function HistoryPage() {
                           </div>
                         </div>
 
-                        {/* Right: delete button — always visible on mobile */}
                         <button
                           onClick={(e) => promptDelete(e, report.id)}
                           disabled={deletingId === report.id}
@@ -356,7 +356,6 @@ export default function HistoryPage() {
                             "text-[#86868B] hover:text-danger",
                             "bg-white border border-transparent hover:border-danger/15 hover:bg-danger/5",
                             "rounded-xl md:rounded-2xl transition-all active:scale-90",
-                            // On tablet/desktop: hide until hover on card
                             "md:opacity-0 md:group-hover:opacity-100",
                             "disabled:opacity-40 touch-target relative z-20"
                           )}
@@ -387,21 +386,18 @@ export default function HistoryPage() {
         disableBackdropClose={false}
       >
         <div className="space-y-5">
-          {/* Icon */}
           <div className="flex justify-center">
             <div className="w-16 h-16 bg-danger/8 rounded-[1.5rem] flex items-center justify-center border border-danger/12">
               <AlertTriangle className="h-8 w-8 text-danger" />
             </div>
           </div>
 
-          {/* Description */}
           <p className="text-center text-sm font-medium text-[#86868B] leading-relaxed">
             {targetId === "ALL"
               ? "This will permanently delete all your analysis history. This cannot be undone."
               : "This will permanently delete this entry. This cannot be undone."}
           </p>
 
-          {/* Actions */}
           <div className="grid grid-cols-2 gap-3 pt-2">
             <button
               className="flex-1 py-3.5 rounded-2xl bg-[#F5F5F7] border border-black/[0.05] text-[#1D1D1F] font-bold text-sm hover:bg-[#EBEBEB] transition-colors active:scale-95 min-h-[48px]"

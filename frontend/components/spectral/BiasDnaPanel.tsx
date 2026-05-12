@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useAuth } from "@clerk/nextjs";
 import { getBiasDna } from "@/lib/api";
 import { useSubscription } from "@/hooks/useSubscription";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Dna, TrendingUp, TrendingDown, Minus, Lock } from "lucide-react";
+import { useBackendToken } from "@/hooks/useBackendToken";
 
 interface BiasDnaData {
   dominant_bias_types: { type: string; count: number }[];
@@ -19,7 +19,7 @@ interface BiasDnaData {
 
 export function BiasDnaPanel() {
   const { canUse } = useSubscription();
-  const { getToken } = useAuth();
+  const { getAuthToken } = useBackendToken();
   const router = useRouter();
   const isUnlocked = canUse("bias_dna");
   const [data, setData] = useState<BiasDnaData | null>(null);
@@ -30,7 +30,8 @@ export function BiasDnaPanel() {
     const fetch = async () => {
       setLoading(true);
       try {
-        const token = await getToken({ template: "backend" }).catch(() => getToken());
+        const token = await getAuthToken();
+        if (!token) return;
         const result = await getBiasDna(token);
         setData(result);
       } catch (e) {
@@ -40,7 +41,7 @@ export function BiasDnaPanel() {
       }
     };
     fetch();
-  }, [isUnlocked, getToken]);
+  }, [isUnlocked, getAuthToken]);
 
   const TrendIcon = data?.fairness_trend === "improving"
     ? TrendingDown
@@ -132,7 +133,7 @@ export function BiasDnaPanel() {
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white border border-black/[0.05] rounded-[2rem] p-6 shadow-[0_4px_24px_rgba(0,0,0,0.02)] space-y-5"
+      className="bg-white border border-black/[0.05] rounded-[2rem] p-6 shadow-[0_4px_24_rgba(0,0,0,0.02)] space-y-5"
     >
       <div className="flex items-center gap-3">
         <div className="w-9 h-9 bg-violet-50 border border-violet-200 rounded-xl flex items-center justify-center">

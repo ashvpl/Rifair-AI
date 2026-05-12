@@ -21,12 +21,14 @@ import { ContentWarning } from "@/components/moderation/ContentWarning";
 import KitAuditUploader from "@/components/kit-generator/KitAuditUploader";
 import ExportButton from "@/components/pdf/ExportButton";
 import { useSubscription } from "@/hooks/useSubscription";
+import { useBackendToken } from "@/hooks/useBackendToken";
 
 
 type ActiveTab = "generate" | "audit";
 
 export default function KitGeneratorPage() {
-  const { getToken } = useAuth();
+  const { isLoaded, userId } = useAuth();
+  const { getAuthToken } = useBackendToken();
   const [activeTab, setActiveTab] = useState<ActiveTab>("generate");
   const [formData, setFormData] = useState({
     role: "Senior Frontend Engineer",
@@ -48,10 +50,11 @@ export default function KitGeneratorPage() {
 
   useEffect(() => {
     const fetchReport = async () => {
-      if (!reportId) return;
+      if (!reportId || !isLoaded || !userId) return;
       setIsLoading(true);
       try {
-        const token = await getToken({ template: "backend" }).catch(() => getToken());
+        const token = await getAuthToken();
+        if (!token) return;
         const data = await getReportById(reportId, token);
         let fetchedReport = data.report;
 
@@ -82,7 +85,7 @@ export default function KitGeneratorPage() {
       }
     };
     fetchReport();
-  }, [reportId, getToken]);
+  }, [reportId, isLoaded, userId, getAuthToken]);
 
   const kitModeration = useContentModeration('kit');
 
@@ -97,7 +100,8 @@ export default function KitGeneratorPage() {
     setKit(null);
 
     try {
-      const token = await getToken({ template: "backend" }).catch(() => getToken());
+      const token = await getAuthToken();
+      if (!token) throw new Error("Authentication required");
       const data = await generateKit(formData, token);
       const kitData = data.kit || {};
       if (data.reportId) {
@@ -129,7 +133,6 @@ export default function KitGeneratorPage() {
       <div className="relative max-w-6xl mx-auto space-y-6 pt-6 pb-16 px-0">
         {isLoading && <LoadingState text="Generating" />}
       
-      {/* Header section */}
       <div className="relative">
         <div className="space-y-1">
           <h1 className={cn(
@@ -146,7 +149,6 @@ export default function KitGeneratorPage() {
         </div>
       </div>
 
-      {/* ── Tab Switcher (only shown outside evaluate mode) ─────────────── */}
       {searchParams.get("evaluate") !== "true" && (
         <div className="flex bg-[#F5F5F7]/80 rounded-2xl p-1 max-w-sm border border-black/[0.04]">
           <button
@@ -176,7 +178,6 @@ export default function KitGeneratorPage() {
         </div>
       )}
 
-      {/* ── Audit Tab ──────────────────────────────────────────────────── */}
       {activeTab === "audit" && searchParams.get("evaluate") !== "true" && (
         <AnimatePresence mode="wait">
           <motion.div
@@ -191,14 +192,12 @@ export default function KitGeneratorPage() {
         </AnimatePresence>
       )}
 
-      {/* ── Generate Tab (existing content) ────────────────────────────── */}
       {(activeTab === "generate" || searchParams.get("evaluate") === "true") && (
         <>
       <UsageLimitBanner type="kits" />
 
       <AnimatePresence mode="wait">
         {kit ? (
-          /* ── Kit Results — Full Width ─────────────────────────────────── */
           <motion.div
             key="kit-results"
             initial={{ opacity: 0, y: 20 }}
@@ -206,7 +205,6 @@ export default function KitGeneratorPage() {
             exit={{ opacity: 0 }}
             transition={{ type: "spring", stiffness: 200, damping: 25 }}
           >
-            {/* Action bar - hide when evaluating */}
             {searchParams.get("evaluate") !== "true" && (
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
                 <div>
@@ -249,14 +247,12 @@ export default function KitGeneratorPage() {
             <KitDisplay kit={kit} />
           </motion.div>
         ) : (
-          /* ── Form + How It Works Side by Side ─────────────────────────── */
           <motion.div 
             key="interface-grid"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-stretch"
           >
-            {/* Form Section - Left */}
             <div className="lg:col-span-1 h-full">
               <div className="bg-white border border-black/[0.05] p-6 sm:p-8 md:p-12 h-full min-h-[500px] md:min-h-[700px] rounded-[2rem] md:rounded-[3.5rem] shadow-[0_4px_24px_rgba(0,0,0,0.02)] relative overflow-hidden transition-all duration-500 hover:shadow-[0_8px_32px_rgba(0,0,0,0.04)] flex flex-col">
                 <div className="mb-6 md:mb-10">
@@ -327,7 +323,6 @@ export default function KitGeneratorPage() {
               </div>
             </div>
 
-            {/* Right Side Content */}
             <div className="lg:col-span-1 h-full">
               <div className="h-full min-h-[500px] md:min-h-[700px] bg-white border border-black/[0.05] flex flex-col items-stretch p-6 sm:p-8 md:p-12 text-foreground rounded-[2rem] md:rounded-[3.5rem] shadow-[0_8px_48px_rgba(0,0,0,0.02)] relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-black/[0.01] rounded-full blur-[120px] -mr-32 -mt-32 md:-mr-48 md:-mt-48" />

@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Zap, AlertTriangle, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { useBackendToken } from "@/hooks/useBackendToken";
 
 export default function SimulatePage() {
-  const { getToken } = useAuth();
+  const { isLoaded, userId } = useAuth();
+  const { getAuthToken } = useBackendToken();
   const [question, setQuestion] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [simulation, setSimulation] = useState<any>(null);
@@ -21,7 +23,8 @@ export default function SimulatePage() {
     setSimulation(null);
 
     try {
-      const token = await getToken({ template: "backend" }).catch(() => getToken());
+      const token = await getAuthToken();
+      if (!token) return;
       const response = await fetch("/api/simulate", {
         method: "POST",
         headers: { 
@@ -63,11 +66,11 @@ export default function SimulatePage() {
               className="text-lg min-h-[120px] resize-none border-slate-200 bg-slate-50 focus:bg-white transition-colors"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              disabled={isLoading}
+              disabled={isLoading || !isLoaded}
             />
             <Button
               onClick={handleSimulate}
-              disabled={isLoading || !question.trim()}
+              disabled={isLoading || !question.trim() || !isLoaded}
               className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-6 text-lg"
             >
               {isLoading ? (

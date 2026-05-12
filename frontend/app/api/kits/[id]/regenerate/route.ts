@@ -4,6 +4,7 @@ import { auth } from '@clerk/nextjs/server';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { z } from 'zod';
 import { BACKEND_URL } from '@/lib/server-config';
+import { getBackendToken, extractBearerToken } from '@/lib/server-auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -54,6 +55,14 @@ export async function POST(
 
       if (!targetQ) {
         return NextResponse.json({ error: 'Question not found' }, { status: 400 });
+    }
+
+      // Forward client token if present; fall back to server-side auth()
+      const incomingToken = extractBearerToken(req);
+      const token = await getBackendToken("KIT_REGEN", incomingToken);
+
+      if (!token) {
+        return NextResponse.json({ error: "Session expired. Please sign in again." }, { status: 401 });
       }
 
       const backendUrl = BACKEND_URL;
@@ -61,7 +70,10 @@ export async function POST(
       // Call backend AI Gateway
       const aiResponse = await fetch(`${backendUrl}/api/ai/kit/regenerate-question`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({
           role: categories.inputs?.role || 'Candidate',
           experience: categories.inputs?.experience_level || 'mid',
@@ -104,7 +116,7 @@ export async function POST(
 
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
   } catch (error: any) {
-    console.error("[KIT REGEN PROXY] Error:", error.message);
+    console.error("[AUTH API] KIT REGEN PROXY Error:", error.message);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { useAuth } from '@clerk/nextjs'
 import { FEATURE_GATES, PLANS } from '@/lib/pricing/plans'
 import type { PlanId, Subscription, Usage, PaymentRecord } from '@/lib/pricing/types'
+import { useBackendToken } from '@/hooks/useBackendToken'
 
 interface SubscriptionState {
   subscription: Subscription | null
@@ -22,7 +23,8 @@ interface SubscriptionState {
 }
 
 export function useSubscription(): SubscriptionState {
-  const { isLoaded, userId, getToken } = useAuth()
+  const { isLoaded, userId } = useAuth()
+  const { getAuthToken, isReady: isAuthReady } = useBackendToken()
   const [subscription, setSubscription] = useState<Subscription | null>(null)
   const [usage, setUsage] = useState<Usage | null>(null)
   const [payments, setPayments] = useState<PaymentRecord[]>([])
@@ -30,14 +32,14 @@ export function useSubscription(): SubscriptionState {
   const [error, setError] = useState<string | null>(null)
 
   const fetchData = useCallback(async () => {
-    if (!isLoaded || !userId) {
-      setIsLoading(false)
+    if (!isLoaded || !userId || !isAuthReady) {
+      if (isLoaded && !userId) setIsLoading(false)
       return
     }
 
     try {
       setError(null)
-      const token = await getToken({ template: "backend" }).catch(() => getToken())
+      const token = await getAuthToken()
       
       const res = await fetch(`/api/subscription?t=${Date.now()}`, {
         headers: {
@@ -59,7 +61,7 @@ export function useSubscription(): SubscriptionState {
     } finally {
       setIsLoading(false)
     }
-  }, [isLoaded, userId])
+  }, [isLoaded, userId, isAuthReady, getAuthToken])
 
   useEffect(() => {
     fetchData()

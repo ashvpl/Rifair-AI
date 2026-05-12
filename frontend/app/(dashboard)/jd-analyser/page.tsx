@@ -12,6 +12,7 @@ import { ContentWarning } from '@/components/moderation/ContentWarning'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { LoadingState } from '@/components/LoadingState'
+import { useBackendToken } from '@/hooks/useBackendToken'
 
 type Mode = 'generate' | 'analyse'
 
@@ -39,7 +40,7 @@ export default function JDAnalyserPage() {
   const [showFeatures, setShowFeatures] = useState(false)
   const router = useRouter()
   const { planId, isLoading: planLoading } = useSubscription()
-  const { getToken } = useAuth()
+  const { getAuthToken } = useBackendToken()
 
   const hasAccess = planId === 'growth' || planId === 'enterprise'
 
@@ -68,7 +69,9 @@ export default function JDAnalyserPage() {
     setError(null)
 
     try {
-      const token = await getToken({ template: "backend" }).catch(() => getToken())
+      const token = await getAuthToken()
+      if (!token) return
+      
       const res = await fetch('/api/analyse-jd', {
         method: 'POST',
         headers: { 
@@ -416,7 +419,7 @@ export default function JDAnalyserPage() {
 }
 
 function JDGenerator({ onPassToAnalyser }: { onPassToAnalyser: (jd: string) => void }) {
-  const { getToken } = useAuth()
+  const { getAuthToken } = useBackendToken()
   const [form, setForm] = useState({
     role: '', company: '', location: '',
     experience: '', companyType: '',
@@ -437,7 +440,9 @@ function JDGenerator({ onPassToAnalyser }: { onPassToAnalyser: (jd: string) => v
 
     setLoading(true)
     try {
-      const token = await getToken({ template: "backend" }).catch(() => getToken())
+      const token = await getAuthToken()
+      if (!token) return
+      
       const res = await fetch('/api/generate-jd', {
         method: 'POST',
         headers: { 

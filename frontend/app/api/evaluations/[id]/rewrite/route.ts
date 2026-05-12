@@ -2,7 +2,8 @@ import 'server-only';
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
-import { env } from '@/lib/env';
+import { BACKEND_URL } from '@/lib/server-config';
+import { getBackendToken, extractBearerToken } from '@/lib/server-auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -34,12 +35,23 @@ export async function POST(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const backendUrl = env.BACKEND_URL;
+    // Forward client token if present; fall back to server-side auth()
+    const incomingToken = extractBearerToken(req);
+    const token = await getBackendToken("EVAL_REWRITE", incomingToken);
+
+    if (!token) {
+      return NextResponse.json({ error: "Session expired. Please sign in again." }, { status: 401 });
+    }
+
+    const backendUrl = BACKEND_URL;
     
     // Call backend AI Gateway
     const aiResponse = await fetch(`${backendUrl}/api/ai/rewrite-question`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
       body: JSON.stringify({ question, previousRewrite }),
     });
 
@@ -48,7 +60,7 @@ export async function POST(
 
     return NextResponse.json(data);
   } catch (error: any) {
-    console.error("[REWRITE PROXY] Error:", error.message);
+    console.error("[AUTH API] EVAL REWRITE PROXY Error:", error.message);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

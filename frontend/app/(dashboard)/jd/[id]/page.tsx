@@ -10,10 +10,12 @@ import { LoadingState } from "@/components/LoadingState";
 import { AlertTriangle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useBackendToken } from "@/hooks/useBackendToken";
 
 export default function JDReportPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const { getToken, isLoaded, userId } = useAuth();
+  const { isLoaded, userId } = useAuth();
+  const { getAuthToken } = useBackendToken();
   const [result, setResult] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +26,8 @@ export default function JDReportPage({ params }: { params: Promise<{ id: string 
       if (!isLoaded || !userId) return;
       setIsLoading(true);
       try {
-        const token = await getToken({ template: "backend" }).catch(() => getToken());
+        const token = await getAuthToken();
+        if (!token) return;
         const data = await getReportById(id, token);
         if (data.report) {
           const parsed = safeParseReport(data.report);
@@ -40,7 +43,7 @@ export default function JDReportPage({ params }: { params: Promise<{ id: string 
       }
     }
     fetchReport();
-  }, [id, isLoaded, userId, getToken]);
+  }, [id, isLoaded, userId, getAuthToken]);
 
   if (isLoading) return <div className="py-20"><LoadingState text="Loading" /></div>;
   if (error || !result) return (

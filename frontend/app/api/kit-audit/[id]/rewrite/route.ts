@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
+import { getBackendToken, extractBearerToken } from "@/lib/server-auth";
 import { BACKEND_URL } from "@/lib/server-config";
 
 /**
@@ -14,13 +15,21 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId, getToken } = await auth();
+    const { userId } = await auth();
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body  = await req.json();
-    const token = await getToken({ template: "backend" }).catch(() => getToken());
+    
+    // Forward client token if present; fall back to server-side auth()
+    const incomingToken = extractBearerToken(req);
+    const token = await getBackendToken("KIT_AUDIT_REWRITE", incomingToken);
+
+    if (!token) {
+      return NextResponse.json({ error: "Session expired. Please sign in again." }, { status: 401 });
+    }
+
     const { id } = await params;
 
     const response = await fetch(`${BACKEND_URL}/api/kit-audit/${id}/rewrite`, {
@@ -58,7 +67,7 @@ export async function POST(
     return NextResponse.json(data, { status: 200 });
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : "Internal Server Error";
-    console.error("[KIT-AUDIT REWRITE] Proxy error:", msg);
+    console.error("[AUTH API] KIT-AUDIT REWRITE Proxy error:", msg);
     return NextResponse.json(
       { error: `Connection failed: ${msg}` },
       { status: 500 }

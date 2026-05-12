@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown'
 import { Edit3, Save, X, Loader2 } from 'lucide-react'
 import { updateReportById } from '@/lib/api'
 import { useAuth } from '@clerk/nextjs'
+import { useBackendToken } from '@/hooks/useBackendToken'
 
 export function JDGeneratorResult({
   result: initialResult,
@@ -13,12 +14,12 @@ export function JDGeneratorResult({
   onReset: () => void
   reportId?: string
 }) {
-  const { getToken } = useAuth()
+  const { getAuthToken } = useBackendToken()
   const [result, setResult] = useState(initialResult)
   const [copied, setCopied] = useState(false)
   const [view, setView] = useState<'preview' | 'raw' | 'edit'>('preview')
   const [editedContent, setEditedContent] = useState(initialResult.full_jd)
-  const [isSaving, setIsSaving] = useState(false)
+  const [isSaving, setIsLoading] = useState(false)
 
   const stripMarkdown = (text: string) => {
     if (!text) return ''
@@ -52,14 +53,15 @@ export function JDGeneratorResult({
   }
 
   const handleSave = async () => {
-    setIsSaving(true)
+    setIsLoading(true)
     try {
       // 1. Update local state (preserving current structure)
       const updatedResult = { ...result, full_jd: editedContent }
       
       // 2. Persist if we have a reportId (history mode)
       if (reportId) {
-        const token = await getToken({ template: "backend" }).catch(() => getToken())
+        const token = await getAuthToken()
+        if (!token) return
         await updateReportById(reportId, {
           ...updatedResult,
           analysis_type: 'jd_generated'
@@ -72,7 +74,7 @@ export function JDGeneratorResult({
       console.error("Failed to save JD:", err)
       alert("Failed to save changes. Please try again.")
     } finally {
-      setIsSaving(false)
+      setIsLoading(false)
     }
   }
 

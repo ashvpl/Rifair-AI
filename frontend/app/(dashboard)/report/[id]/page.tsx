@@ -13,10 +13,12 @@ import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { useSubscription } from "@/hooks/useSubscription";
 import ExportButton from "@/components/pdf/ExportButton";
+import { useBackendToken } from "@/hooks/useBackendToken";
 
 
 export default function ReportPage({ params }: { params: Promise<{ id: string }> }) {
-  const { getToken } = useAuth();
+  const { isLoaded, userId } = useAuth();
+  const { getAuthToken } = useBackendToken();
   const { id } = use(params);
   const { planId } = useSubscription();
   const [report, setReport] = useState<Record<string, any> | null>(null);
@@ -33,9 +35,11 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
 
 
   useEffect(() => {
+    if (!isLoaded || !userId) return;
     (async () => {
       try {
-        const token = await getToken({ template: "backend" }).catch(() => getToken());
+        const token = await getAuthToken();
+        if (!token) return;
         const res = await fetch(`/api/reports/${id}`, {
           headers: {
             "Authorization": `Bearer ${token}`
@@ -50,7 +54,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
         setIsLoading(false);
       }
     })();
-  }, [id, getToken]);
+  }, [id, isLoaded, userId, getAuthToken]);
 
   if (isLoading) {
     return (

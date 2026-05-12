@@ -5,7 +5,7 @@ import {
   getPersonalisedPromptAdjustments,
   serialiseAdjustments,
 } from "@/lib/intelligence/personalisation-engine";
-import { getBackendToken } from "@/lib/server-auth";
+import { getBackendToken, extractBearerToken } from "@/lib/server-auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -23,9 +23,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Input text is too short" }, { status: 400 });
     }
 
-    console.log(`[PROXY /analyze] Requesting backend token...`);
-    const token = await getBackendToken("ANALYZE");
-    
+    // Extract the client's token from the Authorization header.
+    // Forwarding it skips server-side re-generation and eliminates the
+    // dual-retrieval failure point. Falls back to auth() if not present.
+    const incomingToken = extractBearerToken(req);
+    const token = await getBackendToken("ANALYZE", incomingToken);
+
     if (!token) {
       return NextResponse.json({ error: 'Session expired. Please sign in again.' }, { status: 401 });
     }

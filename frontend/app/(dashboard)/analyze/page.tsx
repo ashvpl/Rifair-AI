@@ -17,6 +17,7 @@ import { safeParseReport } from "@/lib/utils";
 import { useSubscription } from "@/hooks/useSubscription";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import ExportButton from "@/components/pdf/ExportButton";
+import { useBackendToken } from "@/hooks/useBackendToken";
 
 
 interface SessionState {
@@ -27,7 +28,7 @@ interface SessionState {
 }
 
 export default function AnalyzePage() {
-  const { getToken } = useAuth();
+  const { getAuthToken } = useBackendToken();
   const { planId, canUse } = useSubscription();
   const [isLoading, setIsLoading]     = useState(false);
   const [report, setReport]           = useState<Record<string, any> | null>(null);
@@ -50,7 +51,8 @@ export default function AnalyzePage() {
   // Fetch session state for the conversion funnel
   const refreshSessionState = useCallback(async () => {
     try {
-      const token = await getToken({ template: "backend" }).catch(() => getToken()).catch(() => getToken());
+      const token = await getAuthToken();
+      if (!token) return;
       const data = await getBiasSession(token);
       setSessionState({
         funnelState: (data.funnel_state as 1 | 2 | 3) || 1,
@@ -61,7 +63,7 @@ export default function AnalyzePage() {
     } catch (_) {
       // Non-critical — fail silently
     }
-  }, [getToken]);
+  }, [getAuthToken]);
 
   useEffect(() => {
     refreshSessionState();
@@ -74,7 +76,8 @@ export default function AnalyzePage() {
       setIsLoading(true);
       setError(null);
       try {
-        const token = await getToken({ template: "backend" }).catch(() => getToken()).catch(() => getToken());
+        const token = await getAuthToken();
+        if (!token) throw new Error("Authentication required");
         const data = await getReportById(reportId, token);
         const fetchedReport = safeParseReport(data.report);
         if (!fetchedReport) throw new Error("Report data missing");
@@ -86,7 +89,7 @@ export default function AnalyzePage() {
       }
     };
     fetchReport();
-  }, [reportId, getToken]);
+  }, [reportId, getAuthToken]);
 
   const handleAnalyze = async (text: string, name: string) => {
     setIsLoading(true);
@@ -95,7 +98,8 @@ export default function AnalyzePage() {
     setShowSessionBanner(false);
 
     try {
-      const token = await getToken({ template: "backend" }).catch(() => getToken()).catch(() => getToken());
+      const token = await getAuthToken();
+      if (!token) throw new Error("Authentication required");
       const data = await analyzeQuestions(text, token, name);
       const reportData = safeParseReport(data.report);
       

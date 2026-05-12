@@ -23,9 +23,11 @@ import { cn, safeParseReport } from "@/lib/utils";
 import { useSubscription } from "@/hooks/useSubscription";
 import { PLANS } from "@/lib/pricing/plans";
 import { PersonalisedInsights } from "@/components/intelligence/PersonalisedInsights";
+import { useBackendToken } from "@/hooks/useBackendToken";
 
 export default function DashboardPage() {
-  const { getToken, isLoaded, userId } = useAuth();
+  const { isLoaded, userId } = useAuth();
+  const { getAuthToken } = useBackendToken();
   const { usage, planId, usagePercent, isLoading: isSubLoading } = useSubscription();
   const [history, setHistory] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -35,7 +37,8 @@ export default function DashboardPage() {
     const fetchDashboardHistory = async () => {
       if (!isLoaded || !userId) return;
       try {
-        const token = await getToken({ template: "backend" }).catch(() => getToken());
+        const token = await getAuthToken();
+        if (!token) return;
         const data = await getReports(token);
         const parsedData = Array.isArray(data) ? data.map(safeParseReport) : [];
         setHistory(parsedData);
@@ -46,7 +49,7 @@ export default function DashboardPage() {
       }
     };
     fetchDashboardHistory();
-  }, [isLoaded, userId, getToken]);
+  }, [isLoaded, userId, getAuthToken]);
 
   // Stop showing the spinner if Clerk is loaded but there's no session
   useEffect(() => {
@@ -58,11 +61,22 @@ export default function DashboardPage() {
   // Fetch intelligence profile (silently — never blocks dashboard render)
   useEffect(() => {
     if (!isLoaded || !userId) return;
-    fetch('/api/intelligence/profile')
-      .then(r => r.json())
-      .then(data => setIntelligenceProfile(data?.profile ?? null))
-      .catch(() => {});
-  }, [isLoaded, userId]);
+    
+    const fetchProfile = async () => {
+      try {
+        const token = await getAuthToken();
+        if (!token) return;
+        
+        const r = await fetch('/api/intelligence/profile', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await r.json();
+        setIntelligenceProfile(data?.profile ?? null);
+      } catch (e) {}
+    };
+    
+    fetchProfile();
+  }, [isLoaded, userId, getAuthToken]);
 
   const stats = useMemo(() => {
     if (!history.length) return {
@@ -286,7 +300,6 @@ export default function DashboardPage() {
       </motion.div>
 
       {/* 4-Metric Grid */}
-      {/* Mobile: 2x2 grid | Tablet: 2x2 grid | Desktop: 1x4 grid */}
       <motion.div 
         variants={containerVariants}
         initial="hidden"
@@ -377,7 +390,7 @@ export default function DashboardPage() {
         </motion.div>
       </motion.div>
 
-      {/* ── Personalised Insights Panel (Layer 3/2 output) ─────────────── */}
+      {/* ── Personalised Insights Panel ────────────────────────────────── */}
       {intelligenceProfile && (
         <PersonalisedInsights profile={intelligenceProfile} />
       )}
@@ -497,7 +510,6 @@ export default function DashboardPage() {
             </Link>
           </div>
           
-          {/* Placeholder for Quick Action / Tips */}
           <div className="bg-gradient-to-br from-[#1D1D1F] to-[#434343] rounded-[1.5rem] md:rounded-[2.5rem] p-6 text-white flex flex-col justify-between h-full">
             <div className="space-y-2">
               <h3 className="text-lg font-bold">Pro Tip</h3>

@@ -23,11 +23,13 @@ import { motion } from "framer-motion";
 import { LoadingState } from "@/components/LoadingState";
 import { useSubscription } from "@/hooks/useSubscription";
 import ExportButton from "@/components/pdf/ExportButton";
+import { useBackendToken } from "@/hooks/useBackendToken";
 
 
 export default function EvaluationReportPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const { getToken, isLoaded, userId } = useAuth();
+  const { isLoaded, userId } = useAuth();
+  const { getAuthToken } = useBackendToken();
   const { planId } = useSubscription();
   const [report, setReport] = useState<any>(null);
 
@@ -39,7 +41,8 @@ export default function EvaluationReportPage({ params }: { params: Promise<{ id:
       if (!isLoaded || !userId) return;
       setIsLoading(true);
       try {
-        const token = await getToken({ template: "backend" }).catch(() => getToken());
+        const token = await getAuthToken();
+        if (!token) return;
         const data = await getReportById(id, token);
         if (data.report) {
           setReport(safeParseReport(data.report));
@@ -54,7 +57,7 @@ export default function EvaluationReportPage({ params }: { params: Promise<{ id:
       }
     }
     fetchReport();
-  }, [id, isLoaded, userId, getToken]);
+  }, [id, isLoaded, userId, getAuthToken]);
 
   if (isLoading) return <div className="py-20"><LoadingState text="Loading" /></div>;
   if (error || !report) return (
