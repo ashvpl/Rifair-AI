@@ -5,6 +5,7 @@ import {
   getPersonalisedPromptAdjustments,
   serialiseAdjustments,
 } from "@/lib/intelligence/personalisation-engine";
+import { getBackendToken } from "@/lib/server-auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -12,7 +13,7 @@ export const dynamic = "force-dynamic";
 export async function POST(req: Request) {
   try {
     validateBackendConfig();
-    const { userId, getToken } = await auth();
+    const { userId } = await auth();
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -23,11 +24,9 @@ export async function POST(req: Request) {
     }
 
     console.log(`[PROXY /analyze] Requesting backend token...`);
-    const token = await getToken({ template: "backend" }).catch(() => getToken());
-    console.log(`[PROXY /analyze] Token generated: ${token ? 'YES (length: ' + token.length + ')' : 'NO'}`);
+    const token = await getBackendToken("ANALYZE");
     
     if (!token) {
-      console.error('[PROXY /analyze] Failed to generate token');
       return NextResponse.json({ error: 'Session expired. Please sign in again.' }, { status: 401 });
     }
 

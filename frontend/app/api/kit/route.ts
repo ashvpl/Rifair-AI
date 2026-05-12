@@ -5,10 +5,11 @@ import {
   getPersonalisedPromptAdjustments,
   serialiseAdjustments,
 } from "@/lib/intelligence/personalisation-engine";
+import { getBackendToken } from "@/lib/server-auth";
 
 export async function POST(req: Request) {
   try {
-    const { userId, getToken } = await auth();
+    const { userId } = await auth();
     console.log(`[FRONTEND KIT] User: ${userId}`);
 
     if (!userId) {
@@ -16,7 +17,13 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const token = await getToken({ template: "backend" }).catch(() => getToken());
+    
+    // ── Robust Token Retrieval ──
+    const token = await getBackendToken("KIT");
+
+    if (!token) {
+      return NextResponse.json({ error: "Session expired. Please sign in again." }, { status: 401 });
+    }
 
     // ── Layer 3: Fetch personalisation adjustments (non-blocking on failure) ──
     const adjustments = await getPersonalisedPromptAdjustments(userId);

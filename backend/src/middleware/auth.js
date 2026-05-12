@@ -21,8 +21,7 @@ console.log(`[AUTH] Secret Key: ${mask(secretKey)}`);
 console.log(`[AUTH] Publishable Key: ${mask(publishableKey)}`);
 
 const withAuth = ClerkExpressWithAuth({
-  secretKey: secretKey,
-  publishableKey: publishableKey
+  secretKey: secretKey
 });
 
 /**
@@ -61,22 +60,24 @@ const requireAuth = (req, res, next) => {
     const auth = req.auth;
     const authHeader = req.headers.authorization;
 
-    // Fallback for development if withAuth fails but we want to be permissive
-    if ((!auth || !auth.userId) && isDev) {
-      console.warn(`[AUTH WARN] Clerk verification failed in DEV. Falling back to mock user.`);
-      req.auth = {
-        userId: "user_2ovqX7pL5V8R7mS3kM1jB6cE3hF",
-        claims: { sub: "user_2ovqX7pL5V8R7mS3kM1jB6cE3hF" }
-      };
-      return next();
-    }
-
     if (!auth || !auth.userId) {
+      const hasHeader = !!authHeader;
+      const isBearer = authHeader?.startsWith('Bearer ');
+      const tokenSnippet = authHeader ? `${authHeader.slice(0, 15)}...` : 'NONE';
+      
       console.error(`[AUTH DEBUG] Rejection on ${req.method} ${req.originalUrl}`);
-      // ... rest of error logic
+      console.error(`[AUTH DEBUG] Reason: Missing or invalid session. Header present: ${hasHeader}, Bearer: ${isBearer}, Token: ${tokenSnippet}`);
+      console.error(`[AUTH DEBUG] Full Auth Object:`, JSON.stringify(auth, null, 2));
+      
       return res.status(401).json({ 
         error: "Unauthenticated",
         details: "Your session could not be verified. Please sign in again.",
+        debug: {
+          header: hasHeader,
+          bearer: isBearer,
+          token: tokenSnippet !== 'NONE' ? 'REDACTED' : 'MISSING',
+          authPopulated: !!auth
+        },
         code: "CLERK_UNAUTHENTICATED"
       });
     }

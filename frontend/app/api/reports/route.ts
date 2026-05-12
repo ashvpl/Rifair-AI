@@ -1,17 +1,22 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { BACKEND_URL } from "@/lib/server-config";
+import { getBackendToken } from "@/lib/server-auth";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const { userId, getToken } = await auth();
+    const { userId } = await auth();
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const token = await getToken({ template: "backend" }).catch(() => getToken());
+    const token = await getBackendToken("REPORTS_GET");
+
+    if (!token) {
+      return NextResponse.json({ error: "Session expired" }, { status: 401 });
+    }
     
     console.log(`[Proxy] Fetching reports from: ${BACKEND_URL}/api/reports`);
 
@@ -52,12 +57,16 @@ export async function GET() {
 
 export async function DELETE() {
   try {
-    const { userId, getToken } = await auth();
+    const { userId } = await auth();
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const token = await getToken({ template: "backend" }).catch(() => getToken());
+    const token = await getBackendToken("REPORTS_DELETE");
+
+    if (!token) {
+      return NextResponse.json({ error: "Session expired" }, { status: 401 });
+    }
 
     console.log(`[Proxy] Deleting all reports via: ${BACKEND_URL}/api/reports`);
 
