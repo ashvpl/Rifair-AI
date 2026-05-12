@@ -147,7 +147,7 @@ export const FEATURE_GATES: Record<string, PlanId[]> = {
   bias_chat:            ['growth', 'enterprise'],
   kit_unlimited:        ['growth', 'enterprise'],
   dashboard_full:       ['growth', 'enterprise'],
-  pdf_reports:          ['starter', 'growth', 'enterprise'],
+  pdf_reports:          ['growth', 'enterprise'],
   api_access:           ['growth', 'enterprise'],
   confidence_score:     ['growth', 'enterprise'],
 

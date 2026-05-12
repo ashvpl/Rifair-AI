@@ -36,7 +36,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
     (async () => {
       try {
         const token = await getToken({ template: "backend" }).catch(() => getToken());
-        const res = await fetch(`/api/report/${id}`, {
+        const res = await fetch(`/api/reports/${id}`, {
           headers: {
             "Authorization": `Bearer ${token}`
           }

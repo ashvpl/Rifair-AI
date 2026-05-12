@@ -36,30 +36,30 @@ export function SessionScoreBanner({
           initial={{ opacity: 0, y: -12, scale: 0.97 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -8 }}
-          className="relative rounded-2xl border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 p-5 overflow-hidden"
+          className="relative rounded-2xl border border-zinc-200 bg-gradient-to-r from-zinc-50 to-zinc-100 p-5 overflow-hidden"
         >
           {/* Animated bg stripe */}
-          <div className="absolute inset-0 opacity-5 bg-[repeating-linear-gradient(45deg,#F59E0B,#F59E0B_10px,transparent_10px,transparent_20px)]" />
+          <div className="absolute inset-0 opacity-5 bg-[repeating-linear-gradient(45deg,#000,#000_10px,transparent_10px,transparent_20px)]" />
 
           <div className="relative flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-amber-100 border border-amber-200 flex items-center justify-center flex-shrink-0">
-              <ShieldAlert className="h-5 w-5 text-amber-700" />
+            <div className="w-10 h-10 rounded-xl bg-zinc-100 border border-zinc-200 flex items-center justify-center flex-shrink-0">
+              <ShieldAlert className="h-5 w-5 text-zinc-700" />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between mb-1">
-                <p className="text-sm font-black text-amber-900">
+                <p className="text-sm font-black text-zinc-900">
                   {score !== null ? `Session Fairness Score: ${score}/100` : "Fairness Risk Detected"}
                 </p>
-                <button onClick={() => setDismissed(true)} className="text-amber-500 hover:text-amber-700 transition-colors ml-2">
+                <button onClick={() => setDismissed(true)} className="text-zinc-500 hover:text-zinc-700 transition-colors ml-2">
                   <X className="h-4 w-4" />
                 </button>
               </div>
-              <p className="text-xs text-amber-800 font-medium mb-3 leading-relaxed">
+              <p className="text-xs text-zinc-800 font-medium mb-3 leading-relaxed">
                 Your questions may violate Indian employment law. Starter shows you which specific acts apply — before your next interview.
               </p>
               <button
                 onClick={() => router.push("/pricing?highlight=starter")}
-                className="text-xs font-black text-white bg-amber-600 hover:bg-amber-700 px-4 py-2 rounded-full transition-all active:scale-95 flex items-center gap-1.5 w-fit shadow-sm"
+                className="text-xs font-black text-white bg-black hover:bg-black/90 px-4 py-2 rounded-full transition-all active:scale-95 flex items-center gap-1.5 w-fit shadow-sm"
               >
                 See full legal risk report <ArrowRight className="h-3.5 w-3.5" />
               </button>

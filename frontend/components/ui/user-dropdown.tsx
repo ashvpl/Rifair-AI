@@ -37,8 +37,8 @@ const MENU_ITEMS = {
       icon: "solar:star-bold", 
       label: "Upgrade to Pro", 
       action: "upgrade",
-      iconClass: "text-amber-600",
-      badge: { text: "20% off", className: "bg-amber-600 text-white text-[11px]" }
+      iconClass: "text-black dark:text-white",
+      badge: { text: "20% off", className: "bg-black text-white dark:bg-white dark:text-black text-[11px]" }
     },
   ],
   support: [

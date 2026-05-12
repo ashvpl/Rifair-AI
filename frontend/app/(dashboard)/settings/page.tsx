@@ -65,6 +65,7 @@ export default function SettingsPage() {
   const currentPlan = PLANS.find((p) => p.id === planId)!;
   const analysesPercent = usagePercent("analyses");
   const kitsPercent = usagePercent("kits");
+  const jdAnalysesPercent = usagePercent("jdAnalyses");
 
   const nextPlans = PLANS.filter(
     (p) => PLAN_ORDER.indexOf(p.id) > PLAN_ORDER.indexOf(planId)
@@ -165,6 +166,14 @@ export default function SettingsPage() {
                     limit={currentPlan.evaluationsLimit}
                     percent={usagePercent("evaluations")}
                   />
+                  {(planId === 'growth' || planId === 'enterprise') && (
+                    <UsageMeter
+                      label="Job Descriptions this month"
+                      used={usage?.jdAnalysesUsed ?? 0}
+                      limit={currentPlan.jdAnalysesLimit}
+                      percent={jdAnalysesPercent}
+                    />
+                  )}
                 </div>
 
                 {/* Action buttons */}

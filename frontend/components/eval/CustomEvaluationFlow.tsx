@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, X, AlertTriangle, CheckCircle, Loader2, ShieldCheck, ArrowRight, Lock } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { CandidateEvaluator } from '@/components/evaluation/CandidateEvaluator'
+import { LoadingState } from '@/components/LoadingState'
 import BiasCheckResults from './BiasCheckResults'
 
 // ── Types ───────────────────────────────────────────────────────────────────
@@ -170,27 +171,28 @@ function InputStep({
 
   return (
     <div className="space-y-5">
+      {loading && <LoadingState text="Checking for bias..." />}
 
       {showRecovery && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start sm:items-center justify-between gap-4 flex-col sm:flex-row shadow-sm">
+        <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-4 flex items-start sm:items-center justify-between gap-4 flex-col sm:flex-row shadow-sm">
           <div>
-            <h4 className="text-amber-800 font-bold text-sm flex items-center gap-2">
+            <h4 className="text-zinc-800 font-bold text-sm flex items-center gap-2">
               <span className="text-base">↻</span> Recover unsaved work?
             </h4>
-            <p className="text-amber-700/80 text-xs font-medium mt-1">
+            <p className="text-zinc-700/80 text-xs font-medium mt-1">
               You have {validQuestions.length} valid question(s){draftTime ? ` from ${Math.round((Date.now() - draftTime) / 60000)} minute(s) ago` : ''}.
             </p>
           </div>
           <div className="flex gap-2 w-full sm:w-auto">
             <button 
               onClick={() => setShowRecovery(false)} 
-              className="flex-1 sm:flex-none text-xs font-bold bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition shadow-sm whitespace-nowrap"
+              className="flex-1 sm:flex-none text-xs font-bold bg-black text-white px-4 py-2 rounded-lg hover:bg-black/90 transition shadow-sm whitespace-nowrap"
             >
               Continue draft
             </button>
             <button 
               onClick={handleClearDraft} 
-              className="flex-1 sm:flex-none text-xs font-bold border border-amber-300 text-amber-700 px-4 py-2 rounded-lg hover:bg-amber-100 transition whitespace-nowrap"
+              className="flex-1 sm:flex-none text-xs font-bold border border-zinc-300 text-zinc-700 px-4 py-2 rounded-lg hover:bg-zinc-100 transition whitespace-nowrap"
             >
               Start new
             </button>

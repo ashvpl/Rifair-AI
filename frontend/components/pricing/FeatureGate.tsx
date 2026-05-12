@@ -114,13 +114,13 @@ export function UsageLimitBanner({ type: forceType }: { type?: 'analyses' | 'kit
 
     return (
       <div className={`rounded-2xl px-5 py-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-5 border transition-colors ${
-        atLimit ? 'bg-red-50 border-red-200' : 'bg-amber-50 border-amber-200'
+        atLimit ? 'bg-red-50 border-red-200' : 'bg-zinc-50 border-zinc-200'
       }`}>
         <div className="min-w-0">
-          <p className={`text-sm font-bold ${atLimit ? 'text-red-800' : 'text-amber-800'}`}>
+          <p className={`text-sm font-bold ${atLimit ? 'text-red-800' : 'text-zinc-800'}`}>
             {atLimit ? `You've used all ${label}.` : `You are approaching your ${label} limit (${Math.round(percent)}%).`}
           </p>
-          <p className={`text-xs mt-0.5 font-medium ${atLimit ? 'text-red-600' : 'text-amber-600'}`}>
+          <p className={`text-xs mt-0.5 font-medium ${atLimit ? 'text-red-600' : 'text-zinc-600'}`}>
             Need more? {addonText} for {addonPrice} or {upgradeText}.
           </p>
         </div>
@@ -129,7 +129,7 @@ export function UsageLimitBanner({ type: forceType }: { type?: 'analyses' | 'kit
             planId={isAnalysesIssue ? 'analyses_20' as PlanId : 'kits_5' as PlanId}
             billingCycle="monthly"
             className={`flex-1 md:flex-none text-xs font-bold px-4 py-2.5 rounded-xl whitespace-nowrap transition-all active:scale-95 shadow-sm border flex items-center justify-center ${
-              atLimit ? 'bg-red-100 text-red-800 border-red-200 hover:bg-red-200' : 'bg-amber-100 text-amber-800 border-amber-200 hover:bg-amber-200'
+              atLimit ? 'bg-red-100 text-red-800 border-red-200 hover:bg-red-200' : 'bg-zinc-100 text-zinc-800 border-zinc-200 hover:bg-zinc-200'
             }`}
           >
             Top up {addonPrice}
@@ -138,7 +138,7 @@ export function UsageLimitBanner({ type: forceType }: { type?: 'analyses' | 'kit
             <button
               onClick={() => router.push('/pricing')}
               className={`flex-1 md:flex-none text-xs font-bold px-4 py-2.5 rounded-xl whitespace-nowrap transition-all active:scale-95 shadow-sm ${
-                atLimit ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-amber-600 text-white hover:bg-amber-700'
+                atLimit ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-black text-white hover:bg-black/90'
               }`}
             >
               Upgrade to Growth
@@ -156,20 +156,20 @@ export function UsageLimitBanner({ type: forceType }: { type?: 'analyses' | 'kit
 
   return (
     <div className={`rounded-2xl px-5 py-4 flex items-center justify-between gap-4 mb-5 border transition-colors ${
-      atLimit ? 'bg-red-50 border-red-200' : 'bg-amber-50 border-amber-200'
+      atLimit ? 'bg-red-50 border-red-200' : 'bg-zinc-50 border-zinc-200'
     }`}>
       <div className="min-w-0">
-        <p className={`text-sm font-bold ${atLimit ? 'text-red-800' : 'text-amber-800'}`}>
+        <p className={`text-sm font-bold ${atLimit ? 'text-red-800' : 'text-zinc-800'}`}>
           {title}
         </p>
-        <p className={`text-xs mt-0.5 font-medium ${atLimit ? 'text-red-600' : 'text-amber-600'}`}>
+        <p className={`text-xs mt-0.5 font-medium ${atLimit ? 'text-red-600' : 'text-zinc-600'}`}>
           {description}
         </p>
       </div>
       <button
         onClick={() => router.push('/pricing')}
         className={`text-xs font-bold px-5 py-2.5 rounded-full whitespace-nowrap flex-shrink-0 transition-all active:scale-95 shadow-sm ${
-          atLimit ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-amber-600 text-white hover:bg-amber-700'
+          atLimit ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-black text-white hover:bg-black/90'
         }`}
       >
         {atLimit ? 'Upgrade now' : 'Upgrade plan'}

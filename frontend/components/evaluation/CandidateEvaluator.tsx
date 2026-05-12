@@ -8,6 +8,7 @@ import { ContentWarning } from '@/components/moderation/ContentWarning'
 import { cn } from '@/lib/utils'
 import { useSubscription } from '@/hooks/useSubscription'
 import ExportButton from '@/components/pdf/ExportButton'
+import { LoadingState } from '@/components/LoadingState'
 
 
 interface Question {
@@ -196,6 +197,7 @@ export function CandidateEvaluator({
   if (step === 'score') {
     return (
       <div className="space-y-4">
+        {loading && <LoadingState text="Analyzing candidate..." />}
 
         {/* Header */}
         <div className="bg-white border border-gray-200 rounded-2xl p-5 md:p-6 shadow-sm">

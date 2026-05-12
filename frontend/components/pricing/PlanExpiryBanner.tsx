@@ -27,14 +27,14 @@ export function PlanExpiryBanner() {
         exit={{ height: 0, opacity: 0 }}
         className={cn(
           "relative overflow-hidden transition-all duration-500",
-          isExpired ? "bg-red-500/10 border-b border-red-500/20" : "bg-amber-500/10 border-b border-amber-500/20"
+          isExpired ? "bg-red-500/10 border-b border-red-500/20" : "bg-black/5 border-b border-black/10"
         )}
       >
         <div className="max-w-screen-xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className={cn(
               "p-2 rounded-full",
-              isExpired ? "bg-red-500/20 text-red-600" : "bg-amber-500/20 text-amber-600"
+              isExpired ? "bg-red-500/20 text-red-600" : "bg-black/10 text-black"
             )}>
               {isExpired ? <AlertCircle className="w-4 h-4" /> : <RefreshCcw className="w-4 h-4 animate-spin-slow" />}
             </div>
@@ -42,7 +42,7 @@ export function PlanExpiryBanner() {
             <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
               <p className={cn(
                 "text-sm font-bold",
-                isExpired ? "text-red-700" : "text-amber-700"
+                isExpired ? "text-red-700" : "text-black"
               )}>
                 {isExpired 
                   ? "Your current plan has expired" 
@@ -51,7 +51,7 @@ export function PlanExpiryBanner() {
               </p>
               <p className={cn(
                 "text-[13px] font-medium opacity-80",
-                isExpired ? "text-red-600" : "text-amber-600"
+                isExpired ? "text-red-600" : "text-zinc-600"
               )}>
                 {isExpired 
                   ? "Renew now to continue using premium features without interruption." 
@@ -68,7 +68,7 @@ export function PlanExpiryBanner() {
                 "inline-flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-bold transition-all active:scale-95 shadow-sm",
                 isExpired 
                   ? "bg-red-600 text-white hover:bg-red-700" 
-                  : "bg-amber-600 text-white hover:bg-amber-700"
+                  : "bg-black text-white hover:bg-black/90"
               )}
             >
               {isStarterOrFree ? (

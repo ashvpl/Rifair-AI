@@ -8,14 +8,11 @@ async function fetchWithAuth(endpoint: string, options: RequestInit = {}, token?
 
   const isNextJsProxy = API_BASE === "/api" || API_BASE.startsWith("/");
   
-  // NEVER send Authorization header to Next.js API routes.
-  // Next.js uses the __session cookie to authenticate, and generates a fresh token server-side.
-  // Passing the client token in the header forces Clerk to use stateless auth, which forwards the (potentially stale) client token to the backend.
-  const includeAuthHeader = token && !isNextJsProxy;
-
+  // Send Authorization header if token is available.
+  // This helps Clerk middleware identify the request and avoids redirects for API routes.
   const headers = {
     "Content-Type": "application/json",
-    ...(includeAuthHeader ? { "Authorization": `Bearer ${token}` } : {}),
+    ...(token ? { "Authorization": `Bearer ${token}` } : {}),
     ...options.headers,
   };
 
@@ -87,19 +84,19 @@ export async function deleteReports(token?: string | null) {
 }
 
 export async function getReportById(id: string, token?: string | null) {
-  return fetchWithAuth(`/report/${id}`, {
+  return fetchWithAuth(`/reports/${id}`, {
     method: "GET",
   }, token);
 }
 
 export async function deleteReportById(id: string, token?: string | null) {
-  return fetchWithAuth(`/report/${id}`, {
+  return fetchWithAuth(`/reports/${id}`, {
     method: "DELETE",
   }, token);
 }
 
 export async function updateReportById(id: string, categories: any, token?: string | null) {
-  return fetchWithAuth(`/report/${id}`, {
+  return fetchWithAuth(`/reports/${id}`, {
     method: "PATCH",
     body: JSON.stringify({ categories }),
   }, token);

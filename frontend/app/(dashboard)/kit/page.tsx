@@ -334,25 +334,25 @@ export default function KitGeneratorPage() {
                 <div className="relative z-10 flex flex-col items-center justify-center flex-1 py-10">
                   {error ? (
                     errorCode === 'api_quota_exceeded' ? (
-                      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 text-center max-w-sm mx-auto">
+                      <div className="bg-zinc-50 border border-zinc-200 rounded-2xl p-6 text-center max-w-sm mx-auto">
                         <div className="text-3xl mb-3">⏳</div>
-                        <h3 className="text-sm font-semibold text-amber-900 mb-2">
+                        <h3 className="text-sm font-semibold text-zinc-900 mb-2">
                           AI is cooling down
                         </h3>
-                        <p className="text-xs text-amber-700 mb-4">
+                        <p className="text-xs text-zinc-700 mb-4">
                           Our AI quota resets every hour. 
                           Your kit generation will work again shortly.
                         </p>
                         <div className="flex gap-2 justify-center">
                           <button
                             onClick={handleGenerate}
-                            className="text-xs font-medium bg-amber-600 text-white px-4 py-2 rounded-full hover:bg-amber-700 transition"
+                            className="text-xs font-medium bg-black text-white px-4 py-2 rounded-full hover:bg-black/90 transition"
                           >
                             Try again
                           </button>
                           <button
                             onClick={() => router.push('/pricing')}
-                            className="text-xs font-medium border border-amber-300 text-amber-700 px-4 py-2 rounded-full hover:bg-amber-100 transition"
+                            className="text-xs font-medium border border-zinc-300 text-zinc-700 px-4 py-2 rounded-full hover:bg-zinc-100 transition"
                           >
                             Upgrade for more quota →
                           </button>
@@ -398,7 +398,7 @@ export default function KitGeneratorPage() {
       >
         <div className="space-y-5">
           <div className="flex justify-center">
-            <div className="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center border border-amber-100">
+            <div className="w-14 h-14 bg-zinc-50 rounded-2xl flex items-center justify-center border border-zinc-100">
               <span className="text-3xl">⚡</span>
             </div>
           </div>

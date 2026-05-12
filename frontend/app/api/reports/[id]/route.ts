@@ -26,7 +26,19 @@ export async function GET(
       cache: 'no-store'
     });
 
-    const data = await response.json();
+    // Safely attempt to parse JSON
+    let data;
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      data = await response.json();
+    } else {
+      const text = await response.text();
+      console.error(`[Proxy] Backend single report returned non-JSON response (${response.status}):`, text.slice(0, 200));
+      return NextResponse.json(
+        { error: `Backend returned ${response.status}: ${response.statusText}` }, 
+        { status: response.status || 500 }
+      );
+    }
 
     if (!response.ok) {
       console.error("Backend single report fetch error:", data);
@@ -36,8 +48,9 @@ export async function GET(
     // Backend already returns { report: ... data ... }
     return NextResponse.json(data, { status: 200 });
   } catch (error: unknown) {
-    console.error("Report API Proxy error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Report API Proxy error:", errorMessage);
+    return NextResponse.json({ error: `Internal Proxy Error: ${errorMessage}` }, { status: 500 });
   }
 }
 
@@ -62,7 +75,18 @@ export async function DELETE(
       }
     });
 
-    const data = await response.json();
+    let data;
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      data = await response.json();
+    } else {
+      const text = await response.text();
+      console.error(`[Proxy] Backend report delete returned non-JSON response (${response.status}):`, text.slice(0, 200));
+      return NextResponse.json(
+        { error: `Backend returned ${response.status}` }, 
+        { status: response.status || 500 }
+      );
+    }
 
     if (!response.ok) {
       console.error("Backend report delete error:", data);
@@ -71,8 +95,9 @@ export async function DELETE(
 
     return NextResponse.json({ message: "Report deleted successfully" }, { status: 200 });
   } catch (error: unknown) {
-    console.error("Report Delete Proxy API error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Report Delete Proxy API error:", errorMessage);
+    return NextResponse.json({ error: `Internal Delete Proxy Error: ${errorMessage}` }, { status: 500 });
   }
 }
 
@@ -99,7 +124,18 @@ export async function PATCH(
       body: JSON.stringify(body)
     });
 
-    const data = await response.json();
+    let data;
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      data = await response.json();
+    } else {
+      const text = await response.text();
+      console.error(`[Proxy] Backend report update returned non-JSON response (${response.status}):`, text.slice(0, 200));
+      return NextResponse.json(
+        { error: `Backend returned ${response.status}` }, 
+        { status: response.status || 500 }
+      );
+    }
 
     if (!response.ok) {
       return NextResponse.json({ error: data.error || "Failed to update report" }, { status: response.status });
@@ -107,7 +143,8 @@ export async function PATCH(
 
     return NextResponse.json(data, { status: 200 });
   } catch (error: unknown) {
-    console.error("Report Update Proxy API error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Report Update Proxy API error:", errorMessage);
+    return NextResponse.json({ error: `Internal Update Proxy Error: ${errorMessage}` }, { status: 500 });
   }
 }

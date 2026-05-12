@@ -21,6 +21,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { LoadingState } from "@/components/LoadingState";
 import { CustomEvaluationFlow } from "@/components/eval/CustomEvaluationFlow";
 
 
@@ -199,8 +200,8 @@ export default function EvaluationsPage() {
 
       {/* Kits List */}
       {isLoading ? (
-        <div className="flex flex-col items-center justify-center py-10 space-y-4">
-          <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
+        <div className="py-20">
+          <LoadingState text="Loading evaluations" />
         </div>
       ) : filteredKits.length === 0 ? (
         <div className="bg-[#F5F5F7]/50 border-2 border-dashed border-black/[0.05] rounded-[2.5rem] p-10 text-center mb-10">

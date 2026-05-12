@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { cn, safeParseReport } from "@/lib/utils";
 import { BottomSheet } from "@/components/ui/BottomSheet";
+import { LoadingState } from "@/components/LoadingState";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 type FilterType = "All" | "Analysis" | "JD Analysis" | "JD Generated" | "Kit" | "Evaluation" | "Kit Audit";
@@ -228,17 +229,8 @@ export default function HistoryPage() {
 
       {/* ── Content ──────────────────────────────────────────────────────────── */}
       {isLoading ? (
-        /* Skeleton loading */
-        <div className="space-y-3">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="bg-white border border-black/[0.05] rounded-[1.5rem] p-4 md:p-6">
-              <div className="flex items-center gap-4">
-                <div className="skeleton h-4 w-3/5 rounded-lg" />
-                <div className="ml-auto skeleton h-6 w-16 rounded-full" />
-              </div>
-              <div className="skeleton h-3 w-2/5 rounded-lg mt-3" />
-            </div>
-          ))}
+        <div className="py-20">
+          <LoadingState text="Loading history" />
         </div>
       ) : filteredHistory.length === 0 ? (
         <motion.div

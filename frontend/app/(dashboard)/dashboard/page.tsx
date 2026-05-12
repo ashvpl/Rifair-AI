@@ -482,9 +482,9 @@ export default function DashboardPage() {
                   limit={currentPlan.evaluationsLimit} 
                   percent={usagePercent("evaluations")} 
                 />
-                {planId === 'growth' && (
+                {(planId === 'growth' || planId === 'enterprise') && (
                   <UsageMeter 
-                    label="JD Operations" 
+                    label="Job Descriptions" 
                     used={usage?.jdAnalysesUsed ?? 0} 
                     limit={currentPlan.jdAnalysesLimit} 
                     percent={jdAnalysesPercent} 
