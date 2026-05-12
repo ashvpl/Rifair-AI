@@ -63,22 +63,30 @@ const requireAuth = (req, res, next) => {
     if (!auth || !auth.userId) {
       const hasHeader = !!authHeader;
       const isBearer = authHeader?.startsWith('Bearer ');
+      const isNullToken = authHeader === 'Bearer null';
       const tokenSnippet = authHeader ? `${authHeader.slice(0, 15)}...` : 'NONE';
       
       console.error(`[AUTH DEBUG] Rejection on ${req.method} ${req.originalUrl}`);
-      console.error(`[AUTH DEBUG] Reason: Missing or invalid session. Header present: ${hasHeader}, Bearer: ${isBearer}, Token: ${tokenSnippet}`);
+      if (isNullToken) {
+        console.error(`[AUTH DEBUG] Reason: MALFORMED_PROXY_TOKEN. The frontend proxy sent 'Bearer null'.`);
+      } else {
+        console.error(`[AUTH DEBUG] Reason: Missing or invalid session. Header present: ${hasHeader}, Bearer: ${isBearer}, Token: ${tokenSnippet}`);
+      }
       console.error(`[AUTH DEBUG] Full Auth Object:`, JSON.stringify(auth, null, 2));
       
       return res.status(401).json({ 
-        error: "Unauthenticated",
-        details: "Your session could not be verified. Please sign in again.",
+        error: isNullToken ? "Malformed Session" : "Unauthenticated",
+        details: isNullToken 
+          ? "The proxy server sent an invalid session token (null). Please refresh and try again."
+          : "Your session could not be verified. Please sign in again.",
         debug: {
           header: hasHeader,
           bearer: isBearer,
-          token: tokenSnippet !== 'NONE' ? 'REDACTED' : 'MISSING',
-          authPopulated: !!auth
+          token: tokenSnippet !== 'NONE' ? (isNullToken ? 'null' : 'REDACTED') : 'MISSING',
+          authPopulated: !!auth,
+          proxyError: isNullToken
         },
-        code: "CLERK_UNAUTHENTICATED"
+        code: isNullToken ? "CLERK_PROXY_NULL_TOKEN" : "CLERK_UNAUTHENTICATED"
       });
     }
 

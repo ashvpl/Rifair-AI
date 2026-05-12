@@ -3,7 +3,7 @@
  *
  * GET /api/bias-session
  *
- * Returns the current user's session state for the Spectral Bias Report
+ * Returns the current user's session state for the Bias analysis
  * conversion funnel:
  *   - analyses_this_month: count from usage table
  *   - funnel_state: 1 | 2 | 3 (drives conversion banner logic)

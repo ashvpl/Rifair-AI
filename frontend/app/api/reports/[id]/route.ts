@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { getBackendToken } from "@/lib/server-auth";
 import { BACKEND_URL } from "@/lib/server-config";
 
 export const dynamic = "force-dynamic";
@@ -9,13 +9,12 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId, getToken } = await auth();
-    if (!userId) {
+    const token = await getBackendToken("REPORT_GET");
+    if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { id } = await params;
-    const token = await getToken({ template: "backend" }).catch(() => getToken());
     console.log(`[Proxy] Fetching report ${id} from: ${BACKEND_URL}/api/reports/${id}`);
 
     const response = await fetch(`${BACKEND_URL}/api/reports/${id}`, {
@@ -59,13 +58,12 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId, getToken } = await auth();
-    if (!userId) {
+    const token = await getBackendToken("REPORT_DELETE");
+    if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { id } = await params;
-    const token = await getToken({ template: "backend" }).catch(() => getToken());
     console.log(`[Proxy] Deleting report ${id} via: ${BACKEND_URL}/api/reports/${id}`);
 
     const response = await fetch(`${BACKEND_URL}/api/reports/${id}`, {
@@ -106,14 +104,13 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId, getToken } = await auth();
-    if (!userId) {
+    const token = await getBackendToken("REPORT_UPDATE");
+    if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { id } = await params;
     const body = await req.json();
-    const token = await getToken({ template: "backend" }).catch(() => getToken());
 
     const response = await fetch(`${BACKEND_URL}/api/reports/${id}`, {
       method: "PATCH",

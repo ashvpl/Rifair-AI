@@ -1,17 +1,19 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { getBackendToken } from "@/lib/server-auth";
 import { BACKEND_URL } from "@/lib/server-config";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const { userId, getToken } = await auth();
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const token = await getBackendToken("BIAS_SESSION");
 
-    const token = await getToken({ template: "backend" }).catch(() => getToken());
+    if (!token) {
+      return NextResponse.json({ 
+        error: "Unauthenticated", 
+        details: "Your session could not be verified. Please sign in again." 
+      }, { status: 401 });
+    }
     
     console.log(`[Proxy] Fetching bias session from: ${BACKEND_URL}/api/bias-session`);
 

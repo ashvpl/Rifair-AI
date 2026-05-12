@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
+import { getBackendToken } from "@/lib/server-auth";
 import { BACKEND_URL } from "@/lib/server-config";
+
+export const dynamic = "force-dynamic";
 
 /**
  * POST /api/kit-audit
@@ -10,13 +13,13 @@ import { BACKEND_URL } from "@/lib/server-config";
  */
 export async function POST(req: Request) {
   try {
-    const { userId, getToken } = await auth();
+    const { userId } = await auth();
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body  = await req.json();
-    const token = await getToken({ template: "backend" }).catch(() => getToken());
+    const token = await getBackendToken("KIT_AUDIT");
 
     const response = await fetch(`${BACKEND_URL}/api/kit-audit`, {
       method:  "POST",

@@ -141,7 +141,7 @@ export default function AnalyzePage() {
       {/* Page header */}
       <div className="space-y-1">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#dc2626] tracking-tight">
-          Spectral Bias Report
+          Bias analysis
         </h2>
         <p className="text-[#86868B] max-w-2xl text-sm sm:text-base md:text-lg font-medium">
           AI-powered hiring intelligence — detect, explain, and fix bias before your next interview.
@@ -252,7 +252,7 @@ export default function AnalyzePage() {
                 {/* Overall score ring */}
                 <div className="bg-white border border-black/[0.05] rounded-[2rem] p-6 md:p-8 flex flex-col items-center shadow-[0_4px_32px_rgba(0,0,0,0.02)]">
                   <p className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] mb-6 text-center">
-                    Spectral Bias Index
+                    Bias Index
                   </p>
                   <BiasScoreRing score={overallScore} size="lg" showLabel />
 

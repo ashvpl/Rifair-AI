@@ -32,7 +32,7 @@ export function BiasScoreCard({ score, type = 'analysis' }: BiasScoreCardProps) 
 
   return (
     <div className="bg-white border border-black/[0.05] p-5 sm:p-6 md:p-10 flex flex-col items-center justify-center relative overflow-hidden rounded-[2rem] md:rounded-[3rem] shadow-[0_4px_32px_rgba(0,0,0,0.02)] transition-all duration-500 hover:shadow-[0_8px_48px_rgba(0,0,0,0.04)]" style={style}>
-      <h3 className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] mb-4 sm:mb-6 md:mb-8 z-10 w-full text-center">Spectral Bias Index</h3>
+      <h3 className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.2em] mb-4 sm:mb-6 md:mb-8 z-10 w-full text-center">Bias Index</h3>
       
       {/* Responsive ring: w-36 h-36 on mobile, w-48 h-48 on desktop */}
       <div className="relative flex items-center justify-center z-10 w-36 h-36 md:w-48 md:h-48">
