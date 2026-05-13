@@ -51,16 +51,7 @@ async function isAdminUser(userId) {
  * Get or create subscription for a user
  */
 async function getSubscription(userId) {
-  if (await isAdminUser(userId)) {
-    return {
-      user_id: userId,
-      plan_id: "enterprise", // Admins get unlimited plan features
-      status: "active",
-      billing_cycle: "monthly",
-      current_period_start: new Date().toISOString(),
-      current_period_end: new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000).toISOString(),
-    };
-  }
+  const isUserAdmin = await isAdminUser(userId);
 
   let { data: subscription, error } = await supabaseAdmin
     .from("subscriptions")
@@ -69,6 +60,17 @@ async function getSubscription(userId) {
     .single();
 
   if (error && error.code === "PGRST116") {
+    if (isUserAdmin) {
+      return {
+        user_id: userId,
+        plan_id: "enterprise",
+        status: "active",
+        billing_cycle: "monthly",
+        current_period_start: new Date().toISOString(),
+        current_period_end: new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000).toISOString(),
+      };
+    }
+
     // Auto-create free subscription if none exists
     const { data: newSub, error: insertError } = await supabaseAdmin
       .from("subscriptions")
@@ -88,6 +90,15 @@ async function getSubscription(userId) {
   }
 
   if (error) throw error;
+
+  // If they are admin and on free plan, upgrade them to enterprise in-memory
+  if (isUserAdmin && (!subscription || subscription.plan_id === 'free')) {
+    return {
+      ...subscription,
+      plan_id: "enterprise",
+    };
+  }
+
   return subscription;
 }
 

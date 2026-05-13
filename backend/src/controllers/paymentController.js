@@ -84,7 +84,10 @@ async function verifyPayment(req, res) {
       razorpay_signature
     );
 
-    if (!isValid) return res.status(400).json({ error: "Invalid signature" });
+    if (!isValid) {
+      console.error(`[PAYMENT] Signature verification failed for order ${razorpay_order_id}`);
+      return res.status(400).json({ error: "Invalid signature" });
+    }
 
     const plan = PLANS[planId];
     if (!plan) return res.status(400).json({ error: "Invalid plan" });
