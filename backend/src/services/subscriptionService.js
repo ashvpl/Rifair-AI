@@ -1,10 +1,11 @@
 const { supabase: supabaseAdmin } = require("../config/supabase");
 const { secrets } = require("../core/secrets/secretManager");
 
+const { isAdmin } = require("../utils/admin");
+
 // --- Admin Caching and User Verification ---
 const adminUserIds = new Set();
 const nonAdminUserIds = new Set();
-const ADMIN_EMAILS = ["god95448@gmail.com", "aashu20p@gmail.com", "rifairaiteam@gmail.com"];
 
 async function isAdminUser(userId) {
   if (!userId || userId === "anonymous") return false;
@@ -28,9 +29,9 @@ async function isAdminUser(userId) {
     if (!user) return false;
 
     const userEmails = (user.emailAddresses || []).map(e => (e.emailAddress || "").toLowerCase());
-    const isAdmin = userEmails.some(email => ADMIN_EMAILS.includes(email));
+    const isUserAdmin = userEmails.some(email => isAdmin(email));
 
-    if (isAdmin) {
+    if (isUserAdmin) {
       adminUserIds.add(userId);
       return true;
     } else {

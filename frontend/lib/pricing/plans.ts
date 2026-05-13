@@ -106,6 +106,28 @@ export const PLANS: Plan[] = [
     ctaLabel: 'Contact Sales',
     ctaVariant: 'sales'
   },
+  {
+    id: 'internal_qa_plan',
+    name: 'Internal QA Plan',
+    price: {
+      inr: { monthly: 1, annual: 1 },
+      usd: { monthly: 1, annual: 1 },
+    },
+    analysesLimit: 5,
+    kitLimit: 1,
+    jdAnalysesLimit: 0,
+    evaluationsLimit: 1,
+    apiCallsLimit: 0,
+    seatsLimit: 1,
+    features: [
+      'bias_score', 'kit_basic'
+    ],
+    internal: true,
+    testPlan: true,
+    qaOnly: true,
+    ctaLabel: 'Test Payment ₹1',
+    ctaVariant: 'primary'
+  },
 ]
 
 /** Feature gate map — which plans unlock each feature */
@@ -244,4 +266,13 @@ export const PLAN_DISPLAY_FEATURES: Record<PlanId, string[]> = {
     'Enterprise SLA',
     'Unlimited seats',
   ],
+  internal_qa_plan: [
+    'Internal testing only',
+    '₹1 production validation',
+    'Real payment pipeline',
+    'No premium credits',
+  ],
+  analyses_20: ['20 additional analyses'],
+  kits_5: ['5 additional interview kits'],
+  kits_15: ['15 additional interview kits'],
 }

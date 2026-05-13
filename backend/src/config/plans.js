@@ -39,6 +39,17 @@ const PLANS = {
     jdAnalysesLimit: null,
     evaluationsLimit: null,
   },
+  internal_qa_plan: {
+    inr: { monthly: 1, annual: 1 },
+    usd: { monthly: 1, annual: 1 },
+    analysesLimit: 5,
+    kitLimit: 1,
+    jdAnalysesLimit: 0,
+    evaluationsLimit: 1,
+    internal: true,
+    testPlan: true,
+    qaOnly: true
+  },
   analyses_20: {
     inr: { monthly: 599, annual: 599 },
     usd: { monthly: 8, annual: 8 },

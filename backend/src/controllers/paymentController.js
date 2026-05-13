@@ -13,6 +13,15 @@ async function createOrder(req, res) {
     const plan = PLANS[planId];
     if (!plan) return res.status(400).json({ error: "Invalid plan" });
 
+    // --- ADMIN SECURITY CHECK ---
+    if (plan.internal) {
+      const isUserAdmin = await subscriptionService.isAdminUser(userId);
+      if (!isUserAdmin) {
+        console.warn(`[SECURITY] Unauthorized attempt to access internal plan ${planId} by user ${userId}`);
+        return res.status(403).json({ error: "Forbidden: Admin access required for this plan" });
+      }
+    }
+
     // Resolve the correct currency prices
     const currencyKey = currency === "usd" ? "usd" : "inr";
     const prices = plan[currencyKey];
@@ -33,7 +42,14 @@ async function createOrder(req, res) {
       amount,
       razorpayCurrency,
       receipt,
-      { userId, planId, billingCycle, currency: razorpayCurrency }
+      { 
+        userId, 
+        planId, 
+        billingCycle, 
+        currency: razorpayCurrency,
+        internal: plan.internal ? "true" : "false",
+        testPlan: plan.testPlan ? "true" : "false"
+      }
     );
 
     res.json({
@@ -73,6 +89,15 @@ async function verifyPayment(req, res) {
     const plan = PLANS[planId];
     if (!plan) return res.status(400).json({ error: "Invalid plan" });
 
+    // --- ADMIN SECURITY CHECK ---
+    if (plan.internal) {
+      const isUserAdmin = await subscriptionService.isAdminUser(userId);
+      if (!isUserAdmin) {
+        console.warn(`[SECURITY] Unauthorized attempt to verify internal plan ${planId} by user ${userId}`);
+        return res.status(403).json({ error: "Forbidden: Admin access required" });
+      }
+    }
+
     if (plan.isAddon) {
       await subscriptionService.applyAddon(userId, plan);
     } else {
@@ -92,10 +117,11 @@ async function verifyPayment(req, res) {
     await subscriptionService.logPayment(userId, {
       planId,
       amount,
-      currency: currencyKey === "usd" ? "USD" : "INR",
+      currency: currencyKey === "usd" ? "usd" : "inr",
       orderId: razorpay_order_id,
       paymentId: razorpay_payment_id,
       billingCycle,
+      internal: plan.internal
     });
 
     res.json({ success: true });

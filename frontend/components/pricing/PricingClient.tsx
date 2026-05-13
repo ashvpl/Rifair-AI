@@ -7,6 +7,8 @@ import FooterSection from '@/components/ui/footer-section'
 import type { Plan, BillingCycle } from '@/lib/pricing/types'
 import { ApplePricing } from '@/components/pricing/ApplePricing'
 import { cn } from '@/lib/utils'
+import { useUser } from '@clerk/nextjs'
+import { isAdmin } from '@/lib/auth/admin'
 
 interface PricingClientProps {
   plans: Plan[]
@@ -197,6 +199,32 @@ const PRICING_DATA = [
     ],
     bgClass: 'bg-[#0B3D2B] border border-[#145C41]',
     calloutClass: 'bg-[#125A41] text-[#7DE2B5]'
+  },
+  {
+    id: 'internal_qa_plan',
+    internal: true,
+    badge: 'INTERNAL QA',
+    name: 'QA Test Plan',
+    price: {
+      inr: { monthly: '₹1', annual: '₹1' },
+      usd: { monthly: '$0.01', annual: '$0.01' }
+    },
+    desc: 'Internal ₹1 plan for safely validating production payments. Admins only.',
+    btnText: 'Test Payment',
+    btnVariant: 'primary',
+    sections: [
+      {
+        title: 'QA VALIDATION',
+        features: [
+          { text: 'Real Razorpay pipeline', status: 'active' },
+          { text: 'Signature verification', status: 'active' },
+          { text: 'DB persistence test', status: 'active' },
+          { text: 'No premium credits', status: 'star' },
+        ]
+      }
+    ],
+    bgClass: 'bg-[#1D1D1F] border border-red-500/30',
+    calloutClass: 'bg-red-500/10 text-red-400'
   }
 ]
 
@@ -228,12 +256,19 @@ const ADDON_DATA = [
 ]
 
 export function PricingClient({ plans }: PricingClientProps) {
+  const { user, isLoaded } = useUser()
   const [billingCycle, setBillingCycle] = useState<BillingCycle>('monthly')
   const [currency, setCurrency] = useState<CurrencyKey>('usd')
+
+  const userEmail = user?.primaryEmailAddress?.emailAddress
+  const userIsAdmin = isAdmin(userEmail)
 
   useEffect(() => {
     setCurrency(detectCurrency())
   }, [])
+
+  // Filter UI data based on admin status
+  const visiblePricingData = PRICING_DATA.filter(p => !p.internal || userIsAdmin)
 
   return (
     <div className="flex flex-col min-h-screen bg-background font-sans relative">
@@ -244,7 +279,7 @@ export function PricingClient({ plans }: PricingClientProps) {
       <main className="flex-1 pt-12">
         {/* The New Apple-Style Pricing Component */}
         <ApplePricing 
-          plans={PRICING_DATA as any} 
+          plans={visiblePricingData as any} 
           addons={ADDON_DATA}
           currency={currency} 
           billingCycle={billingCycle} 

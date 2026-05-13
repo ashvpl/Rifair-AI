@@ -1,4 +1,4 @@
-export type PlanId = 'free' | 'lite' | 'starter' | 'growth' | 'enterprise'
+export type PlanId = 'free' | 'lite' | 'starter' | 'growth' | 'enterprise' | 'internal_qa_plan' | 'analyses_20' | 'kits_5' | 'kits_15'
 export type BillingCycle = 'monthly' | 'annual'
 export type SubscriptionStatus =
   'active' | 'cancelled' | 'past_due' | 'trialing' | 'paused'
@@ -20,6 +20,9 @@ export interface Plan {
   badge?: string
   isFeatured?: boolean
   comingSoon?: boolean
+  internal?: boolean
+  testPlan?: boolean
+  qaOnly?: boolean
   ctaLabel: string
   ctaVariant: 'outline' | 'default' | 'primary' | 'sales'
 }

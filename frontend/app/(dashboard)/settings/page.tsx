@@ -41,7 +41,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-const PLAN_ORDER: PlanId[] = ["free", "lite", "starter", "growth", "enterprise"];
+const PLAN_ORDER: PlanId[] = ["free", "lite", "starter", "growth", "enterprise", "internal_qa_plan"];
 
 export default function SettingsPage() {
   const {
@@ -269,7 +269,7 @@ export default function SettingsPage() {
               {/* Next plan cards */}
               <div className="space-y-3">
                 {nextPlans
-                  .filter((p) => p.id !== "free")
+                  .filter((p) => p.id !== "free" && !p.internal)
                   .map((plan) => (
                     <div
                       key={plan.id}
@@ -560,6 +560,10 @@ function PlanBadge({ planId }: { planId: PlanId }) {
     starter: "bg-blue-50 text-blue-700",
     growth: "bg-emerald-50 text-emerald-700",
     enterprise: "bg-purple-50 text-purple-700",
+    internal_qa_plan: "bg-red-50 text-red-700",
+    analyses_20: "bg-blue-50 text-blue-700",
+    kits_5: "bg-blue-50 text-blue-700",
+    kits_15: "bg-blue-50 text-blue-700",
   };
 
   return (
