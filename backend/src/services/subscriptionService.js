@@ -196,6 +196,7 @@ async function getPaymentHistory(userId) {
 }
 
 module.exports = {
+  isAdminUser,
   getSubscription,
   updateSubscription,
   logPayment,
