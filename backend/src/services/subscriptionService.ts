@@ -3,21 +3,20 @@ const { secrets } = require("../core/secrets/secretManager");
 
 const { isAdmin } = require("../utils/admin");
 
+console.log("[DEBUG] SubscriptionService module loading...");
+
 // --- Admin Caching and User Verification ---
 const adminUserIds = new Set();
 const nonAdminUserIds = new Set();
 
-async function isAdminUser(userId) {
+export async function isAdminUser(userId: string) {
   if (!userId || userId === "anonymous") return false;
   
   if (adminUserIds.has(userId)) return true;
   if (userId === "user_3D1NoQ0R8GeLEtKk58qRxjh60Gc" || userId === "user_3DZjCGURzT37bRBp85cXBXebBp1") return true; 
-  // Clear cache check to pick up new admin emails without restart
-  // if (nonAdminUserIds.has(userId)) return false;
 
   try {
     const clerk = require("@clerk/clerk-sdk-node");
-    // Fallback to older clerk SDK properties if clerkClient is not available
     const clerkUsers = clerk.clerkClient ? clerk.clerkClient.users : clerk.users;
     
     if (!clerkUsers || typeof clerkUsers.getUser !== 'function') {
@@ -28,8 +27,8 @@ async function isAdminUser(userId) {
     const user = await clerkUsers.getUser(userId);
     if (!user) return false;
 
-    const userEmails = (user.emailAddresses || []).map(e => (e.emailAddress || "").toLowerCase());
-    const isUserAdmin = userEmails.some(email => isAdmin(email));
+    const userEmails = (user.emailAddresses || []).map((e: any) => (e.emailAddress || "").toLowerCase());
+    const isUserAdmin = userEmails.some((email: string) => isAdmin(email));
 
     if (isUserAdmin) {
       adminUserIds.add(userId);
@@ -38,7 +37,7 @@ async function isAdminUser(userId) {
       nonAdminUserIds.add(userId);
       return false;
     }
-  } catch (error) {
+  } catch (error: any) {
     if (error.status !== 404) {
       console.error("Error fetching user from Clerk to check admin status:", error.message);
     }
@@ -46,11 +45,7 @@ async function isAdminUser(userId) {
   }
 }
 
-
-/**
- * Get or create subscription for a user
- */
-async function getSubscription(userId) {
+export async function getSubscription(userId: string) {
   const isUserAdmin = await isAdminUser(userId);
 
   let { data: subscription, error } = await supabaseAdmin
@@ -71,7 +66,6 @@ async function getSubscription(userId) {
       };
     }
 
-    // Auto-create free subscription if none exists
     const { data: newSub, error: insertError } = await supabaseAdmin
       .from("subscriptions")
       .upsert({
@@ -91,7 +85,6 @@ async function getSubscription(userId) {
 
   if (error) throw error;
 
-  // If they are admin and on free plan, upgrade them to enterprise in-memory
   if (isUserAdmin && (!subscription || subscription.plan_id === 'free')) {
     return {
       ...subscription,
@@ -102,29 +95,17 @@ async function getSubscription(userId) {
   return subscription;
 }
 
-/**
- * Apply an addon by reducing current month's usage
- */
-async function applyAddon(userId, addonConfig) {
+export async function applyAddon(userId: string, addonConfig: any) {
   const usageService = require("./usageService");
-  const currentMonth = new Date().toISOString().slice(0, 7);
-
-  // Ensure usage row exists first
-  await usageService.getUsage(userId);
-
   const { type, amount } = addonConfig;
   const columnToReduce = type === 'analyses' ? 'analyses_used' : type === 'kits' ? 'kits_used' : type === 'jd_analyses' ? 'jd_analyses_used' : null;
   
   if (!columnToReduce || !amount) return;
-
-  // Reduce usage atomically by a negative amount
+  await usageService.getUsage(userId);
   await usageService.incrementUsage(userId, columnToReduce, -amount);
 }
 
-/**
- * Update subscription after successful payment
- */
-async function updateSubscription(userId, { planId, billingCycle, orderId, paymentId }) {
+export async function updateSubscription(userId: string, { planId, billingCycle, orderId, paymentId }: any) {
   const now = new Date();
   const periodEnd = new Date(now);
   if (billingCycle === "annual") {
@@ -152,10 +133,7 @@ async function updateSubscription(userId, { planId, billingCycle, orderId, payme
   return data;
 }
 
-/**
- * Log a payment record
- */
-async function logPayment(userId, paymentData) {
+export async function logPayment(userId: string, paymentData: any) {
   const { error } = await supabaseAdmin.from("payments").insert({
     user_id: userId,
     plan_id: paymentData.planId,
@@ -171,10 +149,7 @@ async function logPayment(userId, paymentData) {
   if (error) throw error;
 }
 
-/**
- * Cancel subscription
- */
-async function cancelSubscription(userId) {
+export async function cancelSubscription(userId: string) {
   const { error } = await supabaseAdmin
     .from("subscriptions")
     .update({
@@ -191,10 +166,7 @@ async function cancelSubscription(userId) {
   if (error) throw error;
 }
 
-/**
- * Get payment history
- */
-async function getPaymentHistory(userId) {
+export async function getPaymentHistory(userId: string) {
   const { data, error } = await supabaseAdmin
     .from("payments")
     .select("*")
@@ -205,13 +177,3 @@ async function getPaymentHistory(userId) {
   if (error) throw error;
   return data || [];
 }
-
-module.exports = {
-  isAdminUser,
-  getSubscription,
-  updateSubscription,
-  logPayment,
-  applyAddon,
-  cancelSubscription,
-  getPaymentHistory,
-};

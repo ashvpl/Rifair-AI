@@ -1,11 +1,13 @@
+import { Request, Response } from 'express';
 const paymentService = require("../services/paymentService");
-const subscriptionService = require("../services/subscriptionService");
+import * as subscriptionService from "../services/subscriptionService";
 const { PLANS } = require("../config/plans");
 const { secrets } = require("../core/secrets/secretManager");
 
-async function createOrder(req, res) {
+async function createOrder(req: Request, res: Response) {
   try {
-    const userId = req.auth?.userId || req.auth?.claims?.sub;
+    const auth = (req as any).auth;
+    const userId = auth?.userId || auth?.claims?.sub;
     if (!userId) return res.status(401).json({ error: "Unauthorized" });
     
     const { planId, billingCycle, currency = "inr" } = req.body;
@@ -58,15 +60,16 @@ async function createOrder(req, res) {
       currency: order.currency,
       key: secrets.get('RAZORPAY_KEY_ID'),
     });
-  } catch (err) {
+  } catch (err: any) {
     console.error("Payment Order Error:", err);
     res.status(500).json({ error: err.error?.description || err.message || "Failed to create Razorpay order" });
   }
 }
 
-async function verifyPayment(req, res) {
+async function verifyPayment(req: Request, res: Response) {
   try {
-    const userId = req.auth?.userId || req.auth?.claims?.sub;
+    const auth = (req as any).auth;
+    const userId = auth?.userId || auth?.claims?.sub;
     if (!userId) return res.status(401).json({ error: "Unauthorized" });
 
     const {
@@ -128,7 +131,7 @@ async function verifyPayment(req, res) {
     });
 
     res.json({ success: true });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({ error: err.message });
   }
 }
