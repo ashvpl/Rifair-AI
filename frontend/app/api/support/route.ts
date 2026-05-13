@@ -54,6 +54,8 @@ export async function POST(req: NextRequest) {
 
     if (dbError) throw dbError
 
+    const logoUrl = 'https://rifairai.com/rifair-logo.png'
+
     // 2. Send notification email to your team
     await resend.emails.send({
       from: 'Rifair AI <support@rifairai.com>',
@@ -61,7 +63,8 @@ export async function POST(req: NextRequest) {
       subject: `[Support Ticket] ${subject} — ${full_name}`,
       html: `
         <div style="font-family:sans-serif; max-width:600px; margin:0 auto; color: #1f2937;">
-          <div style="background:#0a3d2e; padding:32px 24px; border-radius:12px 12px 0 0; text-align: center;">
+          <div style="background:#000000; padding:32px 24px; border-radius:12px 12px 0 0; text-align: center;">
+            <img src="${logoUrl}" alt="Rifair AI" style="height: 40px; margin-bottom: 16px;">
             <h2 style="color:white; margin:0; font-size: 24px; letter-spacing: -0.025em;">New Support Request</h2>
             <p style="color:rgba(255,255,255,0.7); margin:8px 0 0; font-size:14px">
               Ticket ID: ${ticket.id.slice(0, 8).toUpperCase()}
@@ -76,7 +79,7 @@ export async function POST(req: NextRequest) {
               <tr>
                 <td style="padding:12px 0; color:#6b7280; font-size:13px; border-bottom: 1px solid #f3f4f6;">Email</td>
                 <td style="padding:12px 0; border-bottom: 1px solid #f3f4f6;">
-                  <a href="mailto:${work_email}" style="color: #0a3d2e; text-decoration: none; font-weight: 500;">${work_email}</a>
+                  <a href="mailto:${work_email}" style="color: #000000; text-decoration: none; font-weight: 500;">${work_email}</a>
                 </td>
               </tr>
               ${company ? `
@@ -99,7 +102,7 @@ export async function POST(req: NextRequest) {
 
             <div style="text-align: center;">
               <a href="mailto:${work_email}?subject=Re: ${subject}"
-                 style="display: inline-block; background:#0a3d2e; color:white; padding:14px 28px; border-radius:8px; text-decoration:none; font-size:15px; font-weight:600; transition: background 0.2s;">
+                 style="display: inline-block; background:#000000; color:white; padding:14px 28px; border-radius:8px; text-decoration:none; font-size:15px; font-weight:600; transition: background 0.2s;">
                 Reply to Client
               </a>
             </div>
@@ -118,10 +121,8 @@ export async function POST(req: NextRequest) {
       subject: `We've received your message — Rifair AI`,
       html: `
         <div style="font-family:sans-serif; max-width:600px; margin:0 auto; color: #1f2937;">
-          <div style="background:#0a3d2e; padding:40px 24px; border-radius:12px 12px 0 0; text-align: center;">
-            <div style="background: rgba(255,255,255,0.1); width: 64px; height: 64px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px;">
-              <span style="font-size: 32px;">✓</span>
-            </div>
+          <div style="background:#000000; padding:40px 24px; border-radius:12px 12px 0 0; text-align: center;">
+            <img src="${logoUrl}" alt="Rifair AI" style="height: 40px; margin-bottom: 20px;">
             <h2 style="color:white; margin:0; font-size: 24px; letter-spacing: -0.025em;">Request Received</h2>
           </div>
           <div style="background:#ffffff; padding:40px 32px; border:1px solid #e5e7eb; border-top:none; border-radius:0 0 12px 12px; text-align: center;">
@@ -131,15 +132,15 @@ export async function POST(req: NextRequest) {
             <p style="font-size: 16px; line-height:1.6; color:#4b5563; margin-bottom: 32px;">
               Thank you for reaching out to Rifair AI. We've received your inquiry regarding <strong>${subject}</strong> and our technical team is already reviewing it.
             </p>
-            <div style="background: #f0fdf4; border: 1px solid #dcfce7; padding: 16px; border-radius: 8px; margin-bottom: 32px;">
-              <p style="margin: 0; color: #166534; font-size: 14px; font-weight: 500;">
+            <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 16px; border-radius: 8px; margin-bottom: 32px;">
+              <p style="margin: 0; color: #111827; font-size: 14px; font-weight: 600;">
                 Expect a response from us within 24 hours.
               </p>
             </div>
             <p style="font-size: 14px; color:#9ca3af; margin-bottom: 8px;">
               Best regards,
             </p>
-            <p style="font-size: 16px; font-weight: 700; color:#0a3d2e; margin: 0;">
+            <p style="font-size: 16px; font-weight: 700; color:#000000; margin: 0;">
               The Rifair AI Team
             </p>
           </div>
