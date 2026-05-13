@@ -8,8 +8,8 @@ const infoSections = [
   {
     icon: Mail,
     title: "Email Support",
-    value: "rifairaiteam@gmail.com",
-    href: "https://mail.google.com/mail/?view=cm&fs=1&to=rifairaiteam@gmail.com",
+    value: "support@rifairai.com",
+    href: "mailto:support@rifairai.com",
   },
   {
     icon: Clock,

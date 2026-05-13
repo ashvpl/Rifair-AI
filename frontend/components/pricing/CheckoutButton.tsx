@@ -48,7 +48,7 @@ export function CheckoutButton({
     }
     if (planId === 'enterprise') {
       // Open mailto for enterprise contact
-      window.location.href = 'mailto:rifairaiteam@gmail.com?subject=Enterprise%20Plan%20Inquiry'
+      window.location.href = 'mailto:sales@rifairai.com?subject=Enterprise%20Plan%20Inquiry'
       return
     }
 

@@ -27,7 +27,7 @@ export const EnterpriseCTA = () => {
 
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-4">
           <a 
-            href="https://mail.google.com/mail/?view=cm&fs=1&to=rifairaiteam@gmail.com"
+            href="mailto:sales@rifairai.com"
             target="_blank"
             rel="noopener noreferrer"
             className="group relative px-8 h-14 bg-primary text-primary-foreground font-semibold rounded-2xl overflow-hidden shadow-xl hover:shadow-primary/20 transition-all flex items-center justify-center"

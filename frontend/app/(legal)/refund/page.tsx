@@ -134,7 +134,7 @@ export default function RefundPolicy() {
             <li>
               <div className="step-num">2</div>
               <div className="step-content">
-                <h4>Email rifairaiteam@gmail.com</h4>
+                <h4>Email support@rifairai.com</h4>
                 <p>Provide your transaction ID and a brief description of the technical failure or billing error.</p>
               </div>
             </li>
@@ -164,7 +164,7 @@ export default function RefundPolicy() {
           <h2>Billing Enquiries</h2>
           <div className="legal-contact-box">
             <h3>Technical & Billing Support</h3>
-            <p>Email: <a href="mailto:rifairaiteam@gmail.com">rifairaiteam@gmail.com</a></p>
+            <p>Email: <a href="mailto:support@rifairai.com">support@rifairai.com</a></p>
             <p>Standard Response: Within 24 hours</p>
             <p style={{ marginTop: '12px', fontSize: '13px', opacity: 0.6 }}>
               For failed transactions where money was deducted but not credited, 

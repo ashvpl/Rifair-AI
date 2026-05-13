@@ -60,8 +60,7 @@ export const SupportForm = () => {
         <div className="space-y-2">
           <h2 className="text-2xl font-bold tracking-tight">Message Sent!</h2>
           <p className="text-muted-foreground max-w-sm mx-auto">
-            We've received your message and sent a confirmation to <span className="text-foreground font-medium">{form.work_email}</span>. 
-            We'll reply within 24 hours.
+            We've received your message. We'll reply within 24 hours.
           </p>
         </div>
         <button

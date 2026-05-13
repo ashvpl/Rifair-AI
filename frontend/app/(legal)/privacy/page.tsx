@@ -164,7 +164,7 @@ export default function PrivacyPolicy() {
             <li>API keys and secrets stored in environment variables, never in code</li>
             <li>Regular security reviews of our infrastructure</li>
           </ul>
-          <p>No method of transmission or storage is 100% secure. If you discover a security reporting, please report it to rifairaiteam@gmail.com and we will respond within 48 hours.</p>
+          <p>No method of transmission or storage is 100% secure. If you discover a security reporting, please report it to support@rifairai.com and we will respond within 48 hours.</p>
         </section>
 
         <section id="rights" className="legal-section">
@@ -178,7 +178,7 @@ export default function PrivacyPolicy() {
             <li><strong>Opt-out:</strong> Unsubscribe from non-transactional communications at any time</li>
             <li><strong>Restriction:</strong> Request that we restrict processing of your data in certain circumstances</li>
           </ul>
-          <p>To exercise any of these rights, email us at rifairaiteam@gmail.com. We will respond within 30 days. For account deletion, you can also use the "Delete Account" option in your Settings page.</p>
+          <p>To exercise any of these rights, email us at support@rifairai.com. We will respond within 30 days. For account deletion, you can also use the "Delete Account" option in your Settings page.</p>
         </section>
 
         <section id="cookies" className="legal-section">
@@ -194,7 +194,7 @@ export default function PrivacyPolicy() {
 
         <section id="children" className="legal-section">
           <h2>10. Children's privacy</h2>
-          <p>Rifair AI is a professional B2B service intended for use by individuals aged 18 and over. We do not knowingly collect personal information from children under 18. If you believe a child has provided us with personal information, please contact us at rifairaiteam@gmail.com and we will delete it promptly.</p>
+          <p>Rifair AI is a professional B2B service intended for use by individuals aged 18 and over. We do not knowingly collect personal information from children under 18. If you believe a child has provided us with personal information, please contact us at support@rifairai.com and we will delete it promptly.</p>
         </section>
 
         <section id="changes" className="legal-section">
@@ -207,8 +207,8 @@ export default function PrivacyPolicy() {
           <p>If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact us:</p>
           <div className="legal-contact-box">
             <h3>Privacy enquiries</h3>
-            <p>Email: <a href="mailto:rifairaiteam@gmail.com">rifairaiteam@gmail.com</a></p>
-            <p>General: <a href="mailto:rifairaiteam@gmail.com">rifairaiteam@gmail.com</a></p>
+            <p>Email: <a href="mailto:support@rifairai.com">support@rifairai.com</a></p>
+            <p>General: <a href="mailto:support@rifairai.com">support@rifairai.com</a></p>
             <p style={{ marginTop: '12px', fontSize: '13px', opacity: 0.6 }}>We respond to all privacy requests within 30 days.</p>
           </div>
         </section>

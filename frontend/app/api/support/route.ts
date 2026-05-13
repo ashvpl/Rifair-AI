@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // 1. Save to Supabase
+    // 1. Save to Supabase for record keeping
     const { data: ticket, error: dbError } = await supabase
       .from('support_tickets')
       .insert({
@@ -54,80 +54,98 @@ export async function POST(req: NextRequest) {
 
     if (dbError) throw dbError
 
-    // 2. Send notification email to team
+    // 2. Send notification email to your team
     await resend.emails.send({
-      from: 'Rifair AI <hello@rifairai.com>',
+      from: 'Rifair AI <support@rifairai.com>',
       to: 'rifairaiteam@gmail.com',
-      subject: `[Support] ${subject} — from ${full_name}`,
+      subject: `[Support Ticket] ${subject} — ${full_name}`,
       html: `
-        <div style="font-family:sans-serif; max-width:600px; margin:0 auto">
-          <div style="background:#0a3d2e; padding:20px; border-radius:8px 8px 0 0">
-            <h2 style="color:white; margin:0">New Support Ticket</h2>
-            <p style="color:rgba(255,255,255,0.6); margin:4px 0 0; font-size:13px">
-              Ticket ID: ${ticket.id.slice(0, 8)}
+        <div style="font-family:sans-serif; max-width:600px; margin:0 auto; color: #1f2937;">
+          <div style="background:#0a3d2e; padding:32px 24px; border-radius:12px 12px 0 0; text-align: center;">
+            <h2 style="color:white; margin:0; font-size: 24px; letter-spacing: -0.025em;">New Support Request</h2>
+            <p style="color:rgba(255,255,255,0.7); margin:8px 0 0; font-size:14px">
+              Ticket ID: ${ticket.id.slice(0, 8).toUpperCase()}
             </p>
           </div>
-          <div style="background:#f9fafb; padding:24px; border:1px solid #e5e7eb; border-top:none; border-radius:0 0 8px 8px">
-            <table style="width:100%; border-collapse:collapse">
+          <div style="background:#ffffff; padding:32px 24px; border:1px solid #e5e7eb; border-top:none; border-radius:0 0 12px 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+            <table style="width:100%; border-collapse:collapse; margin-bottom: 24px;">
               <tr>
-                <td style="padding:8px 0; color:#6b7280; font-size:12px; width:120px">Name</td>
-                <td style="padding:8px 0; font-weight:500">${full_name}</td>
+                <td style="padding:12px 0; color:#6b7280; font-size:13px; width:100px; border-bottom: 1px solid #f3f4f6;">From</td>
+                <td style="padding:12px 0; font-weight:600; border-bottom: 1px solid #f3f4f6;">${full_name}</td>
               </tr>
               <tr>
-                <td style="padding:8px 0; color:#6b7280; font-size:12px">Email</td>
-                <td style="padding:8px 0">
-                  <a href="mailto:${work_email}">${work_email}</a>
+                <td style="padding:12px 0; color:#6b7280; font-size:13px; border-bottom: 1px solid #f3f4f6;">Email</td>
+                <td style="padding:12px 0; border-bottom: 1px solid #f3f4f6;">
+                  <a href="mailto:${work_email}" style="color: #0a3d2e; text-decoration: none; font-weight: 500;">${work_email}</a>
                 </td>
               </tr>
               ${company ? `
               <tr>
-                <td style="padding:8px 0; color:#6b7280; font-size:12px">Company</td>
-                <td style="padding:8px 0">${company}</td>
+                <td style="padding:12px 0; color:#6b7280; font-size:13px; border-bottom: 1px solid #f3f4f6;">Company</td>
+                <td style="padding:12px 0; border-bottom: 1px solid #f3f4f6;">${company}</td>
               </tr>` : ''}
               <tr>
-                <td style="padding:8px 0; color:#6b7280; font-size:12px">Subject</td>
-                <td style="padding:8px 0; font-weight:500">${subject}</td>
+                <td style="padding:12px 0; color:#6b7280; font-size:13px; border-bottom: 1px solid #f3f4f6;">Subject</td>
+                <td style="padding:12px 0; font-weight:600; border-bottom: 1px solid #f3f4f6;">${subject}</td>
               </tr>
             </table>
-            <div style="margin-top:16px; padding:16px; background:white; border:1px solid #e5e7eb; border-radius:8px">
-              <p style="font-size:12px; color:#6b7280; margin:0 0 8px">Message</p>
-              <p style="margin:0; line-height:1.6; color:#374151">
+            
+            <div style="padding:20px; background:#f9fafb; border-radius:8px; margin-bottom: 24px;">
+              <p style="font-size:12px; font-weight: 700; color:#9ca3af; text-transform: uppercase; letter-spacing: 0.05em; margin:0 0 12px">Message Content</p>
+              <p style="margin:0; line-height:1.6; color:#374151; font-size: 15px;">
                 ${message.replace(/\n/g, '<br>')}
               </p>
             </div>
-            <div style="margin-top:16px">
+
+            <div style="text-align: center;">
               <a href="mailto:${work_email}?subject=Re: ${subject}"
-                 style="background:#0a3d2e; color:white; padding:10px 20px; border-radius:6px; text-decoration:none; font-size:13px; font-weight:500">
-                Reply to ${full_name} →
+                 style="display: inline-block; background:#0a3d2e; color:white; padding:14px 28px; border-radius:8px; text-decoration:none; font-size:15px; font-weight:600; transition: background 0.2s;">
+                Reply to Client
               </a>
             </div>
+          </div>
+          <div style="text-align: center; padding: 24px; color: #9ca3af; font-size: 12px;">
+            &copy; ${new Date().getFullYear()} Rifair AI. Sent via Internal Support System.
           </div>
         </div>
       `
     })
 
-    // 3. Send confirmation to user
+    // 3. Send confirmation to user (the premium feel)
     await resend.emails.send({
-      from: 'Rifair AI <hello@rifairai.com>',
+      from: 'Rifair AI Support <support@rifairai.com>',
       to: work_email,
-      subject: `We received your message — Rifair AI`,
+      subject: `We've received your message — Rifair AI`,
       html: `
-        <div style="font-family:sans-serif; max-width:600px; margin:0 auto">
-          <div style="background:#0a3d2e; padding:20px; border-radius:8px 8px 0 0">
-            <h2 style="color:white; margin:0">Got your message ✓</h2>
+        <div style="font-family:sans-serif; max-width:600px; margin:0 auto; color: #1f2937;">
+          <div style="background:#0a3d2e; padding:40px 24px; border-radius:12px 12px 0 0; text-align: center;">
+            <div style="background: rgba(255,255,255,0.1); width: 64px; height: 64px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+              <span style="font-size: 32px;">✓</span>
+            </div>
+            <h2 style="color:white; margin:0; font-size: 24px; letter-spacing: -0.025em;">Request Received</h2>
           </div>
-          <div style="background:#f9fafb; padding:24px; border:1px solid #e5e7eb; border-top:none; border-radius:0 0 8px 8px">
-            <p style="color:#374151">Hi ${full_name},</p>
-            <p style="color:#374151; line-height:1.6">
-              Thanks for reaching out. We've received your message about <strong>${subject}</strong> and will get back to you within 24 hours.
+          <div style="background:#ffffff; padding:40px 32px; border:1px solid #e5e7eb; border-top:none; border-radius:0 0 12px 12px; text-align: center;">
+            <p style="font-size: 16px; margin-bottom: 24px; color: #374151;">
+              Hi ${full_name.split(' ')[0]},
             </p>
-            <p style="color:#374151; line-height:1.6">
-              If your issue is urgent, you can also reply directly to this email.
+            <p style="font-size: 16px; line-height:1.6; color:#4b5563; margin-bottom: 32px;">
+              Thank you for reaching out to Rifair AI. We've received your inquiry regarding <strong>${subject}</strong> and our technical team is already reviewing it.
             </p>
-            <p style="color:#6b7280; font-size:13px; margin-top:24px">
-              — Rifair AI Team<br>
-              rifairaiteam@gmail.com
+            <div style="background: #f0fdf4; border: 1px solid #dcfce7; padding: 16px; border-radius: 8px; margin-bottom: 32px;">
+              <p style="margin: 0; color: #166534; font-size: 14px; font-weight: 500;">
+                Expect a response from us within 24 hours.
+              </p>
+            </div>
+            <p style="font-size: 14px; color:#9ca3af; margin-bottom: 8px;">
+              Best regards,
             </p>
+            <p style="font-size: 16px; font-weight: 700; color:#0a3d2e; margin: 0;">
+              The Rifair AI Team
+            </p>
+          </div>
+          <div style="text-align: center; padding: 24px; color: #9ca3af; font-size: 12px;">
+            Rifair AI — Advanced Bias Analysis for the Future of Enterprise.<br>
+            <a href="https://rifairai.com" style="color: #9ca3af; text-decoration: underline;">rifairai.com</a>
           </div>
         </div>
       `

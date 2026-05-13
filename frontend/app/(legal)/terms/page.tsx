@@ -67,7 +67,7 @@ export default function TermsOfService() {
           <p>You must be at least 18 years of age to create an account. The Service is intended for professional use by HR professionals, recruiters, hiring managers, and business owners.</p>
 
           <h3>Account security</h3>
-          <p>You are responsible for maintaining the confidentiality of your account credentials. You agree to notify us immediately at rifairaiteam@gmail.com if you suspect unauthorised access to your account. We are not liable for any loss resulting from unauthorised use of your account.</p>
+          <p>You are responsible for maintaining the confidentiality of your account credentials. You agree to notify us immediately at support@rifairai.com if you suspect unauthorised access to your account. We are not liable for any loss resulting from unauthorised use of your account.</p>
 
           <h3>Account accuracy</h3>
           <p>You agree to provide accurate and complete information when creating your account and to keep this information up to date. We reserve the right to suspend accounts with false or misleading information.</p>
@@ -182,7 +182,7 @@ export default function TermsOfService() {
         <section id="governing" className="legal-section">
           <h2>11. Governing law and disputes</h2>
           <p>These Terms are governed by the laws of India. Any disputes arising from these Terms or your use of the Service shall be subject to the exclusive jurisdiction of the courts of Mumbai, Maharashtra, India.</p>
-          <p>Before initiating formal legal proceedings, we encourage you to contact us at rifairaiteam@gmail.com to resolve disputes informally. We will make every reasonable effort to address your concerns within 30 days.</p>
+          <p>Before initiating formal legal proceedings, we encourage you to contact us at support@rifairai.com to resolve disputes informally. We will make every reasonable effort to address your concerns within 30 days.</p>
         </section>
 
         <section id="contact" className="legal-section">
@@ -190,8 +190,8 @@ export default function TermsOfService() {
           <p>For questions about these Terms, please contact us:</p>
           <div className="legal-contact-box">
             <h3>Legal enquiries</h3>
-            <p>Email: <a href="mailto:rifairaiteam@gmail.com">rifairaiteam@gmail.com</a></p>
-            <p>General: <a href="mailto:rifairaiteam@gmail.com">rifairaiteam@gmail.com</a></p>
+            <p>Email: <a href="mailto:support@rifairai.com">support@rifairai.com</a></p>
+            <p>General: <a href="mailto:support@rifairai.com">support@rifairai.com</a></p>
             <p style={{ marginTop: '12px', fontSize: '13px', opacity: 0.6 }}>We respond to all legal enquiries within 5 business days.</p>
           </div>
         </section>

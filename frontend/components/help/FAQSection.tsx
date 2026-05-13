@@ -27,7 +27,7 @@ const faqs = [
   },
   {
     question: "How can I get in touch with the support team?",
-    answer: "You can submit a ticket directly through the support form on this page, or email us at rifairaiteam@gmail.com. Our team typically responds within 24 hours to ensure your hiring process remains uninterrupted.",
+    answer: "You can submit a ticket directly through the support form on this page, or email us at support@rifairai.com. Our team typically responds within 24 hours to ensure your hiring process remains uninterrupted.",
   },
 ];
 
