@@ -118,7 +118,7 @@ export default function EvaluationsPage() {
       {/* ── Entry Points ─────────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         {/* A — Rifair Kit */}
-        <div className="bg-white border border-black/[0.05] rounded-[2rem] p-6 shadow-sm relative overflow-hidden hover:border-[#3b82f6]/[0.2] hover:shadow-[0_8px_32px_rgba(59,130,246,0.04)] transition-all duration-300">
+        <div className="bg-white border border-black/10 rounded-[2rem] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden hover:border-[#3b82f6]/[0.2] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-300">
           <div className="absolute -top-12 -right-12 w-40 h-40 bg-[#3b82f6]/[0.03] rounded-full blur-2xl" />
           <div className="relative z-10">
             <div className="w-12 h-12 bg-[#3b82f6] rounded-2xl flex items-center justify-center mb-4">
@@ -146,7 +146,7 @@ export default function EvaluationsPage() {
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.99 }}
           onClick={() => setShowCustomFlow(true)}
-          className="text-left bg-gradient-to-br from-[#3b82f6] to-[#2563eb] border border-[#3b82f6] rounded-[2rem] p-6 shadow-[0_4px_20px_rgba(59,130,246,0.2)] relative overflow-hidden cursor-pointer group"
+          className="text-left bg-gradient-to-br from-[#3b82f6] to-[#2563eb] border-2 border-black rounded-[2rem] p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden cursor-pointer group"
         >
           <div className="absolute -top-12 -right-12 w-40 h-40 bg-white/[0.04] rounded-full blur-2xl" />
           <div className="absolute bottom-0 right-0 w-32 h-32 bg-white/[0.03] rounded-full blur-xl" />
@@ -182,10 +182,10 @@ export default function EvaluationsPage() {
             placeholder="Search roles or kits..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-4 rounded-2xl border border-black/[0.05] bg-white shadow-[0_4px_24px_rgba(0,0,0,0.02)] focus:ring-2 focus:ring-black/5 focus:border-black/[0.1] transition-all text-[#1D1D1F] font-medium"
+            className="w-full pl-12 pr-4 py-4 rounded-2xl border border-black/10 bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus:ring-0 focus:border-black transition-all text-[#1D1D1F] font-medium"
           />
         </div>
-        <div className="bg-white border border-black/[0.05] rounded-2xl p-4 flex items-center justify-between shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
+        <div className="bg-white border border-black/10 rounded-2xl p-4 flex items-center justify-between shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <div className="flex flex-col">
             <span className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.1em]">Total Kits</span>
             <span className="text-2xl font-extrabold text-[#1D1D1F]">{kits.length}</span>
@@ -226,7 +226,7 @@ export default function EvaluationsPage() {
                   transition={{ delay: idx * 0.05 }}
                 >
                 <Link href={latestEval ? `/evaluations/${latestEval.id}` : `/kit?reportId=${kit.id}&evaluate=true`}>
-                    <div className="group bg-white border border-black/[0.05] rounded-[2rem] p-6 hover:border-black/[0.1] hover:shadow-[0_8px_32px_rgba(0,0,0,0.04)] transition-all duration-300 cursor-pointer relative overflow-hidden">
+                    <div className="group bg-white border border-black/10 rounded-[2rem] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-300 cursor-pointer relative overflow-hidden">
                       <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
                         <div className="w-10 h-10 rounded-full bg-[#1D1D1F] flex items-center justify-center text-white">
                           <ArrowRight className="w-5 h-5" />
@@ -295,7 +295,7 @@ export default function EvaluationsPage() {
                   transition={{ delay: idx * 0.05 }}
                 >
                   <Link href={`/evaluations/${evalItem.id}`}>
-                    <div className="bg-white border border-black/[0.05] rounded-[2rem] p-5 hover:border-black/[0.1] hover:shadow-[0_8px_32px_rgba(0,0,0,0.04)] transition-all cursor-pointer group">
+                    <div className="bg-white border border-black/10 rounded-[2rem] p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all cursor-pointer group">
                       <div className="flex justify-between items-start mb-3">
                         <div className="w-10 h-10 rounded-2xl bg-[#F5F5F7] flex items-center justify-center border border-black/[0.02] group-hover:bg-[#1D1D1F] transition-colors">
                           <Users className="w-5 h-5 text-[#86868B] group-hover:text-white" />
@@ -329,7 +329,7 @@ export default function EvaluationsPage() {
       )}
 
       {/* Info Box */}
-      <div className="mt-12 p-6 md:p-8 rounded-[2rem] bg-[#1D1D1F] text-white relative overflow-hidden shadow-2xl">
+      <div className="mt-12 p-6 md:p-8 rounded-[2rem] bg-[#1D1D1F] text-white relative overflow-hidden shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-32 -mt-32" />
         <div className="relative z-10 flex flex-col md:flex-row items-center gap-6 md:gap-8">
           <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center shrink-0 border border-white/10">

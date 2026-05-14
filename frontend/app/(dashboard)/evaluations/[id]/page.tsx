@@ -74,11 +74,11 @@ export default function EvaluationReportPage({ params }: { params: Promise<{ id:
   const recommendation = evalData?.recommendation || "UNKNOWN";
   
   const recStyles: Record<string, any> = {
-    "HIRE": { bg: "bg-blue-500", text: "text-white", border: "border-blue-600", label: "Recommended for Hire" },
-    "STRONG HIRE": { bg: "bg-blue-600", text: "text-white", border: "border-blue-700", label: "Strong Hire Priority" },
-    "HOLD": { bg: "bg-amber-500", text: "text-white", border: "border-amber-600", label: "Further Assessment Required" },
-    "REJECT": { bg: "bg-red-500", text: "text-white", border: "border-red-600", label: "Not Recommended" },
-    "UNKNOWN": { bg: "bg-slate-500", text: "text-white", border: "border-slate-600", label: "Evaluation Completed" },
+    "HIRE": { bg: "bg-indigo-600", text: "text-white", border: "border-black", label: "Recommended for Hire" },
+    "STRONG HIRE": { bg: "bg-black", text: "text-white", border: "border-black", label: "Strong Hire Priority" },
+    "HOLD": { bg: "bg-amber-600", text: "text-white", border: "border-black", label: "Further Assessment Required" },
+    "REJECT": { bg: "bg-red-600", text: "text-white", border: "border-black", label: "Not Recommended" },
+    "UNKNOWN": { bg: "bg-indigo-700", text: "text-white", border: "border-black", label: "Evaluation Completed" },
   };
 
   const style = recStyles[recommendation] || recStyles.UNKNOWN;
@@ -92,20 +92,22 @@ export default function EvaluationReportPage({ params }: { params: Promise<{ id:
       </Link>
 
       {/* Header Card */}
-      <div className="bg-white border border-black/[0.05] rounded-[2.5rem] p-8 md:p-12 mb-8 shadow-[0_4px_32px_rgba(0,0,0,0.03)] relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 rounded-full blur-3xl -mr-32 -mt-32 opacity-60" />
+      <div className={cn(
+        "border-2 border-black rounded-[2.5rem] p-8 md:p-12 mb-8 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden text-white transition-colors duration-500 bg-[#3b82f6]"
+      )}>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-32 -mt-32" />
         
         <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-[#F5F5F7] flex items-center justify-center border border-black/[0.02]">
-                <Users className="w-6 h-6 text-[#1D1D1F]" />
+              <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10 backdrop-blur-md">
+                <Users className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-extrabold text-[#1D1D1F] tracking-tight">
+                <h1 className="text-3xl font-extrabold text-white tracking-tight">
                   {report.categories?.candidate_name || "Unnamed Candidate"}
                 </h1>
-                <p className="text-sm font-bold text-[#86868B] uppercase tracking-widest flex items-center gap-2">
+                <p className="text-sm font-bold text-white/60 uppercase tracking-widest flex items-center gap-2">
                   <Briefcase className="w-3.5 h-3.5" />
                   {report.categories?.role || "Co-Founder"}
                 </p>
@@ -113,12 +115,12 @@ export default function EvaluationReportPage({ params }: { params: Promise<{ id:
             </div>
             
             <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2 text-xs font-bold text-[#86868B]">
+              <div className="flex items-center gap-2 text-xs font-bold text-white/60">
                 <Calendar className="w-4 h-4 opacity-50" />
                 {new Date(report.created_at).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}
               </div>
-              <div className="flex items-center gap-2 text-xs font-bold text-[#86868B]">
-                <ShieldCheck className="w-4 h-4 text-blue-500" />
+              <div className="flex items-center gap-2 text-xs font-bold text-white/60">
+                <ShieldCheck className="w-4 h-4 text-white/80" />
                 Bias Check Verified
               </div>
             </div>
@@ -127,17 +129,20 @@ export default function EvaluationReportPage({ params }: { params: Promise<{ id:
           <div className="flex flex-col items-center gap-4">
             <div className="flex items-center gap-6">
               <div className="text-right">
-                <div className="text-sm font-black text-[#86868B] uppercase tracking-widest mb-1">Overall Score</div>
-                <div className="text-5xl font-black text-[#1D1D1F] tracking-tighter">
-                  {evalData?.overall_score}<span className="text-xl text-[#86868B]">/100</span>
+                <div className="text-[10px] font-black text-white/60 uppercase tracking-widest mb-1">Overall Score</div>
+                <div className="text-5xl font-black text-white tracking-tighter">
+                  {evalData?.overall_score}<span className="text-xl text-white/40">/100</span>
                 </div>
               </div>
               <div className={cn(
-                "px-6 py-4 rounded-3xl border shadow-lg flex flex-col items-center justify-center text-center min-w-[160px]",
-                style.bg, style.text, style.border
+                "px-6 py-4 rounded-3xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center justify-center text-center min-w-[160px] bg-white text-black"
               )}>
-                <span className="text-[10px] font-black uppercase tracking-widest opacity-80 mb-1">Recommendation</span>
-                <span className="text-sm font-black uppercase tracking-widest">{recommendation}</span>
+                <span className="text-[10px] font-black uppercase tracking-widest opacity-60 mb-1">Recommendation</span>
+                <span className={cn(
+                  "text-xs font-black uppercase tracking-widest",
+                  recommendation === 'HIRE' || recommendation === 'STRONG HIRE' ? 'text-indigo-600' :
+                  recommendation === 'REJECT' ? 'text-red-600' : 'text-amber-600'
+                )}>{recommendation}</span>
               </div>
             </div>
             
@@ -145,6 +150,7 @@ export default function EvaluationReportPage({ params }: { params: Promise<{ id:
               type="evaluation" 
               id={id} 
               planTier={planId} 
+              variant="secondary"
               className="w-full"
             />
           </div>
@@ -156,9 +162,9 @@ export default function EvaluationReportPage({ params }: { params: Promise<{ id:
         {/* Left Column: Summary & Competencies */}
         <div className="lg:col-span-2 space-y-8">
           {/* Summary Section */}
-          <section className="bg-white border border-black/[0.05] rounded-[2rem] p-8 shadow-sm">
+          <section className="bg-white border border-black/10 rounded-[2rem] p-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
             <h2 className="text-lg font-extrabold text-[#1D1D1F] mb-4 flex items-center gap-2">
-              <FileText className="w-5 h-5 text-blue-600" />
+              <FileText className="w-5 h-5 text-indigo-600" />
               Executive Summary
             </h2>
             <p className="text-[#424245] font-medium leading-relaxed text-sm md:text-base">
@@ -167,9 +173,9 @@ export default function EvaluationReportPage({ params }: { params: Promise<{ id:
           </section>
 
           {/* Competency Breakdown */}
-          <section className="bg-white border border-black/[0.05] rounded-[2rem] p-8 shadow-sm">
+          <section className="bg-white border border-black/10 rounded-[2rem] p-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
             <h2 className="text-lg font-extrabold text-[#1D1D1F] mb-6 flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-blue-600" />
+              <TrendingUp className="w-5 h-5 text-indigo-600" />
               Competency Breakdown
             </h2>
             <div className="space-y-6">
@@ -183,7 +189,7 @@ export default function EvaluationReportPage({ params }: { params: Promise<{ id:
                     <div className="text-right">
                       <span className={cn(
                         "text-sm font-black",
-                        comp.score >= 4 ? "text-blue-600" : comp.score >= 3 ? "text-amber-600" : "text-red-600"
+                        comp.score >= 4 ? "text-indigo-600" : comp.score >= 3 ? "text-amber-600" : "text-red-600"
                       )}>
                         {comp.score}/5
                       </span>
@@ -196,7 +202,7 @@ export default function EvaluationReportPage({ params }: { params: Promise<{ id:
                       transition={{ duration: 1, delay: i * 0.1 }}
                       className={cn(
                         "h-full rounded-full",
-                        comp.score >= 4 ? "bg-blue-500" : comp.score >= 3 ? "bg-amber-500" : "bg-red-500"
+                        comp.score >= 4 ? "bg-indigo-500" : comp.score >= 3 ? "bg-amber-500" : "bg-red-500"
                       )}
                     />
                   </div>
@@ -209,14 +215,14 @@ export default function EvaluationReportPage({ params }: { params: Promise<{ id:
         {/* Right Column: Strengths & Gaps */}
         <div className="space-y-8">
           {/* Strengths */}
-          <section className="bg-blue-50/50 border border-blue-100 rounded-[2rem] p-6">
+          <section className="bg-blue-50/50 border border-black/10 rounded-[2rem] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
             <h2 className="text-sm font-black text-blue-900 uppercase tracking-widest mb-6 flex items-center gap-2">
               <Trophy className="w-4 h-4" />
               Top Strengths
             </h2>
             <div className="space-y-4">
               {evalData?.strengths?.map((strength: any, i: number) => (
-                <div key={i} className="bg-white border border-blue-100/50 rounded-2xl p-4 shadow-sm">
+                <div key={i} className="bg-white border border-black/10 rounded-2xl p-4 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                   <h4 className="text-[11px] font-black text-blue-900 uppercase tracking-widest mb-1">{strength.competency}</h4>
                   <p className="text-xs text-blue-800/80 font-medium leading-relaxed">{strength.observation}</p>
                 </div>
@@ -225,21 +231,21 @@ export default function EvaluationReportPage({ params }: { params: Promise<{ id:
           </section>
 
           {/* Critical Gaps */}
-          <section className="bg-red-50/50 border border-red-100 rounded-[2rem] p-6">
+          <section className="bg-red-50/50 border border-black/10 rounded-[2rem] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
             <h2 className="text-sm font-black text-red-900 uppercase tracking-widest mb-6 flex items-center gap-2">
               <AlertTriangle className="w-4 h-4" />
               Identified Gaps
             </h2>
             <div className="space-y-4">
               {evalData?.gaps?.map((gap: any, i: number) => (
-                <div key={i} className="bg-white border border-red-100/50 rounded-2xl p-4 shadow-sm">
+                <div key={i} className="bg-white border border-black/10 rounded-2xl p-4 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                   <div className="flex justify-between items-center mb-1">
                     <h4 className="text-[11px] font-black text-red-900 uppercase tracking-widest">{gap.competency}</h4>
                     <span className="text-[8px] font-black bg-red-100 text-red-600 px-1.5 py-0.5 rounded uppercase tracking-widest">{gap.severity}</span>
                   </div>
                   <p className="text-xs text-red-800/80 font-medium leading-relaxed">{gap.observation}</p>
                   {gap.can_be_trained && (
-                    <div className="mt-2 inline-flex items-center gap-1 text-[9px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-100">
+                    <div className="mt-2 inline-flex items-center gap-1 text-[9px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-black/10 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
                       <CheckCircle2 className="w-2.5 h-2.5" /> Trainable skill
                     </div>
                   )}
@@ -251,7 +257,7 @@ export default function EvaluationReportPage({ params }: { params: Promise<{ id:
       </div>
 
       {/* Next Steps Footer */}
-      <section className="mt-8 bg-[#1D1D1F] text-white rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden shadow-2xl">
+      <section className="mt-8 bg-[#1D1D1F] text-white rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-[100px] -mr-48 -mt-48" />
         
         <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-12">

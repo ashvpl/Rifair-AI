@@ -87,7 +87,7 @@ export function JDGeneratorResult({
     <div className="space-y-4">
 
       {/* Header — clean, confident, no bias score */}
-      <div className="bg-[#f59e0b] rounded-2xl p-6 text-white">
+      <div className="bg-[#f59e0b] border-2 border-black rounded-2xl p-6 text-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
         <div className="flex items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
@@ -150,8 +150,7 @@ export function JDGeneratorResult({
 
       {/* Conversion insight */}
       {result.conversion_insights?.top_strength && (
-        <div className="bg-amber-50 border border-amber-100 
-                        rounded-2xl p-4 flex gap-3">
+        <div className="bg-amber-50 border border-black/10 rounded-2xl p-4 flex gap-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <span className="text-amber-500 flex-shrink-0 
                            font-bold text-lg">↗</span>
           <div>
@@ -167,8 +166,7 @@ export function JDGeneratorResult({
       )}
 
       {/* JD Content */}
-      <div className="bg-white border border-gray-200 
-                      rounded-2xl overflow-hidden">
+      <div className="bg-white border border-black/10 rounded-2xl overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
 
         {/* Toolbar */}
         <div className="flex items-center justify-between 
@@ -301,10 +299,7 @@ export function JDGeneratorResult({
       {/* NO re-analyse button */}
       <button
         onClick={onReset}
-        className="w-full py-3.5 border border-gray-200 
-                   text-gray-700 rounded-2xl text-sm 
-                   font-medium hover:bg-gray-50 
-                   transition-colors"
+        className="w-full py-3.5 border-2 border-black text-[#1D1D1F] rounded-2xl text-sm font-bold bg-white hover:bg-[#F5F5F7] transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5"
       >
         ← Generate another JD
       </button>

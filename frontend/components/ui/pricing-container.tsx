@@ -2,20 +2,33 @@
 import React, { useRef, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform, animate } from 'framer-motion'
 import { cn } from '@/lib/utils';
+import { Check } from 'lucide-react';
+import { CheckoutButton } from '@/components/pricing/CheckoutButton';
+import { PlanId } from '@/lib/pricing/types';
 
-interface PricingPlan {
+export interface PricingFeature {
+    text: string;
+    status: 'enabled' | 'disabled';
+    isHeader?: boolean;
+}
+
+export interface PricingPlan {
+    id: PlanId;
     name: string;
     monthlyPrice: number;
     yearlyPrice: number;
-    features: string[];
+    features: (string | PricingFeature)[];
     isPopular?: boolean;
+    badgeText?: string;
     accent: string;
     rotation?: number;
 }
 
 interface PricingProps {
     title?: string;
+    description?: string;
     plans: PricingPlan[];
+    currencySymbol?: string;
     className?: string;
 }
 
@@ -37,20 +50,25 @@ const Counter = ({ from, to }: { from: number; to: number }) => {
 };
 
 // Header Component
-const PricingHeader = ({ title }: { title: string }) => (
-    <div className="text-center mb-8 sm:mb-12 relative z-10">
+const PricingHeader = ({ title, description }: { title?: string; description?: string }) => (
+    <div className="text-center mb-12 sm:mb-16 relative z-30 px-4 mt-24 sm:mt-32">
         <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-block"
+            className="inline-block max-w-4xl"
         >
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-800 
-                bg-gradient-to-r from-white to-gray-100 px-8 py-4 rounded-xl border-4 border-black
-                shadow-[8px_8px_0px_0px_rgba(0,0,0,0.9),_15px_15px_15px_-3px_rgba(0,0,0,0.1)]
-                transform transition-transform hover:translate-x-1 hover:translate-y-1 mb-3 relative
+            <h1 className="text-3xl sm:text-4xl lg:text-6xl font-black text-slate-800 
+                bg-gradient-to-r from-white to-gray-100 px-8 py-6 rounded-2xl border-4 border-black
+                shadow-[8px_8px_0px_0px_rgba(0,0,0,0.9)]
+                transform transition-transform hover:translate-x-1 hover:translate-y-1 mb-6 relative
                 before:absolute before:inset-0 before:bg-white/50 before:rounded-xl before:blur-sm before:-z-10">
                 {title}
             </h1>
+            {description && (
+                <p className="text-gray-600 text-lg md:text-xl font-bold max-w-2xl mx-auto mb-6">
+                    {description}
+                </p>
+            )}
             <motion.div
                 className="h-2 bg-gradient-to-r from-black via-gray-600 to-black rounded-full"
                 initial={{ scaleX: 0 }}
@@ -88,47 +106,63 @@ const PricingToggle = ({ isYearly, onToggle }: { isYearly: boolean; onToggle: ()
 );
 
 // Background Effects Component
-const BackgroundEffects = () => (
-    <>
-        <div className="absolute inset-0">
-            {[...Array(30)].map((_, i) => (
-                <motion.div
-                    key={i}
-                    className="absolute w-2 h-2 bg-black/5 rounded-full"
-                    style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`,
-                    }}
-                    animate={{
-                        y: [0, -30, 0],
-                        x: [0, Math.random() * 20 - 10, 0],
-                        scale: [1, 1.5, 1],
-                        opacity: [0.3, 0.6, 0.3],
-                    }}
-                    transition={{
-                        duration: 3 + Math.random() * 2,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                    }}
-                />
-            ))}
-        </div>
-        <div className="absolute inset-0" style={{
-            backgroundImage: "linear-gradient(#00000008 1px, transparent 1px), linear-gradient(90deg, #00000008 1px, transparent 1px)",
-            backgroundSize: "16px 16px"
-        }} />
-    </>
-);
+const BackgroundEffects = () => {
+    const [particles, setParticles] = useState<{ left: string; top: string; x: number; duration: number }[]>([]);
+
+    React.useEffect(() => {
+        const newParticles = [...Array(30)].map(() => ({
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            x: Math.random() * 20 - 10,
+            duration: 3 + Math.random() * 2,
+        }));
+        setParticles(newParticles);
+    }, []);
+
+    return (
+        <>
+            <div className="absolute inset-0">
+                {particles.map((p, i) => (
+                    <motion.div
+                        key={i}
+                        className="absolute w-2 h-2 bg-black/5 rounded-full"
+                        style={{
+                            left: p.left,
+                            top: p.top,
+                        }}
+                        animate={{
+                            y: [0, -30, 0],
+                            x: [0, p.x, 0],
+                            scale: [1, 1.5, 1],
+                            opacity: [0.3, 0.6, 0.3],
+                        }}
+                        transition={{
+                            duration: p.duration,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                        }}
+                    />
+                ))}
+            </div>
+            <div className="absolute inset-0" style={{
+                backgroundImage: "linear-gradient(#00000008 1px, transparent 1px), linear-gradient(90deg, #00000008 1px, transparent 1px)",
+                backgroundSize: "16px 16px"
+            }} />
+        </>
+    );
+};
 
 // Pricing Card Component
 const PricingCard = ({
     plan,
     isYearly,
-    index
+    index,
+    currencySymbol = "$"
 }: {
     plan: PricingPlan;
     isYearly: boolean;
-    index: number
+    index: number;
+    currencySymbol?: string;
 }) => {
     const cardRef = useRef<HTMLDivElement>(null);
     const mouseX = useMotionValue(0);
@@ -140,6 +174,7 @@ const PricingCard = ({
     const currentPrice = isYearly ? plan.yearlyPrice : plan.monthlyPrice;
     const previousPrice = !isYearly ? plan.yearlyPrice : plan.monthlyPrice;
 
+    // Card JSX remains the same as original, just destructured from props
     return (
         <motion.div
             ref={cardRef}
@@ -188,21 +223,21 @@ const PricingCard = ({
                 }}
             >
                 <div className="text-center text-white">
-                    <div className="text-lg font-black">$
+                    <div className="text-lg font-black">{currencySymbol}
                         <Counter from={previousPrice} to={currentPrice} />
                     </div>
                     <div className="text-[10px] font-bold">/{isYearly ? 'yr' : 'mo'}</div>
                 </div>
             </motion.div>
 
-            {/* Plan Name and Popular Badge */}
-            <div className="mb-4">
+            {/* Plan Name and Badge */}
+            <div className="mb-4 min-h-[90px] flex flex-col justify-end items-start">
                 <h3 className="text-xl font-black text-black mb-2">{plan.name}</h3>
-                {plan.isPopular && (
+                {plan.badgeText ? (
                     <motion.span
                         className={cn(
-                            `inline-block px-3 py-1 text-white
-                            font-bold rounded-md text-xs border-2 border-black
+                            `inline-block px-3 py-1 text-white w-fit
+                            font-bold rounded-md text-[10px] border-2 border-black
                             shadow-[2px_2px_0px_0px_rgba(0,0,0,0.9)]`
                             , plan.accent)}
                         animate={{
@@ -214,73 +249,108 @@ const PricingCard = ({
                             repeat: Infinity
                         }}
                     >
-                        POPULAR
+                        {plan.badgeText}
                     </motion.span>
+                ) : (
+                    <div className="h-[28px]" /> /* Spacer to match the badge height */
                 )}
+            </div>
+
+            {/* CTA Button */}
+            <div className="mb-8">
+                <CheckoutButton
+                    planId={plan.id}
+                    billingCycle={isYearly ? 'annual' : 'monthly'}
+                    className={cn(
+                        `w-full py-3 rounded-lg text-white font-black text-sm
+                        border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.9)]
+                        hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.9)]
+                        active:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.9)]
+                        transition-all duration-200`
+                        , plan.accent)}
+                >
+                    GET STARTED →
+                </CheckoutButton>
             </div>
 
             {/* Features List */}
             <div className="space-y-2 mb-4">
-                {plan.features.map((feature, i) => (
-                    <motion.div
-                        key={feature}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: i * 0.1 }}
-                        whileHover={{
-                            x: 5,
-                            scale: 1.02,
-                            transition: { type: "spring", stiffness: 400 }
-                        }}
-                        className={`flex items-center gap-2 p-2 bg-gray-50 rounded-md border-2 border-black
-                            shadow-[2px_2px_0px_0px_rgba(0,0,0,0.9)]`}
-                    >
-                        <motion.span
-                            whileHover={{ scale: 1.2, rotate: 360 }}
-                            className={cn(
-                                `w-5 h-5 rounded-md  flex items-center justify-center
-                                text-white font-bold text-xs border border-black
-                                shadow-[1px_1px_0px_0px_rgba(0,0,0,0.9)]`
-                                , plan.accent)}
-                        >
-                            ✓
-                        </motion.span>
-                        <span className="text-black font-bold text-sm">{feature}</span>
-                    </motion.div>
-                ))}
-            </div>
+                {plan.features.map((featureObj, i) => {
+                    const feature = typeof featureObj === 'string' 
+                        ? { text: featureObj, status: 'enabled' as const } 
+                        : featureObj;
+                    
+                    if (feature.isHeader) {
+                        return (
+                            <div key={`header-${i}`} className="mt-4 mb-2">
+                                <span className="text-[10px] font-black text-black/40 uppercase tracking-[0.2em]">
+                                    {feature.text}
+                                </span>
+                            </div>
+                        );
+                    }
 
-            {/* CTA Button */}
-            <motion.button
-                className={cn(
-                    `w-full py-2 rounded-lg  text-white font-black text-sm
-                    border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.9)]
-                    hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.9)]
-                    active:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.9)]
-                    transition-all duration-200`
-                    , plan.accent)}
-                whileHover={{
-                    scale: 1.02,
-                    transition: { duration: 0.2 }
-                }}
-                whileTap={{
-                    scale: 0.95,
-                    rotate: [-1, 1, 0],
-                }}
-            >
-                GET STARTED →
-            </motion.button>
+                    const isDisabled = feature.status === 'disabled';
+
+                    return (
+                        <motion.div
+                            key={`${feature.text}-${i}`}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: i * 0.05 }}
+                            whileHover={!isDisabled ? {
+                                x: 5,
+                                scale: 1.02,
+                                transition: { type: "spring", stiffness: 400 }
+                            } : {}}
+                            className={cn(
+                                `flex items-center gap-2 p-2 rounded-md border-2 border-black
+                                shadow-[2px_2px_0px_0px_rgba(0,0,0,0.9)]`,
+                                isDisabled ? "bg-gray-100 opacity-40 grayscale" : "bg-gray-50"
+                            )}
+                        >
+                            <motion.span
+                                whileHover={!isDisabled ? { scale: 1.2, rotate: 360 } : {}}
+                                className={cn(
+                                    `w-5 h-5 rounded-md flex items-center justify-center
+                                    text-white font-bold text-xs border border-black
+                                    shadow-[1px_1px_0px_0px_rgba(0,0,0,0.9)]`,
+                                    isDisabled ? "bg-gray-400" : plan.accent
+                                )}
+                            >
+                                {isDisabled ? (
+                                    <div className="w-2 h-[2px] bg-white rounded-full" />
+                                ) : (
+                                    <Check size={12} strokeWidth={4} />
+                                )}
+                            </motion.span>
+                            <span className={cn(
+                                "text-black font-bold text-sm",
+                                isDisabled && "line-through decoration-black/30"
+                            )}>
+                                {feature.text}
+                            </span>
+                        </motion.div>
+                    );
+                })}
+            </div>
         </motion.div>
     );
 };
 
 // Main Container Component
-export const PricingContainer = ({ title = "Pricing Plans", plans, className = "" }: PricingProps) => {
+export const PricingContainer = ({ 
+    title = "Pricing Plans", 
+    description,
+    plans, 
+    currencySymbol = "$",
+    className = "" 
+}: PricingProps) => {
     const [isYearly, setIsYearly] = useState(false);
 
     return (
-        <div className={`min-h-screen bg-[#f0f0f0] p-4 sm:p-6 lg:p-8 relative overflow-hidden rounded-[12px] ${className}`}>
-            <PricingHeader title={title} />
+        <div className={`min-h-fit bg-[#f0f0f0] p-4 sm:p-6 lg:p-8 relative overflow-visible rounded-[12px] ${className}`}>
+            <PricingHeader title={title || ""} description={description || ""} />
             <PricingToggle isYearly={isYearly} onToggle={() => setIsYearly(!isYearly)} />
             <BackgroundEffects />
 
@@ -291,6 +361,7 @@ export const PricingContainer = ({ title = "Pricing Plans", plans, className = "
                         plan={plan}
                         isYearly={isYearly}
                         index={index}
+                        currencySymbol={currencySymbol}
                     />
                 ))}
             </div>

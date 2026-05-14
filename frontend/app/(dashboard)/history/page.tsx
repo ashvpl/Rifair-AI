@@ -231,8 +231,9 @@ export default function HistoryPage() {
 
       {/* ── Content ──────────────────────────────────────────────────────────── */}
       {isLoading ? (
-        <div className="py-20">
-          <LoadingState text="Loading history" />
+        <div className="py-20 flex flex-col items-center justify-center space-y-4">
+          <Loader2 className="w-8 h-8 animate-spin text-black/10" />
+          <p className="text-[10px] font-black text-black/20 uppercase tracking-[0.2em]">Loading history...</p>
         </div>
       ) : filteredHistory.length === 0 ? (
         <motion.div
@@ -309,7 +310,7 @@ export default function HistoryPage() {
                   layout
                 >
                   <Link href={detailUrl} className="block group">
-                    <div className="card-pressable bg-white border border-black/[0.05] rounded-[1.5rem] p-4 md:p-6 shadow-[0_2px_16px_rgba(0,0,0,0.02)] group-hover:shadow-[0_6px_24px_rgba(0,0,0,0.06)] group-hover:border-primary/20 transition-all duration-300 relative overflow-hidden">
+                    <div className="bg-white border border-black/10 rounded-[1.5rem] p-4 md:p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-300 relative overflow-hidden">
                       <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/[0.005] transition-colors rounded-[1.5rem]" />
 
                       <div className="relative z-10 flex flex-row items-center gap-3 md:gap-6 w-full">

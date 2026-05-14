@@ -29,7 +29,7 @@ export default function FooterSection({
       title: "Company",
       links: [
         { text: "About Us", url: "/#about-us" },
-        { text: "Contact", url: "mailto:support@rifairai.com" },
+        { text: "Contact", url: "/help" },
       ],
     },
     {

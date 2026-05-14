@@ -108,8 +108,8 @@ export function BiasScoreRing({ score, size = "lg", showLabel = true, className 
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.2 }}
           className={cn(
-            "px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border",
-            s.bg, s.text, s.border
+            "px-6 py-2 rounded-[2rem] text-[10px] font-black uppercase tracking-[0.2em] border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
+            s.bg, s.text
           )}
         >
           {s.label}

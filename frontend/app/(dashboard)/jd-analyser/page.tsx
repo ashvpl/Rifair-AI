@@ -151,7 +151,7 @@ export default function JDAnalyserPage() {
       )}
 
       {/* Mode toggle */}
-      <div className="flex items-center gap-1 bg-[#F5F5F7] p-1 rounded-2xl mb-6 w-fit relative z-10">
+      <div className="flex items-center gap-1 bg-[#F5F5F7] p-1 rounded-2xl mb-6 w-fit relative z-10 border border-black/10 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
         <button
           onClick={() => setMode('generate')}
           className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
@@ -160,7 +160,7 @@ export default function JDAnalyserPage() {
               : 'text-gray-500 hover:text-[#f59e0b]'
           }`}
         >
-          ✨ Generate JD
+          Generate JD
         </button>
         <button
           onClick={() => setMode('analyse')}
@@ -170,7 +170,7 @@ export default function JDAnalyserPage() {
               : 'text-gray-500 hover:text-[#f59e0b]'
           }`}
         >
-          🔍 Analyse JD
+          Analyse JD
         </button>
       </div>
 
@@ -227,7 +227,7 @@ export default function JDAnalyserPage() {
               placeholder="e.g. Senior Frontend Engineer"
               value={(!hasAccess && !planLoading) ? 'Senior Frontend Engineer' : role}
               onChange={e => setRole(e.target.value)}
-              className="w-full border border-black rounded-xl px-4 py-3 focus:outline-none focus:border-primary bg-white text-black placeholder:text-black/40 transition-all"
+              className="w-full border border-black/10 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-xl px-4 py-3 focus:outline-none focus:border-black bg-white text-black placeholder:text-black/40 transition-all"
             />
           </div>
           <div>
@@ -240,7 +240,7 @@ export default function JDAnalyserPage() {
               placeholder="e.g. Fintech startup"
               value={(!hasAccess && !planLoading) ? 'Fast-growing Fintech Startup' : companyType}
               onChange={e => setCompanyType(e.target.value)}
-              className="w-full border border-black rounded-xl px-4 py-3 focus:outline-none focus:border-primary bg-white text-black placeholder:text-black/40 transition-all"
+              className="w-full border border-black/10 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-xl px-4 py-3 focus:outline-none focus:border-black bg-white text-black placeholder:text-black/40 transition-all"
             />
           </div>
         </motion.div>
@@ -259,7 +259,7 @@ export default function JDAnalyserPage() {
               rows={14}
               maxLength={12000}
               className={cn(
-                "w-full border border-black rounded-2xl px-5 py-4 resize-none focus:outline-none focus:border-primary leading-relaxed transition-all",
+                "w-full border border-black/10 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-2xl px-5 py-4 resize-none focus:outline-none focus:border-black leading-relaxed transition-all",
                 jdModeration.isBlocked ? "border-red-300 bg-red-50/30 text-red-900 placeholder:text-red-900/40" : "bg-white text-black placeholder:text-black/40"
               )}
             />
@@ -307,8 +307,8 @@ export default function JDAnalyserPage() {
             className={cn(
               "w-full py-4 rounded-2xl text-sm font-bold transition-all flex items-center justify-center gap-2 min-h-[52px]",
               !jdModeration.isBlocked && canSubmit
-                ? 'bg-[#f59e0b] text-white hover:bg-[#d97706] active:scale-[0.98] shadow-sm'
-                : 'bg-[#F5F5F7] text-black/40 cursor-not-allowed'
+                ? 'bg-[#f59e0b] text-white hover:bg-[#d97706] active:scale-[0.98] border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5'
+                : 'bg-[#F5F5F7] text-black/40 cursor-not-allowed border border-black/10'
             )}
           >
             {jdModeration.isBlocked ? (
@@ -366,7 +366,7 @@ export default function JDAnalyserPage() {
           </AnimatePresence>
 
           {/* Desktop: always visible */}
-          <div className="hidden md:block bg-[#F5F5F7] rounded-2xl p-5">
+          <div className="hidden md:block bg-white border border-black/10 rounded-2xl p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
             <p className="text-[10px] font-black text-black uppercase tracking-[0.15em] mb-3">What gets analysed</p>
             <div className="grid grid-cols-2 gap-1.5">
               {features.map(item => (
@@ -519,10 +519,7 @@ function JDGenerator({ onPassToAnalyser }: { onPassToAnalyser: (jd: string) => v
               placeholder={field.placeholder}
               value={(form as any)[field.key]}
               onChange={e => set(field.key, e.target.value)}
-              className="w-full text-sm border border-gray-200 
-                         rounded-xl px-4 py-3 
-                         focus:outline-none 
-                         focus:border-[#f59e0b] transition-all bg-white font-medium"
+              className="w-full text-sm border border-black/10 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-xl px-4 py-3 focus:outline-none focus:border-black transition-all bg-white font-medium"
             />
           </div>
         ))}
@@ -539,10 +536,7 @@ function JDGenerator({ onPassToAnalyser }: { onPassToAnalyser: (jd: string) => v
           <select
             value={form.workMode}
             onChange={e => set('workMode', e.target.value)}
-            className="w-full text-sm border border-gray-200 
-                       rounded-xl px-4 py-3 
-                       focus:outline-none 
-                       focus:border-[#f59e0b] bg-white font-medium transition-all"
+            className="w-full text-sm border border-black/10 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-xl px-4 py-3 focus:outline-none focus:border-black bg-white font-medium transition-all"
           >
             <option value="onsite">On-site</option>
             <option value="hybrid">Hybrid</option>
@@ -558,10 +552,7 @@ function JDGenerator({ onPassToAnalyser }: { onPassToAnalyser: (jd: string) => v
           <select
             value={form.tone}
             onChange={e => set('tone', e.target.value)}
-            className="w-full text-sm border border-gray-200 
-                       rounded-xl px-4 py-3 
-                       focus:outline-none 
-                       focus:border-[#f59e0b] bg-white font-medium transition-all"
+            className="w-full text-sm border border-black/10 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-xl px-4 py-3 focus:outline-none focus:border-black bg-white font-medium transition-all"
           >
             <option value="conversational">
               Conversational
@@ -579,11 +570,11 @@ function JDGenerator({ onPassToAnalyser }: { onPassToAnalyser: (jd: string) => v
           !form.location || !form.experience || loading
         }
         className={`w-full py-4 rounded-2xl text-sm 
-                    font-bold transition-all min-h-[56px] shadow-lg ${
+                    font-bold transition-all min-h-[56px] ${
           form.role && form.company &&
           form.location && form.experience && !loading
-            ? 'bg-[#f59e0b] text-white hover:bg-[#d97706] active:scale-[0.98] shadow-[#f59e0b]/10'
-            : 'bg-gray-100 text-gray-400 cursor-not-allowed shadow-none'
+            ? 'bg-[#f59e0b] text-white hover:bg-[#d97706] active:scale-[0.98] border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5'
+            : 'bg-gray-100 text-gray-400 cursor-not-allowed border border-black/10'
         }`}
       >
         {loading ? (

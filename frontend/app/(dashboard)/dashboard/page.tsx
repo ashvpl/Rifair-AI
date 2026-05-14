@@ -262,8 +262,8 @@ export default function DashboardPage() {
       
       {/* Dashboard Title Row — stacks vertically on mobile */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2">
-        <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-[#1D1D1F] tracking-tight">Hiring intelligence dashboard</h1>
-        <p className="text-[10px] font-semibold text-[#86868B] uppercase tracking-wider whitespace-nowrap">Last updated: today</p>
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-[#1D1D1F] tracking-tighter">Hiring intelligence dashboard</h1>
+        <p className="text-[10px] font-bold text-[#86868B] uppercase tracking-[0.3em] whitespace-nowrap">Last updated: today</p>
       </div>
 
       <div className="mb-2"><UsageLimitBanner /></div>
@@ -273,9 +273,8 @@ export default function DashboardPage() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         className={cn(
-          "relative overflow-hidden border rounded-[1.5rem] md:rounded-[2rem] p-5 sm:p-8 lg:p-12 shadow-sm transition-colors duration-500",
-          heroContent.bg,
-          heroContent.border
+          "relative overflow-hidden border-2 border-black rounded-[1.5rem] md:rounded-[2.5rem] p-5 sm:p-8 lg:p-12 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-colors duration-500",
+          heroContent.bg
         )}
       >
         {/* Mobile: column layout; desktop: row */}
@@ -307,23 +306,23 @@ export default function DashboardPage() {
         className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6"
       >
         {/* TOTAL ANALYSES */}
-        <motion.div variants={itemVariants} className="bg-[#F5F5F7] p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-black/[0.03] shadow-sm snap-start shrink-0">
+        <motion.div variants={itemVariants} className="bg-white p-5 md:p-8 rounded-2xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300">
           <div className="space-y-3 md:space-y-6">
-            <p className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.15em]">TOTAL ANALYSES</p>
+            <p className="text-[10px] font-black text-black/40 uppercase tracking-[0.2em]">TOTAL ANALYSES</p>
             <div className="space-y-1">
-              <p className="text-3xl md:text-5xl font-bold text-[#1D1D1F] tracking-tighter">{stats.analysisCount}</p>
+              <p className="text-3xl md:text-5xl font-black text-[#1D1D1F] tracking-tighter">{stats.analysisCount}</p>
             </div>
           </div>
         </motion.div>
         
         {/* AVG BIAS SCORE */}
-        <motion.div variants={itemVariants} className="bg-[#F5F5F7] p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-black/[0.03] shadow-sm snap-start shrink-0">
+        <motion.div variants={itemVariants} className="bg-white p-5 md:p-8 rounded-2xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300">
           <div className="space-y-3 md:space-y-6">
-            <p className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.15em]">AVG BIAS SCORE</p>
+            <p className="text-[10px] font-black text-black/40 uppercase tracking-[0.2em]">AVG BIAS SCORE</p>
             <div className="space-y-1">
               <div className="flex items-baseline gap-1">
                 <p className={cn(
-                  "text-3xl md:text-5xl font-bold tracking-tighter",
+                  "text-3xl md:text-5xl font-black tracking-tighter",
                   stats.analysisCount === 0 ? "text-[#1D1D1F]" :
                   stats.avgBiasScore < 40 ? "text-[#059669]" :
                   stats.avgBiasScore < 65 ? "text-amber-600" :
@@ -331,7 +330,7 @@ export default function DashboardPage() {
                 )}>
                   {stats.analysisCount === 0 ? "—" : stats.avgBiasScore}
                 </p>
-                <span className="text-lg font-bold text-[#86868B]">/100</span>
+                <span className="text-lg font-black text-black/20">/100</span>
               </div>
               <p className={cn(
                 "text-sm font-bold capitalize",
@@ -347,11 +346,11 @@ export default function DashboardPage() {
         </motion.div>
         
         {/* HIGH BIAS FLAGS */}
-        <motion.div variants={itemVariants} className={cn("p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border shadow-sm transition-colors duration-500 snap-start shrink-0", flagCardStyle.bg, flagCardStyle.border)}>
+        <motion.div variants={itemVariants} className={cn("p-5 md:p-8 rounded-2xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300", flagCardStyle.bg)}>
           <div className="space-y-3 md:space-y-6">
-            <p className={cn("text-[10px] font-black uppercase tracking-[0.15em]", flagCardStyle.label)}>HIGH BIAS FLAGS</p>
+            <p className={cn("text-[10px] font-black uppercase tracking-[0.2em]", flagCardStyle.label)}>HIGH BIAS FLAGS</p>
             <div className="space-y-1">
-              <p className={cn("tracking-tighter font-bold", stats.analysisCount === 0 ? "text-xl text-[#86868B]" : "text-3xl md:text-5xl " + flagCardStyle.text)}>
+              <p className={cn("tracking-tighter font-black", stats.analysisCount === 0 ? "text-xl text-[#86868B]" : "text-3xl md:text-5xl " + flagCardStyle.text)}>
                 {stats.analysisCount === 0 ? "No data yet" : stats.highBiasFlags}
               </p>
               <p className={cn("text-sm font-black uppercase", flagCardStyle.text)}>{subtexts.flags}</p>
@@ -360,13 +359,13 @@ export default function DashboardPage() {
         </motion.div>
         
         {/* FAIRNESS SCORE */}
-        <motion.div variants={itemVariants} className="bg-[#F5F5F7] p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-black/[0.03] shadow-sm snap-start shrink-0">
+        <motion.div variants={itemVariants} className="bg-white p-5 md:p-8 rounded-2xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300">
           <div className="space-y-3 md:space-y-6">
-            <p className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.15em]">FAIRNESS SCORE</p>
+            <p className="text-[10px] font-black text-black/40 uppercase tracking-[0.2em]">FAIRNESS SCORE</p>
             <div className="space-y-1">
               <div className="flex items-baseline gap-1">
                 <p className={cn(
-                  "text-3xl md:text-5xl font-bold tracking-tighter",
+                  "text-3xl md:text-5xl font-black tracking-tighter",
                   stats.analysisCount === 0 ? "text-[#1D1D1F]" :
                   stats.fairnessScore >= 80 ? "text-[#059669]" :
                   stats.fairnessScore >= 60 ? "text-amber-500" :
@@ -375,7 +374,7 @@ export default function DashboardPage() {
                   {stats.analysisCount === 0 ? "—" : stats.fairnessScore}
                 </p>
                 <span className={cn(
-                  "font-bold",
+                  "font-black",
                   stats.analysisCount === 0 ? "text-lg text-[#86868B]" : "text-2xl text-[#059669]"
                 )}>{stats.analysisCount === 0 ? "" : "%"}</span>
               </div>
@@ -408,7 +407,7 @@ export default function DashboardPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="lg:col-span-2 bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-10 border border-black/[0.03] shadow-sm space-y-6 md:space-y-10"
+            className="lg:col-span-2 bg-white rounded-2xl p-6 md:p-10 border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6 md:space-y-10"
           >
             <div className="flex items-center justify-between flex-wrap gap-3">
               <h3 className="text-lg md:text-2xl font-bold text-[#1D1D1F] tracking-tight">Bias Trend Analysis</h3>
@@ -433,7 +432,7 @@ export default function DashboardPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-10 border border-black/[0.03] shadow-sm space-y-6 md:space-y-10"
+            className="bg-white rounded-2xl p-6 md:p-10 border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6 md:space-y-10"
           >
             <h3 className="text-lg md:text-2xl font-bold text-[#1D1D1F] tracking-tight">Bias by category</h3>
             <div className="space-y-6">
@@ -473,7 +472,7 @@ export default function DashboardPage() {
           transition={{ delay: 0.3 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          <div className="bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-6 border border-black/20 shadow-md flex flex-col justify-between h-full">
+          <div className="bg-white rounded-2xl p-6 border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between h-full">
             <div className="space-y-4">
               <h3 className="text-[10px] font-black text-black uppercase tracking-[0.2em]">Monthly Usage</h3>
               <div className="space-y-6">
@@ -510,7 +509,7 @@ export default function DashboardPage() {
             </Link>
           </div>
           
-          <div className="bg-gradient-to-br from-[#1D1D1F] to-[#434343] rounded-[1.5rem] md:rounded-[2.5rem] p-6 text-white flex flex-col justify-between h-full">
+          <div className="bg-gradient-to-br from-[#1D1D1F] to-[#434343] rounded-2xl p-6 text-white border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between h-full">
             <div className="space-y-2">
               <h3 className="text-lg font-bold">Pro Tip</h3>
               <p className="text-xs text-white/70 leading-relaxed">
@@ -529,7 +528,7 @@ export default function DashboardPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-10 border border-black/[0.03] shadow-sm space-y-5 md:space-y-8"
+        className="bg-white rounded-2xl p-6 md:p-10 border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-5 md:space-y-8"
       >
         <div className="flex items-center justify-between gap-2 flex-wrap">
           <h3 className="text-lg md:text-2xl font-bold text-[#1D1D1F] tracking-tight">Recently flagged questions</h3>
@@ -583,7 +582,7 @@ export default function DashboardPage() {
         transition={{ delay: 0.55 }}
       >
         {planId === 'growth' || planId === 'enterprise' ? (
-          <div className="relative overflow-hidden bg-gradient-to-br from-[#f59e0b] via-[#d97706] to-[#b45309] rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-10 text-white shadow-md">
+          <div className="relative overflow-hidden bg-gradient-to-br from-[#f59e0b] via-[#d97706] to-[#b45309] rounded-2xl p-6 md:p-10 text-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
             <div className="absolute -right-8 -top-8 w-48 h-48 rounded-full border border-white/[0.07]" />
             <div className="absolute -right-2 -top-2 w-32 h-32 rounded-full border border-white/[0.07]" />
             <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -612,7 +611,7 @@ export default function DashboardPage() {
             </div>
           </div>
         ) : (
-          <div className="relative overflow-hidden bg-[#F5F5F7] border border-black/[0.05] rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-10">
+          <div className="relative overflow-hidden bg-white border-2 border-black rounded-2xl p-6 md:p-10 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
             <div className="absolute -right-6 -top-6 w-40 h-40 rounded-full border border-black/[0.04]" />
             <div className="absolute -right-1 -top-1 w-28 h-28 rounded-full border border-black/[0.04]" />
             <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">

@@ -13,6 +13,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LoadingState } from "@/components/LoadingState";
 
 interface QuestionRow {
   id: string;
@@ -172,10 +173,11 @@ export default function KitAuditUploader() {
 
   return (
     <div className="w-full max-w-3xl mx-auto">
-      <div className="bg-white border border-black/[0.06] rounded-[2rem] overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.03)]">
+      {loading && <LoadingState text="Analysing" />}
+      <div className="bg-white border-2 border-black rounded-2xl overflow-hidden shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
 
         {/* ── Header ──────────────────────────────────────────────────────── */}
-        <div className="px-6 sm:px-8 pt-8 pb-6 border-b border-black/[0.04]">
+        <div className="px-6 sm:px-8 pt-8 pb-6 border-b-2 border-black">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-9 h-9 rounded-xl bg-[#10b981]/10 flex items-center justify-center">
               <ClipboardList className="w-5 h-5 text-[#10b981]" />
@@ -232,7 +234,7 @@ export default function KitAuditUploader() {
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Frontend Engineer — Round 2"
               maxLength={200}
-              className="w-full px-4 py-3 rounded-2xl border border-black/[0.15] bg-[#F5F5F7]/40 text-sm font-semibold text-[#1D1D1F] placeholder:text-[#1D1D1F]/40 focus:outline-none focus:ring-2 focus:ring-[#10b981]/20 focus:border-[#10b981]/40 transition-all"
+              className="w-full px-4 py-3 rounded-xl border-2 border-black bg-[#F5F5F7]/40 text-sm font-semibold text-[#1D1D1F] placeholder:text-[#1D1D1F]/40 focus:outline-none focus:ring-2 focus:ring-[#10b981]/20 focus:border-[#10b981]/40 transition-all"
             />
           </div>
 
@@ -272,11 +274,11 @@ export default function KitAuditUploader() {
                         rows={2}
                         maxLength={1000}
                         className={cn(
-                          "w-full px-4 py-3 pr-10 rounded-2xl border text-sm font-semibold text-[#1D1D1F] placeholder:text-[#1D1D1F]/40",
+                          "w-full px-4 py-3 pr-10 rounded-xl border-2 text-sm font-semibold text-[#1D1D1F] placeholder:text-[#1D1D1F]/40",
                           "resize-none focus:outline-none focus:ring-2 focus:ring-[#10b981]/20 focus:border-[#10b981]/40 transition-all",
                           q.text.length > 0 && q.text.trim().length < 10
-                            ? "border-amber-300 bg-amber-50/50"
-                            : "border-black/[0.15] bg-[#F5F5F7]/30"
+                            ? "border-amber-500 bg-amber-50/50"
+                            : "border-black bg-[#F5F5F7]/30"
                         )}
                       />
                       <span className="absolute bottom-2 right-3 text-[9px] font-mono text-[#1D1D1F]/40">
@@ -330,7 +332,7 @@ export default function KitAuditUploader() {
                   handleBulkPaste((e.target as HTMLTextAreaElement).value);
                 }
               }}
-              className="w-full px-4 py-3 rounded-2xl border border-black/[0.15] bg-[#F5F5F7]/30 text-sm font-semibold text-[#1D1D1F] placeholder:text-[#1D1D1F]/40 resize-none focus:outline-none focus:ring-2 focus:ring-[#10b981]/20 focus:border-[#10b981]/40 transition-all"
+              className="w-full px-4 py-3 rounded-xl border-2 border-black bg-[#F5F5F7]/30 text-sm font-semibold text-[#1D1D1F] placeholder:text-[#1D1D1F]/40 resize-none focus:outline-none focus:ring-2 focus:ring-[#10b981]/20 focus:border-[#10b981]/40 transition-all"
             />
             <p className="text-[10px] text-[#1D1D1F]/60 font-semibold mt-1.5 ml-1">
               Questions are auto-split on paste or when you click outside / press ⌘↵
@@ -342,9 +344,9 @@ export default function KitAuditUploader() {
           <button
             onClick={runAudit}
             disabled={loading || totalCount < 1}
-            className="w-full relative p-0.5 inline-flex overflow-hidden rounded-2xl group shadow-xl transition-all h-auto active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed bg-[#10b981] hover:bg-[#059669] text-white"
+            className="w-full relative p-0.5 inline-flex overflow-hidden rounded-xl group shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all h-auto active:translate-x-0.5 active:translate-y-0.5 active:shadow-none bg-[#10b981] hover:bg-[#059669] border-2 border-black text-white"
           >
-            <span className="inline-flex size-full items-center justify-center rounded-2xl px-6 py-4 font-semibold transition-all">
+            <span className="inline-flex size-full items-center justify-center rounded-xl px-6 py-4 font-semibold transition-all">
               {loading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin mr-2 text-white" />

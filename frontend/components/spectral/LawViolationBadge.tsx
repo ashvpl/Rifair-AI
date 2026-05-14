@@ -29,22 +29,25 @@ export function LawViolationBadge({ violation, indiaLawViolation }: LawViolation
         initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="flex items-start gap-2.5 p-3 bg-red-50/60 rounded-xl border border-red-200/50 cursor-pointer group"
+        className="flex items-start gap-3 p-4 bg-red-50 border-2 border-black rounded-2xl cursor-pointer group shadow-[4px_4px_0px_0px_rgba(220,38,38,0.1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300"
         onClick={() => router.push("/pricing?highlight=starter&feature=law_violation")}
       >
-        <div className="w-6 h-6 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-          <Scale className="h-3.5 w-3.5 text-red-600" />
+        <div className="w-10 h-10 bg-red-100 border-2 border-red-200 rounded-xl flex items-center justify-center flex-shrink-0">
+          <Scale className="h-5 w-5 text-red-600" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[10px] font-black text-red-700 uppercase tracking-widest mb-0.5">
-            ⚖️ Law Violation Detected
+          <p className="text-[10px] font-black text-red-700 uppercase tracking-widest mb-1">
+            ⚖️ Risk Detection Locked
           </p>
-          <p className="text-xs text-red-600/80 font-medium blur-[4px] select-none">
+          <p className="text-sm text-red-600/80 font-bold blur-[4px] select-none leading-tight">
             {teaserText}
           </p>
-          <p className="text-[10px] text-red-500 font-bold mt-1 group-hover:underline">
-            Unlock citation → Starter plan
-          </p>
+          <div className="flex items-center gap-1.5 mt-2">
+            <span className="text-[9px] font-black bg-red-600 text-white px-2 py-0.5 rounded uppercase tracking-tighter">Starter</span>
+            <p className="text-[10px] text-red-500 font-bold group-hover:underline">
+              Unlock citation →
+            </p>
+          </div>
         </div>
       </motion.div>
     );
@@ -57,16 +60,21 @@ export function LawViolationBadge({ violation, indiaLawViolation }: LawViolation
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4 }}
-      className="flex items-start gap-2.5 p-3 bg-red-50/80 rounded-xl border border-red-200/60"
+      className="flex items-start gap-4 p-5 bg-red-50 border-2 border-black rounded-[2rem] shadow-[6px_6px_0px_0px_rgba(220,38,38,0.08)]"
     >
-      <div className="w-6 h-6 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-        <Scale className="h-3.5 w-3.5 text-red-600" />
+      <div className="w-12 h-12 bg-red-100 border-2 border-red-200 rounded-2xl flex items-center justify-center flex-shrink-0">
+        <Scale className="h-6 w-6 text-red-600" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-[10px] font-black text-red-700 uppercase tracking-widest mb-1">
-          ⚖️ Indian Law Violation
+        <div className="flex items-center gap-2 mb-2">
+          <p className="text-[10px] font-black text-red-700 uppercase tracking-widest">
+            ⚖️ Legal Compliance Risk
+          </p>
+          <span className="text-[9px] font-black bg-black text-white px-2 py-0.5 rounded tracking-tighter">INDIAN LAW</span>
+        </div>
+        <p className="text-sm text-red-900 font-black leading-relaxed italic border-l-4 border-red-200 pl-4">
+          "{lawText}"
         </p>
-        <p className="text-xs text-red-700 font-semibold leading-snug">{lawText}</p>
       </div>
     </motion.div>
   );

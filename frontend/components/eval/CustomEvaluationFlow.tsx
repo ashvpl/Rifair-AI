@@ -213,7 +213,7 @@ function InputStep({
               value={value}
               onChange={e => set(e.target.value)}
               placeholder={placeholder}
-               className="w-full text-sm font-semibold border border-black/[0.15] bg-[#F5F5F7]/50 rounded-xl px-4 py-3 focus:outline-none focus:border-[#3b82f6]/40 focus:ring-4 focus:ring-black/5 transition-all text-[#1D1D1F] placeholder:text-[#1D1D1F]/40"
+               className="w-full text-sm font-semibold border border-black/10 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white rounded-xl px-4 py-3 focus:outline-none focus:border-black transition-all text-[#1D1D1F] placeholder:text-[#1D1D1F]/40"
             />
           </div>
         ))}
@@ -226,7 +226,7 @@ function InputStep({
           value={role}
           onChange={e => setRole(e.target.value)}
           placeholder="e.g. Senior Frontend Engineer"
-          className="w-full text-sm font-semibold border border-black/[0.15] bg-[#F5F5F7]/50 rounded-xl px-4 py-3 focus:outline-none focus:border-[#3b82f6]/40 focus:ring-4 focus:ring-black/5 transition-all text-[#1D1D1F] placeholder:text-[#1D1D1F]/40"
+          className="w-full text-sm font-semibold border border-black/10 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white rounded-xl px-4 py-3 focus:outline-none focus:border-black transition-all text-[#1D1D1F] placeholder:text-[#1D1D1F]/40"
         />
       </div>
 
@@ -250,7 +250,7 @@ function InputStep({
                   onChange={e => updateRow(i, e.target.value)}
                   placeholder={`Question ${i + 1} — minimum 10 characters`}
                   rows={2}
-                  className="w-full text-[13px] font-semibold border border-black/[0.15] bg-[#F5F5F7]/30 rounded-xl px-4 py-3 pr-10 resize-none focus:outline-none focus:border-[#3b82f6]/40 focus:ring-4 focus:ring-black/5 transition-all text-[#1D1D1F] placeholder:text-[#1D1D1F]/40"
+                  className="w-full text-[13px] font-semibold border border-black/10 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white rounded-xl px-4 py-3 pr-10 resize-none focus:outline-none focus:border-black transition-all text-[#1D1D1F] placeholder:text-[#1D1D1F]/40"
                 />
                 <span className={cn(
                   'absolute bottom-2 right-3 text-[10px] font-medium',
@@ -304,7 +304,7 @@ function InputStep({
               handleBulkPaste((e.target as HTMLTextAreaElement).value)
             }
           }}
-          className="w-full px-4 py-3 rounded-xl border border-black/[0.15] bg-[#F5F5F7]/30 text-sm font-semibold text-[#1D1D1F] placeholder:text-[#1D1D1F]/40 resize-none focus:outline-none focus:border-[#3b82f6]/40 focus:ring-4 focus:ring-black/5 transition-all"
+          className="w-full px-4 py-3 rounded-xl border border-black/10 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white text-sm font-semibold text-[#1D1D1F] placeholder:text-[#1D1D1F]/40 resize-none focus:outline-none focus:border-black transition-all"
         />
         <p className="text-[10px] text-[#1D1D1F]/60 font-semibold ml-1">
           Questions are auto-split on paste or when you click outside / press ⌘↵
@@ -317,8 +317,8 @@ function InputStep({
         className={cn(
           'w-full py-4 rounded-2xl text-sm font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2',
           loading || validQuestions.length === 0
-            ? 'bg-[#F5F5F7] text-[#1D1D1F]/30 cursor-not-allowed border border-black/[0.12]'
-            : 'bg-[#3b82f6] text-white shadow-[0_4px_14px_rgba(59,130,246,0.3)] hover:bg-blue-700 hover:-translate-y-0.5'
+            ? 'bg-[#F5F5F7] text-[#1D1D1F]/30 cursor-not-allowed border border-black/10'
+            : 'bg-[#3b82f6] text-white border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5'
         )}
       >
         {loading

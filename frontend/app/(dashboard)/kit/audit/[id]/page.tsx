@@ -53,7 +53,7 @@ function scoreColor(score: number) {
     pill: "bg-red-100 text-red-700", 
     ring: "border-red-200", 
     circle: "bg-red-100 text-red-700",
-    gradient: "from-[#10b981] to-[#059669]", // Branded Green gradient
+    bg: "bg-[#10b981]", 
     text: "text-red-600",
     border: "border-red-100"
   };
@@ -61,7 +61,7 @@ function scoreColor(score: number) {
     pill: "bg-amber-100 text-amber-700", 
     ring: "border-amber-200", 
     circle: "bg-amber-100 text-amber-700",
-    gradient: "from-[#10b981] to-[#059669]", // Branded Green gradient
+    bg: "bg-[#10b981]", 
     text: "text-amber-600",
     border: "border-amber-100"
   };
@@ -69,7 +69,7 @@ function scoreColor(score: number) {
     pill: "bg-emerald-100 text-emerald-700", 
     ring: "border-emerald-200", 
     circle: "bg-emerald-100 text-emerald-700",
-    gradient: "from-[#10b981] to-[#059669]",
+    bg: "bg-[#10b981]",
     text: "text-[#10b981]",
     border: "border-emerald-100"
   };
@@ -161,11 +161,11 @@ function QuestionCard({
       exit={{ opacity: 0, y: -8 }}
       transition={{ type: "spring", stiffness: 400, damping: 30 }}
       className={cn(
-        "bg-white border rounded-2xl overflow-hidden transition-all duration-200",
+        "bg-white border border-black/10 rounded-2xl overflow-hidden transition-all duration-200",
         expanded
-          ? originallyFlagged && !applied ? `border-red-200 shadow-[0_2px_20px_rgba(220,38,38,0.06)]` : "border-[#10b981]/30 shadow-[0_2px_20px_rgba(16,185,129,0.06)]"
-          : "border-black/[0.05] hover:border-black/[0.1]",
-        applied && "ring-2 ring-emerald-200 border-emerald-300"
+          ? "shadow-none translate-x-1 translate-y-1"
+          : "shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5",
+        applied && "border-emerald-500 shadow-[4px_4px_0px_0px_#10b981]"
       )}
     >
       {/* ── Question header ────────────────────────────────────── */}
@@ -176,10 +176,10 @@ function QuestionCard({
         <div className="flex items-start gap-4">
           {/* Index + score badge */}
           <div className={cn(
-            "w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5 transition-all duration-200",
+            "w-9 h-9 rounded-xl flex items-center justify-center text-sm font-black border-2 border-black flex-shrink-0 mt-0.5 transition-all duration-200",
             expanded
-              ? "bg-[#10b981] text-white shadow-sm"
-              : "bg-[#F5F5F7] text-[#86868B]"
+              ? "bg-black text-white"
+              : "bg-white text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
           )}>
             {index + 1}
           </div>
@@ -382,11 +382,11 @@ function KitActions({
   onEvaluate: () => void 
 }) {
   return (
-    <div className="bg-white border border-black/[0.05] rounded-3xl p-8 text-center shadow-sm relative overflow-hidden mt-12">
+    <div className="bg-white border-2 border-black rounded-2xl p-8 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden mt-12">
       <div className="absolute -top-24 -right-24 w-64 h-64 bg-gradient-to-br from-emerald-50 to-transparent rounded-full blur-[60px]" />
       
       <div className="relative z-10 max-w-md mx-auto space-y-4">
-        <div className="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-2 text-2xl border border-emerald-100">
+        <div className="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-2 text-2xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]">
           📋
         </div>
         <div>
@@ -401,7 +401,7 @@ function KitActions({
         <div className="pt-4">
           <button
             onClick={onEvaluate}
-            className="w-full bg-[#10b981] text-white py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-[#059669] shadow-lg shadow-[#10b981]/20 hover:shadow-[#10b981]/30 hover:-translate-y-0.5 transition-all"
+            className="w-full bg-[#10b981] text-white py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-[#059669] shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none border-2 border-black transition-all"
           >
             Evaluate Candidate ↗
           </button>
@@ -548,13 +548,13 @@ export default function AuditResultPage() {
   return (
     <div className="max-w-4xl mx-auto pt-2 pb-16 px-0 animate-in fade-in duration-500 space-y-6">
 
-      {/* ── Premium Header ──────────────────────────────────────────────── */}
-      <div className={cn("bg-gradient-to-br rounded-[1.75rem] p-6 md:p-8 text-white relative overflow-hidden shadow-lg", colors.gradient)}>
+      {/* ── Branded Header ────────────────────────────────────────────── */}
+      <div className={cn("border-2 border-black rounded-[2.5rem] p-6 md:p-8 text-white relative overflow-hidden shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]", colors.bg)}>
         {/* Decorative blur */}
         <div className="absolute -top-16 -right-16 w-56 h-56 bg-white/[0.04] rounded-full blur-[80px]" />
 
-        <div className="flex items-start justify-between gap-4 relative z-10">
-          <div className="space-y-2">
+        <div className="flex items-start justify-between gap-4 relative z-10 text-white">
+          <div className="space-y-3">
             <div className="flex items-center gap-2">
                <Link
                 href="/kit"
@@ -566,7 +566,7 @@ export default function AuditResultPage() {
                 Kit Audit Report
               </p>
             </div>
-            <h1 className="text-lg md:text-2xl font-bold leading-snug">
+            <h1 className="text-xl md:text-3xl font-extrabold leading-none tracking-tight text-white">
               {audit.title}
             </h1>
             <p className="text-sm text-white/70 font-medium leading-relaxed max-w-xl">
@@ -575,7 +575,7 @@ export default function AuditResultPage() {
           </div>
           
           <div className="text-right flex-shrink-0 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10">
-            <div className="text-3xl font-black tabular-nums leading-none">
+            <div className="text-4xl font-black tabular-nums leading-none text-white">
               {audit.overallScore}
             </div>
             <div className="text-[9px] font-black text-white/60 uppercase tracking-widest mt-1.5">
@@ -585,33 +585,33 @@ export default function AuditResultPage() {
         </div>
 
         {/* Stats row */}
-        <div className="flex gap-8 mt-8 pt-6 border-t border-white/10 relative z-10">
+        <div className="flex gap-8 mt-10 pt-8 border-t border-white/10 relative z-10">
           <div className="shrink-0 text-center md:text-left">
-            <div className="flex items-center gap-2 mb-0.5">
-               <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_8px_white] animate-pulse" />
-               <div className="text-xl font-black tabular-nums">{audit.questionCount}</div>
+            <div className="flex items-center gap-2 mb-1 text-white">
+               <div className="w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_8px_white] animate-pulse" />
+               <div className="text-2xl font-black tabular-nums tracking-tighter">{audit.questionCount}</div>
             </div>
             <div className="text-[10px] font-bold text-white/60 uppercase tracking-widest">Questions</div>
           </div>
           
           <div className="shrink-0 text-center md:text-left">
-            <div className="flex items-center gap-2 mb-0.5">
-               <CheckCircle className="w-4 h-4 text-emerald-300" />
-               <div className="text-xl font-black tabular-nums">{cleanCount}</div>
+            <div className="flex items-center gap-2 mb-1 text-white">
+               <CheckCircle className="w-5 h-5 text-emerald-300" />
+               <div className="text-2xl font-black tabular-nums tracking-tighter">{cleanCount}</div>
             </div>
             <div className="text-[10px] font-bold text-white/60 uppercase tracking-widest">Clean</div>
           </div>
 
           <div className="shrink-0 text-center md:text-left">
-            <div className="flex items-center gap-2 mb-0.5">
-               <AlertTriangle className={cn("w-4 h-4", flaggedCount > 0 ? "text-amber-300" : "text-white/40")} />
-               <div className="text-xl font-black tabular-nums">{flaggedCount}</div>
+            <div className="flex items-center gap-2 mb-1 text-white">
+               <AlertTriangle className={cn("w-5 h-5", flaggedCount > 0 ? "text-amber-300" : "text-white/40")} />
+               <div className="text-2xl font-black tabular-nums tracking-tighter">{flaggedCount}</div>
             </div>
             <div className="text-[10px] font-bold text-white/60 uppercase tracking-widest">Flagged</div>
           </div>
 
           <div className="ml-auto hidden md:block self-center">
-             <div className="px-4 py-2 bg-white/10 rounded-full border border-white/10 text-[10px] font-black uppercase tracking-widest">
+             <div className="px-5 py-2 bg-white/10 rounded-full border border-white/10 text-[10px] font-black uppercase tracking-widest text-white">
                {audit.overallScore > 70 ? "High Risk" : audit.overallScore > 40 ? "Moderate" : "Fair Kit"}
              </div>
           </div>
@@ -663,9 +663,9 @@ export default function AuditResultPage() {
 
       {/* ── Structural analysis (paid) ────────────────────────────────── */}
       {isPaid && audit.structuralAnalysis && (
-        <div className="bg-white rounded-[2rem] border border-black/[0.06] p-6 md:p-10 shadow-sm">
+        <div className="bg-white rounded-2xl border-2 border-black p-6 md:p-10 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
           <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 bg-emerald-50 rounded-2xl flex items-center justify-center border border-emerald-100">
+            <div className="w-10 h-10 bg-emerald-50 rounded-2xl flex items-center justify-center border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)]">
               <Activity className="w-5 h-5 text-[#10b981]" />
             </div>
             <div>

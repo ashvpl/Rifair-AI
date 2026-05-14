@@ -211,7 +211,7 @@ export function CandidateEvaluator({
         {loading && <LoadingState text="Analyzing candidate..." />}
 
         {/* Header */}
-        <div className="bg-white border border-gray-200 rounded-2xl p-5 md:p-6 shadow-sm">
+        <div className="bg-white border border-black/10 rounded-2xl p-5 md:p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <div className="mb-5">
             <h3 className="text-lg font-bold text-[#1D1D1F] mb-1">
               Evaluate Candidate
@@ -229,7 +229,7 @@ export function CandidateEvaluator({
               placeholder="e.g. Jane Doe (optional)"
               value={candidateName}
               onChange={e => setCandidateName(e.target.value)}
-              className="w-full text-sm font-medium border border-black/[0.05] bg-[#F5F5F7]/50 rounded-xl px-4 py-3 focus:outline-none focus:border-[#3b82f6]/30 focus:ring-4 focus:ring-black/5 transition-all"
+              className="w-full text-sm font-medium border border-black/10 bg-white rounded-xl px-4 py-3 focus:outline-none focus:border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
             />
           </div>
         </div>
@@ -300,8 +300,8 @@ export function CandidateEvaluator({
                         }))}
                         className={`py-2 rounded-xl border text-center transition-all duration-200 ${
                           isSelected
-                            ? `${config.bg} ${config.color} border-current shadow-sm scale-[1.02]`
-                            : 'bg-white text-[#86868B] border-black/[0.05] hover:bg-[#F5F5F7] hover:border-black/[0.1]'
+                            ? `${config.bg} ${config.color} border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] scale-[1.02]`
+                            : 'bg-white text-[#86868B] border-black/10 hover:bg-[#F5F5F7] hover:border-black/20 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none'
                         }`}
                       >
                         <div className={`text-base font-bold mb-0.5 ${isSelected ? '' : 'text-[#1D1D1F]'}`}>
@@ -336,10 +336,10 @@ export function CandidateEvaluator({
                   }}
                   rows={2}
                   className={cn(
-                    "w-full text-[13px] border rounded-xl px-4 py-3 resize-none focus:outline-none focus:border-[#3b82f6]/30 focus:ring-4 focus:ring-black/5 transition-all font-medium",
+                    "w-full text-[13px] border rounded-xl px-4 py-3 resize-none focus:outline-none focus:border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all font-medium",
                     evalModeration.isBlocked 
                       ? "border-red-300 bg-red-50/30 text-red-900 placeholder:text-red-900/40" 
-                      : "border-black/[0.05] bg-[#F5F5F7]/30 placeholder:text-[#86868B]/60"
+                      : "border-black/10 bg-white placeholder:text-[#86868B]/60"
                   )}
                 />
               </div>
@@ -360,8 +360,8 @@ export function CandidateEvaluator({
           disabled={!allScored || loading || evalModeration.isBlocked || evalModeration.isChecking}
           className={`w-full mt-4 py-4 rounded-2xl text-sm font-bold uppercase tracking-widest transition-all ${
             allScored && !loading && !evalModeration.isBlocked
-              ? 'bg-[#3b82f6] text-white hover:bg-[#2563eb] shadow-[0_4px_14px_rgba(59,130,246,0.3)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.4)] hover:-translate-y-0.5'
-              : 'bg-[#F5F5F7] text-[#86868B] cursor-not-allowed border border-black/[0.05]'
+              ? 'bg-[#3b82f6] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5'
+              : 'bg-[#F5F5F7] text-[#86868B] cursor-not-allowed border border-black/10'
           }`}
         >
           {evalModeration.isBlocked ? (
@@ -407,19 +407,22 @@ function EvaluationResult({
 
   const recommendationConfig = {
     HIRE: {
-      bg:    'bg-gradient-to-br from-blue-600 to-blue-800',
+      bg:    'bg-indigo-600',
+      border: 'border-black',
       badge: 'bg-white/20 text-white backdrop-blur-md',
       icon:  '✓',
       label: 'Recommended to Hire'
     },
     HOLD: {
-      bg:    'bg-gradient-to-br from-amber-50 to-amber-700',
+      bg:    'bg-amber-600',
+      border: 'border-black',
       badge: 'bg-white/20 text-white backdrop-blur-md',
       icon:  '⟳',
       label: 'Hold — Further Assessment Needed'
     },
     REJECT: {
-      bg:    'bg-gradient-to-br from-red-600 to-red-800',
+      bg:    'bg-red-600',
+      border: 'border-black',
       badge: 'bg-white/20 text-white backdrop-blur-md',
       icon:  '✕',
       label: 'Not Recommended'
@@ -433,7 +436,7 @@ function EvaluationResult({
     <div id="evaluation-container" className="space-y-4 bg-[#F5F5F7]">
 
       {/* Hero recommendation card */}
-      <div className={`page-break-avoid ${config.bg} rounded-[2rem] p-8 text-white shadow-lg overflow-hidden relative`}>
+      <div className={`page-break-avoid bg-[#3b82f6] border-2 border-black rounded-[2rem] p-8 text-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] overflow-hidden relative`}>
         <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-[80px]" />
         
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 relative z-10">
@@ -447,20 +450,20 @@ function EvaluationResult({
             <p className="text-sm font-medium text-white/80 mb-5">
               {role}
             </p>
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm tracking-wide border border-white/10 shadow-sm bg-black/10 backdrop-blur-md">
+            <div className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white text-black">
               <span className="opacity-90">{config.icon}</span> 
               {config.label}
             </div>
           </div>
-          <div className="md:text-right flex-shrink-0 bg-black/10 backdrop-blur-md p-5 rounded-2xl border border-white/10">
-            <div className="text-[10px] font-bold text-white/60 uppercase tracking-[0.2em] mb-1">
+          <div className="md:text-right flex-shrink-0 bg-white/10 backdrop-blur-md p-6 rounded-2xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <div className="text-[10px] font-black text-white/60 uppercase tracking-[0.2em] mb-1">
               Overall Score
             </div>
             <div className="flex items-baseline md:justify-end gap-1">
-              <span className="text-5xl font-black tabular-nums">{evaluation.overall_score}</span>
-              <span className="text-xl font-bold text-white/50">/100</span>
+              <span className="text-5xl font-black tabular-nums text-white">{evaluation.overall_score}</span>
+              <span className="text-xl font-bold text-white/40">/100</span>
             </div>
-            <div className="text-xs font-semibold text-white/70 mt-2 bg-black/20 inline-block px-2 py-1 rounded">
+            <div className="text-[10px] font-black text-white/70 mt-2 bg-black/20 inline-block px-2 py-1 rounded uppercase tracking-widest">
               {evaluation.confidence} confidence
             </div>
           </div>
@@ -468,7 +471,7 @@ function EvaluationResult({
       </div>
 
       {/* Summary */}
-      <div className="page-break-avoid bg-white border border-black/[0.05] rounded-2xl p-6 shadow-sm">
+      <div className="page-break-avoid bg-white border border-black/10 rounded-2xl p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
         <p className="text-[10px] font-bold text-[#86868B] uppercase tracking-[0.1em] mb-3">
           Overall Assessment
         </p>
@@ -479,7 +482,7 @@ function EvaluationResult({
 
       {/* Reasoning */}
       {(evaluation.hire_reasoning || evaluation.reject_reasoning || evaluation.hold_reasoning) && (
-        <div className={`page-break-avoid border rounded-2xl p-6 shadow-sm ${
+        <div className={`page-break-avoid border-2 border-black rounded-2xl p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ${
           rec === 'HIRE'   ? 'bg-emerald-50/50 border-emerald-100' :
           rec === 'REJECT' ? 'bg-red-50/50 border-red-100' :
                              'bg-amber-50/50 border-amber-100'
@@ -496,7 +499,7 @@ function EvaluationResult({
       {/* Strengths + Gaps */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Strengths */}
-        <div className="page-break-avoid bg-white border border-black/[0.05] rounded-2xl p-6 shadow-sm">
+        <div className="page-break-avoid bg-white border border-black/10 rounded-2xl p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <p className="text-[10px] font-bold text-[#86868B] uppercase tracking-[0.1em] mb-4">
             Strengths Identified
           </p>
@@ -522,7 +525,7 @@ function EvaluationResult({
         </div>
 
         {/* Gaps */}
-        <div className="page-break-avoid bg-white border border-black/[0.05] rounded-2xl p-6 shadow-sm">
+        <div className="page-break-avoid bg-white border border-black/10 rounded-2xl p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <p className="text-[10px] font-bold text-[#86868B] uppercase tracking-[0.1em] mb-4">
             Areas of Concern
           </p>
@@ -561,7 +564,7 @@ function EvaluationResult({
       </div>
 
       {/* Competency breakdown */}
-      <div className="page-break-avoid bg-white border border-black/[0.05] rounded-2xl p-6 shadow-sm">
+      <div className="page-break-avoid bg-white border border-black/10 rounded-2xl p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
         <p className="text-[10px] font-bold text-[#86868B] uppercase tracking-[0.1em] mb-5">
           Competency Scores
         </p>
@@ -578,7 +581,7 @@ function EvaluationResult({
                     key={idx} 
                     className={`flex-1 rounded-full ${
                       idx <= c.score 
-                        ? (c.score >= 4 ? 'bg-blue-500' : c.score >= 3 ? 'bg-blue-400' : c.score >= 2 ? 'bg-amber-500' : 'bg-red-500')
+                        ? (c.score >= 4 ? 'bg-indigo-500' : c.score >= 3 ? 'bg-indigo-400' : c.score >= 2 ? 'bg-amber-500' : 'bg-red-500')
                         : 'bg-[#F5F5F7]'
                     }`} 
                   />
@@ -593,7 +596,7 @@ function EvaluationResult({
       </div>
 
       {/* Next steps */}
-      <div className="page-break-avoid bg-white border border-black/[0.05] rounded-2xl p-6 shadow-sm">
+      <div className="page-break-avoid bg-white border border-black/10 rounded-2xl p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
         <p className="text-[10px] font-bold text-[#86868B] uppercase tracking-[0.1em] mb-4">
           Recommended Next Steps
         </p>
@@ -628,7 +631,7 @@ function EvaluationResult({
 
       {/* Interviewer feedback */}
       {evaluation.interview_quality_feedback && (
-        <div className="bg-[#F5F5F7] border border-black/[0.05] rounded-2xl p-5 no-print">
+        <div className="bg-[#F5F5F7] border border-black/10 rounded-2xl p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] no-print">
           <p className="text-[10px] font-bold text-[#86868B] uppercase tracking-[0.1em] mb-2">
             Interviewer Feedback (Private)
           </p>
@@ -647,7 +650,7 @@ function EvaluationResult({
         />
         <button
           onClick={() => window.location.reload()}
-          className="flex-1 py-4 bg-[#3b82f6] text-white rounded-2xl text-xs font-bold uppercase tracking-widest shadow-lg shadow-[#3b82f6]/20 hover:bg-[#2563eb] hover:shadow-[#3b82f6]/30 hover:-translate-y-0.5 transition-all"
+          className="flex-1 py-4 bg-indigo-600 text-white rounded-2xl text-xs font-bold uppercase tracking-widest border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
         >
           Evaluate Another
         </button>

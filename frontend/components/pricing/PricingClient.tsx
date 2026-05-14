@@ -9,6 +9,7 @@ import { ApplePricing } from '@/components/pricing/ApplePricing'
 import { cn } from '@/lib/utils'
 import { useUser } from '@clerk/nextjs'
 import { isAdmin } from '@/lib/auth/admin'
+import { IndustrialPricing } from '@/components/pricing/IndustrialPricing'
 
 interface PricingClientProps {
   plans: Plan[]
@@ -256,38 +257,5 @@ const ADDON_DATA = [
 ]
 
 export function PricingClient({ plans }: PricingClientProps) {
-  const { user, isLoaded } = useUser()
-  const [billingCycle, setBillingCycle] = useState<BillingCycle>('monthly')
-  const [currency, setCurrency] = useState<CurrencyKey>('usd')
-
-  const userEmail = user?.primaryEmailAddress?.emailAddress
-  const userIsAdmin = isAdmin(userEmail)
-
-  useEffect(() => {
-    setCurrency(detectCurrency())
-  }, [])
-
-  // Filter UI data based on admin status
-  const visiblePricingData = PRICING_DATA.filter(p => !p.internal || userIsAdmin)
-
-  return (
-    <div className="flex flex-col min-h-screen bg-background font-sans relative">
-      <div className="relative z-50 w-full">
-        <NavBarDemo />
-      </div>
-
-      <main className="flex-1 pt-12">
-        {/* The New Apple-Style Pricing Component */}
-        <ApplePricing 
-          plans={visiblePricingData as any} 
-          addons={ADDON_DATA}
-          currency={currency} 
-          billingCycle={billingCycle} 
-          setBillingCycle={setBillingCycle}
-        />
-      </main>
-
-      <FooterSection />
-    </div>
-  )
+  return <IndustrialPricing />
 }

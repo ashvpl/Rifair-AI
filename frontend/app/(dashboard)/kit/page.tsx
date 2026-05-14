@@ -41,6 +41,7 @@ export default function KitGeneratorPage() {
   const [kit, setKit] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [errorCode, setErrorCode] = useState<string | null>(null);
+  const [loadingText, setLoadingText] = useState("Generating");
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradeReason, setUpgradeReason] = useState("");
   const { planId } = useSubscription();
@@ -52,6 +53,7 @@ export default function KitGeneratorPage() {
     const fetchReport = async () => {
       if (!reportId || !isLoaded || !userId) return;
       setIsLoading(true);
+      setLoadingText("Retrieving your report...");
       try {
         const token = await getAuthToken();
         if (!token) return;
@@ -95,6 +97,7 @@ export default function KitGeneratorPage() {
     if (!isClean) return;
 
     setIsLoading(true);
+    setLoadingText("Generating interview kit...");
     setError(null);
     setErrorCode(null);
     setKit(null);
@@ -131,26 +134,29 @@ export default function KitGeneratorPage() {
   return (
     <div className="kit-page-wrapper">
       <div className="relative max-w-6xl mx-auto space-y-6 pt-6 pb-16 px-0">
-        {isLoading && <LoadingState text="Generating" />}
+        {isLoading && <LoadingState text={loadingText} />}
       
-      <div className="relative">
-        <div className="space-y-1">
-          <h1 className={cn(
-            "text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight",
-            searchParams.get("evaluate") === "true" ? "text-[#1e1b4b]" : "text-[#062c21]"
-          )}>
-            {searchParams.get("evaluate") === "true" ? "Candidate Evaluation" : "Interview Kits"}
-          </h1>
-          <p className="text-[#86868B] max-w-2xl text-base md:text-lg font-medium">
-            {searchParams.get("evaluate") === "true" 
-              ? "Precision scoring to ensure accurate, merit-based hiring while detecting subtle interview biases."
-              : "Generate role-specific kits or audit your existing questions for bias."}
-          </p>
+      {/* Page header - hide when viewing history */}
+      {!reportId && (
+        <div className="relative">
+          <div className="space-y-1">
+            <h1 className={cn(
+              "text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-[#062c21]",
+            )}>
+              {searchParams.get("evaluate") === "true" ? "Candidate Evaluation" : "Interview Kits"}
+            </h1>
+            <p className="text-[#86868B] max-w-2xl text-base md:text-lg font-medium">
+              {searchParams.get("evaluate") === "true" 
+                ? "Precision scoring to ensure accurate, merit-based hiring while detecting subtle interview biases."
+                : "Generate role-specific kits or audit your existing questions for bias."}
+            </p>
+          </div>
         </div>
-      </div>
+      )}
 
-      {searchParams.get("evaluate") !== "true" && (
-        <div className="flex bg-[#F5F5F7]/80 rounded-2xl p-1 max-w-sm border border-black/[0.04]">
+      {/* Tab selector - hide when viewing history */}
+      {!reportId && searchParams.get("evaluate") !== "true" && (
+        <div className="flex bg-[#F5F5F7]/80 rounded-2xl p-1 max-w-sm border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <button
             onClick={() => setActiveTab("generate")}
             className={cn(
@@ -173,7 +179,7 @@ export default function KitGeneratorPage() {
             )}
           >
             <ClipboardCheck className="w-3.5 h-3.5" />
-            Audit My Kit
+            Audit Kit
           </button>
         </div>
       )}
@@ -204,6 +210,7 @@ export default function KitGeneratorPage() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ type: "spring", stiffness: 200, damping: 25 }}
+            className={cn(reportId && "pt-4")}
           >
             {searchParams.get("evaluate") !== "true" && (
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
@@ -254,9 +261,9 @@ export default function KitGeneratorPage() {
             className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-stretch"
           >
             <div className="lg:col-span-1 h-full">
-              <div className="bg-white border border-black/[0.05] p-6 sm:p-8 md:p-12 h-full min-h-[500px] md:min-h-[700px] rounded-[2rem] md:rounded-[3.5rem] shadow-[0_4px_24px_rgba(0,0,0,0.02)] relative overflow-hidden transition-all duration-500 hover:shadow-[0_8px_32px_rgba(0,0,0,0.04)] flex flex-col">
+              <div className="bg-white border-2 border-black p-6 sm:p-8 md:p-12 h-full min-h-[500px] md:min-h-[700px] rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden transition-all duration-500 hover:shadow-none hover:translate-x-1 hover:translate-y-1 flex flex-col">
                 <div className="mb-6 md:mb-10">
-                  <h2 className="text-xl md:text-2xl font-extrabold text-foreground tracking-tight">Role Definitions</h2>
+                  <h2 className="text-xl md:text-2xl font-extrabold text-[#1D1D1F] tracking-tight">Role Definitions</h2>
                   <p className="text-xs md:text-sm font-medium text-[#86868B] mt-1">Prime the engine for localized expertise.</p>
                 </div>
                 
@@ -267,7 +274,7 @@ export default function KitGeneratorPage() {
                       value={formData.role} 
                       onChange={(e) => setFormData({...formData, role: e.target.value})} 
                       placeholder="e.g. Lead Machine Learning Engineer"
-                      className="bg-[#F5F5F7]/30 border-black/[0.05] focus:border-black/[0.1] focus:ring-4 focus:ring-black/5 h-12 rounded-2xl transition-all font-semibold"
+                      className="bg-[#F5F5F7]/30 border-2 border-black focus:border-[#10b981] focus:ring-4 focus:ring-[#10b981]/5 h-12 rounded-xl transition-all font-semibold"
                     />
                   </div>
                   <div className="space-y-2">
@@ -276,7 +283,7 @@ export default function KitGeneratorPage() {
                       value={formData.experience_level} 
                       onChange={(e) => setFormData({...formData, experience_level: e.target.value})} 
                       placeholder="e.g. Tier 4, 7-10 years" 
-                      className="bg-[#F5F5F7]/30 border-black/[0.05] focus:border-black/[0.1] focus:ring-4 focus:ring-black/5 h-12 rounded-2xl transition-all font-semibold"
+                      className="bg-[#F5F5F7]/30 border-2 border-black focus:border-black focus:ring-0 h-12 rounded-xl transition-all font-bold"
                     />
                   </div>
                   <div className="space-y-2">
@@ -285,7 +292,7 @@ export default function KitGeneratorPage() {
                       value={formData.company_type} 
                       onChange={(e) => setFormData({...formData, company_type: e.target.value})} 
                       placeholder="e.g. Series B High-Growth" 
-                      className="bg-[#F5F5F7]/30 border-black/[0.05] focus:border-black/[0.1] focus:ring-4 focus:ring-black/5 h-12 rounded-2xl transition-all font-semibold"
+                      className="bg-[#F5F5F7]/30 border-2 border-black focus:border-black focus:ring-0 h-12 rounded-xl transition-all font-bold"
                     />
                   </div>
                   <div className="space-y-2">
@@ -294,7 +301,7 @@ export default function KitGeneratorPage() {
                       value={formData.diversity_goals} 
                       onChange={(e) => setFormData({...formData, diversity_goals: e.target.value})} 
                       placeholder="e.g. Eliminate domain-specific linguistic barriers..."
-                      className="resize-none bg-[#F5F5F7]/30 border-black/[0.05] focus:border-black/[0.1] focus:ring-4 focus:ring-black/5 min-h-[100px] rounded-2xl transition-all font-semibold p-4"
+                      className="resize-none bg-[#F5F5F7]/30 border-2 border-black focus:border-black focus:ring-0 min-h-[100px] rounded-xl transition-all font-bold p-4"
                     />
                   </div>
                   
@@ -309,11 +316,11 @@ export default function KitGeneratorPage() {
                     onClick={handleGenerate}
                     disabled={isLoading || !formData.role || kitModeration.isBlocked || kitModeration.isChecking}
                     className={cn(
-                      "w-full relative p-0.5 inline-flex overflow-hidden rounded-2xl group shadow-xl transition-all h-auto mt-auto active:scale-95 text-white",
+                      "w-full relative p-0.5 inline-flex overflow-hidden rounded-xl group shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all h-auto mt-auto active:translate-x-0.5 active:translate-y-0.5 active:shadow-none border-2 border-black text-white",
                       searchParams.get("evaluate") === "true" ? "bg-[#3b82f6] hover:bg-[#2563eb]" : "bg-[#10b981] hover:bg-[#059669]"
                     )}
                   >
-                    <span className="inline-flex size-full items-center justify-center rounded-2xl px-6 py-4 font-semibold transition-all">
+                    <span className="inline-flex size-full items-center justify-center rounded-xl px-6 py-4 font-semibold transition-all">
                       <span className="font-black text-xs tracking-widest relative z-10 uppercase">
                         {kitModeration.isBlocked ? 'Fix content to continue' : 'Generate Kit'}
                       </span>
@@ -324,8 +331,8 @@ export default function KitGeneratorPage() {
             </div>
 
             <div className="lg:col-span-1 h-full">
-              <div className="h-full min-h-[500px] md:min-h-[700px] bg-white border border-black/[0.05] flex flex-col items-stretch p-6 sm:p-8 md:p-12 text-foreground rounded-[2rem] md:rounded-[3.5rem] shadow-[0_8px_48px_rgba(0,0,0,0.02)] relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-black/[0.01] rounded-full blur-[120px] -mr-32 -mt-32 md:-mr-48 md:-mt-48" />
+              <div className="h-full min-h-[500px] md:min-h-[700px] bg-white border-2 border-black flex flex-col items-stretch p-6 sm:p-8 md:p-10 text-foreground rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-black/[0.02] rounded-full blur-[120px] -mr-32 -mt-32 md:-mr-48 md:-mt-48" />
                 <div className="relative z-10 flex flex-col items-center justify-center flex-1 py-10">
                   {error ? (
                     errorCode === 'api_quota_exceeded' ? (

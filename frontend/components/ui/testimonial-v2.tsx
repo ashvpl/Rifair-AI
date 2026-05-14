@@ -17,19 +17,19 @@ interface Testimonial {
 const testimonials: Testimonial[] = [
   {
     text: "Rifair AI transformed our hiring process. We've seen a 40% increase in diverse hires since we started using their bias-detection engine.",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150",
+    image: "/images/models/testimonial-woman-1.png",
     name: "Sarah Jenkins",
     role: "Head of Talent at TechFlow",
   },
   {
     text: "The interview kit generation is a game-changer. It ensures every candidate gets the same fair treatment while saving our managers hours of prep time.",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150&h=150",
+    image: "/images/models/testimonial-man-1.png",
     name: "Marcus Chen",
     role: "Director of People Ops at ScaleUp",
   },
   {
     text: "Finally, a tool that actually understands the nuance of language in job descriptions and interviews. Rifair is essential for any modern HR stack.",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=150&h=150",
+    image: "/images/models/hr-leader.png",
     name: "Elena Rodriguez",
     role: "DEI Lead at Global Corp",
   },

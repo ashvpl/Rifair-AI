@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   RefreshCw, Check, Copy, SkipForward, ChevronDown,
-  Loader2, RotateCcw, Zap
+  Loader2, RotateCcw, Zap, Lock, Info
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -66,6 +67,7 @@ export default function QuestionCard({
   onToggleExpand,
   onSkip
 }: Props) {
+  const router = useRouter();
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [showFocusMenu, setShowFocusMenu] = useState(false);
   const [regenError, setRegenError] = useState('');
@@ -134,10 +136,10 @@ export default function QuestionCard({
       animate={justRegenerated ? { scale: 1, borderColor: '#e5e5e5' } : false}
       transition={{ duration: 0.3 }}
       className={cn(
-        "group bg-white rounded-2xl border overflow-hidden transition-all duration-200 relative",
+        "group bg-white rounded-[2rem] border-2 border-black overflow-hidden transition-all duration-300 relative",
         isExpanded
-          ? "border-[#10b981]/30 shadow-[0_2px_20px_rgba(16,185,129,0.06)] ring-1 ring-[#1D9E75]/20"
-          : "border-neutral-200 hover:border-black/[0.1]"
+          ? "shadow-none translate-x-1 translate-y-1"
+          : "shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5",
       )}
     >
       <div 
@@ -147,42 +149,29 @@ export default function QuestionCard({
         {/* Question Number */}
         <div className="shrink-0 relative">
           <span className={cn(
-            "w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center text-xs sm:text-sm font-bold mt-0.5 transition-all duration-200",
-            question.regenerated ? "bg-[#1D9E75] text-white shadow-sm" : 
-            isExpanded ? "bg-[#10b981] text-white shadow-sm" : "bg-[#F5F5F7] text-[#86868B]"
+            "w-10 h-10 rounded-2xl flex items-center justify-center text-sm font-black mt-0.5 transition-all duration-300 border-2 border-black",
+            isExpanded
+              ? "bg-[#10b981] text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+              : "bg-white text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
           )}>
-            {question.id ?? (index + 1)}
+            {index + 1}
           </span>
-          {question.regenerated && (
-            <motion.div 
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full flex items-center justify-center"
-            >
-              <Zap className="w-2.5 h-2.5 text-white fill-white" />
-            </motion.div>
-          )}
         </div>
 
-        {/* Question Content */}
         <div className="min-w-0 flex-1">
-          {/* Tags row */}
-          <div className="flex items-center gap-2 mb-2 flex-wrap">
+          <div className="flex items-center gap-2 mb-3 flex-wrap">
             <span className={cn(
-              "text-[10px] font-bold px-2.5 py-1 rounded-lg border capitalize tracking-wide",
+              "text-[10px] font-black px-2.5 py-1 rounded-lg border-2 uppercase tracking-widest",
               typeStyle.bg, typeStyle.text, typeStyle.border
             )}>
-              {String(question.type) || 'Unknown'}
+              {question.type}
             </span>
-            <span className="text-[11px] text-[#86868B] tracking-wider hidden sm:inline-block">
-              {DIFFICULTY_DOTS[question.difficulty || 'intermediate'] || '●○○'}
-            </span>
-            <span className="text-[11px] text-[#86868B] font-medium hidden sm:inline-block">
-              {question.time_minutes || 10} min
-            </span>
-            <span className="hidden sm:inline text-[11px] text-[#86868B] font-medium">
-              · {question.competency}
-            </span>
+            {question.difficulty && (
+              <span className="text-[10px] font-black text-[#86868B] uppercase tracking-widest flex items-center gap-1.5">
+                <span className="w-1 h-1 rounded-full bg-black/20" />
+                {question.difficulty}
+              </span>
+            )}
           </div>
 
           <p className={cn(
@@ -241,8 +230,6 @@ export default function QuestionCard({
             <ChevronDown className={cn("w-5 h-5 text-[#86868B] transition-transform duration-300", isExpanded && "rotate-180")} />
           </button>
         </div>
-
-
       </div>
 
       {/* Expanded Content */}
@@ -255,7 +242,7 @@ export default function QuestionCard({
             transition={{ duration: 0.25, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="px-5 md:px-6 pb-6 space-y-4 border-t border-black/[0.04] pt-5 ml-11 md:ml-12">
+            <div className="px-5 md:px-6 pb-8 space-y-6 border-t border-black/[0.04] pt-8 ml-11 md:ml-12">
               {/* Error */}
               <AnimatePresence>
                 {regenError && (
@@ -263,30 +250,17 @@ export default function QuestionCard({
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="p-3 bg-red-50 rounded-xl border border-red-100 mb-4"
+                    className="p-3 bg-red-50 rounded-xl border-2 border-red-100 mb-4"
                   >
-                    <p className="text-sm text-red-700">{regenError}</p>
-                    {isFree && (
-                      <a href="/pricing?reason=kit_regen" className="text-xs font-semibold text-[#10b981] mt-1 inline-block">
-                        Upgrade for unlimited regenerations →
-                      </a>
-                    )}
+                    <p className="text-sm text-red-700 font-bold">{regenError}</p>
                   </motion.div>
                 )}
               </AnimatePresence>
 
-              {/* Original Version (if regenerated) */}
-              {question.originalVersion && (
-                <div className="p-3.5 bg-neutral-50/70 rounded-xl border border-neutral-100 mb-4">
-                  <p className="text-[10px] font-semibold text-neutral-400 uppercase tracking-wide mb-1">Original Version</p>
-                  <p className="text-[13px] text-neutral-500 line-through leading-relaxed">{question.originalVersion}</p>
-                </div>
-              )}
-
-              {/* AI Modification Templates */}
+              {/* AI Modification Templates (only if not limit reached) */}
               {!isLimitReached && (
-                <div className="mb-6 p-4 bg-emerald-50/50 rounded-xl border border-emerald-100/50">
-                  <p className="text-[10px] font-bold text-[#1D9E75] uppercase tracking-widest mb-2">Refine Question</p>
+                <div className="bg-emerald-50/30 border-2 border-emerald-100/50 rounded-2xl p-6 shadow-[2px_2px_0px_0px_rgba(16,185,129,0.05)]">
+                  <p className="text-[10px] font-black text-[#1D9E75] uppercase tracking-widest mb-4">Refine with AI</p>
                   <div className="flex flex-wrap gap-2">
                     {focusOptions.map(opt => (
                       <button
@@ -297,93 +271,108 @@ export default function QuestionCard({
                           handleRegenerate(opt.key);
                         }}
                         disabled={isRegenerating}
-                        className="flex items-center gap-1.5 px-3 py-2 bg-white border border-emerald-200/60 rounded-lg text-xs font-medium text-emerald-800 hover:bg-emerald-50 hover:border-emerald-300 transition-colors shadow-sm"
+                        className="flex items-center gap-2 px-4 py-2.5 bg-white border-2 border-emerald-100 rounded-xl text-xs font-black text-emerald-800 hover:bg-emerald-50 hover:border-emerald-300 transition-all shadow-[2px_2px_0px_0px_rgba(16,185,129,0.1)] hover:shadow-none active:translate-x-0.5 active:translate-y-0.5"
                       >
-                        <span>{opt.icon}</span>
+                        <span className="text-base">{opt.icon}</span>
                         {opt.label}
                       </button>
                     ))}
                   </div>
-                  <div className="mt-2 text-[10px] text-emerald-600/70 font-medium">
-                    {remaining} regenerations remaining
-                  </div>
                 </div>
               )}
 
-              {/* Metadata */}
-              {!isLocked ? (
-                <>
-                  {question.why_this_question && (
-                    <div>
-                      <p className="text-[10px] font-bold text-[#86868B] uppercase tracking-[0.1em] mb-1.5">Why this question</p>
-                      <p className="text-[13px] text-[#424245] leading-relaxed">{question.why_this_question}</p>
-                    </div>
-                  )}
-                  {question.strong_answer_includes && question.strong_answer_includes.length > 0 && (
-                    <div>
-                      <p className="text-[10px] font-bold text-[#86868B] uppercase tracking-[0.1em] mb-2">Strong answer includes</p>
-                      <div className="space-y-1.5">
-                        {question.strong_answer_includes.map((point, i) => (
-                          <div key={i} className="flex gap-2.5 items-start">
-                            <span className="text-emerald-500 flex-shrink-0 mt-0.5 text-sm">✓</span>
-                            <p className="text-[13px] text-[#424245] leading-relaxed">{point}</p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {question.red_flags && (
-                    <div className="bg-red-50/70 border border-red-100 rounded-xl p-3.5 mt-4">
-                      <p className="text-[10px] font-bold text-red-500 uppercase tracking-[0.1em] mb-1">Red flags</p>
-                      <p className="text-[13px] text-red-700 leading-relaxed">{question.red_flags}</p>
-                    </div>
-                  )}
-                </>
-              ) : (
-                /* Free user lock */
-                <div className="p-6 sm:p-8 bg-[#F5F5F7] border border-black/[0.05] rounded-[1.5rem] flex flex-col items-center justify-center text-center mt-2">
-                  <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 text-xl border border-black/[0.05] shadow-sm">
-                    🔒
+              {/* Locked state for Free users */}
+              {isLocked ? (
+                <div className="bg-neutral-50 border-2 border-black/5 rounded-[2rem] p-8 text-center space-y-4">
+                  <div className="w-12 h-12 bg-white rounded-2xl border-2 border-black flex items-center justify-center mx-auto shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)]">
+                    <Lock className="w-6 h-6 text-black" />
                   </div>
-                  <h3 className="text-lg font-bold text-[#1D1D1F] mb-3">
-                    Unlock Professional Analysis
-                  </h3>
-                  <p className="text-[13px] font-medium text-[#86868B] mb-6 max-w-[280px] mx-auto leading-relaxed">
-                    Upgrade to Starter to see why each question is asked, what a strong answer sounds like, and red flags.
-                  </p>
-                  <button
-                    onClick={() => window.location.href = '/pricing'}
-                    className="w-full max-w-[240px] bg-[#1D1D1F] text-white py-3.5 rounded-xl text-[11px] font-bold uppercase tracking-widest hover:bg-black transition-all shadow-lg active:scale-95"
+                  <div>
+                    <h3 className="text-lg font-black text-black">Unlock Expert Analysis</h3>
+                    <p className="text-sm text-slate-500 font-medium max-w-xs mx-auto">
+                      Upgrade to Starter to see why this question matters, red flags to watch for, and strategic follow-ups.
+                    </p>
+                  </div>
+                  <button 
+                    onClick={() => router.push('/pricing')}
+                    className="px-8 py-3 bg-black text-white rounded-full font-black text-[10px] uppercase tracking-widest shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
                   >
-                    GET STARTER PLAN →
+                    View Pricing →
                   </button>
                 </div>
+              ) : (
+                <>
+                  {/* Rationale */}
+                  <div className="bg-white border-2 border-black rounded-2xl p-6 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.05)]">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Info className="w-4 h-4 text-indigo-600" />
+                      <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">Why ask this?</p>
+                    </div>
+                    <p className="text-sm text-[#1D1D1F] font-medium leading-relaxed">
+                      {question.why_this_question || "This question assesses the candidate's core competencies and behavioral alignment with the role requirements."}
+                    </p>
+                  </div>
+
+                  {/* Answer Guide */}
+                  <div className="bg-emerald-50/50 border-2 border-emerald-100 rounded-2xl p-6 shadow-[2px_2px_0px_0px_rgba(16,185,129,0.05)]">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Check className="w-4 h-4 text-emerald-600" />
+                      <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Strong Answer Indicators</p>
+                    </div>
+                    <ul className="space-y-3">
+                      {question.strong_answer_includes?.map((item, i) => (
+                        <li key={i} className="flex gap-3 text-sm text-emerald-900 font-bold leading-relaxed">
+                          <span className="shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Red Flags */}
+                    <div className="bg-red-50/50 border-2 border-red-100 rounded-2xl p-6 shadow-[2px_2px_0px_0px_rgba(239,68,68,0.05)]">
+                      <div className="flex items-center gap-2 mb-4">
+                        <Zap className="w-4 h-4 text-red-600" />
+                        <p className="text-[10px] font-black text-red-600 uppercase tracking-widest">Red Flags</p>
+                      </div>
+                      <p className="text-sm text-red-900 font-medium leading-relaxed">
+                        {question.red_flags || "Generic answers, lack of specific examples, or inability to articulate the 'how' behind their actions."}
+                      </p>
+                    </div>
+
+                    {/* Follow ups */}
+                    <div className="bg-blue-50/50 border-2 border-blue-100 rounded-2xl p-6 shadow-[2px_2px_0px_0px_rgba(59,130,246,0.05)]">
+                      <div className="flex items-center gap-2 mb-4">
+                        <RefreshCw className="w-4 h-4 text-blue-600" />
+                        <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest">Strategic Follow-ups</p>
+                      </div>
+                      <div className="space-y-3">
+                        <p className="text-sm text-blue-900 font-bold leading-relaxed border-b border-blue-100 pb-2">
+                          "Can you walk me through the specific impact of that decision?"
+                        </p>
+                        <p className="text-sm text-blue-900 font-bold leading-relaxed">
+                          "If you had to do it again, what would you change?"
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </>
               )}
 
-              {/* Bottom actions */}
-              <div className="flex gap-2 pt-3 mt-4 border-t border-black/[0.04]">
+              {/* Action row */}
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-black/[0.04]">
                 <button 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleRegenerate(); // default regenerate without focus
-                  }}
-                  disabled={isRegenerating || isLimitReached}
-                  className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-black/[0.06] text-[12px] font-medium text-[#424245] hover:bg-[#F5F5F7] active:bg-neutral-100 transition-colors touch-target"
+                  onClick={() => onCopy(question.question)}
+                  className="flex items-center gap-2 px-6 py-3 rounded-full border-2 border-black font-black text-[10px] uppercase tracking-widest hover:bg-black hover:text-white transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none active:translate-x-0.5 active:translate-y-0.5"
                 >
-                  {isRegenerating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />} Regenerate
+                  <Copy className="w-3.5 h-3.5" /> Copy Question
                 </button>
                 <button 
-                  onClick={(e) => { e.stopPropagation(); onCopy(question.question); }}
-                  className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-black/[0.06] text-[12px] font-medium text-[#424245] hover:bg-[#F5F5F7] active:bg-neutral-100 transition-colors touch-target"
+                  onClick={onSkip}
+                  className="flex items-center gap-2 px-6 py-3 rounded-full border-2 border-black/10 font-black text-[10px] uppercase tracking-widest hover:bg-neutral-100 transition-all"
                 >
-                  <Copy className="w-3.5 h-3.5" /> Copy
-                </button>
-                <button 
-                  onClick={(e) => { e.stopPropagation(); onSkip(); }}
-                  className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-black/[0.06] text-[12px] font-medium text-[#424245] hover:bg-[#F5F5F7] active:bg-neutral-100 transition-colors touch-target"
-                >
-                  <SkipForward className="w-3.5 h-3.5" /> Skip
+                  Skip <SkipForward className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>

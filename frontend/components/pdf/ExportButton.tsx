@@ -128,20 +128,21 @@ export default function ExportButton({
         onClick={handleExport}
         disabled={loading}
         className={cn(
-          'flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all w-full justify-center',
+          'flex items-center gap-2 px-4 py-4 rounded-xl text-xs font-bold uppercase tracking-widest transition-all w-full justify-center',
           variant === 'primary' && (
-            type === 'analysis' ? 'bg-[#dc2626] hover:bg-[#b91c1c] text-white' :
-            type === 'kit' || type === 'audit' ? 'bg-[#10b981] hover:bg-[#059669] text-white' :
-            type === 'jd' ? 'bg-[#f59e0b] hover:bg-[#d97706] text-white' :
-            type === 'evaluation' ? 'bg-[#3b82f6] hover:bg-[#2563eb] text-white' :
-            'bg-[#1D1D1F] text-white hover:bg-black'
+            type === 'analysis' ? 'bg-[#dc2626] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]' :
+            type === 'kit' || type === 'audit' ? 'bg-[#10b981] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]' :
+            type === 'jd' ? 'bg-[#f59e0b] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]' :
+            type === 'evaluation' ? 'bg-indigo-600 text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]' :
+            'bg-[#1D1D1F] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
           ),
+          variant === 'primary' && 'hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5',
           variant === 'secondary' && (
-            type === 'analysis' ? 'border border-[#dc2626] text-[#dc2626] hover:bg-[#dc2626]/5' :
-            type === 'kit' || type === 'audit' ? 'border border-[#10b981] text-[#10b981] hover:bg-[#10b981]/5' :
-            type === 'jd' ? 'border border-[#f59e0b] text-[#f59e0b] hover:bg-[#f59e0b]/5' :
-            type === 'evaluation' ? 'border border-[#3b82f6] text-[#3b82f6] hover:bg-[#3b82f6]/5' :
-            'border border-[#1D1D1F] text-[#1D1D1F] hover:bg-black/5'
+            type === 'analysis' ? 'border-2 border-black text-[#dc2626] bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' :
+            type === 'kit' || type === 'audit' ? 'border-2 border-black text-[#10b981] bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' :
+            type === 'jd' ? 'border-2 border-black text-[#f59e0b] bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' :
+            type === 'evaluation' ? 'border-2 border-black text-indigo-600 bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]' :
+            'border-2 border-black text-[#1D1D1F] bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
           ),
           variant === 'ghost' && 'text-neutral-600 hover:bg-neutral-100',
           loading && 'opacity-70 cursor-wait',

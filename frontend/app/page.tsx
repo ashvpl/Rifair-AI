@@ -156,66 +156,101 @@ export default function LandingPage() {
         {/* WHY / WHO ADVANCED SECTIONS */}
         <section id="about-us" className="py-16 md:py-24 lg:py-32 px-6 lg:px-12 relative w-full bg-[#F5F5F7] border-y border-black/[0.05]">
             <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20">
-                <div className="space-y-8 md:space-y-12">
-                    <h2 className="text-4xl md:text-5xl font-black text-[#1D1D1F] tracking-tight">Why Rifair AI</h2>
-                    <ul className="space-y-6 md:space-y-8">
-                        <li className="flex items-start gap-4 md:gap-5">
-                            <div className="h-10 w-10 rounded-full bg-muted text-primary flex items-center justify-center shrink-0 mt-1">
-                                <CheckCircle className="h-5 w-5" />
-                            </div>
-                            <div>
-                                <h4 className="text-2xl font-bold text-[#1D1D1F]">Removes Unconscious Bias</h4>
-                                <p className="text-[#86868B] text-lg mt-2 leading-relaxed">Eliminate subtle biases that humans inherently miss.</p>
-                            </div>
-                        </li>
-                        <li className="flex items-start gap-4 md:gap-5">
-                            <div className="h-10 w-10 rounded-full bg-muted text-primary flex items-center justify-center shrink-0 mt-1">
-                                <CheckCircle className="h-5 w-5" />
-                            </div>
-                            <div>
-                                <h4 className="text-2xl font-bold text-[#1D1D1F]">Improves Hiring Fairness</h4>
-                                <p className="text-[#86868B] text-lg mt-2 leading-relaxed">Create a perfectly level playing field for all candidates.</p>
-                            </div>
-                        </li>
-                        <li className="flex items-start gap-4 md:gap-5">
-                            <div className="h-10 w-10 rounded-full bg-muted text-primary flex items-center justify-center shrink-0 mt-1">
-                                <CheckCircle className="h-5 w-5" />
-                            </div>
-                            <div>
-                                <h4 className="text-2xl font-bold text-[#1D1D1F]">Ensures Compliance</h4>
-                                <p className="text-[#86868B] text-lg mt-2 leading-relaxed">Stay seamlessly aligned with modern employment standards and ethical guidelines.</p>
-                            </div>
-                        </li>
-                    </ul>
+                <div className="flex flex-col h-full">
+                    <div className="space-y-4 mb-12">
+                        <h2 className="text-3xl md:text-4xl font-black text-[#1D1D1F] tracking-tighter">
+                            Why Rifair AI?
+                        </h2>
+                        <p className="text-[#86868B] text-xl font-medium leading-relaxed max-w-lg">
+                            We help you build a hiring process that is faster, fairer, and focused entirely on talent.
+                        </p>
+                    </div>
+
+                    <div className="flex-1 grid gap-4">
+                        {[
+                            {
+                                title: "Hire for Talent, Not Bias",
+                                desc: "We help you spot the best people by removing the hidden biases that often cloud human judgment.",
+                                number: "01",
+                                border: "border-blue-500/20"
+                            },
+                            {
+                                title: "Save Days of Planning",
+                                desc: "Stop wasting hours on interview prep. Get professional, fair, and ready-to-use interview kits in seconds.",
+                                number: "02",
+                                border: "border-emerald-500/20"
+                            },
+                            {
+                                title: "Decisions You Can Trust",
+                                desc: "Build a hiring process you can be proud of. Every decision is backed by clear data, making your choices fair and transparent.",
+                                number: "03",
+                                border: "border-amber-500/20"
+                            },
+                            {
+                                title: "Better Questions, Better Hires",
+                                desc: "Our AI doesn't just check your questions; it makes them better so you can find the person who actually fits the job.",
+                                number: "04",
+                                border: "border-indigo-500/20"
+                            }
+                        ].map((point, i) => (
+                            <motion.div 
+                                key={point.number}
+                                initial={{ opacity: 0, y: 10 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.1 }}
+                                className="group p-6 rounded-2xl bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all duration-300"
+                            >
+                                <div className="flex items-center gap-6">
+                                    <span className="text-3xl font-black text-black/10 group-hover:text-primary/20 transition-colors duration-500 tabular-nums">
+                                        {point.number}
+                                    </span>
+                                    <div className="space-y-1">
+                                        <h4 className="text-lg font-black text-[#1D1D1F] tracking-tight">{point.title}</h4>
+                                        <p className="text-[#86868B] text-sm leading-relaxed font-medium">{point.desc}</p>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
 
-                <div className="space-y-8 md:space-y-12">
-                    <h2 className="text-4xl md:text-5xl font-black text-[#1D1D1F] tracking-tight">Who is it for</h2>
-                    <InteractiveAccordion 
+                <div className="flex flex-col h-full">
+                    <div className="space-y-4 mb-12">
+                        <h2 className="text-3xl md:text-4xl font-black text-[#1D1D1F] tracking-tighter">
+                            Who is it for?
+                        </h2>
+                        <p className="text-[#86868B] text-xl font-medium leading-relaxed max-w-lg">
+                            Whether you're hiring your first employee or your thousandth.
+                        </p>
+                    </div>
+                    <div className="flex-1 flex flex-col justify-center">
+                        <InteractiveAccordion 
                         items={[
                             {
                                 id: 1,
                                 title: 'HR Teams',
-                                imageUrl: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1974&auto=format&fit=crop',
+                                imageUrl: '/images/models/hr-leader.png',
                                 desc: 'Perfect for recruiting teams looking to remove unconscious bias from their workflow.'
                             },
                             {
                                 id: 2,
                                 title: 'Startups',
-                                imageUrl: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=2074&auto=format&fit=crop',
+                                imageUrl: '/images/models/startup-founder.png',
                                 desc: 'Agile teams ensuring cultural fairness and diversity from day one.'
                             },
                             {
                                 id: 3,
                                 title: 'Enterprises',
-                                imageUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop',
+                                imageUrl: '/images/models/enterprise-leaders.png',
                                 desc: 'Scale fair hiring practices across thousands of employees and teams.'
                             }
                         ]}
                     />
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
         {/* TESTIMONIALS SECTION */}
         <TestimonialsSection />
@@ -247,7 +282,7 @@ export default function LandingPage() {
                         href: "/sign-in?redirect_url=/analyze",
                         icon: <ArrowRight className="h-6 w-6" />
                     }}
-                    backgroundImage="https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=2070&auto=format&fit=crop"
+                    backgroundImage="/images/models/final-cta-hero.png"
                     className="shadow-[0_20px_100px_rgba(0,0,0,0.08)]"
                 />
             </div>

@@ -192,9 +192,8 @@ export default function BiasCheckResults({
           <div 
             key={i} 
             className={cn(
-              "bg-white rounded-2xl border overflow-hidden transition-all",
-              isFlagged ? "border-amber-200" : "border-neutral-200",
-              isRewritten && "ring-2 ring-emerald-200"
+              "bg-white rounded-2xl border border-black/10 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden transition-all",
+              isRewritten && "border-emerald-500 shadow-none translate-x-0.5 translate-y-0.5"
             )}
           >
             {/* Question Header */}

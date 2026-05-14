@@ -31,9 +31,7 @@ async function createOrder(req: Request, res: Response) {
 
     // Razorpay expects amount in smallest unit (paise for INR, cents for USD)
     const unitPrice = billingCycle === "annual" ? prices.annual : prices.monthly;
-    const amount = billingCycle === "annual"
-      ? unitPrice * 12 * 100
-      : unitPrice * 100;
+    const amount = unitPrice * 100;
 
     const razorpayCurrency = currencyKey === "usd" ? "USD" : "INR";
 
@@ -118,7 +116,7 @@ async function verifyPayment(req: Request, res: Response) {
     const currencyKey = currency === "usd" ? "usd" : "inr";
     const prices = plan[currencyKey];
     const unitPrice = billingCycle === "annual" ? prices.annual : prices.monthly;
-    const amount = billingCycle === "annual" ? unitPrice * 12 * 100 : unitPrice * 100;
+    const amount = unitPrice * 100;
     
     await subscriptionService.logPayment(userId, {
       planId,

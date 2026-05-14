@@ -61,43 +61,33 @@ export function BlurTextAnimation({
     });
   }, [text, words]);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    // Reset animation state when text changes
     setIsAnimating(false);
-    
-    const startAnimation = () => {
-      const timer = setTimeout(() => {
-        setIsAnimating(true);
-      }, 100);
-      
-      let maxTime = 0;
-      textWords.forEach(word => {
-        const totalTime = word.delay + word.duration;
-        maxTime = Math.max(maxTime, totalTime);
-      });
-      
-      animationTimeoutRef.current = setTimeout(() => {
-        setIsAnimating(false);
-        
-        resetTimeoutRef.current = setTimeout(() => {
-          startAnimation();
-        }, animationDelay);
-      }, (maxTime + 1) * 1000);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsAnimating(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
 
-      return timer;
-    };
-
-    const initialTimer = startAnimation();
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
 
     return () => {
-      clearTimeout(initialTimer);
+      observer.disconnect();
       if (animationTimeoutRef.current) clearTimeout(animationTimeoutRef.current);
       if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
     };
-  }, [textWords, animationDelay]);
+  }, [textWords]);
 
   return (
-    <div className={cn("flex items-center justify-center", containerClassName)}>
+    <div ref={containerRef} className={cn("flex items-center justify-center", containerClassName)}>
       <div className={cn("text-center w-full", className)}>
         <p className={cn(textColor, fontSize, fontFamily, "font-light leading-relaxed tracking-wide")}>
           {textWords.map((word, index) => (

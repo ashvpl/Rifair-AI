@@ -457,28 +457,28 @@ export function AuthRotatingText({
 
 const allAuthImages = [
     {
-        src: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=2000",
-        alt: "Professional interview setting"
+        src: "/images/models/final-cta-hero.png",
+        alt: "Professional leadership"
     },
     {
-        src: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=2000",
-        alt: "Modern executive office"
+        src: "/images/models/hr-leader.png",
+        alt: "Modern HR management"
     },
     {
-        src: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=2000",
-        alt: "Focused professional in discussion"
+        src: "/images/models/startup-founder.png",
+        alt: "Innovative entrepreneurship"
     },
     {
-        src: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=2000",
-        alt: "Modern workspace for new beginnings"
+        src: "/images/models/enterprise-leaders.png",
+        alt: "Collaborative corporate leadership"
     },
     {
-        src: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2000",
-        alt: "Collaborative team meeting"
+        src: "/images/models/testimonial-woman-1.png",
+        alt: "Focused recruitment professional"
     },
     {
-        src: "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?q=80&w=2000",
-        alt: "High-tech corporate environment"
+        src: "/images/models/testimonial-man-1.png",
+        alt: "Confident hiring manager"
     }
 ];
 
