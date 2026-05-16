@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 export const metadata: Metadata = {
   title: "Rifair AI | Interview Bias & Hiring Risk Intelligence",
@@ -77,6 +78,7 @@ export default function RootLayout({
             {children}
           </ClerkProvider>
         </ThemeProvider>
+        <GoogleAnalytics gaId="G-EN7Q07D0WE" />
       </body>
     </html>
   );
