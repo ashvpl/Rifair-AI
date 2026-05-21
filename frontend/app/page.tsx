@@ -27,7 +27,7 @@ export default function LandingPage() {
         <NavBarDemo />
       </div>
 
-      <main className="flex-1 flex flex-col pt-4 pb-20 relative z-10 w-full overflow-hidden">
+      <main className="flex-1 flex flex-col pt-4 pb-20 relative z-10 w-full">
         <section className="relative w-full overflow-hidden">
             <HeroSection />
             <LogosSection />

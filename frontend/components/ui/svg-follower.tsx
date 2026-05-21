@@ -244,14 +244,22 @@ export function SVGFollower({
     // Clear any existing content in the SVG to prevent orphaned paths from hot reloads or Strict Mode
     svgRef.current.innerHTML = ""
     
+    // On coarse touch devices (mobile/tablet), we can completely skip mousemove to save CPU
+    const isCoarse = window.matchMedia("(pointer: coarse)").matches
+    
     followersRef.current = colors.map((color) => new Follower(svgRef.current!, color))
     
-    window.addEventListener("mousemove", handleMouseMove)
-    window.addEventListener("touchmove", handleTouchMove)
+    if (!isCoarse) {
+      window.addEventListener("mousemove", handleMouseMove, { passive: true })
+    }
+    
+    window.addEventListener("touchmove", handleTouchMove, { passive: true })
     animate()
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove)
+      if (!isCoarse) {
+        window.removeEventListener("mousemove", handleMouseMove)
+      }
       window.removeEventListener("touchmove", handleTouchMove)
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current)

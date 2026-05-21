@@ -17,6 +17,9 @@ const SpotlightBackground = () => {
     setIsHydrated(true);
     let moveTimeout: NodeJS.Timeout;
 
+    const isCoarse = window.matchMedia("(pointer: coarse)").matches;
+    if (isCoarse) return;
+
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
@@ -28,7 +31,7 @@ const SpotlightBackground = () => {
       }, 150);
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       clearTimeout(moveTimeout);
