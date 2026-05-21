@@ -95,14 +95,15 @@ export function CandidateEvaluator({
 
   const scoreLabels: Record<number, {
     label: string
+    shortLabel: string
     color: string
     bg: string
   }> = {
-    1: { label: 'Poor',        color: 'text-red-700',     bg: 'bg-red-50 border-red-200' },
-    2: { label: 'Adequate',    color: 'text-orange-700',  bg: 'bg-orange-50 border-orange-200' },
-    3: { label: 'Good',        color: 'text-amber-700',   bg: 'bg-amber-50 border-amber-200' },
-    4: { label: 'Strong',      color: 'text-teal-700',    bg: 'bg-teal-50 border-teal-200' },
-    5: { label: 'Exceptional', color: 'text-emerald-700', bg: 'bg-emerald-50 border-emerald-200' },
+    1: { label: 'Poor',        shortLabel: 'Poor', color: 'text-red-700',     bg: 'bg-red-50 border-red-200' },
+    2: { label: 'Adequate',    shortLabel: 'Adqt', color: 'text-orange-700',  bg: 'bg-orange-50 border-orange-200' },
+    3: { label: 'Good',        shortLabel: 'Good', color: 'text-amber-700',   bg: 'bg-amber-50 border-amber-200' },
+    4: { label: 'Strong',      shortLabel: 'Stng', color: 'text-teal-700',    bg: 'bg-teal-50 border-teal-200' },
+    5: { label: 'Exceptional', shortLabel: 'Excl', color: 'text-emerald-700', bg: 'bg-emerald-50 border-emerald-200' },
   }
 
   const completedCount = Object.keys(scores).filter(
@@ -282,8 +283,8 @@ export function CandidateEvaluator({
                   </div>
                 </div>
 
-                {/* Score buttons */}
-                <div className="grid grid-cols-5 gap-2 mb-4">
+                {/* Score buttons — gap-1 + no tracking to fit 5 cols at 320px+ */}
+                <div className="grid grid-cols-5 gap-1 mb-4">
                   {[1, 2, 3, 4, 5].map(score => {
                     const config = scoreLabels[score]
                     const isSelected = selected === score
@@ -307,8 +308,10 @@ export function CandidateEvaluator({
                         <div className={`text-base font-bold mb-0.5 ${isSelected ? '' : 'text-[#1D1D1F]'}`}>
                           {score}
                         </div>
-                        <div className={`text-[9px] font-semibold uppercase tracking-wider ${isSelected ? '' : 'opacity-70'}`}>
-                          {config.label}
+                        {/* Full label on sm+; abbreviated on mobile to prevent mid-word break */}
+                        <div className={`text-[9px] font-semibold overflow-hidden ${isSelected ? '' : 'opacity-70'}`}>
+                          <span className="hidden sm:inline">{config.label}</span>
+                          <span className="sm:hidden">{config.shortLabel}</span>
                         </div>
                       </button>
                     )

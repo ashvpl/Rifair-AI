@@ -10,7 +10,9 @@ interface LoaderProps {
 }
 
 export const AILoader: React.FC<LoaderProps> = ({ size = 180, text = "Loading" }) => {
+  // Split into words to properly handle spaces, then re-flatten to characters
   const letters = text.split("");
+
   const pathname = usePathname();
   
   // Routes that have the dashboard sidebar (offset required on lg screens)
@@ -27,7 +29,9 @@ export const AILoader: React.FC<LoaderProps> = ({ size = 180, text = "Loading" }
 
   return (
     <div className={cn(
-      "fixed inset-0 z-[100] flex items-center justify-center bg-white/80 backdrop-blur-[4px] dark:bg-black/80",
+      // No backdrop-blur on mobile — it's extremely GPU-intensive on Android.
+      // Use a solid translucent background instead for smooth performance.
+      "fixed inset-0 z-[100] flex items-center justify-center ai-loader-overlay",
       isDashboardRoute && "lg:left-72"
     )}>
       <div
@@ -39,14 +43,20 @@ export const AILoader: React.FC<LoaderProps> = ({ size = 180, text = "Loading" }
           <span
             key={index}
             className="inline-block text-zinc-900 dark:text-white opacity-60 animate-loaderLetter z-10 font-black tracking-tight"
-            style={{ animationDelay: `${index * 0.1}s` }}
+            style={{
+              animationDelay: `${index * 0.1}s`,
+              // Explicit width for space characters — inline-block collapses them to 0
+              ...(letter === ' ' ? { width: '0.35em', minWidth: '0.35em' } : {}),
+            }}
           >
-            {letter}
+            {/* Replace space with non-breaking space so inline-block renders it */}
+            {letter === ' ' ? '\u00A0' : letter}
           </span>
         ))}
 
         <div
           className="absolute inset-0 rounded-full animate-loaderCircle"
+          style={{ willChange: 'transform', transform: 'translateZ(0)' }}
         ></div>
       </div>
 

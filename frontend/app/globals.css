@@ -137,6 +137,8 @@
     min-height: 100dvh;
     /* Momentum scrolling on iOS */
     -webkit-overflow-scrolling: touch;
+    /* Prevent pull-to-refresh jank on PWA / Android Chrome */
+    overscroll-behavior-y: contain;
   }
 
   /* ── iOS Input Zoom Prevention ──
@@ -151,7 +153,20 @@
     -webkit-text-size-adjust: 100%;
   }
 
-  /* ── Smooth active states for touch (mobile only) ── */
+  /* ── Smooth active states for touch & premium tactile feedback ── */
+  button,
+  a,
+  [role="button"],
+  .bottom-nav-item {
+    transition: transform 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+  }
+
+  button:active:not(:disabled),
+  a:active:not([href=""]):not(:disabled),
+  [role="button"]:active:not(:disabled) {
+    transform: scale(0.97) !important;
+  }
+
   @media (hover: none) and (pointer: coarse) {
     button,
     a,
@@ -163,15 +178,24 @@
   }
 
   ::selection {
-    background-color: rgba(0, 0, 0, 0.08);
+    background-color: rgba(0, 0, 0, 0.10);
     color: inherit;
   }
 
   ::-moz-selection {
-    background-color: rgba(0, 0, 0, 0.08);
+    background-color: rgba(0, 0, 0, 0.10);
     color: inherit;
   }
 }
+
+  /* Respect OS reduced-motion preference — disables heavy animations */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 
 /* ─────────────────────────────────────────────────────────────────
    UTILITIES LAYER
@@ -618,7 +642,10 @@ code, pre, kbd, samp {
 @media (max-width: 1023px) {
   .kit-page-wrapper {
     padding: 0 16px;
-    margin: calc(-1 * (56px + env(safe-area-inset-top) + 12px)) -12px calc(-1 * (60px + env(safe-area-inset-bottom) + 12px));
+    /* Negative top/horizontal margins for full-bleed background */
+    margin: calc(-1 * (56px + env(safe-area-inset-top) + 12px)) -12px 0;
+    /* Positive bottom padding so "Add Question" button clears the bottom nav */
+    padding-bottom: calc(60px + env(safe-area-inset-bottom) + 32px);
   }
 }
 
@@ -674,4 +701,37 @@ code, pre, kbd, samp {
   background-size: 400px 100%;
   animation: skeleton-shimmer 1.4s ease infinite;
   border-radius: 8px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   AI LOADER OVERLAY
+   Mobile: solid background (no backdrop-blur — extremely GPU-intensive
+   on Android/mid-range devices, causes scroll jank).
+   Desktop (lg+): light backdrop-blur is fine on powerful GPUs.
+   ───────────────────────────────────────────────────────────────── */
+
+.ai-loader-overlay {
+  /* Solid, opaque fallback — works everywhere, zero GPU cost */
+  background: rgba(255, 255, 255, 0.96);
+}
+
+@media (min-width: 1024px) {
+  .ai-loader-overlay {
+    background: rgba(255, 255, 255, 0.82);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+  }
+}
+
+/* Dark mode variants */
+@media (prefers-color-scheme: dark) {
+  .ai-loader-overlay {
+    background: rgba(0, 0, 0, 0.96);
+  }
+}
+
+@media (prefers-color-scheme: dark) and (min-width: 1024px) {
+  .ai-loader-overlay {
+    background: rgba(0, 0, 0, 0.82);
+  }
 }

@@ -20,14 +20,14 @@ import { TestimonialsSection } from "@/components/ui/testimonial-v2";
 
 export default function LandingPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-[#F5F5F7] relative overflow-hidden font-sans selection:bg-primary/20 selection:text-primary transition-colors duration-500">
+    <div className="flex flex-col min-h-screen bg-[#F5F5F7] relative overflow-x-hidden font-sans selection:bg-primary/20 selection:text-primary transition-colors duration-500">
       {/* Background Effects */}
       <SpotlightBackground />
       <div className="relative z-50 w-full">
         <NavBarDemo />
       </div>
 
-      <main className="flex-1 flex flex-col pt-4 pb-20 relative z-10 w-full">
+      <main className="flex-1 flex flex-col pt-4 pb-20 relative z-10 w-full overflow-hidden">
         <section className="relative w-full overflow-hidden">
             <HeroSection />
             <LogosSection />
@@ -154,9 +154,9 @@ export default function LandingPage() {
 
 
         {/* WHY / WHO ADVANCED SECTIONS */}
-        <section id="about-us" className="py-16 md:py-24 lg:py-32 px-6 lg:px-12 relative w-full bg-[#F5F5F7] border-y border-black/[0.05]">
+        <section id="about-us" className="py-16 md:py-24 lg:py-32 px-6 lg:px-12 relative w-full bg-[#F5F5F7] border-y border-black/[0.05] overflow-hidden">
             <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20">
-                <div className="flex flex-col h-full">
+                <div className="flex flex-col h-full min-w-0">
                     <div className="space-y-4 mb-12">
                         <h2 className="text-3xl md:text-4xl font-black text-[#1D1D1F] tracking-tighter">
                             Why Rifair AI?
@@ -215,7 +215,7 @@ export default function LandingPage() {
                     </div>
                 </div>
 
-                <div className="flex flex-col h-full">
+                <div className="flex flex-col h-full min-w-0">
                     <div className="space-y-4 mb-12">
                         <h2 className="text-3xl md:text-4xl font-black text-[#1D1D1F] tracking-tighter">
                             Who is it for?
