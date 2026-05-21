@@ -53,7 +53,7 @@ export default function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="font-sans antialiased overflow-x-hidden" suppressHydrationWarning>
+      <body className="font-sans antialiased overflow-x-clip" suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
