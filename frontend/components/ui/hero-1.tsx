@@ -32,7 +32,7 @@ export function HeroSection() {
 					{/* Hero title wrapper — word-break prevention */}
 					<div className="w-full text-center flex flex-col items-center gap-2">
 						<RevealText 
-							text="Eliminate Bias from"
+							text="The Operating System"
 							fontSize="text-3xl sm:text-4xl md:text-5xl lg:text-[56px]"
 							textColor="text-[#1D1D1F]"
 							overlayColor="text-indigo-600"
@@ -40,7 +40,7 @@ export function HeroSection() {
 							className="w-full block"
 						/>
 						<RevealText 
-							text="Hiring Decisions – Instantly."
+							text="for Modern Hiring"
 							fontSize="text-3xl sm:text-4xl md:text-5xl lg:text-[56px]"
 							textColor="text-[#1D1D1F]"
 							overlayColor="text-emerald-600"
@@ -51,9 +51,9 @@ export function HeroSection() {
 				</div>
 
 				<p
-					className="fade-in slide-in-from-bottom-10 mx-auto max-w-2xl animate-in fill-mode-backwards text-center text-base text-foreground/80 tracking-wider delay-200 duration-500 ease-out sm:text-lg md:text-xl font-medium"
+					className="fade-in slide-in-from-bottom-10 mx-auto max-w-3xl animate-in fill-mode-backwards text-center text-base text-foreground/80 tracking-wider delay-200 duration-500 ease-out sm:text-lg md:text-xl font-medium"
 				>
-					Rifair AI analyzes interview questions, detects hidden bias, and generates fair, inclusive alternatives — in seconds.
+					Generate interview kits, evaluate candidates, analyze job descriptions, audit hiring processes, and eliminate bias — all in one AI-powered platform.
 				</p>
 
 				<div className="fade-in slide-in-from-bottom-10 flex animate-in flex-row flex-wrap items-center justify-center gap-3 fill-mode-backwards pt-2 delay-300 duration-500 ease-out w-full max-w-sm sm:max-w-none">

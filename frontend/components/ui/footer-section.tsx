@@ -56,10 +56,10 @@ export default function FooterSection({
             </div>
             <div className="space-y-6">
               <h3 className="text-sm font-black text-[#1D1D1F] uppercase tracking-[0.2em]">
-                Towards Equitable Hiring
+                Towards Better Hiring Decisions
               </h3>
               <p className="text-lg text-black/50 font-medium leading-[1.6] tracking-tight">
-                Rifair AI is pioneering the future of ethical recruitment with advanced bias detection and skills-first evaluation tools. Empowering teams to build diverse, high-performing organizations.
+                Rifair AI combines AI-powered hiring tools with candidate evaluations, interview generation, job description analysis, hiring audits, and bias detection to help teams hire smarter.
               </p>
               
               <div className="flex items-center gap-3 pt-4 opacity-40 grayscale">

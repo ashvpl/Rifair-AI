@@ -7,6 +7,7 @@ import { PLANS, PLAN_DISPLAY_FEATURES } from '@/lib/pricing/plans'
 import { useUser } from '@clerk/nextjs'
 import { isAdmin } from '@/lib/auth/admin'
 import { TrustedByRotator } from "@/components/ui/trusted-by-rotator"
+import { RotatingPricingSubtitle } from "@/components/ui/rotating-pricing-subtitle"
 import { motion } from 'framer-motion'
 
 type CurrencyKey = 'inr' | 'usd'
@@ -147,7 +148,7 @@ export function IndustrialPricing() {
             <main className="flex-1">
                 <PricingContainer
                     title="Fair hiring starts here."
-                    description="Start free. Upgrade when your team scales. No hidden fees, no surprises."
+                    description={<RotatingPricingSubtitle />}
                     plans={mappedPlans}
                     currencySymbol={currency === 'inr' ? '₹' : '$'}
                     className="pt-80 pb-24" // Significantly increased padding

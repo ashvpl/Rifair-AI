@@ -26,7 +26,7 @@ export interface PricingPlan {
 
 interface PricingProps {
     title?: string;
-    description?: string;
+    description?: React.ReactNode;
     plans: PricingPlan[];
     currencySymbol?: string;
     className?: string;
@@ -50,7 +50,7 @@ const Counter = ({ from, to }: { from: number; to: number }) => {
 };
 
 // Header Component
-const PricingHeader = ({ title, description }: { title?: string; description?: string }) => (
+const PricingHeader = ({ title, description }: { title?: string; description?: React.ReactNode }) => (
     <div className="text-center mb-12 sm:mb-16 relative z-30 px-4 mt-24 sm:mt-32">
         <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -65,9 +65,9 @@ const PricingHeader = ({ title, description }: { title?: string; description?: s
                 {title}
             </h1>
             {description && (
-                <p className="text-gray-600 text-lg md:text-xl font-bold max-w-2xl mx-auto mb-6">
+                <div className="text-gray-600 text-lg md:text-xl font-bold max-w-2xl mx-auto mb-6">
                     {description}
-                </p>
+                </div>
             )}
             <motion.div
                 className="h-2 bg-gradient-to-r from-black via-gray-600 to-black rounded-full"

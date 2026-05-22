@@ -121,8 +121,20 @@ export default function JDAnalyserPage() {
   const canSubmit = !!(jd.trim()) && !loading && charCount <= 12000
 
   return (
-    <div className="max-w-3xl mx-auto relative pb-28 md:pb-8">
+    <div className="w-full min-h-screen relative pb-28 md:pb-8">
       {loading && <LoadingState text="Analysing" />}
+
+      {/* Page Header */}
+      <div className="relative mb-6">
+        <div className="space-y-1">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-[#d97706]">
+            Job Descriptions
+          </h1>
+          <p className="text-[#86868B] max-w-2xl text-base md:text-lg font-medium">
+            Generate high-converting, bias-free job descriptions or analyze your existing ones for inclusivity.
+          </p>
+        </div>
+      </div>
 
       {/* ── Upgrade Overlay (locked state) ──────────────────────────────────── */}
       {!hasAccess && !planLoading && (
@@ -183,16 +195,14 @@ export default function JDAnalyserPage() {
         ) : (
           <>
 
-        {/* Header */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="flex items-center gap-3 mb-1">
-            <div className="w-9 h-9 rounded-xl bg-[#f59e0b]/10 flex items-center justify-center shrink-0">
-              <FileSearch className="w-5 h-5 text-[#f59e0b]" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-[#f59e0b] tracking-tight">Job Descriptions</h1>
-            </div>
-          </div>
+        {/* Section Header */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-4">
+          <h2 className="text-xl font-extrabold text-[#1D1D1F] tracking-tight mb-1">
+            Analyze Existing JD
+          </h2>
+          <p className="text-xs md:text-sm font-medium text-[#86868B]">
+            Paste your job description to scan for biased language and requirements.
+          </p>
         </motion.div>
 
         {/* Error (at top for visibility) */}
@@ -477,14 +487,11 @@ function JDGenerator({ onPassToAnalyser }: { onPassToAnalyser: (jd: string) => v
     <div className="space-y-6 relative animate-in fade-in slide-in-from-bottom-4 duration-500">
       {loading && <LoadingState text="Generating" />}
       <div>
-        <h1 className="text-xl font-bold 
-                       text-gray-900 tracking-tight mb-1.5">
-          Generate a bias-free JD
-        </h1>
-        <p className="text-sm text-gray-500 font-medium leading-relaxed">
-          Fill in the role details. We'll generate a 
-          complete, high-converting, bias-free job 
-          description in one shot.
+        <h2 className="text-xl font-extrabold text-[#1D1D1F] tracking-tight mb-1">
+          Role Details
+        </h2>
+        <p className="text-xs md:text-sm font-medium text-[#86868B]">
+          Fill in the specifications to generate a complete, high-converting, bias-free job description.
         </p>
       </div>
 

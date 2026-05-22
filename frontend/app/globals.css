@@ -722,15 +722,24 @@ code, pre, kbd, samp {
   }
 }
 
-/* Dark mode variants */
+/* Dark mode variants — keep consistent with light theme */
 @media (prefers-color-scheme: dark) {
   .ai-loader-overlay {
-    background: rgba(0, 0, 0, 0.96);
+    background: rgba(255, 255, 255, 0.96);
   }
 }
 
 @media (prefers-color-scheme: dark) and (min-width: 1024px) {
   .ai-loader-overlay {
-    background: rgba(0, 0, 0, 0.82);
+    background: rgba(255, 255, 255, 0.82);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
   }
+}
+
+/* Hide Clerk branding globally */
+.cl-footer,
+[class*="cl-footer"],
+[class*="footerAction"] {
+  display: none !important;
 }
