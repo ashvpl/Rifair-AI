@@ -61,9 +61,11 @@ export function BlurTextAnimation({
     });
   }, [text, words]);
 
+  const [isMounted, setIsMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setIsMounted(true);
     setIsAnimating(false);
     const observer = new IntersectionObserver(
       (entries) => {
@@ -90,32 +92,37 @@ export function BlurTextAnimation({
     <div ref={containerRef} className={cn("flex items-center justify-center", containerClassName)}>
       <div className={cn("text-center w-full", className)}>
         <p className={cn(textColor, fontSize, fontFamily, "font-light leading-relaxed tracking-wide")}>
-          {textWords.map((word, index) => (
-            <span
-              key={`${text}-${index}`}
-              className={cn("inline-block transition-all", isAnimating ? 'opacity-100' : 'opacity-0')}
-              style={{
-                transitionDuration: `${word.duration}s`,
-                transitionDelay: `${word.delay}s`,
-                transitionTimingFunction: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                filter: isAnimating 
-                  ? 'blur(0px) brightness(1)' 
-                  : `blur(${word.blur}px) brightness(0.6)`,
-                transform: isAnimating 
-                  ? 'translateY(0) scale(1) rotateX(0deg)' 
-                  : `translateY(20px) scale(${word.scale || 1}) rotateX(-15deg)`,
-                marginRight: '0.35em',
-                willChange: 'filter, transform, opacity',
-                transformStyle: 'preserve-3d',
-                backfaceVisibility: 'hidden',
-                textShadow: isAnimating 
-                  ? '0 2px 8px rgba(255,255,255,0.1)' 
-                  : '0 0 40px rgba(255,255,255,0.4)'
-              }}
-            >
-              {word.text}
-            </span>
-          ))}
+          {!isMounted ? (
+            words ? words.map(w => w.text).join(" ") : text
+          ) : (
+            textWords.map((word, index) => (
+              <React.Fragment key={`${text}-${index}`}>
+                <span
+                  className={cn("inline-block transition-all", isAnimating ? 'opacity-100' : 'opacity-0')}
+                  style={{
+                    transitionDuration: `${word.duration}s`,
+                    transitionDelay: `${word.delay}s`,
+                    transitionTimingFunction: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                    filter: isAnimating 
+                      ? 'blur(0px) brightness(1)' 
+                      : `blur(${word.blur}px) brightness(0.6)`,
+                    transform: isAnimating 
+                      ? 'translateY(0) scale(1) rotateX(0deg)' 
+                      : `translateY(20px) scale(${word.scale || 1}) rotateX(-15deg)`,
+                    willChange: 'filter, transform, opacity',
+                    transformStyle: 'preserve-3d',
+                    backfaceVisibility: 'hidden',
+                    textShadow: isAnimating 
+                      ? '0 2px 8px rgba(255,255,255,0.1)' 
+                      : '0 0 40px rgba(255,255,255,0.4)'
+                  }}
+                >
+                  {word.text}
+                </span>
+                {index < textWords.length - 1 && " "}
+              </React.Fragment>
+            ))
+          )}
         </p>
       </div>
     </div>

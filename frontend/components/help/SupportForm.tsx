@@ -52,7 +52,7 @@ export const SupportForm = () => {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="p-8 md:p-12 rounded-3xl bg-white/5 backdrop-blur-sm border border-border/50 text-center space-y-6 py-20"
+        className="p-4 sm:p-8 md:p-12 rounded-3xl bg-white/5 backdrop-blur-sm border border-border/50 text-center space-y-6 py-20"
       >
         <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 text-primary">
           <CheckCircle2 className="w-10 h-10" />
@@ -79,7 +79,7 @@ export const SupportForm = () => {
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className="p-8 md:p-10 rounded-3xl bg-white/5 backdrop-blur-sm border border-border/50 space-y-8"
+      className="p-4 sm:p-8 md:p-10 rounded-3xl bg-white/5 backdrop-blur-sm border border-border/50 space-y-8"
     >
       <div className="space-y-2">
         <h2 className="text-2xl font-bold tracking-tight">Send us a message</h2>

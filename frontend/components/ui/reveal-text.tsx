@@ -37,8 +37,10 @@ export function RevealText({
 }: RevealTextProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [showOverlay, setShowOverlay] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   
   useEffect(() => {
+    setIsMounted(true);
     const lastLetterDelay = (text.length - 1) * letterDelay;
     const totalDelay = (lastLetterDelay * 1000) + springDuration;
     
@@ -48,6 +50,30 @@ export function RevealText({
     
     return () => clearTimeout(timer);
   }, [text.length, letterDelay, springDuration]);
+
+  if (!isMounted) {
+    return (
+      <div className={cn("flex items-center justify-center relative select-none", className)}>
+        <div className="flex flex-wrap justify-center">
+          {text.split(" ").map((word, wordIndex, wordsArray) => (
+            <span key={wordIndex} className="inline-flex whitespace-nowrap">
+              {word.split("").map((letter, letterIndex) => (
+                <span
+                  key={letterIndex}
+                  className={cn(fontSize, textColor, "font-black tracking-tighter cursor-crosshair relative overflow-hidden inline-block")}
+                >
+                  {letter}
+                </span>
+              ))}
+              {wordIndex < wordsArray.length - 1 && (
+                <span className={cn(fontSize, "w-[0.25em]")} />
+              )}
+            </span>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={cn("flex items-center justify-center relative select-none", className)}>

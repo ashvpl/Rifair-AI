@@ -177,7 +177,7 @@ export default function KitAuditUploader() {
       <div className="bg-white border-2 border-black rounded-2xl overflow-hidden shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
 
         {/* ── Header ──────────────────────────────────────────────────────── */}
-        <div className="px-6 sm:px-8 pt-8 pb-6 border-b-2 border-black">
+        <div className="px-4 sm:px-8 pt-8 pb-6 border-b-2 border-black">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-9 h-9 rounded-xl bg-[#10b981]/10 flex items-center justify-center">
               <ClipboardList className="w-5 h-5 text-[#10b981]" />
@@ -199,7 +199,7 @@ export default function KitAuditUploader() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="overflow-hidden px-6 sm:px-8 pt-4"
+              className="overflow-hidden px-4 sm:px-8 pt-4"
             >
               <div className="p-4 bg-red-50 rounded-2xl border border-red-100">
                 <div className="flex items-start gap-3">
@@ -221,7 +221,7 @@ export default function KitAuditUploader() {
           )}
         </AnimatePresence>
 
-        <div className="px-6 sm:px-8 py-6 space-y-5">
+        <div className="px-4 sm:px-8 py-6 space-y-5">
 
           {/* ── Kit name ────────────────────────────────────────────────── */}
           <div>

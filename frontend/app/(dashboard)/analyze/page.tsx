@@ -229,27 +229,27 @@ export default function AnalyzePage() {
           {!isLoading && report && questions.length > 0 ? (
             <div ref={resultsRef} className={cn("space-y-8", !reportId && "pt-10")}>
               {/* Hero Result Card */}
-              <div className="bg-[#dc2626] border-2 border-black rounded-[2.5rem] p-8 md:p-12 text-white relative overflow-hidden shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-colors duration-500">
+              <div className="bg-[#dc2626] border-2 border-black rounded-2xl md:rounded-[2.5rem] p-4 sm:p-6 md:p-8 lg:p-12 text-white relative overflow-hidden shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] md:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-colors duration-500">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-32 -mt-32" />
                 
-                <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
-                  <div className="space-y-4">
+                <div className="relative z-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
+                  <div className="space-y-4 w-full lg:max-w-xl">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10 backdrop-blur-md">
+                      <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10 backdrop-blur-md flex-shrink-0">
                         <ShieldCheck className="w-6 h-6 text-white" />
                       </div>
                       <div>
-                        <h1 className="text-3xl font-extrabold text-white tracking-tight">
+                        <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                           Bias Analysis Report
                         </h1>
-                        <p className="text-sm font-bold text-white/60 uppercase tracking-widest flex items-center gap-2">
+                        <p className="text-xs font-bold text-white/60 uppercase tracking-widest flex items-center gap-2 mt-0.5">
                           <Layers className="w-3.5 h-3.5" />
                           Spectral Intelligence Audit
                         </p>
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-6">
+                    <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
                       <div className="flex items-center gap-2 text-xs font-bold text-white/60 uppercase tracking-widest">
                         <ShieldCheck className="w-4 h-4 text-white/80" />
                         Compliance Check
@@ -259,22 +259,22 @@ export default function AnalyzePage() {
                         {questions.length} Items Analyzed
                       </div>
                     </div>
-
-                    <p className="text-sm text-white/80 leading-relaxed max-w-xl font-medium">
+                    
+                    <p className="text-sm text-white/80 leading-relaxed font-medium">
                       Our AI has scanned your interview content for unconscious bias, exclusionary language, and legal risks. Below is the detailed breakdown.
                     </p>
                   </div>
 
-                  <div className="flex flex-col items-end gap-6">
-                    <div className="flex items-center gap-8">
-                      <div className="text-right">
+                  <div className="flex flex-col items-start lg:items-end gap-6 w-full lg:w-auto">
+                    <div className="flex flex-wrap items-center gap-6 sm:gap-8 justify-between w-full lg:w-auto">
+                      <div className="text-left lg:text-right">
                         <div className="text-[10px] font-black text-white/60 uppercase tracking-widest mb-1">Bias Points</div>
-                        <div className="text-5xl font-black text-white tracking-tighter">
+                        <div className="text-4xl sm:text-5xl font-black text-white tracking-tighter">
                           {questions.filter((q: any) => (q.bias_score ?? 0) >= 30).length}<span className="text-xl text-white/40"> pts</span>
                         </div>
                       </div>
                       <div className={cn(
-                        "px-6 py-4 rounded-3xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center justify-center text-center min-w-[160px] bg-white text-black"
+                        "px-6 py-4 rounded-3xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center justify-center text-center min-w-[140px] sm:min-w-[160px] bg-white text-black"
                       )}>
                         <span className="text-[10px] font-black uppercase tracking-widest opacity-60 mb-1">Fairness Score</span>
                         <span className={cn(
@@ -286,7 +286,7 @@ export default function AnalyzePage() {
                       </div>
                     </div>
                     
-                    <div className="flex flex-col sm:flex-row gap-3 w-full">
+                    <div className="flex flex-col sm:flex-row gap-3 w-full lg:min-w-[320px]">
                       <ExportButton 
                         type="analysis" 
                         id={reportId || ""} 
@@ -294,7 +294,7 @@ export default function AnalyzePage() {
                         variant="secondary"
                         className="w-full"
                       />
-                      <button className="flex-1 h-14 text-[10px] font-black bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-2xl transition-all uppercase tracking-widest px-6 whitespace-nowrap">
+                      <button className="w-full sm:flex-1 h-14 text-[10px] font-black bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-2xl transition-all uppercase tracking-widest px-6 whitespace-nowrap">
                         Save Report
                       </button>
                     </div>

@@ -45,7 +45,7 @@ const item: Variants = {
 
 export const HelpCards = () => {
   return (
-    <section className="max-w-7xl mx-auto px-6 py-12">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
       <motion.div
         variants={container}
         initial="hidden"
@@ -57,7 +57,7 @@ export const HelpCards = () => {
             key={index}
             variants={item}
             whileHover={{ y: -4 }}
-            className="group relative p-8 rounded-3xl bg-white/5 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-all cursor-pointer overflow-hidden"
+            className="group relative p-6 sm:p-8 rounded-3xl bg-white/5 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-all cursor-pointer overflow-hidden"
           >
             {/* Hover glow */}
             <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity blur-2xl" />

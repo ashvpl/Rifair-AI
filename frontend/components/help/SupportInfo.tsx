@@ -33,7 +33,7 @@ export const SupportInfo = () => {
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as any }}
       className="lg:sticky lg:top-24 space-y-6"
     >
-      <div className="p-8 rounded-3xl bg-white/5 backdrop-blur-sm border border-border/50 space-y-8">
+      <div className="p-4 sm:p-8 rounded-3xl bg-white/5 backdrop-blur-sm border border-border/50 space-y-8">
         {infoSections.map((section, index) => (
           <div key={index} className="space-y-2">
             <div className="flex items-center gap-2 text-muted-foreground">

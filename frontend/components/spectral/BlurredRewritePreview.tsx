@@ -30,7 +30,7 @@ export function BlurredRewritePreview({
 
   if (isUnlocked) {
     return (
-      <div className="p-6 md:p-8 bg-emerald-50/30 flex flex-col gap-6">
+      <div className="p-4 sm:p-6 md:p-8 bg-emerald-50/30 flex flex-col gap-6">
         <div className="flex items-center justify-between">
           <span className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em]">
             ✓ Neutral Reconstruction
@@ -57,7 +57,7 @@ export function BlurredRewritePreview({
   return (
     <div className="relative overflow-hidden min-h-[220px] flex flex-col">
       {/* Blurred preview text */}
-      <div className="p-6 md:p-8 bg-emerald-50/20 select-none pointer-events-none blur-[4px] opacity-40 flex-1">
+      <div className="p-4 sm:p-6 md:p-8 bg-emerald-50/20 select-none pointer-events-none blur-[4px] opacity-40 flex-1">
         <div className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-4">
           Neutral Reconstruction
         </div>
@@ -79,7 +79,7 @@ export function BlurredRewritePreview({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3 }}
-          className="bg-white border-2 border-black rounded-[2rem] p-6 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] max-w-[280px]"
+          className="bg-white border-2 border-black rounded-2xl md:rounded-[2rem] p-4 sm:p-6 text-center shadow-[6px_6px_0px_0px_rgba(0,0,0,0.1)] max-w-[280px]"
         >
           <div className="w-10 h-10 bg-emerald-50 border-2 border-emerald-200 rounded-2xl flex items-center justify-center mx-auto mb-3">
             <Lock className="h-4 w-4 text-emerald-600" />

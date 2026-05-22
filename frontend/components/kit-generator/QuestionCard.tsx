@@ -242,7 +242,7 @@ export default function QuestionCard({
             transition={{ duration: 0.25, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="px-5 md:px-6 pb-8 space-y-6 border-t border-black/[0.04] pt-8 ml-11 md:ml-12">
+            <div className="px-5 md:px-6 pb-8 space-y-6 border-t border-black/[0.04] pt-8 ml-0 sm:ml-11 md:ml-12">
               {/* Error */}
               <AnimatePresence>
                 {regenError && (
@@ -259,19 +259,19 @@ export default function QuestionCard({
 
               {/* AI Modification Templates (only if not limit reached) */}
               {!isLimitReached && (
-                <div className="bg-emerald-50/30 border-2 border-emerald-100/50 rounded-2xl p-6 shadow-[2px_2px_0px_0px_rgba(16,185,129,0.05)]">
+                <div className="bg-emerald-50/30 border-2 border-emerald-100/50 rounded-2xl p-4 sm:p-6 shadow-[2px_2px_0px_0px_rgba(16,185,129,0.05)]">
                   <p className="text-[10px] font-black text-[#1D9E75] uppercase tracking-widest mb-4">Refine with AI</p>
                   <div className="flex flex-wrap gap-2">
                     {focusOptions.map(opt => (
                       <button
-                        key={opt.key}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleRegenerate(opt.key);
-                        }}
-                        disabled={isRegenerating}
-                        className="flex items-center gap-2 px-4 py-2.5 bg-white border-2 border-emerald-100 rounded-xl text-xs font-black text-emerald-800 hover:bg-emerald-50 hover:border-emerald-300 transition-all shadow-[2px_2px_0px_0px_rgba(16,185,129,0.1)] hover:shadow-none active:translate-x-0.5 active:translate-y-0.5"
+                          key={opt.key}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleRegenerate(opt.key);
+                          }}
+                          disabled={isRegenerating}
+                          className="flex items-center gap-2 px-4 py-2.5 bg-white border-2 border-emerald-100 rounded-xl text-xs font-black text-emerald-800 hover:bg-emerald-50 hover:border-emerald-300 transition-all shadow-[2px_2px_0px_0px_rgba(16,185,129,0.1)] hover:shadow-none active:translate-x-0.5 active:translate-y-0.5"
                       >
                         <span className="text-base">{opt.icon}</span>
                         {opt.label}
@@ -283,7 +283,7 @@ export default function QuestionCard({
 
               {/* Locked state for Free users */}
               {isLocked ? (
-                <div className="bg-neutral-50 border-2 border-black/5 rounded-[2rem] p-8 text-center space-y-4">
+                <div className="bg-neutral-50 border-2 border-black/5 rounded-[2rem] p-4 sm:p-8 text-center space-y-4">
                   <div className="w-12 h-12 bg-white rounded-2xl border-2 border-black flex items-center justify-center mx-auto shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)]">
                     <Lock className="w-6 h-6 text-black" />
                   </div>
@@ -303,7 +303,7 @@ export default function QuestionCard({
               ) : (
                 <>
                   {/* Rationale */}
-                  <div className="bg-white border-2 border-black rounded-2xl p-6 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.05)]">
+                  <div className="bg-white border-2 border-black rounded-2xl p-4 sm:p-6 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.05)]">
                     <div className="flex items-center gap-2 mb-4">
                       <Info className="w-4 h-4 text-indigo-600" />
                       <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">Why ask this?</p>
@@ -314,7 +314,7 @@ export default function QuestionCard({
                   </div>
 
                   {/* Answer Guide */}
-                  <div className="bg-emerald-50/50 border-2 border-emerald-100 rounded-2xl p-6 shadow-[2px_2px_0px_0px_rgba(16,185,129,0.05)]">
+                  <div className="bg-emerald-50/50 border-2 border-emerald-100 rounded-2xl p-4 sm:p-6 shadow-[2px_2px_0px_0px_rgba(16,185,129,0.05)]">
                     <div className="flex items-center gap-2 mb-4">
                       <Check className="w-4 h-4 text-emerald-600" />
                       <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Strong Answer Indicators</p>
@@ -331,7 +331,7 @@ export default function QuestionCard({
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Red Flags */}
-                    <div className="bg-red-50/50 border-2 border-red-100 rounded-2xl p-6 shadow-[2px_2px_0px_0px_rgba(239,68,68,0.05)]">
+                    <div className="bg-red-50/50 border-2 border-red-100 rounded-2xl p-4 sm:p-6 shadow-[2px_2px_0px_0px_rgba(239,68,68,0.05)]">
                       <div className="flex items-center gap-2 mb-4">
                         <Zap className="w-4 h-4 text-red-600" />
                         <p className="text-[10px] font-black text-red-600 uppercase tracking-widest">Red Flags</p>
@@ -342,7 +342,7 @@ export default function QuestionCard({
                     </div>
 
                     {/* Follow ups */}
-                    <div className="bg-blue-50/50 border-2 border-blue-100 rounded-2xl p-6 shadow-[2px_2px_0px_0px_rgba(59,130,246,0.05)]">
+                    <div className="bg-blue-50/50 border-2 border-blue-100 rounded-2xl p-4 sm:p-6 shadow-[2px_2px_0px_0px_rgba(59,130,246,0.05)]">
                       <div className="flex items-center gap-2 mb-4">
                         <RefreshCw className="w-4 h-4 text-blue-600" />
                         <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest">Strategic Follow-ups</p>

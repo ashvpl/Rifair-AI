@@ -82,7 +82,7 @@ export function SpectralBiasReport({ questions }: SpectralBiasReportProps) {
               exit={{ opacity: 0, y: -8 }}
               transition={{ type: "spring", stiffness: 400, damping: 30 }}
               className={cn(
-                "bg-white border-2 border-black rounded-[2rem] overflow-hidden transition-all duration-300",
+                "bg-white border-2 border-black rounded-xl sm:rounded-2xl md:rounded-[2rem] overflow-hidden transition-all duration-300",
                 isExpanded
                   ? "shadow-none translate-x-1 translate-y-1"
                   : "shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5"
@@ -160,15 +160,15 @@ export function SpectralBiasReport({ questions }: SpectralBiasReportProps) {
                     transition={{ duration: 0.25, ease: "easeInOut" }}
                     className="overflow-hidden bg-[#dc2626]/[0.01]"
                   >
-                    <div className="p-8 space-y-8 border-t border-black/[0.04]">
+                    <div className="p-4 sm:p-6 md:p-8 space-y-6 md:space-y-8 border-t border-black/[0.04]">
                       {isNeutral ? (
-                        <div className="bg-emerald-50/50 border-2 border-emerald-100 rounded-[2rem] p-8 text-center shadow-[4px_4px_0px_0px_rgba(16,185,129,0.1)]">
+                        <div className="bg-emerald-50/50 border-2 border-emerald-100 rounded-xl sm:rounded-2xl md:rounded-[2rem] p-4 sm:p-6 md:p-8 text-center shadow-[4px_4px_0px_0px_rgba(16,185,129,0.1)]">
                           <ShieldCheck className="w-12 h-12 text-emerald-500 mx-auto mb-4" />
                           <p className="text-lg font-black text-emerald-700 uppercase tracking-widest">Compliance Verified</p>
                           <p className="text-sm text-emerald-600/80 font-medium mt-2">This question passed our fairness checks. No significant bias detected.</p>
                         </div>
                       ) : (
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
                           {/* Left: Issues & Rationale */}
                           <div className="space-y-6">
                             {/* Primary issue badge */}
@@ -210,7 +210,7 @@ export function SpectralBiasReport({ questions }: SpectralBiasReportProps) {
                                 requiredPlan="starter"
                                 customPrompt="Unlock India-specific bias flags: caste signalling, regional discrimination, institution elitism, and colorism."
                               >
-                                <div className="bg-white border-2 border-black rounded-[2rem] p-6 shadow-[4px_4px_0px_0px_rgba(249,115,22,0.1)] space-y-4">
+                                <div className="bg-white border-2 border-black rounded-xl sm:rounded-2xl md:rounded-[2rem] p-4 sm:p-6 shadow-[4px_4px_0px_0px_rgba(249,115,22,0.1)] space-y-4">
                                   <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-2">
                                       <Flag className="h-4 w-4 text-orange-600" />
@@ -249,7 +249,7 @@ export function SpectralBiasReport({ questions }: SpectralBiasReportProps) {
 
                           {/* Right: Recommended Rewrite */}
                           <div className="space-y-6">
-                            <div className="bg-white border-2 border-black rounded-[2rem] overflow-hidden shadow-[8px_8px_0px_0px_rgba(16,185,129,0.05)]">
+                            <div className="bg-white border-2 border-black rounded-xl sm:rounded-2xl md:rounded-[2rem] overflow-hidden shadow-[8px_8px_0px_0px_rgba(16,185,129,0.05)]">
                               <div className="p-6 border-b-2 border-black/[0.04] bg-emerald-50/[0.3]">
                                 <div className="flex items-center gap-2">
                                   <ShieldCheck className="w-4 h-4 text-emerald-600" />

@@ -538,7 +538,7 @@ export function AuthUI({ children, initialIsSignIn = true }: AuthUIProps) {
         }
       `}</style>
 
-      <div className="flex h-screen items-center justify-center p-6 md:h-auto md:p-0 md:py-12 z-20 bg-background/50 backdrop-blur-sm">
+      <div className="flex min-h-screen items-center justify-center p-6 md:min-h-0 md:py-12 z-20 bg-background/50 backdrop-blur-sm">
         {children || <AuthFormContainer isSignIn={isSignIn} onToggle={toggleForm} />}
       </div>
 
