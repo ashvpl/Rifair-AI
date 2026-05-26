@@ -195,13 +195,15 @@ backgrounds, experiences, and perspectives.*
 
 ---
 
+#hiring #[RoleName] #[CompanyName] #[Location]jobs #JobOpportunity
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 RETURN ONLY VALID JSON — NO MARKDOWN:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 {
   "headline": "<one-line role headline that sells>",
   
-  "full_jd": "<complete formatted job description following the exact markdown structure above as a single string with \\n for line breaks>",
+  "full_jd": "<complete formatted job description following the exact markdown structure above as a single string. You MUST use double newlines (\\\\n\\\\n) between all sections, paragraphs, and list items to ensure proper markdown rendering and a clean, spacious, LinkedIn-optimized format. Also include the hashtags at the very bottom.>",
   
   "sections": {
     "about_company": "<company description paragraph>",

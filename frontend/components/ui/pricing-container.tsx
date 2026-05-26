@@ -51,21 +51,21 @@ const Counter = ({ from, to }: { from: number; to: number }) => {
 
 // Header Component
 const PricingHeader = ({ title, description }: { title?: string; description?: React.ReactNode }) => (
-    <div className="text-center mb-12 sm:mb-16 relative z-30 px-4 mt-24 sm:mt-32">
+    <div className="text-center mb-12 sm:mb-16 lg:mb-20 relative z-30 px-4 mt-4 sm:mt-6 lg:mt-10">
         <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="inline-block max-w-4xl"
         >
-            <h1 className="text-3xl sm:text-4xl lg:text-6xl font-black text-slate-800 
-                bg-gradient-to-r from-white to-gray-100 px-8 py-6 rounded-2xl border-4 border-black
-                shadow-[8px_8px_0px_0px_rgba(0,0,0,0.9)]
+            <h1 className="text-2xl sm:text-3xl lg:text-5xl xl:text-6xl font-black text-slate-800 
+                bg-gradient-to-r from-white to-gray-100 px-3 py-2 sm:px-8 sm:py-6 lg:px-12 lg:py-8 rounded-2xl border-4 border-black
+                shadow-[4px_4px_0px_0px_rgba(0,0,0,0.9)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.9)]
                 transform transition-transform hover:translate-x-1 hover:translate-y-1 mb-6 relative
                 before:absolute before:inset-0 before:bg-white/50 before:rounded-xl before:blur-sm before:-z-10">
                 {title}
             </h1>
             {description && (
-                <div className="text-gray-600 text-lg md:text-xl font-bold max-w-2xl mx-auto mb-6">
+                <div className="text-gray-600 text-lg md:text-xl lg:text-2xl font-bold max-w-2xl mx-auto mb-6">
                     {description}
                 </div>
             )}
@@ -199,15 +199,15 @@ const PricingCard = ({
                 mouseX.set(0);
                 mouseY.set(0);
             }}
-            className={`relative w-full bg-white rounded-xl p-6 border-3 border-black
+            className={`relative w-full bg-white rounded-xl p-4 sm:p-6 lg:p-8 xl:p-10 border-3 border-black
                 shadow-[6px_6px_0px_0px_rgba(0,0,0,0.9)]
-                hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.9)]
+                hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.9)] lg:hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,0.9)]
                 transition-all duration-200`}
         >
             {/* Price Badge */}
             <motion.div
                 className={cn(
-                    `absolute -top-4 -right-4 w-16 h-16 
+                    `absolute right-2 top-2 sm:-top-4 sm:-right-4 w-16 h-16 
                     rounded-full flex items-center justify-center border-2 border-black
                     shadow-[3px_3px_0px_0px_rgba(0,0,0,0.9)]`
                     , plan.accent)}
@@ -232,7 +232,7 @@ const PricingCard = ({
 
             {/* Plan Name and Badge */}
             <div className="mb-4 min-h-[90px] flex flex-col justify-end items-start">
-                <h3 className="text-xl font-black text-black mb-2">{plan.name}</h3>
+                <h3 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-black text-black mb-2">{plan.name}</h3>
                 {plan.badgeText ? (
                     <motion.span
                         className={cn(
@@ -261,13 +261,7 @@ const PricingCard = ({
                 <CheckoutButton
                     planId={plan.id}
                     billingCycle={isYearly ? 'annual' : 'monthly'}
-                    className={cn(
-                        `w-full py-3 rounded-lg text-white font-black text-sm
-                        border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.9)]
-                        hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.9)]
-                        active:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.9)]
-                        transition-all duration-200`
-                        , plan.accent)}
+                    className={cn(`w-full py-2 sm:py-3 lg:py-4 rounded-lg lg:rounded-xl text-white font-black text-xs sm:text-sm lg:text-base border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.9)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.9)] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.9)] transition-all duration-200`, plan.accent)}
                 >
                     GET STARTED →
                 </CheckoutButton>
@@ -324,10 +318,7 @@ const PricingCard = ({
                                     <Check size={12} strokeWidth={4} />
                                 )}
                             </motion.span>
-                            <span className={cn(
-                                "text-black font-bold text-sm",
-                                isDisabled && "line-through decoration-black/30"
-                            )}>
+                            <span className={cn("text-black font-bold text-xs sm:text-sm lg:text-base", isDisabled && "line-through decoration-black/30")}>
                                 {feature.text}
                             </span>
                         </motion.div>
@@ -349,12 +340,12 @@ export const PricingContainer = ({
     const [isYearly, setIsYearly] = useState(false);
 
     return (
-        <div className={`min-h-fit bg-[#f0f0f0] p-4 sm:p-6 lg:p-8 relative overflow-visible rounded-[12px] ${className}`}>
+        <div className={`min-h-fit bg-[#f0f0f0] p-4 sm:p-6 lg:p-10 xl:p-16 relative overflow-visible rounded-[12px] ${className}`}>
             <PricingHeader title={title || ""} description={description || ""} />
             <PricingToggle isYearly={isYearly} onToggle={() => setIsYearly(!isYearly)} />
             <BackgroundEffects />
 
-            <div className="w-[100%] max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
+            <div className="w-[100%] max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 relative z-10">
                 {plans.map((plan, index) => (
                     <PricingCard
                         key={plan.name}

@@ -50,8 +50,8 @@ const AccordionItem = ({
         "absolute inset-0 p-10 flex flex-col justify-end transition-all duration-500",
         isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
       )}>
-        <h3 className="text-3xl font-black text-white mb-4 tracking-tight">{item.title}</h3>
-        {item.desc && <p className="text-white/70 text-lg font-medium leading-relaxed max-w-sm">{item.desc}</p>}
+        <h3 className="text-base sm:text-lg lg:text-xl font-black text-white mb-2 tracking-tight whitespace-nowrap">{item.title}</h3>
+        {item.desc && <p className="text-white/70 text-sm font-medium leading-relaxed max-w-sm">{item.desc}</p>}
       </div>
 
       {/* Vertical Title for Inactive State */}

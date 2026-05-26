@@ -33,25 +33,25 @@ export const SupportInfo = () => {
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as any }}
       className="lg:sticky lg:top-24 space-y-6"
     >
-      <div className="p-4 sm:p-8 rounded-3xl bg-white/5 backdrop-blur-sm border border-border/50 space-y-8">
+      <div className="p-2 sm:p-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-border/50 space-y-4">
         {infoSections.map((section, index) => (
           <div key={index} className="space-y-2">
             <div className="flex items-center gap-2 text-muted-foreground">
               <section.icon className="w-4 h-4" />
-              <span className="text-xs font-semibold uppercase tracking-wider">{section.title}</span>
+              <span className="text-[10px] font-semibold uppercase tracking-wider">{section.title}</span>
             </div>
             {section.href ? (
               <a
                 href={section.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-lg font-medium hover:text-primary transition-colors underline-offset-4 hover:underline"
+                className="text-sm font-medium hover:text-primary transition-colors underline-offset-4 hover:underline"
               >
                 {section.value}
               </a>
             ) : (
               <div className="flex items-center gap-2">
-                <span className="text-lg font-medium">{section.value}</span>
+                <span className="text-sm font-medium">{section.value}</span>
                 {section.status === "success" && (
                   <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                 )}

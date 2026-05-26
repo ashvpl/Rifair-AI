@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "lucide-react";
@@ -12,6 +13,26 @@ import { Banner } from "@/components/ui/banner";
 
 export function HeroSection() {
 	const { isSignedIn } = useAuth();
+
+	// #region agent log
+	useEffect(() => {
+		const payload = {
+			sessionId: "33be9b",
+			location: "hero-1.tsx:HeroSection",
+			message: "HeroSection mounted",
+			data: { mountMs: Math.round(performance.now()) },
+			hypothesisId: "E",
+			timestamp: Date.now(),
+			runId: "initial",
+		};
+		fetch("/api/debug-log", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(payload),
+		}).catch(() => {});
+	}, []);
+	// #endregion
+
 	return (
 		<section className="mx-auto w-full max-w-7xl relative group/hero overflow-hidden">
 			<SVGFollower className="opacity-40" />
@@ -26,14 +47,14 @@ export function HeroSection() {
 			</div>
 
 			{/* main content */}
-			<div className="relative flex flex-col items-center justify-center gap-6 md:gap-8 pt-24 md:pt-32 pb-12 md:pb-16 px-4 md:px-6">
+			<div className="relative flex flex-col items-center justify-center gap-6 lg:gap-8 pt-16 lg:pt-24 xl:pt-32 pb-8 lg:pb-12 xl:pb-16 px-4 sm:px-6 lg:px-8">
 
 				<div className="flex flex-col items-center gap-1 md:gap-2 w-full max-w-5xl">
 					{/* Hero title wrapper — word-break prevention */}
 					<div className="w-full text-center flex flex-col items-center gap-2">
 						<RevealText 
 							text="The Operating System"
-							fontSize="text-3xl sm:text-4xl md:text-5xl lg:text-[56px]"
+							fontSize="text-2xl sm:text-3xl md:text-4xl lg:text-[56px] xl:text-[64px]"
 							textColor="text-[#1D1D1F]"
 							overlayColor="text-indigo-600"
 							letterDelay={0.06}
@@ -41,7 +62,7 @@ export function HeroSection() {
 						/>
 						<RevealText 
 							text="for Modern Hiring"
-							fontSize="text-3xl sm:text-4xl md:text-5xl lg:text-[56px]"
+							fontSize="text-2xl sm:text-3xl md:text-4xl lg:text-[56px] xl:text-[64px]"
 							textColor="text-[#1D1D1F]"
 							overlayColor="text-emerald-600"
 							letterDelay={0.05}
@@ -51,22 +72,22 @@ export function HeroSection() {
 				</div>
 
 				<p
-					className="fade-in slide-in-from-bottom-10 mx-auto max-w-3xl animate-in fill-mode-backwards text-center text-base text-foreground/80 tracking-wider delay-200 duration-500 ease-out sm:text-lg md:text-xl font-medium"
+					className="fade-in slide-in-from-bottom-10 mx-auto max-w-3xl animate-in fill-mode-backwards text-center text-sm sm:text-base lg:text-lg xl:text-xl text-foreground/80 tracking-wider delay-200 duration-500 ease-out font-medium"
 				>
 					Generate interview kits, evaluate candidates, analyze job descriptions, audit hiring processes, and eliminate bias — all in one AI-powered platform.
 				</p>
 
-				<div className="fade-in slide-in-from-bottom-10 flex animate-in flex-row flex-wrap items-center justify-center gap-3 fill-mode-backwards pt-2 delay-300 duration-500 ease-out w-full max-w-sm sm:max-w-none">
+				<div className="fade-in slide-in-from-bottom-10 flex animate-in flex-row flex-wrap items-center justify-center gap-2 lg:gap-3 fill-mode-backwards pt-2 delay-300 duration-500 ease-out w-full max-w-xs sm:max-w-none">
 					{isSignedIn ? (
 						<Link href="/dashboard" className="w-full sm:w-auto">
-							<Button className="w-full sm:w-auto rounded-full font-bold h-12 px-8" size="lg">
+							<Button className="w-full sm:w-auto rounded-full font-bold h-10 lg:h-12 px-6 lg:px-8" size="lg">
 								Dashboard{" "}
 								<ArrowRightIcon className="size-4 ms-2" />
 							</Button>
 						</Link>
 					) : (
 						<Link href="/sign-in?redirect_url=/analyze" className="w-full sm:w-auto">
-							<Button className="w-full sm:w-auto rounded-full font-bold h-12 px-8" size="lg">
+							<Button className="w-full sm:w-auto rounded-full font-bold h-10 lg:h-12 px-6 lg:px-8" size="lg">
 								Try Free Analysis{" "}
 								<ArrowRightIcon className="size-4 ms-2" />
 							</Button>
@@ -80,14 +101,10 @@ export function HeroSection() {
 
 export function LogosSection() {
 	return (
-		<section className="relative space-y-8 border-t border-black/[0.03] pt-12 pb-16">
-			<h2 className="text-center font-black text-sm uppercase text-[#86868B] tracking-[0.3em]">
-				Powered by 
-			</h2>
-			<div className="relative z-10 mx-auto max-w-4xl">
-				<LogoCloud logos={logos} />
-			</div>
-		</section>
+		<LogoCloud
+			className="opacity-60 max-w-4xl mx-auto"
+			logos={logos.filter((logo) => logo.alt !== "GitHub Logo")}
+		/>
 	);
 }
 
@@ -103,10 +120,6 @@ const logos = [
 	{
 		src: "https://storage.efferd.com/logo/vercel-wordmark.svg",
 		alt: "Vercel Logo",
-	},
-	{
-		src: "https://storage.efferd.com/logo/github-wordmark.svg",
-		alt: "GitHub Logo",
 	},
 	{
 		src: "https://storage.efferd.com/logo/claude-wordmark.svg",

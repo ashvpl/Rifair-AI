@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "Rifair AI | Interview Bias & Hiring Risk Intelligence",
@@ -15,7 +15,6 @@ export const metadata: Metadata = {
     ],
     apple: "/apple-touch-icon.png"
   },
-  manifest: "/site.webmanifest",
 };
 
 export const viewport: Viewport = {
@@ -52,6 +51,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="font-sans antialiased overflow-x-clip" suppressHydrationWarning>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+              });
+            `,
+          }}
+        />
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
@@ -76,7 +84,18 @@ export default function RootLayout({
             {children}
           </ClerkProvider>
         </ThemeProvider>
-        <GoogleAnalytics gaId="G-EN7Q07D0WE" />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-EN7Q07D0WE"
+          strategy="lazyOnload"
+        />
+        <Script id="google-analytics" strategy="lazyOnload">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-EN7Q07D0WE');
+          `}
+        </Script>
       </body>
     </html>
   );

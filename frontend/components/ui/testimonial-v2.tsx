@@ -93,7 +93,7 @@ const TestimonialsColumn = (props: {
           ease: "linear",
           repeatType: "loop",
         }}
-        className="flex flex-col gap-6 pb-6 bg-transparent transition-colors duration-300 list-none m-0 p-0"
+        className="flex flex-col gap-3 pb-3 bg-transparent transition-colors duration-300 list-none m-0 p-0"
       >
         {[
           ...new Array(2).fill(0).map((_, index) => (
@@ -115,25 +115,25 @@ const TestimonialsColumn = (props: {
                     boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.12), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05)",
                     transition: { type: "spring", stiffness: 400, damping: 17 }
                   }}
-                  className="p-10 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-lg shadow-black/5 max-w-xs w-full bg-white dark:bg-neutral-900 transition-all duration-300 cursor-default select-none group focus:outline-none focus:ring-2 focus:ring-primary/30" 
+                  className="p-4 sm:p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-md shadow-black/5 max-w-xs w-full bg-white dark:bg-neutral-900 transition-all duration-300 cursor-default select-none group focus:outline-none focus:ring-2 focus:ring-primary/30" 
                 >
                   <blockquote className="m-0 p-0">
-                    <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed font-normal m-0 transition-colors duration-300">
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed font-normal m-0 transition-colors duration-300 line-clamp-4">
                       {text}
                     </p>
-                    <footer className="flex items-center gap-3 mt-6">
+                    <footer className="flex items-center gap-2 mt-3">
                       <img
                         width={40}
                         height={40}
                         src={image}
                         alt={`Avatar of ${name}`}
-                        className="h-10 w-10 rounded-full object-cover ring-2 ring-neutral-100 dark:ring-neutral-800 group-hover:ring-primary/30 transition-all duration-300 ease-in-out"
+                        className="h-8 w-8 rounded-full object-cover ring-2 ring-neutral-100 dark:ring-neutral-800 group-hover:ring-primary/30 transition-all duration-300 ease-in-out"
                       />
                       <div className="flex flex-col">
-                        <cite className="font-semibold not-italic tracking-tight leading-5 text-neutral-900 dark:text-white transition-colors duration-300">
+                        <cite className="font-semibold not-italic tracking-tight leading-4 text-sm text-neutral-900 dark:text-white transition-colors duration-300">
                           {name}
                         </cite>
-                        <span className="text-sm leading-5 tracking-tight text-neutral-500 dark:text-neutral-500 mt-0.5 transition-colors duration-300">
+                        <span className="text-xs leading-4 tracking-tight text-neutral-500 dark:text-neutral-500 mt-0.5 transition-colors duration-300">
                           {role}
                         </span>
                       </div>
@@ -182,7 +182,7 @@ export function TestimonialsSection() {
         </div>
 
         <div 
-          className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)] max-h-[740px] overflow-hidden"
+          className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)] max-h-[500px] overflow-hidden"
           role="region"
           aria-label="Scrolling Testimonials"
         >

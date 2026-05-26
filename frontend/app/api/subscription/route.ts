@@ -32,14 +32,31 @@ export async function GET(req: NextRequest) {
       }
     })
 
-    const data = await response.json()
+    const contentType = response.headers.get('content-type') || '';
     if (!response.ok) {
+      let errMsg = 'Failed to fetch subscription';
+      if (contentType.includes('application/json')) {
+        const errData = await response.json().catch(() => ({}));
+        errMsg = errData.error || errMsg;
+      } else {
+        errMsg = `Server responded with status ${response.status}: ${response.statusText}`;
+      }
       return NextResponse.json(
-        { error: `Backend Error: ${data.error || 'Failed to fetch subscription'}` },
+        { error: `Backend Error: ${errMsg}` },
         { status: response.status }
       )
     }
 
+    if (!contentType.includes('application/json')) {
+      const text = await response.text();
+      console.error('[AUTH API] Expected JSON but got text:', text.substring(0, 200));
+      return NextResponse.json(
+        { error: 'Backend returned invalid non-JSON content' },
+        { status: 502 }
+      )
+    }
+
+    const data = await response.json()
     return NextResponse.json(data)
   } catch (err: any) {
     console.error('[AUTH API] Subscription Proxy Error:', err)

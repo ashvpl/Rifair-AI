@@ -60,7 +60,7 @@ export function RevealText({
               {word.split("").map((letter, letterIndex) => (
                 <span
                   key={letterIndex}
-                  className={cn(fontSize, textColor, "font-black tracking-tighter cursor-crosshair relative overflow-hidden inline-block")}
+                  className={cn(fontSize, textColor, "font-black tracking-tighter cursor-crosshair relative overflow-hidden inline-block py-0 lg:py-2 lg:leading-[1.3]")}
                 >
                   {letter}
                 </span>
@@ -91,7 +91,7 @@ export function RevealText({
                     key={index}
                     onMouseEnter={() => setHoveredIndex(index)}
                     onMouseLeave={() => setHoveredIndex(null)}
-                    className={cn(fontSize, "font-black tracking-tighter cursor-crosshair relative overflow-hidden inline-block")}
+                    className={cn(fontSize, "font-black tracking-tighter cursor-crosshair relative overflow-hidden inline-block py-0 lg:py-2 lg:leading-[1.3]")}
                     initial={{ 
                       scale: 0,
                       opacity: 0,
@@ -112,7 +112,7 @@ export function RevealText({
                   >
                     {/* Base text layer */}
                     <motion.span 
-                      className={cn("absolute inset-0 transition-colors duration-300", textColor)}
+                      className={cn("absolute inset-0 transition-colors duration-300 py-0 lg:py-2", textColor)}
                       animate={{ 
                         opacity: hoveredIndex === index ? 0 : 1 
                       }}
@@ -122,7 +122,7 @@ export function RevealText({
                     </motion.span>
                     {/* Image text layer with background panning */}
                     <motion.span
-                      className="text-transparent bg-clip-text bg-cover bg-no-repeat bg-center"
+                      className="text-transparent bg-clip-text bg-cover bg-no-repeat bg-center py-0 lg:py-2"
                       animate={{ 
                         opacity: hoveredIndex === index ? 1 : 0,
                         scale: hoveredIndex === index ? 1.1 : 1
@@ -143,7 +143,7 @@ export function RevealText({
                     {/* Overlay text sweep */}
                     {showOverlay && (
                       <motion.span
-                        className={cn("absolute inset-0 pointer-events-none", overlayColor)}
+                        className={cn("absolute inset-0 pointer-events-none py-0 lg:py-2", overlayColor)}
                         initial={{ opacity: 0, x: "-100%" }}
                         animate={{ 
                           opacity: [0, 1, 1, 0],

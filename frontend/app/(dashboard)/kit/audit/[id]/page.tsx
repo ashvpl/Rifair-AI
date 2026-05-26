@@ -526,16 +526,16 @@ export default function AuditResultPage() {
   if (showEvaluator) {
     return (
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-4xl mx-auto pt-2 pb-16">
-        <div className="flex items-center gap-4 mb-8">
+        <div className="flex items-center gap-2.5 mb-4 sm:mb-6">
           <button 
             onClick={() => setShowEvaluator(false)}
-            className="w-10 h-10 rounded-2xl bg-white border border-black/[0.05] flex items-center justify-center text-[#86868B] hover:text-[#1D1D1F] hover:bg-[#F5F5F7] shadow-sm transition-all active:scale-95"
+            className="w-8 h-8 rounded-xl bg-white border border-black/[0.05] flex items-center justify-center text-[#86868B] hover:text-[#1D1D1F] hover:bg-[#F5F5F7] shadow-sm transition-all active:scale-95 text-xs font-bold"
           >
             ←
           </button>
           <div>
-            <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-0.5">Evaluation Mode</p>
-            <h2 className="text-xl md:text-2xl font-bold text-[#1D1D1F]">
+            <p className="text-[8px] sm:text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-0.5">Evaluation Mode</p>
+            <h2 className="text-sm sm:text-base md:text-lg font-bold text-[#1D1D1F]">
               {audit.title}
             </h2>
           </div>

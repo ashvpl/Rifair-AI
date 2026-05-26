@@ -42,6 +42,42 @@ export function NavBarDemo() {
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const clerkWaitStart = React.useRef<number | null>(null);
+
+  // #region agent log
+  useEffect(() => {
+    if (clerkWaitStart.current === null) {
+      clerkWaitStart.current = performance.now();
+    }
+    if (isLoaded && clerkWaitStart.current !== null) {
+      const payload = {
+        sessionId: "33be9b",
+        location: "navbar-demo.tsx:clerk",
+        message: "Clerk auth became loaded",
+        data: {
+          clerkReadyMs: Math.round(performance.now() - clerkWaitStart.current),
+          isSignedIn,
+        },
+        hypothesisId: "B",
+        timestamp: Date.now(),
+        runId: "initial",
+      };
+      fetch("/api/debug-log", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }).catch(() => {});
+      fetch("http://127.0.0.1:7444/ingest/72af6889-1483-49f9-99fc-c3a8701a3216", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Debug-Session-Id": "33be9b",
+        },
+        body: JSON.stringify(payload),
+      }).catch(() => {});
+    }
+  }, [isLoaded, isSignedIn]);
+  // #endregion
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() ?? 0;
@@ -99,12 +135,8 @@ export function NavBarDemo() {
 
           {/* Right: Auth Buttons + hamburger */}
           <div className="flex items-center justify-end gap-2 md:gap-4 relative z-[100] shrink-0">
-            {!isLoaded ? (
-              <div className="w-20 h-10 animate-pulse bg-[#F5F5F7] rounded-full" />
-            ) : isSignedIn ? (
-              <>
-                <UserDropdown />
-              </>
+            {isLoaded && isSignedIn ? (
+              <UserDropdown />
             ) : (
               <>
                 <Link href="/sign-in" className="hidden sm:block">

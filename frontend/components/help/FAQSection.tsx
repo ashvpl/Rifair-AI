@@ -36,9 +36,9 @@ const AccordionItem = ({ question, answer, isOpen, onClick }: { question: string
     <div className="border-b border-border/50 overflow-hidden">
       <button
         onClick={onClick}
-        className="w-full py-6 flex items-center justify-between text-left group transition-all"
+        className="w-full py-4 flex items-center justify-between text-left group transition-all"
       >
-        <span className="text-lg font-medium group-hover:text-primary transition-colors">{question}</span>
+        <span className="text-base sm:text-lg font-medium group-hover:text-primary transition-colors">{question}</span>
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] as any }}
@@ -69,10 +69,10 @@ export const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="max-w-4xl mx-auto px-6 py-24 space-y-12">
-      <div className="text-center space-y-4">
-        <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Frequently Asked Questions</h2>
-        <p className="text-muted-foreground max-w-xl mx-auto">
+    <section className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-24 space-y-8">
+      <div className="text-center space-y-2">
+        <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Frequently Asked Questions</h2>
+        <p className="text-sm text-muted-foreground max-w-xl mx-auto">
           Quick answers to common questions about Rifair AI.
         </p>
       </div>

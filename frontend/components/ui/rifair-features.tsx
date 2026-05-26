@@ -56,23 +56,24 @@ function BiasAnalysisAnimation() {
 
 function InterviewKitAnimation() {
   return (
-    <div className="h-full w-full flex items-center justify-center p-12">
-      <div className="relative w-full max-w-[200px] aspect-square flex items-center justify-center">
+    <div className="h-full w-full flex items-center justify-center p-6 lg:p-12">
+      {/* Smaller stacked cards for mobile, larger on desktop */}
+      <div className="relative w-full max-w-[150px] lg:max-w-[200px] aspect-square flex items-center justify-center">
         {[0, 1, 2].map((i) => (
           <motion.div
             key={i}
-            className="absolute bg-white border border-emerald-100/50 shadow-[0_10px_30px_rgba(16,185,129,0.05)] rounded-2xl p-4 flex flex-col gap-2"
-            style={{ width: '100%', height: '60%', top: `${i * 15}%`, left: `${i * 10}%`, zIndex: 10 - i }}
-            animate={{ 
-                y: [0, -10, 0],
-                rotate: [i * 2, i * 2 - 2, i * 2],
-                x: [0, 5, 0]
+            className="absolute bg-white border border-emerald-100/50 shadow-[0_8px_20px_rgba(16,185,129,0.05)] lg:shadow-[0_10px_30px_rgba(16,185,129,0.05)] rounded-2xl p-3 lg:p-4 flex flex-col gap-1 lg:gap-2"
+            style={{ width: '100%', height: '55%', top: `${i * 13}%`, left: `${i * 9}%`, zIndex: 10 - i }}
+            animate={{
+              y: [0, -8, 0],
+              rotate: [i * 2, i * 2 - 2, i * 2],
+              x: [0, 4, 0]
             }}
-            transition={{ 
-                duration: 4, 
-                repeat: Infinity, 
-                delay: i * 0.5,
-                ease: "easeInOut"
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              delay: i * 0.5,
+              ease: "easeInOut"
             }}
           >
             <div className="w-1/2 h-2 bg-emerald-500/20 rounded-full" />
@@ -82,7 +83,7 @@ function InterviewKitAnimation() {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 function JDOptimizerAnimation() {
@@ -232,17 +233,17 @@ export function RifairCoreFeatures() {
   ]
 
   return (
-    <section id="core-features" className="py-24 md:py-40 relative bg-[#E5E7EB] overflow-hidden" style={{ paddingLeft: 'clamp(16px, 5vw, 80px)', paddingRight: 'clamp(16px, 5vw, 80px)' }}>
+    <section id="core-features" className="py-16 lg:py-40 relative bg-[#E5E7EB] overflow-hidden" style={{ paddingLeft: 'clamp(16px, 5vw, 80px)', paddingRight: 'clamp(16px, 5vw, 80px)' }}>
         {/* Background decorative elements - kept subtle for industrial look */}
         <div className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-white/40 rounded-full blur-[160px] -z-10" />
         
         <div className="max-w-7xl mx-auto space-y-24 relative z-10">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-10 md:gap-16">
                 <div className="space-y-4">
-                  <h2 className="font-black text-black tracking-tight text-4xl md:text-6xl leading-[1]">
+                  <h2 className="font-black text-black tracking-tight text-3xl lg:text-5xl xl:text-6xl leading-[1]">
                     The Core <br /> <span className="text-black/30">Capabilities.</span>
                   </h2>
-                  <p className="text-black/60 text-lg font-medium max-w-xl leading-relaxed">Enterprise-grade infrastructure for teams who refuse to compromise on hiring quality and fairness.</p>
+                  <p className="text-black/60 text-base lg:text-lg font-medium max-w-xl leading-relaxed">Enterprise-grade infrastructure for teams who refuse to compromise on hiring quality and fairness.</p>
                 </div>
                 <motion.div
                     whileHover={{ scale: 1.05 }}
@@ -256,11 +257,11 @@ export function RifairCoreFeatures() {
                 </motion.div>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-12 xl:gap-16">
                 {features.map((feature, idx) => (
                     <motion.div
                         key={idx}
-                        className="group relative p-1 rounded-[3rem] bg-white border-2 border-black shadow-[12px_12px_0px_rgba(0,0,0,1)] overflow-hidden transition-all duration-500"
+                        className="group relative p-2 lg:p-1 rounded-[2rem] lg:rounded-[3rem] bg-white border-2 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] lg:shadow-[12px_12px_0px_rgba(0,0,0,1)] overflow-hidden transition-all duration-500"
                         initial={{ opacity: 0, y: 50 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-100px" }}
@@ -268,8 +269,8 @@ export function RifairCoreFeatures() {
                         whileHover={{ translate: "2px 2px", boxShadow: "8px 8px 0px rgba(0,0,0,1)" }}
                     >
                         {/* Mobile: stacked. Desktop: side-by-side */}
-                        <div className="relative z-10 flex flex-col lg:grid lg:grid-cols-2 items-stretch min-h-[340px] md:min-h-[420px]">
-                            <div className="p-10 md:p-14 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-black">
+                        <div className="relative z-10 flex flex-col lg:grid lg:grid-cols-2 items-stretch min-h-[260px] lg:min-h-[420px]">
+                            <div className="p-4 lg:p-10 xl:p-14 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-black">
                                 <div className="min-w-0">
                                     <div className="flex items-center gap-4 mb-10">
                                         <div className={`w-10 h-10 rounded-full ${feature.bgColor} flex items-center justify-center border border-black shadow-[2px_2px_0px_rgba(0,0,0,1)]`}>
@@ -278,12 +279,12 @@ export function RifairCoreFeatures() {
                                         <div className="h-[2px] flex-1 bg-black" />
                                     </div>
                                     <h3
-                                      className="text-2xl md:text-3xl font-black text-black mb-4 tracking-tight leading-tight"
+                                      className="text-xl lg:text-2xl xl:text-3xl font-black text-black mb-4 tracking-tight leading-tight"
                                     >
                                       {feature.title}
                                     </h3>
                                     <p
-                                      className="text-base text-black leading-relaxed font-medium"
+                                      className="text-sm lg:text-base text-black leading-relaxed font-medium"
                                     >
                                         {feature.description}
                                     </p>
@@ -298,7 +299,7 @@ export function RifairCoreFeatures() {
                                 </motion.div>
                             </div>
 
-                            <div className="min-h-[260px] md:min-h-[300px] flex items-center justify-center bg-[#E5E7EB] overflow-hidden relative transition-all duration-500">
+                            <div className="min-h-[180px] lg:min-h-[260px] xl:min-h-[300px] flex items-center justify-center bg-[#E5E7EB] overflow-hidden relative transition-all duration-500">
                                 {feature.animation}
                             </div>
                         </div>

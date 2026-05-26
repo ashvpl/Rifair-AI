@@ -23,6 +23,7 @@ export default function JDAnalyserPage() {
   const [companyType, setCompanyType] = useState('')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<any>(null)
+  const [generatedResult, setGeneratedResult] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
 
   // Scroll to top when error occurs
@@ -108,6 +109,18 @@ export default function JDAnalyserPage() {
     }
   }
 
+  // Show generated JD result (no header/toggle)
+  if (generatedResult) {
+    return (
+      <JDGeneratorResult
+        result={generatedResult}
+        reportId={generatedResult.reportId}
+        onReset={() => setGeneratedResult(null)}
+      />
+    )
+  }
+
+  // Show analysed JD result (no header/toggle)
   if (result) {
     return <JDAnalysisResult result={result} onReset={() => setResult(null)} />
   }
@@ -125,15 +138,10 @@ export default function JDAnalyserPage() {
       {loading && <LoadingState text="Analysing" />}
 
       {/* Page Header */}
-      <div className="relative mb-6">
-        <div className="space-y-1">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-[#d97706]">
-            Job Descriptions
-          </h1>
-          <p className="text-[#86868B] max-w-2xl text-base md:text-lg font-medium">
-            Generate high-converting, bias-free job descriptions or analyze your existing ones for inclusivity.
-          </p>
-        </div>
+      <div className="relative mb-4">
+        <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-[#d97706]">
+          Job Descriptions
+        </h1>
       </div>
 
       {/* ── Upgrade Overlay (locked state) ──────────────────────────────────── */}
@@ -142,18 +150,18 @@ export default function JDAnalyserPage() {
           <div className="absolute inset-0 bg-white/30 backdrop-blur-[2px] rounded-3xl" />
           <div className="relative z-30 flex flex-col items-center max-w-md w-full">
             {/* Lock card */}
-            <div className="bg-white/95 backdrop-blur-md rounded-[2rem] p-8 shadow-[0_20px_60px_rgba(0,0,0,0.12)] border border-white/60 w-full">
-              <div className="w-16 h-16 bg-[#F5F5F7] rounded-2xl flex items-center justify-center mb-5 mx-auto border border-black/[0.05]">
-                <Lock className="w-8 h-8 text-[#1D1D1F]" />
+            <div className="bg-white/95 backdrop-blur-md rounded-xl p-5 shadow-[0_20px_60px_rgba(0,0,0,0.12)] border border-white/60 w-full">
+              <div className="w-12 h-12 bg-[#F5F5F7] rounded-xl flex items-center justify-center mb-4 mx-auto border border-black/[0.05]">
+                <Lock className="w-6 h-6 text-[#1D1D1F]" />
               </div>
-              <h2 className="text-xl font-bold text-[#1D1D1F] tracking-tight mb-2">
+              <h2 className="text-lg font-bold text-[#1D1D1F] tracking-tight mb-2">
                 Premium Feature
               </h2>
-              <p className="text-sm text-[#86868B] mb-6 leading-relaxed font-medium">
+              <p className="text-xs text-[#86868B] mb-5 leading-relaxed font-medium">
                 Upgrade to the Growth plan to unlock our powerful Job Description Analyser. Instantly detect bias, get inclusivity scores, and generate complete bias-free rewrites.
               </p>
               <Link href="/pricing?highlight=growth&feature=jd_analyser">
-                <button className="w-full bg-[#1D1D1F] text-white px-6 py-4 rounded-2xl text-sm font-bold shadow-lg hover:bg-black active:scale-[0.98] transition-all min-h-[52px]">
+                <button className="w-full bg-[#1D1D1F] text-white px-5 py-3 rounded-xl text-sm font-bold shadow-lg hover:bg-black active:scale-[0.98] transition-all min-h-[44px]">
                   Upgrade to Unlock →
                 </button>
               </Link>
@@ -188,19 +196,22 @@ export default function JDAnalyserPage() {
 
       <div className={`space-y-4 transition-all duration-500 ${(!hasAccess && !planLoading) ? 'opacity-40 pointer-events-none select-none blur-[4px]' : ''}`}>
         {mode === 'generate' ? (
-          <JDGenerator onPassToAnalyser={(generatedJd) => {
-            setJd(generatedJd)
-            setMode('analyse')
-          }} />
+          <JDGenerator
+            onPassToAnalyser={(generatedJd) => {
+              setJd(generatedJd)
+              setMode('analyse')
+            }}
+            onResult={(data) => setGeneratedResult(data)}
+          />
         ) : (
           <>
 
         {/* Section Header */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-4">
-          <h2 className="text-xl font-extrabold text-[#1D1D1F] tracking-tight mb-1">
+          <h2 className="text-lg font-extrabold text-[#1D1D1F] tracking-tight mb-1">
             Analyze Existing JD
           </h2>
-          <p className="text-xs md:text-sm font-medium text-[#86868B]">
+          <p className="text-xs font-medium text-[#86868B]">
             Paste your job description to scan for biased language and requirements.
           </p>
         </motion.div>
@@ -428,7 +439,13 @@ export default function JDAnalyserPage() {
   )
 }
 
-function JDGenerator({ onPassToAnalyser }: { onPassToAnalyser: (jd: string) => void }) {
+function JDGenerator({
+  onPassToAnalyser,
+  onResult
+}: {
+  onPassToAnalyser: (jd: string) => void
+  onResult: (data: any) => void
+}) {
   const { getAuthToken } = useBackendToken()
   const [form, setForm] = useState({
     role: '', company: '', location: '',
@@ -438,8 +455,6 @@ function JDGenerator({ onPassToAnalyser }: { onPassToAnalyser: (jd: string) => v
     tone: 'conversational'
   })
   const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState<any>(null)
-  const [copied, setCopied] = useState(false)
 
   const set = (key: string, val: string) =>
     setForm(p => ({ ...p, [key]: val }))
@@ -462,35 +477,20 @@ function JDGenerator({ onPassToAnalyser }: { onPassToAnalyser: (jd: string) => v
         body: JSON.stringify(form)
       })
       const data = await res.json()
-      if (res.ok) setResult(data)
+      if (res.ok) onResult(data)
     } finally {
       setLoading(false)
     }
   }
 
-  const copy = () => {
-    if (!result) return
-    navigator.clipboard.writeText(result.full_jd)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
-  if (result) return (
-    <JDGeneratorResult 
-      result={result} 
-      reportId={result.reportId} 
-      onReset={() => setResult(null)} 
-    />
-  )
-
   return (
     <div className="space-y-6 relative animate-in fade-in slide-in-from-bottom-4 duration-500">
       {loading && <LoadingState text="Generating" />}
       <div>
-        <h2 className="text-xl font-extrabold text-[#1D1D1F] tracking-tight mb-1">
+        <h2 className="text-lg font-extrabold text-[#1D1D1F] tracking-tight mb-1">
           Role Details
         </h2>
-        <p className="text-xs md:text-sm font-medium text-[#86868B]">
+        <p className="text-xs font-medium text-[#86868B]">
           Fill in the specifications to generate a complete, high-converting, bias-free job description.
         </p>
       </div>
@@ -576,8 +576,8 @@ function JDGenerator({ onPassToAnalyser }: { onPassToAnalyser: (jd: string) => v
           !form.role || !form.company ||
           !form.location || !form.experience || loading
         }
-        className={`w-full py-4 rounded-2xl text-sm 
-                    font-bold transition-all min-h-[56px] ${
+        className={`w-full py-3 rounded-xl text-sm 
+                    font-bold transition-all min-h-[44px] ${
           form.role && form.company &&
           form.location && form.experience && !loading
             ? 'bg-[#f59e0b] text-white hover:bg-[#d97706] active:scale-[0.98] border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5'

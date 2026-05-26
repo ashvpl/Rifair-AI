@@ -53,25 +53,25 @@ export function PersonalisedInsights({ profile }: PersonalisedInsightsProps) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.25, type: 'spring', stiffness: 280, damping: 26 }}
-      className="bg-white border border-black/[0.04] rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-7 space-y-4 shadow-sm"
+      className="bg-white border-2 border-black rounded-xl p-4 sm:p-5 md:p-7 space-y-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]"
     >
       {/* Header */}
       <div className="flex items-center justify-between">
-        <p className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.15em]">
+        <p className="text-[9px] sm:text-[10px] font-black text-[#86868B] uppercase tracking-[0.15em]">
           Your hiring intelligence
         </p>
-        <span className="text-[9px] font-bold text-[#0a3d2e] bg-[#f0fdf4] px-2 py-1 rounded-full uppercase tracking-wider">
+        <span className="text-[8px] sm:text-[9px] font-bold text-[#0a3d2e] bg-[#f0fdf4] px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full uppercase tracking-wider">
           Personalised
         </span>
       </div>
 
       {/* ── Bias pattern alert ─────────────────────────────────── */}
       {topBias && (
-        <div className="bg-amber-50 border border-amber-100 rounded-xl p-3.5">
-          <p className="text-[10px] font-black text-amber-700 uppercase tracking-wider mb-1">
+        <div className="bg-amber-50 border border-amber-100 rounded-lg sm:rounded-xl p-3 sm:p-3.5">
+          <p className="text-[9px] sm:text-[10px] font-black text-amber-700 uppercase tracking-wider mb-0.5 sm:mb-1">
             Pattern detected
           </p>
-          <p className="text-xs text-amber-800 leading-relaxed font-medium">
+          <p className="text-[11px] sm:text-xs text-amber-800 leading-relaxed font-medium">
             <span className="font-bold capitalize">{topBias.replace(/_/g, ' ')} bias</span>{' '}
             appears across your submitted questions. Your team may have an unconscious pattern worth reviewing.
           </p>
@@ -80,17 +80,17 @@ export function PersonalisedInsights({ profile }: PersonalisedInsightsProps) {
 
       {/* ── Improvement trend ──────────────────────────────────── */}
       {improvement !== 0 && (
-        <div className="flex items-center gap-3">
-          <div className={`w-9 h-9 rounded-full flex items-center justify-center text-base flex-shrink-0 ${
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-sm sm:text-base flex-shrink-0 ${
             improvement > 0 ? 'bg-green-50' : 'bg-red-50'
           }`}>
             {improvement > 0 ? '↗' : '↘'}
           </div>
           <div>
-            <p className="text-sm font-bold text-[#1D1D1F] leading-tight">
+            <p className="text-xs sm:text-sm font-bold text-[#1D1D1F] leading-tight">
               {improvement > 0 ? 'Bias scores are improving' : 'Bias scores need attention'}
             </p>
-            <p className="text-xs text-[#86868B] mt-0.5">
+            <p className="text-[10px] sm:text-xs text-[#86868B] mt-0.5">
               {improvement > 0
                 ? `${Math.abs(improvement).toFixed(0)}-point average improvement this month`
                 : 'Consider reviewing your question patterns'}
@@ -101,13 +101,13 @@ export function PersonalisedInsights({ profile }: PersonalisedInsightsProps) {
 
       {/* ── Active streak badge ────────────────────────────────── */}
       {streak > 1 && (
-        <div className="flex items-center gap-2.5 bg-[#f0fdf4] border border-green-100 rounded-xl p-3">
-          <span className="text-lg">🔥</span>
+        <div className="flex items-center gap-2 sm:gap-2.5 bg-[#f0fdf4] border border-green-100 rounded-lg sm:rounded-xl p-2.5 sm:p-3">
+          <span className="text-sm sm:text-lg">🔥</span>
           <div>
-            <p className="text-xs font-bold text-[#0a3d2e]">
+            <p className="text-[11px] sm:text-xs font-bold text-[#0a3d2e]">
               {streak}-day active streak
             </p>
-            <p className="text-[10px] text-[#059669] font-medium mt-0.5">
+            <p className="text-[9px] sm:text-[10px] text-[#059669] font-medium mt-0.5">
               You're building a habit of fair hiring
             </p>
           </div>
@@ -118,10 +118,10 @@ export function PersonalisedInsights({ profile }: PersonalisedInsightsProps) {
       {hasRewriteSignal && (
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <span className="text-[10px] font-bold text-[#86868B] uppercase tracking-wider">
+            <span className="text-[9px] sm:text-[10px] font-bold text-[#86868B] uppercase tracking-wider">
               Rewrites accepted
             </span>
-            <span className="text-xs font-black text-[#1D1D1F]">
+            <span className="text-[11px] sm:text-xs font-black text-[#1D1D1F]">
               {Math.round(rewriteRate * 100)}%
             </span>
           </div>
@@ -133,7 +133,7 @@ export function PersonalisedInsights({ profile }: PersonalisedInsightsProps) {
               className="h-full bg-[#0a3d2e] rounded-full"
             />
           </div>
-          <p className="text-[10px] text-[#86868B] font-medium">
+          <p className="text-[9px] sm:text-[10px] text-[#86868B] font-medium">
             {rewriteRate >= 0.7
               ? 'You consistently adopt bias-free rewrites — great signal.'
               : rewriteRate >= 0.4

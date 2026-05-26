@@ -258,11 +258,11 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="max-w-[1240px] mx-auto space-y-5 md:space-y-8 pb-4 pt-4 px-0 lg:px-6">
+    <div className="max-w-[1240px] mx-auto space-y-5 lg:space-y-8 pb-4 pt-4">
       
       {/* Dashboard Title Row — stacks vertically on mobile */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2">
-        <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-[#1D1D1F] tracking-tighter">Hiring intelligence dashboard</h1>
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-[#1D1D1F] tracking-tighter">Hiring intelligence dashboard</h1>
         <p className="text-[10px] font-bold text-[#86868B] uppercase tracking-[0.3em] whitespace-nowrap">Last updated: today</p>
       </div>
 
@@ -273,26 +273,26 @@ export default function DashboardPage() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         className={cn(
-          "relative overflow-hidden border-2 border-black rounded-[1.5rem] md:rounded-[2.5rem] p-5 sm:p-8 lg:p-12 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-colors duration-500",
+          "relative overflow-hidden border-2 border-black rounded-xl lg:rounded-2xl p-4 sm:p-5 lg:p-6 xl:p-8 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] lg:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] transition-colors duration-500",
           heroContent.bg
         )}
       >
         {/* Mobile: column layout; desktop: row */}
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 md:gap-8">
-          <div className="space-y-1.5 md:space-y-3 flex-1 min-w-0">
-            <h2 className={cn("text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight", heroContent.titleColor)}>
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 lg:gap-8">
+          <div className="space-y-1 lg:space-y-1.5 flex-1 min-w-0">
+            <h2 className={cn("text-base sm:text-lg lg:text-xl font-black tracking-tight", heroContent.titleColor)}>
               {heroContent.title}
             </h2>
-            <p className={cn("text-sm md:text-lg font-medium", heroContent.subtitleColor)}>
+            <p className={cn("text-xs lg:text-sm font-semibold", heroContent.subtitleColor)}>
               {heroContent.subtitle}
             </p>
           </div>
           <Link href={heroContent.ctaLink} className="w-full sm:w-auto flex-shrink-0">
             <button className={cn(
-              "w-full sm:w-auto whitespace-nowrap flex items-center justify-center gap-2 md:gap-3 px-6 md:px-8 py-3.5 md:py-4 transition-all rounded-full text-white font-bold shadow-md hover:shadow-lg group active:scale-95 text-sm md:text-base min-h-[52px]",
+              "w-full sm:w-auto whitespace-nowrap flex items-center justify-center gap-2 px-4 lg:px-5 py-2 lg:py-3 transition-all rounded-xl lg:rounded-xl text-white font-black shadow-md hover:shadow-lg group active:scale-95 text-xs lg:text-xs uppercase tracking-widest min-h-[38px] lg:min-h-[42px]",
               heroContent.buttonBg
             )}>
-              {heroContent.cta} <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
+              {heroContent.cta} <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
             </button>
           </Link>
         </div>
@@ -303,26 +303,26 @@ export default function DashboardPage() {
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6"
+        className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6"
       >
         {/* TOTAL ANALYSES */}
-        <motion.div variants={itemVariants} className="bg-white p-5 md:p-8 rounded-2xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300">
-          <div className="space-y-3 md:space-y-6">
-            <p className="text-[10px] font-black text-black/40 uppercase tracking-[0.2em]">TOTAL ANALYSES</p>
-            <div className="space-y-1">
-              <p className="text-3xl md:text-5xl font-black text-[#1D1D1F] tracking-tighter">{stats.analysisCount}</p>
+        <motion.div variants={itemVariants} className="bg-white p-3 lg:p-4 rounded-xl lg:rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] lg:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300">
+          <div className="space-y-1.5 lg:space-y-3">
+            <p className="text-[9px] lg:text-xs font-black text-black/40 uppercase tracking-[0.2em]">TOTAL ANALYSES</p>
+            <div className="space-y-0.5">
+              <p className="text-2xl lg:text-3xl xl:text-4xl font-black text-[#1D1D1F] tracking-tighter">{stats.analysisCount}</p>
             </div>
           </div>
         </motion.div>
         
         {/* AVG BIAS SCORE */}
-        <motion.div variants={itemVariants} className="bg-white p-5 md:p-8 rounded-2xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300">
-          <div className="space-y-3 md:space-y-6">
-            <p className="text-[10px] font-black text-black/40 uppercase tracking-[0.2em]">AVG BIAS SCORE</p>
-            <div className="space-y-1">
-              <div className="flex items-baseline gap-1">
+        <motion.div variants={itemVariants} className="bg-white p-3 lg:p-4 rounded-xl lg:rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] lg:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300">
+          <div className="space-y-1.5 lg:space-y-3">
+            <p className="text-[9px] lg:text-xs font-black text-black/40 uppercase tracking-[0.2em]">AVG BIAS SCORE</p>
+            <div className="space-y-0.5">
+              <div className="flex items-baseline gap-0.5">
                 <p className={cn(
-                  "text-3xl md:text-5xl font-black tracking-tighter",
+                  "text-2xl lg:text-3xl xl:text-4xl font-black tracking-tighter",
                   stats.analysisCount === 0 ? "text-[#1D1D1F]" :
                   stats.avgBiasScore < 40 ? "text-[#059669]" :
                   stats.avgBiasScore < 65 ? "text-amber-600" :
@@ -330,10 +330,10 @@ export default function DashboardPage() {
                 )}>
                   {stats.analysisCount === 0 ? "—" : stats.avgBiasScore}
                 </p>
-                <span className="text-lg font-black text-black/20">/100</span>
+                <span className="text-xs lg:text-sm font-black text-black/20">/100</span>
               </div>
               <p className={cn(
-                "text-sm font-bold capitalize",
+                "text-[10px] sm:text-xs lg:text-xs font-bold capitalize",
                 stats.analysisCount === 0 ? "text-[#86868B]" :
                 stats.avgBiasScore < 40 ? "text-[#059669]" :
                 stats.avgBiasScore < 65 ? "text-amber-600" :
@@ -346,26 +346,26 @@ export default function DashboardPage() {
         </motion.div>
         
         {/* HIGH BIAS FLAGS */}
-        <motion.div variants={itemVariants} className={cn("p-5 md:p-8 rounded-2xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300", flagCardStyle.bg)}>
-          <div className="space-y-3 md:space-y-6">
-            <p className={cn("text-[10px] font-black uppercase tracking-[0.2em]", flagCardStyle.label)}>HIGH BIAS FLAGS</p>
-            <div className="space-y-1">
-              <p className={cn("tracking-tighter font-black", stats.analysisCount === 0 ? "text-xl text-[#86868B]" : "text-3xl md:text-5xl " + flagCardStyle.text)}>
+        <motion.div variants={itemVariants} className={cn("p-3 lg:p-4 rounded-xl lg:rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] lg:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300", flagCardStyle.bg)}>
+          <div className="space-y-1.5 lg:space-y-3">
+            <p className={cn("text-[9px] lg:text-xs font-black uppercase tracking-[0.2em]", flagCardStyle.label)}>HIGH BIAS FLAGS</p>
+            <div className="space-y-0.5">
+              <p className={cn("tracking-tighter font-black", stats.analysisCount === 0 ? "text-sm text-[#86868B]" : "text-2xl lg:text-3xl xl:text-4xl " + flagCardStyle.text)}>
                 {stats.analysisCount === 0 ? "No data yet" : stats.highBiasFlags}
               </p>
-              <p className={cn("text-sm font-black uppercase", flagCardStyle.text)}>{subtexts.flags}</p>
+              <p className={cn("text-[10px] sm:text-xs lg:text-xs font-black uppercase", flagCardStyle.text)}>{subtexts.flags}</p>
             </div>
           </div>
         </motion.div>
         
         {/* FAIRNESS SCORE */}
-        <motion.div variants={itemVariants} className="bg-white p-5 md:p-8 rounded-2xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300">
-          <div className="space-y-3 md:space-y-6">
-            <p className="text-[10px] font-black text-black/40 uppercase tracking-[0.2em]">FAIRNESS SCORE</p>
-            <div className="space-y-1">
-              <div className="flex items-baseline gap-1">
+        <motion.div variants={itemVariants} className="bg-white p-3 lg:p-4 rounded-xl lg:rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] lg:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300">
+          <div className="space-y-1.5 lg:space-y-3">
+            <p className="text-[9px] lg:text-xs font-black text-black/40 uppercase tracking-[0.2em]">FAIRNESS SCORE</p>
+            <div className="space-y-0.5">
+              <div className="flex items-baseline gap-0.5">
                 <p className={cn(
-                  "text-3xl md:text-5xl font-black tracking-tighter",
+                  "text-2xl lg:text-3xl xl:text-4xl font-black tracking-tighter",
                   stats.analysisCount === 0 ? "text-[#1D1D1F]" :
                   stats.fairnessScore >= 80 ? "text-[#059669]" :
                   stats.fairnessScore >= 60 ? "text-amber-500" :
@@ -375,11 +375,11 @@ export default function DashboardPage() {
                 </p>
                 <span className={cn(
                   "font-black",
-                  stats.analysisCount === 0 ? "text-lg text-[#86868B]" : "text-2xl text-[#059669]"
+                  stats.analysisCount === 0 ? "text-xs text-[#86868B]" : "text-xs lg:text-sm text-[#059669]"
                 )}>{stats.analysisCount === 0 ? "" : "%"}</span>
               </div>
               <p className={cn(
-                "text-sm font-bold capitalize",
+                "text-[10px] sm:text-xs lg:text-xs font-bold capitalize",
                 stats.fairnessScore >= 80 ? "text-[#059669]/80" : stats.fairnessScore >= 60 ? "text-amber-500/80" : stats.analysisCount === 0 ? "text-[#86868B]" : "text-red-500/80"
               )}>
                 {subtexts.fairness}
@@ -407,22 +407,22 @@ export default function DashboardPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="lg:col-span-2 bg-white rounded-2xl p-6 md:p-10 border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6 md:space-y-10"
+            className="lg:col-span-2 bg-white rounded-xl lg:rounded-xl p-4 sm:p-5 lg:p-6 xl:p-8 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] lg:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] space-y-4 sm:space-y-6 lg:space-y-6"
           >
-            <div className="flex items-center justify-between flex-wrap gap-3">
-              <h3 className="text-lg md:text-2xl font-bold text-[#1D1D1F] tracking-tight">Bias Trend Analysis</h3>
-              <div className="flex items-center gap-6">
-                 <div className="flex items-center gap-2">
-                   <div className="w-3 h-3 rounded-full bg-[#10b981]" />
-                   <span className="text-xs font-bold text-[#86868B]">Fairness</span>
+            <div className="flex items-center justify-between flex-wrap gap-2.5">
+              <h3 className="text-xs sm:text-base lg:text-xl font-black text-[#1D1D1F] tracking-tight">Bias Trend Analysis</h3>
+              <div className="flex items-center gap-2 sm:gap-4 md:gap-6">
+                 <div className="flex items-center gap-1 sm:gap-2">
+                   <div className="w-2.5 h-2.5 rounded-full bg-[#10b981]" />
+                   <span className="text-[10px] sm:text-xs font-bold text-[#86868B]">Fairness</span>
                  </div>
-                 <div className="flex items-center gap-2">
-                   <div className="w-4 h-4 rounded-full border-2 border-slate-200" />
-                   <span className="text-xs font-bold text-[#86868B]">Daily Score</span>
+                 <div className="flex items-center gap-1 sm:gap-2">
+                   <div className="w-2.5 h-2.5 rounded-full border-2 border-slate-200 bg-white" />
+                   <span className="text-[10px] sm:text-xs font-bold text-[#86868B]">Daily Score</span>
                  </div>
               </div>
             </div>
-            <div className="h-[300px] w-full">
+            <div className="h-[180px] sm:h-[220px] md:h-[300px] w-full">
               <BiasTrendChart data={stats.trendData} />
             </div>
           </motion.div>
@@ -432,18 +432,18 @@ export default function DashboardPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-white rounded-2xl p-6 md:p-10 border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6 md:space-y-10"
+            className="bg-white rounded-xl lg:rounded-xl p-4 sm:p-5 lg:p-6 xl:p-8 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] lg:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] space-y-4 sm:space-y-6 lg:space-y-6"
           >
-            <h3 className="text-lg md:text-2xl font-bold text-[#1D1D1F] tracking-tight">Bias by category</h3>
-            <div className="space-y-6">
+            <h3 className="text-xs sm:text-base lg:text-xl font-black text-[#1D1D1F] tracking-tight">Bias by category</h3>
+            <div className="space-y-4 sm:space-y-6">
               {Object.entries(stats.categoryBreakdown).length > 0 ? (
                 Object.entries(stats.categoryBreakdown).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([cat, count], idx) => (
-                  <div key={cat} className="space-y-3">
+                  <div key={cat} className="space-y-1.5 sm:space-y-3">
                     <div className="flex justify-between items-end">
-                      <span className="text-xs font-black text-[#1D1D1F] uppercase tracking-[0.1em]">{cat.replace('_', ' ')}</span>
-                      <span className="text-xs font-bold text-[#86868B]">{count} hits</span>
+                      <span className="text-[10px] sm:text-xs font-black text-[#1D1D1F] uppercase tracking-[0.1em]">{cat.replace('_', ' ')}</span>
+                      <span className="text-[10px] sm:text-xs font-bold text-[#86868B]">{count} hits</span>
                     </div>
-                    <div className="h-3 w-full bg-[#F5F5F7] rounded-full overflow-hidden">
+                    <div className="h-2 sm:h-3 w-full bg-[#F5F5F7] rounded-full overflow-hidden">
                       <motion.div 
                         initial={{ width: 0 }}
                         animate={{ width: `${Math.min(100, (count / Math.max(1, stats.highBiasFlags)) * 100)}%` }}
@@ -456,8 +456,8 @@ export default function DashboardPage() {
                   </div>
                 ))
               ) : (
-                <div className="h-[200px] flex items-center justify-center border border-dashed border-slate-200 rounded-2xl bg-slate-50">
-                  <p className="text-[#86868B] text-sm font-medium">No activity data yet.</p>
+                <div className="h-[120px] sm:h-[200px] flex items-center justify-center border border-dashed border-slate-200 rounded-xl bg-slate-50">
+                  <p className="text-[#86868B] text-xs sm:text-sm font-medium">No activity data yet.</p>
                 </div>
               )}
             </div>
@@ -472,10 +472,10 @@ export default function DashboardPage() {
           transition={{ delay: 0.3 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          <div className="bg-white rounded-2xl p-6 border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between h-full">
-            <div className="space-y-4">
-              <h3 className="text-[10px] font-black text-black uppercase tracking-[0.2em]">Monthly Usage</h3>
-              <div className="space-y-6">
+          <div className="bg-white rounded-xl lg:rounded-xl p-4 sm:p-5 lg:p-6 xl:p-8 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] lg:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between h-full">
+            <div className="space-y-3 sm:space-y-4">
+              <h3 className="text-[10px] lg:text-xs font-black text-black uppercase tracking-[0.2em]">Monthly Usage</h3>
+              <div className="space-y-4 sm:space-y-6">
                 <UsageMeter 
                   label="Analyses" 
                   used={usage?.analysesUsed ?? 0} 
@@ -504,21 +504,21 @@ export default function DashboardPage() {
                 )}
               </div>
             </div>
-            <Link href="/pricing" className="mt-6 text-xs font-bold text-[#86868B] hover:text-black transition-colors flex items-center gap-1">
+            <Link href="/pricing" className="mt-4 sm:mt-6 text-xs font-bold text-[#86868B] hover:text-black transition-colors flex items-center gap-1">
               View plan limits <ChevronRight className="w-3 h-3" />
             </Link>
           </div>
           
-          <div className="bg-gradient-to-br from-[#1D1D1F] to-[#434343] rounded-2xl p-6 text-white border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between h-full">
-            <div className="space-y-2">
-              <h3 className="text-lg font-bold">Pro Tip</h3>
-              <p className="text-xs text-white/70 leading-relaxed">
+          <div className="bg-gradient-to-br from-[#1D1D1F] to-[#434343] rounded-xl lg:rounded-xl p-4 sm:p-5 lg:p-6 xl:p-8 text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] lg:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between h-full">
+            <div className="space-y-2 lg:space-y-3">
+              <h3 className="text-base sm:text-lg lg:text-xl font-black">Pro Tip</h3>
+              <p className="text-[11px] sm:text-xs lg:text-sm text-white/70 leading-relaxed">
                 Using inclusive language in interview questions increases the quality of candidates by 25%.
               </p>
             </div>
             <button 
               onClick={() => (window as any).location = '/analyze'}
-              className="mt-6 w-full py-3 bg-white text-black rounded-xl text-xs font-bold hover:bg-white/90 transition-all active:scale-95"
+              className="mt-4 sm:mt-6 w-full py-2.5 sm:py-3 lg:py-4 bg-white text-black rounded-xl lg:rounded-2xl text-xs lg:text-sm font-bold hover:bg-white/90 transition-all active:scale-95"
             >
               Analyze new questions
             </button>
@@ -528,12 +528,12 @@ export default function DashboardPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="bg-white rounded-2xl p-6 md:p-10 border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-5 md:space-y-8"
+        className="bg-white rounded-xl lg:rounded-xl p-4 sm:p-5 lg:p-6 xl:p-8 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] lg:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] space-y-4 sm:space-y-6 lg:space-y-6"
       >
         <div className="flex items-center justify-between gap-2 flex-wrap">
-          <h3 className="text-lg md:text-2xl font-bold text-[#1D1D1F] tracking-tight">Recently flagged questions</h3>
-          <Link href="/history" className="text-sm font-bold text-[#059669] hover:text-[#047857] transition-colors flex items-center gap-1">
-            View full log <ChevronRight className="w-4 h-4" />
+          <h3 className="text-xs sm:text-base lg:text-xl font-black text-[#1D1D1F] tracking-tight">Recently flagged questions</h3>
+          <Link href="/history" className="text-xs sm:text-sm font-bold text-[#059669] hover:text-[#047857] transition-colors flex items-center gap-1">
+            View full log <ChevronRight className="w-3.5 h-3.5" />
           </Link>
         </div>
         
@@ -541,35 +541,35 @@ export default function DashboardPage() {
           {stats.flaggedQuestions.length > 0 ? (
             stats.flaggedQuestions.map((q, i) => (
               <div key={i} className={cn(
-                "py-4 md:py-6 px-3 md:px-4 flex flex-row items-center justify-between gap-2 sm:gap-4 md:gap-8 group transition-colors rounded-2xl",
+                "py-2.5 sm:py-4 px-2 sm:px-3.5 flex flex-row items-center justify-between gap-2 sm:gap-4 md:gap-8 group transition-colors rounded-xl",
                 i % 2 === 0 ? "bg-transparent" : "bg-[#F5F5F7]/30"
               )}>
-                <div className="space-y-1.5 md:space-y-2 min-w-0 flex-1">
-                  <p className="text-[#1D1D1F] font-bold text-sm md:text-xl leading-tight group-hover:text-[#059669] transition-colors">
+                <div className="space-y-1 sm:space-y-2 min-w-0 flex-1">
+                  <p className="text-[#1D1D1F] font-bold text-xs sm:text-base lg:text-xl leading-snug group-hover:text-[#059669] transition-colors">
                     &ldquo;{q.text.slice(0, 80)}{q.text.length > 80 ? '...' : ''}&rdquo;
                   </p>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-[9px] md:text-[10px] font-black text-red-600 uppercase tracking-widest bg-red-50 px-2 py-1 rounded">
+                  <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                    <span className="text-[8px] sm:text-[10px] font-black text-red-600 uppercase tracking-widest bg-red-50 px-2 py-0.5 rounded">
                       {q.type} BIAS
                     </span>
-                    <span className="text-[9px] md:text-[10px] font-bold text-[#86868B] uppercase tracking-widest">
+                    <span className="text-[8px] sm:text-[10px] font-bold text-[#86868B] uppercase tracking-widest">
                       {format(new Date(q.date), "MMM d")}
                     </span>
                   </div>
                 </div>
                 <div className="flex flex-col items-end min-w-[50px] sm:min-w-[60px] md:min-w-[100px]">
-                  <span className="text-2xl md:text-4xl font-bold text-[#1D1D1F] tracking-tighter">
+                  <span className="text-xl sm:text-2xl lg:text-4xl font-black text-[#1D1D1F] tracking-tighter">
                     {q.score}
                   </span>
-                  <span className="text-[8px] md:text-[10px] font-black text-[#86868B] uppercase tracking-widest">
+                  <span className="text-[8px] sm:text-[10px] font-black text-[#86868B] uppercase tracking-widest">
                     BIAS
                   </span>
                 </div>
               </div>
             ))
           ) : (
-            <div className="py-24 text-center bg-[#F5F5F7] rounded-[2rem] border border-dashed border-slate-200">
-              <p className="text-[#86868B] font-bold text-lg">Your recent analyses are bias-free.</p>
+            <div className="py-12 sm:py-20 text-center bg-[#F5F5F7] rounded-xl border border-dashed border-slate-200">
+              <p className="text-[#86868B] font-bold text-sm sm:text-lg">Your recent analyses are bias-free.</p>
             </div>
           )}
         </div>
@@ -582,62 +582,62 @@ export default function DashboardPage() {
         transition={{ delay: 0.55 }}
       >
         {planId === 'growth' || planId === 'enterprise' ? (
-          <div className="relative overflow-hidden bg-gradient-to-br from-[#f59e0b] via-[#d97706] to-[#b45309] rounded-2xl p-6 md:p-10 text-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+          <div className="relative overflow-hidden bg-gradient-to-br from-[#f59e0b] via-[#d97706] to-[#b45309] rounded-xl lg:rounded-xl p-3.5 sm:p-5 lg:p-6 xl:p-8 text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] lg:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]">
             <div className="absolute -right-8 -top-8 w-48 h-48 rounded-full border border-white/[0.07]" />
             <div className="absolute -right-2 -top-2 w-32 h-32 rounded-full border border-white/[0.07]" />
-            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-              <div className="space-y-3 flex-1">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
-                    <FileSearch className="w-4 h-4 text-white" />
+            <div className="relative z-10 flex flex-row items-center justify-between gap-3 lg:gap-6">
+              <div className="space-y-1.5 lg:space-y-3 flex-1 min-w-0">
+                <div className="flex items-center gap-1.5 lg:gap-2.5">
+                  <div className="w-5 h-5 lg:w-8 lg:h-8 rounded-lg bg-white/10 flex items-center justify-center">
+                    <FileSearch className="w-3 h-3 lg:w-4.5 lg:h-4.5 text-white" />
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-[0.15em] text-white/60">Premium Feature</span>
+                  <span className="text-[8px] lg:text-[10px] font-black uppercase tracking-[0.15em] text-white/60">Premium Feature</span>
                 </div>
-                <h3 className="text-xl md:text-2xl font-bold tracking-tight">Job Descriptions</h3>
-                <p className="text-sm text-white/70 leading-relaxed max-w-md">
+                <h3 className="text-xs sm:text-base lg:text-xl font-black tracking-tight">Job Descriptions</h3>
+                <p className="text-[10px] sm:text-xs lg:text-sm text-white/70 leading-normal lg:leading-relaxed max-w-md lg:max-w-xl">
                   Paste any job description and get a complete bias audit — section scores, coded language decoder, legal risk assessment, and a fully rewritten inclusive version.
                 </p>
-                <div className="flex flex-wrap gap-2 pt-1">
+                <div className="flex flex-wrap gap-1 lg:gap-2 pt-0.5">
                   {['Bias by section', 'Coded language', 'Legal risk', 'Full rewrite'].map(tag => (
-                    <span key={tag} className="text-[10px] font-black px-2.5 py-1 rounded-full bg-white/10 text-white/80 uppercase tracking-wider">{tag}</span>
+                    <span key={tag} className="text-[8px] lg:text-[10px] font-bold px-1.5 lg:px-2.5 py-0.5 lg:py-1 rounded-full bg-white/10 text-white/80 uppercase tracking-wider">{tag}</span>
                   ))}
                 </div>
               </div>
               <Link href="/jd-analyser" className="flex-shrink-0">
-                <button className="flex items-center gap-2 px-6 py-3.5 bg-white text-[#f59e0b] rounded-full text-sm font-bold hover:bg-white/90 active:scale-95 transition-all shadow-lg whitespace-nowrap">
-                  Analyse a JD <ArrowRight className="w-4 h-4" />
+                <button className="flex items-center gap-1 lg:gap-2 px-3 lg:px-6 py-2 lg:py-3.5 bg-white text-[#f59e0b] rounded-xl lg:rounded-full text-[10px] sm:text-xs lg:text-sm font-black hover:bg-white/90 active:scale-95 transition-all shadow-lg whitespace-nowrap uppercase tracking-wider">
+                  Analyse a JD <ArrowRight className="w-3 h-3 lg:w-4 h-4" />
                 </button>
               </Link>
             </div>
           </div>
         ) : (
-          <div className="relative overflow-hidden bg-white border-2 border-black rounded-2xl p-6 md:p-10 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+          <div className="relative overflow-hidden bg-white border-2 border-black rounded-xl lg:rounded-xl p-3.5 sm:p-5 lg:p-6 xl:p-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] lg:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]">
             <div className="absolute -right-6 -top-6 w-40 h-40 rounded-full border border-black/[0.04]" />
             <div className="absolute -right-1 -top-1 w-28 h-28 rounded-full border border-black/[0.04]" />
-            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-              <div className="space-y-3 flex-1">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <div className="w-8 h-8 rounded-xl bg-black/[0.05] flex items-center justify-center">
-                    <FileSearch className="w-4 h-4 text-[#86868B]" />
+            <div className="relative z-10 flex flex-row items-center justify-between gap-3 lg:gap-6">
+              <div className="space-y-1.5 lg:space-y-3 flex-1 min-w-0">
+                <div className="flex items-center gap-1.5 lg:gap-2.5 flex-wrap">
+                  <div className="w-5 h-5 lg:w-8 lg:h-8 rounded-lg bg-black/[0.05] flex items-center justify-center">
+                    <FileSearch className="w-3 h-3 lg:w-4.5 lg:h-4.5 text-[#86868B]" />
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-[0.15em] text-[#86868B]">Premium Feature</span>
-                  <span className="flex items-center gap-1 text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
-                    <Lock className="w-2.5 h-2.5" /> Locked
+                  <span className="text-[8px] lg:text-[10px] font-black uppercase tracking-[0.15em] text-[#86868B]">Premium Feature</span>
+                  <span className="flex items-center gap-0.5 text-[7px] lg:text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-100 text-amber-700">
+                    <Lock className="w-2 h-2 lg:w-3 lg:h-3" /> Locked
                   </span>
                 </div>
-                <h3 className="text-xl md:text-2xl font-bold text-[#1D1D1F] tracking-tight">Job Descriptions</h3>
-                <p className="text-sm text-[#86868B] leading-relaxed max-w-md">
+                <h3 className="text-xs sm:text-base lg:text-xl font-black text-[#1D1D1F] tracking-tight">Job Descriptions</h3>
+                <p className="text-[10px] sm:text-xs lg:text-sm text-[#86868B] leading-normal lg:leading-relaxed max-w-md lg:max-w-xl">
                   Detect bias in any job description. Section-by-section scoring, coded language detection, legal risk assessment, and a complete bias-free rewrite.
                 </p>
-                <div className="flex flex-wrap gap-2 pt-1">
+                <div className="flex flex-wrap gap-1 lg:gap-2 pt-0.5">
                   {['Bias by section', 'Coded language', 'Legal risk', 'Full rewrite'].map(tag => (
-                    <span key={tag} className="text-[10px] font-black px-2.5 py-1 rounded-full bg-black/[0.05] text-[#86868B] uppercase tracking-wider">{tag}</span>
+                    <span key={tag} className="text-[8px] lg:text-[10px] font-bold px-1.5 lg:px-2.5 py-0.5 lg:py-1 rounded-full bg-black/[0.05] text-[#86868B] uppercase tracking-wider">{tag}</span>
                   ))}
                 </div>
               </div>
               <Link href="/pricing?highlight=growth&feature=jd_analyser" className="flex-shrink-0">
-                <button className="flex items-center gap-2 px-6 py-3.5 bg-[#1D1D1F] text-white rounded-full text-sm font-bold hover:bg-black active:scale-95 transition-all shadow-sm whitespace-nowrap">
-                  Upgrade to Growth <ArrowRight className="w-4 h-4" />
+                <button className="flex items-center gap-1 lg:gap-2 px-3 lg:px-6 py-2 lg:py-3.5 bg-[#1D1D1F] text-white rounded-xl lg:rounded-full text-[10px] sm:text-xs lg:text-sm font-black hover:bg-black active:scale-95 transition-all shadow-sm whitespace-nowrap uppercase tracking-wider">
+                  Upgrade to Growth <ArrowRight className="w-3 h-3 lg:w-4 h-4" />
                 </button>
               </Link>
             </div>
@@ -652,7 +652,7 @@ export default function DashboardPage() {
 function UsageMeter({ label, used, limit, percent }: { label: string; used: number; limit: number | null; percent: number }) {
   return (
     <div className="space-y-2">
-      <div className="flex justify-between text-[11px] font-bold">
+      <div className="flex justify-between text-[10px] sm:text-[11px] font-bold">
         <span className="text-[#333333]">{label}</span>
         <span className="text-black font-extrabold">{used} / {limit || '∞'}</span>
       </div>

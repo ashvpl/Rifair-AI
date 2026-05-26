@@ -13,14 +13,14 @@ export default function SignInPage() {
 
   return (
     <AuthUI initialIsSignIn={true}>
-      <div className="w-full max-w-md z-10 px-6">
-        <div className="mb-10 flex justify-center">
+      <div className="w-full max-w-[min(28rem,calc(100vw-2rem))] lg:max-w-md xl:max-w-lg z-10">
+        <div className="mb-8 flex justify-center">
           <Image
             src="/rifair-logo.png"
             alt="Rifair AI"
             width={120}
             height={120}
-            className="h-[120px] w-auto object-contain"
+            className="h-[100px] sm:h-[120px] w-auto object-contain"
             priority
           />
         </div>

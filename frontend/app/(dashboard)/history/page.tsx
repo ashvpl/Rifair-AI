@@ -193,7 +193,7 @@ export default function HistoryPage() {
       </div>
 
       {/* ── Sticky Search + Filter Bar ────────────────────────────────────── */}
-      <div className="sticky top-0 sticky-below-topbar z-20 bg-background/95 backdrop-blur-sm pt-1 pb-3 -mx-3 px-3 sm:-mx-4 sm:px-4 md:-mx-6 md:px-6 mb-4"
+      <div className="sticky top-0 sticky-below-topbar z-20 bg-background/95 backdrop-blur-sm pt-1 pb-3 mb-4"
       >
         <div className="relative mb-3">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#86868B] pointer-events-none" />
@@ -212,7 +212,7 @@ export default function HistoryPage() {
               key={filter}
               onClick={() => setActiveFilter(filter)}
               className={cn(
-                "px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all duration-150 min-h-[36px] touch-target",
+                "px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all duration-150 min-h-[36px] touch-target shrink-0",
                 activeFilter === filter
                   ? "bg-[#1D1D1F] text-white shadow-sm"
                   : "bg-white text-[#86868B] border border-black/[0.08] hover:border-black/[0.15] active:bg-[#F5F5F7]"

@@ -133,7 +133,7 @@ export default function KitGeneratorPage() {
 
   return (
     <div className="kit-page-wrapper">
-      <div className="relative max-w-6xl mx-auto space-y-6 pt-6 pb-16 px-0">
+      <div className={cn("relative max-w-6xl mx-auto space-y-3 pb-8 px-0", kit ? "pt-1.5" : "pt-6")}>
         {isLoading && <LoadingState text={loadingText} />}
       
       {/* Page header - hide when viewing history */}
@@ -141,11 +141,11 @@ export default function KitGeneratorPage() {
         <div className="relative">
           <div className="space-y-1">
             <h1 className={cn(
-              "text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-[#062c21]",
+              "text-xl sm:text-2xl font-extrabold tracking-tight text-[#062c21]",
             )}>
               {searchParams.get("evaluate") === "true" ? "Candidate Evaluation" : "Interview Kits"}
             </h1>
-            <p className="text-[#86868B] max-w-2xl text-base md:text-lg font-medium">
+            <p className="text-[#86868B] max-w-2xl text-xs sm:text-sm font-medium">
               {searchParams.get("evaluate") === "true" 
                 ? "Precision scoring to ensure accurate, merit-based hiring while detecting subtle interview biases."
                 : "Generate role-specific kits or audit your existing questions for bias."}
@@ -156,7 +156,7 @@ export default function KitGeneratorPage() {
 
       {/* Tab selector - hide when viewing history */}
       {!reportId && searchParams.get("evaluate") !== "true" && (
-        <div className="flex bg-[#F5F5F7]/80 rounded-2xl p-1 max-w-sm border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <div className="flex bg-[#F5F5F7]/80 rounded-xl p-1 max-w-sm border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <button
             onClick={() => setActiveTab("generate")}
             className={cn(
@@ -210,10 +210,10 @@ export default function KitGeneratorPage() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ type: "spring", stiffness: 200, damping: 25 }}
-            className={cn(reportId && "pt-4")}
+            className={cn(reportId && "pt-1")}
           >
             {searchParams.get("evaluate") !== "true" && (
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 gap-4">
                 <div>
                   <p className="text-xs font-bold text-[#86868B] uppercase tracking-[0.1em]">
                     Generated Kit
@@ -261,47 +261,47 @@ export default function KitGeneratorPage() {
             className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-stretch"
           >
             <div className="lg:col-span-1 h-full">
-              <div className="bg-white border-2 border-black p-6 sm:p-8 md:p-12 h-full min-h-[500px] md:min-h-[700px] rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden transition-all duration-500 hover:shadow-none hover:translate-x-1 hover:translate-y-1 flex flex-col">
-                <div className="mb-6 md:mb-10">
-                  <h2 className="text-xl md:text-2xl font-extrabold text-[#1D1D1F] tracking-tight">Role Definitions</h2>
-                  <p className="text-xs md:text-sm font-medium text-[#86868B] mt-1">Prime the engine for localized expertise.</p>
+              <div className="bg-white border-2 border-black p-4 sm:p-5 h-full min-h-[400px] rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden transition-all duration-500 hover:shadow-none hover:translate-x-1 hover:translate-y-1 flex flex-col">
+                <div className="mb-4">
+                  <h2 className="text-base sm:text-lg font-black text-[#1D1D1F] tracking-tight">Role Definitions</h2>
+                  <p className="text-xs font-semibold text-[#86868B] mt-0.5">Prime the engine for localized expertise.</p>
                 </div>
                 
-                <div className="space-y-6 flex-1 flex flex-col">
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.1em] ml-1">Job Role</Label>
+                <div className="space-y-4 flex-1 flex flex-col">
+                  <div className="space-y-1">
+                    <Label className="text-[9px] font-black text-[#86868B] uppercase tracking-[0.1em] ml-0.5">Job Role</Label>
                     <Input 
                       value={formData.role} 
                       onChange={(e) => setFormData({...formData, role: e.target.value})} 
                       placeholder="e.g. Lead Machine Learning Engineer"
-                      className="bg-[#F5F5F7]/30 border-2 border-black focus:border-[#10b981] focus:ring-4 focus:ring-[#10b981]/5 h-12 rounded-xl transition-all font-semibold"
+                      className="bg-[#F5F5F7]/30 border-2 border-black focus:border-[#10b981] focus:ring-0 h-10 rounded-xl transition-all font-semibold text-xs px-3"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.1em] ml-1">Experience</Label>
+                  <div className="space-y-1">
+                    <Label className="text-[9px] font-black text-[#86868B] uppercase tracking-[0.1em] ml-0.5">Experience</Label>
                     <Input 
                       value={formData.experience_level} 
                       onChange={(e) => setFormData({...formData, experience_level: e.target.value})} 
                       placeholder="e.g. Tier 4, 7-10 years" 
-                      className="bg-[#F5F5F7]/30 border-2 border-black focus:border-black focus:ring-0 h-12 rounded-xl transition-all font-bold"
+                      className="bg-[#F5F5F7]/30 border-2 border-black focus:border-black focus:ring-0 h-10 rounded-xl transition-all font-semibold text-xs px-3"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.1em] ml-1">Company type</Label>
+                  <div className="space-y-1">
+                    <Label className="text-[9px] font-black text-[#86868B] uppercase tracking-[0.1em] ml-0.5">Company type</Label>
                     <Input 
                       value={formData.company_type} 
                       onChange={(e) => setFormData({...formData, company_type: e.target.value})} 
                       placeholder="e.g. Series B High-Growth" 
-                      className="bg-[#F5F5F7]/30 border-2 border-black focus:border-black focus:ring-0 h-12 rounded-xl transition-all font-bold"
+                      className="bg-[#F5F5F7]/30 border-2 border-black focus:border-black focus:ring-0 h-10 rounded-xl transition-all font-semibold text-xs px-3"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.1em] ml-1">additional requirement</Label>
+                  <div className="space-y-1">
+                    <Label className="text-[9px] font-black text-[#86868B] uppercase tracking-[0.1em] ml-0.5">additional requirement</Label>
                     <Textarea 
                       value={formData.diversity_goals} 
                       onChange={(e) => setFormData({...formData, diversity_goals: e.target.value})} 
                       placeholder="e.g. Eliminate domain-specific linguistic barriers..."
-                      className="resize-none bg-[#F5F5F7]/30 border-2 border-black focus:border-black focus:ring-0 min-h-[100px] rounded-xl transition-all font-bold p-4"
+                      className="resize-none bg-[#F5F5F7]/30 border-2 border-black focus:border-black focus:ring-0 min-h-[80px] rounded-xl transition-all font-semibold text-xs p-3"
                     />
                   </div>
                   
@@ -316,12 +316,12 @@ export default function KitGeneratorPage() {
                     onClick={handleGenerate}
                     disabled={isLoading || !formData.role || kitModeration.isBlocked || kitModeration.isChecking}
                     className={cn(
-                      "w-full relative p-0.5 inline-flex overflow-hidden rounded-xl group shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all h-auto mt-auto active:translate-x-0.5 active:translate-y-0.5 active:shadow-none border-2 border-black text-white",
+                      "w-full relative p-0.5 inline-flex overflow-hidden rounded-xl group shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all h-auto mt-auto active:translate-x-0.5 active:translate-y-0.5 active:shadow-none border-2 border-black text-white",
                       searchParams.get("evaluate") === "true" ? "bg-[#3b82f6] hover:bg-[#2563eb]" : "bg-[#10b981] hover:bg-[#059669]"
                     )}
                   >
-                    <span className="inline-flex size-full items-center justify-center rounded-xl px-6 py-4 font-semibold transition-all">
-                      <span className="font-black text-xs tracking-widest relative z-10 uppercase">
+                    <span className="inline-flex size-full items-center justify-center rounded-xl px-4 py-2.5 font-semibold transition-all">
+                      <span className="font-black text-[10px] tracking-widest relative z-10 uppercase">
                         {kitModeration.isBlocked ? 'Fix content to continue' : 'Generate Kit'}
                       </span>
                     </span>
@@ -331,7 +331,7 @@ export default function KitGeneratorPage() {
             </div>
 
             <div className="lg:col-span-1 h-full">
-              <div className="h-full min-h-[500px] md:min-h-[700px] bg-white border-2 border-black flex flex-col items-stretch p-6 sm:p-8 md:p-10 text-foreground rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden">
+              <div className="h-full min-h-[360px] bg-white border-2 border-black flex flex-col items-stretch p-4 sm:p-5 text-foreground rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-black/[0.02] rounded-full blur-[120px] -mr-32 -mt-32 md:-mr-48 md:-mt-48" />
                 <div className="relative z-10 flex flex-col items-center justify-center flex-1 py-10">
                   {error ? (
@@ -378,8 +378,8 @@ export default function KitGeneratorPage() {
                     )
                   ) : (
                     <>
-                      <div className="text-center mb-12 space-y-3">
-                        <h3 className="text-4xl font-extrabold text-[#1D1D1F] tracking-tight uppercase">How it works</h3>
+                      <div className="text-center mb-6 space-y-2">
+                        <h3 className="text-xl sm:text-2xl font-extrabold text-[#1D1D1F] tracking-tight uppercase">How it works</h3>
                         <p className="text-[#86868B] font-bold max-w-sm mx-auto leading-relaxed uppercase text-[11px] tracking-widest">Explore the core capabilities of the Rifair interview engine.</p>
                       </div>
                       <KitFeatureCards />

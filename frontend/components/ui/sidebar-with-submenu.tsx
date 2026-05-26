@@ -73,7 +73,7 @@ export function BottomNav() {
     { name: "Analyze",   href: "/analyze",      icon: ShieldAlert },
     { name: "Kits",      href: "/kit",           icon: FileText },
     { name: "JD",        href: "/jd-analyser",  icon: FileSearch },
-    { name: "History",   href: "/history",       icon: History },
+    { name: "Evaluations", href: "/evaluations", icon: ClipboardCheck },
   ];
 
   return (
@@ -160,57 +160,56 @@ const SidebarWithSubmenu = () => {
         }}
       >
         <div className="flex items-center justify-between w-full px-4 h-14">
-          <Link href="/" className="flex items-center h-[30px]">
-            <Image
-              src="/rifair-logo.png"
-              alt="Rifair AI"
-              width={100}
-              height={100}
-              className="w-auto h-full object-contain"
-              priority
-            />
-          </Link>
+          {/* Hamburger on the top-left */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="w-10 h-10 -ml-2 rounded-xl flex items-center justify-center active:scale-90 transition-transform hover:bg-black/[0.04] touch-target"
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              {isMobileMenuOpen ? (
+                <motion.div
+                  key="close"
+                  initial={{ opacity: 0, rotate: -45 }}
+                  animate={{ opacity: 1, rotate: 0 }}
+                  exit={{ opacity: 0, rotate: 45 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  <X className="w-5 h-5 text-[#1D1D1F]" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="open"
+                  initial={{ opacity: 0, rotate: 45 }}
+                  animate={{ opacity: 1, rotate: 0 }}
+                  exit={{ opacity: 0, rotate: -45 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  <svg className="w-5 h-5 text-[#1D1D1F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 6h16M4 12h16m-7 6h7" />
+                  </svg>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </button>
 
+          {/* Logo and Plan Badge on the top-right */}
           <div className="flex items-center gap-3">
-            {/* Plan badge */}
             {!isLoading && (
               <span className="hidden xs:inline-flex text-[9px] font-black uppercase tracking-[0.12em] px-2.5 py-1 rounded-full bg-[#F5F5F7] text-[#86868B] border border-black/[0.04]">
                 {planId} plan
               </span>
             )}
-
-            {/* Hamburger */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="w-10 h-10 rounded-xl flex items-center justify-center active:scale-90 transition-transform hover:bg-black/[0.04] touch-target"
-              aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-            >
-              <AnimatePresence mode="wait" initial={false}>
-                {isMobileMenuOpen ? (
-                  <motion.div
-                    key="close"
-                    initial={{ opacity: 0, rotate: -45 }}
-                    animate={{ opacity: 1, rotate: 0 }}
-                    exit={{ opacity: 0, rotate: 45 }}
-                    transition={{ duration: 0.15 }}
-                  >
-                    <X className="w-5 h-5 text-[#1D1D1F]" />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="open"
-                    initial={{ opacity: 0, rotate: 45 }}
-                    animate={{ opacity: 1, rotate: 0 }}
-                    exit={{ opacity: 0, rotate: -45 }}
-                    transition={{ duration: 0.15 }}
-                  >
-                    <svg className="w-5 h-5 text-[#1D1D1F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 6h16M4 12h16m-7 6h7" />
-                    </svg>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </button>
+            <Link href="/dashboard" className="flex items-center h-[42px] -mr-2">
+              <Image
+                src="/rifair-logo.png"
+                alt="Rifair AI"
+                width={140}
+                height={140}
+                className="w-auto h-full object-contain"
+                priority
+              />
+            </Link>
           </div>
         </div>
       </div>
@@ -230,30 +229,30 @@ const SidebarWithSubmenu = () => {
         )}
       </AnimatePresence>
 
-      {/* ── Mobile Drawer Panel (slides from right) ───────────────────────── */}
+      {/* ── Mobile Drawer Panel (slides from left) ───────────────────────── */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.nav
             key="drawer-panel"
-            initial={{ x: "100%" }}
+            initial={{ x: "-100%" }}
             animate={{ x: 0 }}
-            exit={{ x: "100%" }}
+            exit={{ x: "-100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 300 }}
             style={{
               paddingTop: "calc(56px + env(safe-area-inset-top))",
               paddingBottom: "env(safe-area-inset-bottom)",
             }}
-            className="fixed right-0 top-0 bottom-0 w-[300px] bg-white z-[46] lg:hidden shadow-[-8px_0_40px_rgba(0,0,0,0.12)] flex flex-col"
+            className="fixed left-0 top-0 bottom-0 w-[300px] max-w-[85vw] bg-white border-r border-black/[0.06] z-[46] lg:hidden shadow-[8px_0_40px_rgba(0,0,0,0.12)] flex flex-col"
           >
             {/* Nav items */}
             <div className="flex-1 overflow-y-auto px-4 py-3 space-y-1">
               <p className="text-[9px] font-black text-[#86868B] uppercase tracking-[0.18em] px-3 mb-3 mt-1">
                 Navigation
               </p>
-              {navigation.map((item, idx) => {
-                const isActive = isEvaluateMode 
-                  ? item.href === "/evaluations" 
-                  : pathname === item.href;
+              {navigation
+                .filter((item) => item.href === "/history")
+                .map((item, idx) => {
+                const isActive = pathname === item.href;
                 return (
                   <Link
                     key={idx}
@@ -473,8 +472,6 @@ const SidebarWithSubmenu = () => {
           </div>
         </div>
       </nav>
-
-      {/* ── Bottom Nav (Mobile + Tablet) ──────────────────────────────────── */}
       <BottomNav />
     </>
   );

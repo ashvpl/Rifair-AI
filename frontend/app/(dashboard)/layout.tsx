@@ -4,6 +4,7 @@ import SidebarWithSubmenu from "@/components/ui/sidebar-with-submenu";
 import { Header } from "@/components/Header";
 import { RetentionNudgeWrapper } from "@/components/intelligence/RetentionNudgeWrapper";
 import { PlanExpiryBanner } from "@/components/pricing/PlanExpiryBanner";
+import MobileSafePage from "@/components/layout/MobileSafePage";
 
 export default async function DashboardLayout({
   children,
@@ -25,15 +26,10 @@ export default async function DashboardLayout({
         <Header />
         <PlanExpiryBanner />
 
-        {/*
-          .dashboard-main in globals.css handles breakpoint-aware padding:
-          Mobile/tablet: space for top bar + bottom nav
-          Desktop (lg+): standard 24px padding
-        */}
-        <main className="dashboard-main flex-1 overflow-y-auto">
-          <div className="w-full max-w-screen-xl mx-auto">
+        <main className="flex-1 overflow-y-auto">
+          <MobileSafePage>
             {children}
-          </div>
+          </MobileSafePage>
         </main>
       </div>
 
@@ -42,3 +38,4 @@ export default async function DashboardLayout({
     </div>
   );
 }
+

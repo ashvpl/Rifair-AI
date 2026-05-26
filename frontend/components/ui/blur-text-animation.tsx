@@ -103,17 +103,20 @@ export function BlurTextAnimation({
                     transitionDuration: `${word.duration}s`,
                     transitionDelay: `${word.delay}s`,
                     transitionTimingFunction: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                    filter: isAnimating 
-                      ? 'blur(0px) brightness(1)' 
-                      : `blur(${word.blur}px) brightness(0.6)`,
-                    transform: isAnimating 
-                      ? 'translateY(0) scale(1) rotateX(0deg)' 
+                    // Disable blur on mobile to prevent GPU jank — only use opacity + translateY
+                    ...(typeof window !== 'undefined' && window.innerWidth >= 768 ? {
+                      filter: isAnimating
+                        ? 'blur(0px) brightness(1)'
+                        : `blur(${word.blur}px) brightness(0.6)`,
+                    } : {}),
+                    transform: isAnimating
+                      ? 'translateY(0) scale(1) rotateX(0deg)'
                       : `translateY(20px) scale(${word.scale || 1}) rotateX(-15deg)`,
-                    willChange: 'filter, transform, opacity',
+                    willChange: 'transform, opacity',
                     transformStyle: 'preserve-3d',
                     backfaceVisibility: 'hidden',
-                    textShadow: isAnimating 
-                      ? '0 2px 8px rgba(255,255,255,0.1)' 
+                    textShadow: isAnimating
+                      ? '0 2px 8px rgba(255,255,255,0.1)'
                       : '0 0 40px rgba(255,255,255,0.4)'
                   }}
                 >

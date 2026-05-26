@@ -44,7 +44,7 @@ export default function FooterSection({
 }) {
   const { isSignedIn } = useAuth();
   return (
-    <footer className="bg-white py-24 border-t border-black/[0.03] relative z-10">
+            <footer className="bg-gray-100 py-24 border-t border-black/[0.03] relative z-10">
       <div className="max-w-7xl mx-auto px-6">
         {/* --- Branding & Content --- */}
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-16 lg:gap-24">

@@ -5,6 +5,9 @@ import { cn } from '@/lib/utils'
 import { useSubscription } from '@/hooks/useSubscription'
 import ExportButton from '@/components/pdf/ExportButton'
 import { FileText, Briefcase, CheckCircle2, ShieldCheck, AlertCircle, Info, TrendingUp, Users, Scale, Edit3 } from 'lucide-react'
+import ResponsiveResultCard from '@/components/results/ResponsiveResultCard'
+import ResultSection from '@/components/results/ResultSection'
+import ResultHeader from '@/components/results/ResultHeader'
 
 
 const verdictConfig = {
@@ -50,10 +53,10 @@ export function JDAnalysisResult({ result, onReset, reportId }: { result: any; o
     <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in duration-700">
 
       {/* ── Hero card ────────────────────────────────────────────── */}
-      <motion.div
+            <motion.div
         initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
         className={cn(
-          'rounded-2xl md:rounded-[2.5rem] p-4 sm:p-6 md:p-8 lg:p-12 border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] md:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden text-white transition-colors duration-500',
+          'rounded-xl sm:rounded-2xl md:rounded-[2.5rem] p-4 sm:p-6 md:p-8 lg:p-12 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] md:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden text-white transition-colors duration-500',
           result.overall_verdict === 'INCLUSIVE' ? 'bg-emerald-600' :
           result.overall_verdict === 'MILD_BIAS' ? 'bg-amber-600' :
           result.overall_verdict === 'BIASED' ? 'bg-[#f59e0b]' : 'bg-red-600'
@@ -61,56 +64,56 @@ export function JDAnalysisResult({ result, onReset, reportId }: { result: any; o
       >
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-32 -mt-32" />
         
-        <div className="relative z-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
-          <div className="space-y-4 w-full lg:max-w-xl">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10 backdrop-blur-md flex-shrink-0">
-                <FileText className="w-6 h-6 text-white" />
+        <div className="relative z-10 flex flex-row justify-between items-start gap-3 sm:gap-8">
+          <div className="space-y-2 sm:space-y-4 flex-1 min-w-0">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl bg-white/10 flex items-center justify-center border border-white/10 backdrop-blur-md flex-shrink-0">
+                <FileText className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
               </div>
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              <div className="min-w-0 flex-1">
+                <h1 className="text-sm xs:text-base sm:text-2xl lg:text-3xl font-extrabold text-white tracking-tight break-words leading-tight">
                   {result.headline || "Job Description Analysis"}
                 </h1>
-                <p className="text-sm font-bold text-white/60 uppercase tracking-widest flex items-center gap-2 mt-0.5">
-                  <Briefcase className="w-3.5 h-3.5" />
-                  Bias-Free Talent Acquisition
+                <p className="text-[9px] sm:text-sm font-bold text-white/60 uppercase tracking-widest flex items-center gap-1 mt-0.5">
+                  <Briefcase className="w-3 h-3" />
+                  Talent Acquisition
                 </p>
               </div>
             </div>
             
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-white/60">
-                <CheckCircle2 className="w-4 h-4 text-white/80" />
-                Language Audit Verified
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <div className="flex items-center gap-1 text-[9px] sm:text-xs font-bold text-white/60 uppercase tracking-widest">
+                <CheckCircle2 className="w-3.5 h-3.5 text-white/80" />
+                Audit Verified
               </div>
-              <div className="flex items-center gap-2 text-xs font-bold text-white/60">
+              <div className="flex items-center gap-1 text-[9px] sm:text-xs font-bold text-white/60 uppercase tracking-widest">
                 <span className={cn(
-                  "w-2 h-2 rounded-full",
+                  "w-1.5 h-1.5 rounded-full",
                   (result.legal_risk_level === 'HIGH' || result.legal_risk_level === 'CRITICAL') ? 'bg-red-400' : 'bg-emerald-400'
                 )} />
                 {result.legal_risk_level} Legal Risk
               </div>
             </div>
-
-            <p className="text-sm text-white/80 leading-relaxed font-medium">
+ 
+            <p className="text-[10px] xs:text-xs sm:text-sm text-white/80 leading-relaxed font-medium line-clamp-3 sm:line-clamp-none">
               {result.summary}
             </p>
           </div>
-
-          <div className="flex flex-col items-start lg:items-end gap-6 w-full lg:w-auto">
-            <div className="flex flex-wrap items-center gap-6 sm:gap-8 justify-between w-full lg:w-auto">
-              <div className="text-left lg:text-right">
-                <div className="text-[10px] font-black text-white/60 uppercase tracking-widest mb-1">Inclusivity Score</div>
-                <div className="text-4xl sm:text-5xl font-black text-white tracking-tighter">
-                  {result.overall_inclusivity_score}<span className="text-xl text-white/40">/100</span>
+ 
+          <div className="flex flex-col items-end gap-3 w-[110px] xs:w-[130px] sm:w-auto shrink-0 self-stretch justify-between">
+            <div className="flex flex-col items-end gap-2 w-full">
+              <div className="text-right">
+                <div className="text-[8px] sm:text-[10px] font-black text-white/60 uppercase tracking-widest mb-0.5">Inclusivity Score</div>
+                <div className="text-xl xs:text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tighter leading-none">
+                  {result.overall_inclusivity_score}<span className="text-xs sm:text-xl text-white/40">/100</span>
                 </div>
               </div>
               <div className={cn(
-                "px-6 py-4 rounded-3xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center justify-center text-center min-w-[140px] sm:min-w-[160px] bg-white text-black"
+                "w-full px-2 py-1.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-3xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center justify-center text-center bg-white text-black"
               )}>
-                <span className="text-[10px] font-black uppercase tracking-widest opacity-60 mb-1">Analysis Verdict</span>
+                <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest opacity-60 mb-0.5">Verdict</span>
                 <span className={cn(
-                  "text-xs font-black uppercase tracking-widest",
+                  "text-[9px] sm:text-xs font-black uppercase tracking-widest truncate max-w-full",
                   result.overall_verdict === 'INCLUSIVE' ? 'text-emerald-600' :
                   result.overall_verdict === 'MILD_BIAS' ? 'text-amber-600' :
                   result.overall_verdict === 'BIASED' ? 'text-[#f59e0b]' : 'text-red-600'
@@ -123,7 +126,7 @@ export function JDAnalysisResult({ result, onReset, reportId }: { result: any; o
               id={reportId || ''} 
               planTier={planId} 
               variant="secondary"
-              className="w-full h-14"
+              className="w-full h-8 xs:h-10 sm:h-14 text-[9px] xs:text-[10px] sm:text-xs py-1"
             />
           </div>
         </div>
@@ -155,14 +158,14 @@ export function JDAnalysisResult({ result, onReset, reportId }: { result: any; o
       )}
 
       {/* ── Tab nav ───────────────────────────────────────────────── */}
-      <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+      <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2 scrollbar-hide">
         {tabs.map(tab => (
           <button
             key={tab.id}
             id={`jd-tab-${tab.id}`}
             onClick={() => setActiveTab(tab.id)}
             className={cn(
-              'text-[10px] font-black px-6 py-3 rounded-full border-2 transition-all flex items-center gap-2 uppercase tracking-widest',
+              'text-[9px] sm:text-[10px] font-black px-3 sm:px-6 py-2.5 sm:py-3 rounded-full border-2 transition-all flex items-center gap-1.5 sm:gap-2 uppercase tracking-widest shrink-0 whitespace-nowrap',
               activeTab === tab.id
                 ? 'bg-black text-white border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
                 : 'bg-white text-[#86868B] border-black/10 hover:bg-[#F5F5F7] hover:border-black/20'
@@ -187,7 +190,7 @@ export function JDAnalysisResult({ result, onReset, reportId }: { result: any; o
       {activeTab === 'overview' && (
         <div className="space-y-3">
           {result.gender_language_analysis && (
-            <div className="bg-white border border-black/10 rounded-[2rem] p-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <div className="bg-white border border-black/10 rounded-[2rem] p-4 sm:p-6 lg:p-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
               <div className="flex items-center gap-2 mb-6">
                 <TrendingUp className="w-4 h-4 text-[#86868B]" />
                 <p className="text-[10px] font-black text-[#86868B] uppercase tracking-[0.15em]">Gender language balance</p>

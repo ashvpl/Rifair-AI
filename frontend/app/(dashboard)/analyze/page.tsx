@@ -151,18 +151,184 @@ export default function AnalyzePage() {
   const overallScore = report?.bias_score ?? report?.categories?.overall_bias_score ?? 0;
   const categoryBreakdown = report?.categories?.categoryBreakdown ?? {};
 
+  const renderHeroCard = () => (
+    <div className="bg-[#dc2626] border-2 border-black rounded-xl lg:rounded-2xl p-3 sm:p-5 lg:p-6 xl:p-8 text-white relative overflow-visible shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] lg:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] transition-colors duration-500">
+      <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-3xl -mr-24 -mt-24 pointer-events-none" />
+      
+      <div className="relative z-10 flex flex-col gap-2 lg:gap-3">
+        {/* Top Section: Title & Description */}
+        <div className="flex flex-row justify-between items-start gap-3">
+          <div className="space-y-1 lg:space-y-2 flex-1 min-w-0">
+            <div className="flex items-center gap-2 lg:gap-3.5">
+              <div className="w-7 h-7 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-lg bg-white/10 flex items-center justify-center border border-white/10 backdrop-blur-md flex-shrink-0">
+                <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h1 className="text-xs sm:text-lg lg:text-2xl xl:text-3xl font-black text-white tracking-tight break-words leading-tight">
+                  Bias Analysis Report
+                </h1>
+                <p className="text-[8px] lg:text-[10px] font-black text-white/60 uppercase tracking-widest flex items-center gap-1">
+                  <Layers className="w-2.5 h-2.5" />
+                  Spectral Intelligence Audit
+                </p>
+              </div>
+            </div>
+
+            <p className="text-[9px] sm:text-xs lg:text-sm text-white/80 leading-snug font-medium line-clamp-2 lg:line-clamp-none">
+              Our AI has scanned your interview content for unconscious bias, exclusionary language, and legal risks.
+            </p>
+          </div>
+
+          {/* Desktop Metrics */}
+          <div className="hidden sm:flex items-center gap-3 lg:gap-4 shrink-0">
+            <div className="text-right">
+              <div className="text-[9px] lg:text-[10px] font-black text-white/60 uppercase tracking-widest">Bias Points</div>
+              <div className="text-2xl lg:text-3xl xl:text-4xl font-black text-white tracking-tighter leading-none">
+                {questions.filter((q: any) => (q.bias_score ?? 0) >= 30).length}<span className="text-xs lg:text-sm text-white/40">pts</span>
+              </div>
+            </div>
+            <div className="px-2.5 lg:px-3 py-1.5 lg:py-2 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] lg:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center justify-center text-center bg-white text-black min-w-[60px] lg:min-w-[80px]">
+              <span className="text-[7px] lg:text-[9px] font-black uppercase tracking-widest opacity-60">Fairness</span>
+              <span className={cn(
+                "text-xs lg:text-xl font-black uppercase tracking-widest",
+                overallScore >= 70 ? "text-emerald-600" :
+                overallScore >= 40 ? "text-amber-600" :
+                "text-red-600"
+              )}>{overallScore}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Bar: mobile metrics + export button */}
+        <div className="flex flex-row justify-between items-center border-t border-white/10 pt-2 gap-2">
+          <div className="flex items-center gap-2">
+            {/* Mobile Metrics (Visible only on mobile) */}
+            <div className="flex sm:hidden items-center gap-2">
+              <div className="text-left">
+                <div className="text-[7px] font-black text-white/60 uppercase tracking-widest">Bias Pts</div>
+                <div className="text-sm font-black text-white leading-none">
+                  {questions.filter((q: any) => (q.bias_score ?? 0) >= 30).length}pts
+                </div>
+              </div>
+              <div className="h-5 w-[1px] bg-white/20" />
+              <div className="flex items-center gap-1 px-2 py-1 rounded-lg border border-white/20 bg-white/5">
+                <span className="text-[7px] font-black uppercase tracking-widest text-white/60">Score</span>
+                <span className={cn(
+                  "text-[10px] font-black uppercase",
+                  overallScore >= 70 ? "text-emerald-400" :
+                  overallScore >= 40 ? "text-amber-400" :
+                  "text-red-400"
+                )}>{overallScore}</span>
+              </div>
+            </div>
+
+            {/* Desktop Metadata (Hidden on mobile) */}
+            <div className="hidden sm:flex items-center gap-3 text-white/60 text-[9px] font-bold uppercase tracking-widest">
+              <div className="flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3 text-white/80" />
+                Compliance
+              </div>
+              <div className="flex items-center gap-1">
+                <Layers className="w-3 h-3 text-white/80" />
+                {questions.length} Analyzed
+              </div>
+            </div>
+          </div>
+
+          {/* Export button - outside overflow so tooltip shows */}
+          <div className="w-24 xs:w-28 sm:w-36 shrink-0 relative z-50">
+            <ExportButton
+              type="analysis"
+              id={reportId || ""}
+              planTier={planId}
+              variant="secondary"
+              className="w-full"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderBiasIndexCard = (ringSize: "md" | "lg" = "lg") => (
+    <div className="bg-white border-2 border-black rounded-xl lg:rounded-2xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] lg:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+      {/* Horizontal compact layout for mobile, vertical for desktop sidebar */}
+      <div className="flex items-center gap-3 p-3 sm:flex-col sm:items-center sm:p-4 lg:p-6 xl:p-8">
+        {/* Score ring */}
+        <div className="flex-shrink-0">
+          <BiasScoreRing score={overallScore} size={ringSize} showLabel />
+        </div>
+        {/* Label + Session Score */}
+        <div className="flex-1 sm:text-center sm:w-full sm:border-t sm:border-black/[0.04] sm:pt-3 sm:mt-1">
+          <p className="text-[8px] lg:text-[10px] font-black text-black/30 uppercase tracking-[0.25em] mb-0.5 sm:mb-2">
+            Bias Index
+          </p>
+          {sessionState.sessionFairnessScore !== null && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.2 }}
+              className="flex items-center gap-2 sm:flex-col sm:gap-0"
+            >
+              <p className="text-[8px] lg:text-[10px] font-black text-slate-400 uppercase tracking-widest">Session</p>
+              <p className={`text-base sm:text-2xl lg:text-3xl font-black ${
+                sessionState.sessionFairnessScore >= 70 ? "text-emerald-600" :
+                sessionState.sessionFairnessScore >= 40 ? "text-amber-600" :
+                "text-red-500"
+              }`}>
+                {sessionState.sessionFairnessScore}<span className="text-xs lg:text-sm text-slate-400">/100</span>
+              </p>
+            </motion.div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderCategoryBreakdown = () => {
+    if (Object.keys(categoryBreakdown).length === 0) return null;
+    return (
+      <div className="bg-white border-2 border-black p-4 sm:p-5 lg:p-6 xl:p-8 rounded-xl lg:rounded-2xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] lg:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] space-y-3 lg:space-y-5">
+        <span className="text-[10px] lg:text-xs font-black text-black/30 uppercase tracking-[0.3em] block">
+          Detection Clusters
+        </span>
+        <div className="space-y-3 sm:space-y-4">
+          {Object.entries(categoryBreakdown).map(([cat, count]: [any, any]) => {
+            const pct = Math.min((count / 5) * 100, 100);
+            return (
+              <div key={cat} className="space-y-1.5">
+                <div className="flex justify-between text-xs font-bold tracking-tight">
+                  <span className="capitalize text-foreground/70">{cat}</span>
+                  <span className="text-foreground">{count}</span>
+                </div>
+                <div className="h-2 w-full bg-[#F5F5F7] rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${pct}%` }}
+                    transition={{ duration: 1.5, ease: "circOut" }}
+                    className="h-full bg-[#dc2626] rounded-full"
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div className="relative space-y-4 md:space-y-6 animate-in fade-in duration-1000 pb-4 pt-0">
+    <div className="relative space-y-3 animate-in fade-in duration-1000 pb-4 pt-0">
       {isLoading && <LoadingState text={loadingText} />}
 
       {/* Page header - hide when viewing history */}
       {!reportId && (
         <>
           <div className="space-y-1">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#dc2626] tracking-tight">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-black text-[#dc2626] tracking-tight">
               Bias analysis
             </h2>
-            <p className="text-[#86868B] max-w-2xl text-sm sm:text-base md:text-lg font-medium">
+            <p className="text-[#86868B] max-w-2xl text-xs sm:text-sm lg:text-sm xl:text-base font-medium">
               AI-powered hiring intelligence — detect, explain, and fix bias before your next interview.
             </p>
           </div>
@@ -185,127 +351,67 @@ export default function AnalyzePage() {
         )}
       </AnimatePresence>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden mb-4"
+          >
+            <div className="p-5 bg-red-50 border border-red-200/60 text-red-700 rounded-2xl flex items-center gap-4 shadow-sm">
+              <AlertTriangle className="h-5 w-5 flex-shrink-0" />
+              <span className="text-sm font-bold tracking-tight">{error}</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-        {/* ── Main column ── */}
-        <div className="lg:col-span-2 space-y-5 md:space-y-8">
+      {!reportId && !report && (
+        <div className="space-y-5 md:space-y-8 max-w-4xl">
+          <QuestionInput
+            onAnalyze={handleAnalyze}
+            isLoading={isLoading}
+            initialText=""
+            initialName=""
+          />
+        </div>
+      )}
 
-          {!reportId && (
-            <>
-              <QuestionInput
-                onAnalyze={handleAnalyze}
-                isLoading={isLoading}
-                initialText={
-                  report?.categories?.original_input ||
-                  (report?.input_text?.startsWith("Analysis -") ? "" : report?.input_text) ||
-                  ""
-                }
-                initialName={
-                  report?.input_text?.startsWith("Analysis - '")
-                    ? report.input_text.replace(/^Analysis - '(.*)'$/, "$1")
-                    : ""
-                }
-              />
+      {!isLoading && report && questions.length > 0 ? (
+        <div ref={resultsRef} className={cn("space-y-3", !reportId && "pt-3")}>
+          
+          {/* 1. Mobile Flow (Visible on mobile/tablet, hidden on desktop) */}
+          <div className="flex flex-col gap-3 lg:hidden">
+            {renderHeroCard()}
+            {renderBiasIndexCard("md")}
+            <SpectralBiasReport questions={questions} />
+            <BiasDnaPanel />
+            {renderCategoryBreakdown()}
+          </div>
 
-              <AnimatePresence>
-                {error && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="p-5 bg-red-50 border border-red-200/60 text-red-700 rounded-2xl flex items-center gap-4 shadow-sm">
-                      <AlertTriangle className="h-5 w-5 flex-shrink-0" />
-                      <span className="text-sm font-bold tracking-tight">{error}</span>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </>
-          )}
-
-
-          {!isLoading && report && questions.length > 0 ? (
-            <div ref={resultsRef} className={cn("space-y-8", !reportId && "pt-10")}>
-              {/* Hero Result Card */}
-              <div className="bg-[#dc2626] border-2 border-black rounded-2xl md:rounded-[2.5rem] p-4 sm:p-6 md:p-8 lg:p-12 text-white relative overflow-hidden shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] md:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-colors duration-500">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-32 -mt-32" />
-                
-                <div className="relative z-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
-                  <div className="space-y-4 w-full lg:max-w-xl">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10 backdrop-blur-md flex-shrink-0">
-                        <ShieldCheck className="w-6 h-6 text-white" />
-                      </div>
-                      <div>
-                        <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                          Bias Analysis Report
-                        </h1>
-                        <p className="text-xs font-bold text-white/60 uppercase tracking-widest flex items-center gap-2 mt-0.5">
-                          <Layers className="w-3.5 h-3.5" />
-                          Spectral Intelligence Audit
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-                      <div className="flex items-center gap-2 text-xs font-bold text-white/60 uppercase tracking-widest">
-                        <ShieldCheck className="w-4 h-4 text-white/80" />
-                        Compliance Check
-                      </div>
-                      <div className="flex items-center gap-2 text-xs font-bold text-white/60 uppercase tracking-widest">
-                        <Layers className="w-4 h-4 text-white/80" />
-                        {questions.length} Items Analyzed
-                      </div>
-                    </div>
-                    
-                    <p className="text-sm text-white/80 leading-relaxed font-medium">
-                      Our AI has scanned your interview content for unconscious bias, exclusionary language, and legal risks. Below is the detailed breakdown.
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col items-start lg:items-end gap-6 w-full lg:w-auto">
-                    <div className="flex flex-wrap items-center gap-6 sm:gap-8 justify-between w-full lg:w-auto">
-                      <div className="text-left lg:text-right">
-                        <div className="text-[10px] font-black text-white/60 uppercase tracking-widest mb-1">Bias Points</div>
-                        <div className="text-4xl sm:text-5xl font-black text-white tracking-tighter">
-                          {questions.filter((q: any) => (q.bias_score ?? 0) >= 30).length}<span className="text-xl text-white/40"> pts</span>
-                        </div>
-                      </div>
-                      <div className={cn(
-                        "px-6 py-4 rounded-3xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center justify-center text-center min-w-[140px] sm:min-w-[160px] bg-white text-black"
-                      )}>
-                        <span className="text-[10px] font-black uppercase tracking-widest opacity-60 mb-1">Fairness Score</span>
-                        <span className={cn(
-                          "text-xs font-black uppercase tracking-widest",
-                          overallScore >= 70 ? "text-emerald-600" :
-                          overallScore >= 40 ? "text-amber-600" :
-                          "text-red-600"
-                        )}>{overallScore} FAIR</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex flex-col sm:flex-row gap-3 w-full lg:min-w-[320px]">
-                      <ExportButton 
-                        type="analysis" 
-                        id={reportId || ""} 
-                        planTier={planId} 
-                        variant="secondary"
-                        className="w-full"
-                      />
-                      <button className="w-full sm:flex-1 h-14 text-[10px] font-black bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-2xl transition-all uppercase tracking-widest px-6 whitespace-nowrap">
-                        Save Report
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
+          {/* 2. Desktop Flow (Hidden on mobile/tablet, visible on desktop) */}
+          <div className="hidden lg:grid lg:grid-cols-3 gap-4 items-start">
+            {/* Left Column (spans 2) */}
+            <div className="lg:col-span-2 space-y-5">
+              {renderHeroCard()}
               <SpectralBiasReport questions={questions} />
             </div>
-          ) : (
-            !isLoading && (
+
+            {/* Right Column (spans 1) */}
+            <div className="space-y-4 lg:sticky lg:top-6">
+              {renderBiasIndexCard("lg")}
+              {renderCategoryBreakdown()}
+              <BiasDnaPanel />
+            </div>
+          </div>
+
+        </div>
+      ) : (
+        !isLoading && !report && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
+            {/* Landing/Teaser Cards */}
+            <div className="lg:col-span-2">
               <motion.div 
                 variants={{
                   hidden: { opacity: 0 },
@@ -318,7 +424,7 @@ export default function AnalyzePage() {
                 }}
                 initial="hidden"
                 animate="show"
-                className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12"
+                className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 mt-6"
               >
                 {[
                   {
@@ -344,192 +450,110 @@ export default function AnalyzePage() {
                       hidden: { opacity: 0, y: 10 },
                       show: { opacity: 1, y: 0 }
                     }}
-                    className="p-6 bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] space-y-3 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300"
+                    className="p-6 lg:p-6 bg-white border-2 border-black rounded-2xl lg:rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] lg:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] space-y-3 lg:space-y-3 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300"
                   >
-                    <h4 className="text-lg font-black text-black tracking-tight">{card.title}</h4>
-                    <p className="text-sm text-black/60 font-medium leading-relaxed">
+                    <h4 className="text-base lg:text-xl font-black text-black tracking-tight">{card.title}</h4>
+                    <p className="text-xs lg:text-sm text-black/60 font-medium leading-relaxed">
                       {card.desc}
                     </p>
                   </motion.div>
                 ))}
               </motion.div>
-            )
-          )}
-        </div>
+            </div>
 
-        {/* ── Sidebar ── */}
-        <div className="space-y-5 md:space-y-6">
-          <AnimatePresence mode="wait">
-            {report ? (
-              <motion.div
-                key="sidebar-results"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.6 }}
-                className="space-y-5 md:space-y-6 lg:sticky lg:top-0"
-              >
-                {/* Overall score ring */}
-                <div className="bg-white border-2 border-black rounded-2xl p-6 md:p-8 flex flex-col items-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-                  <p className="text-[10px] font-black text-black/30 uppercase tracking-[0.3em] mb-6 text-center">
-                    Bias Index
-                  </p>
-                  <BiasScoreRing score={overallScore} size="lg" showLabel />
-
-                  {/* Session fairness score (if available) */}
-                  {sessionState.sessionFairnessScore !== null && (
+            {/* Sidebar alerts & Shield info */}
+            <div className="space-y-5 lg:sticky lg:top-28">
+              <div className="bg-white border-2 border-black rounded-2xl p-6 lg:p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] lg:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6 lg:space-y-6">
+                <div className="flex items-center gap-2 border-b-2 border-black pb-4">
+                  <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
+                  <span className="text-[10px] lg:text-xs font-black text-black uppercase tracking-[0.3em]">
+                    Recent Hiring Updates
+                  </span>
+                </div>
+                
+                <div className="min-h-[140px] flex items-center">
+                  <AnimatePresence mode="wait">
                     <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 1.5 }}
-                      className="mt-5 text-center w-full pt-4 border-t border-black/[0.04]"
+                      key={activeAlertIdx}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.5 }}
+                      className="space-y-3"
                     >
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
-                        Session Fairness
-                      </p>
-                      <p className={`text-2xl font-black ${
-                        sessionState.sessionFairnessScore >= 70 ? "text-emerald-600" :
-                        sessionState.sessionFairnessScore >= 40 ? "text-amber-600" :
-                        "text-red-500"
-                      }`}>
-                        {sessionState.sessionFairnessScore}<span className="text-sm text-slate-400">/100</span>
-                      </p>
-                    </motion.div>
-                  )}
-                </div>
-
-                {/* Category breakdown */}
-                {Object.keys(categoryBreakdown).length > 0 && (
-                  <div className="bg-white border-2 border-black p-6 md:p-8 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6">
-                    <span className="text-[10px] font-black text-black/30 uppercase tracking-[0.3em] block">
-                      Detection Clusters
-                    </span>
-                    <div className="space-y-4">
-                      {Object.entries(categoryBreakdown).map(([cat, count]: [any, any]) => {
-                        const pct = Math.min((count / 5) * 100, 100);
-                        return (
-                          <div key={cat} className="space-y-1.5">
-                            <div className="flex justify-between text-xs font-bold tracking-tight">
-                              <span className="capitalize text-foreground/70">{cat}</span>
-                              <span className="text-foreground">{count}</span>
-                            </div>
-                            <div className="h-2 w-full bg-[#F5F5F7] rounded-full overflow-hidden">
-                              <motion.div
-                                initial={{ width: 0 }}
-                                animate={{ width: `${pct}%` }}
-                                transition={{ duration: 1.5, ease: "circOut" }}
-                                className="h-full bg-[#dc2626] rounded-full"
-                              />
-                            </div>
+                      {[
+                        {
+                          title: "Global Tech Firm Fined $2.4M",
+                          desc: "Discriminatory interview questions led to a massive class-action settlement. Bias is a multi-million dollar liability."
+                        },
+                        {
+                          title: "Turnover 40% Higher",
+                          desc: "Research shows biased interview questions lead to significantly higher turnover rates within the first 6 months."
+                        },
+                        {
+                          title: "EEOC Audits Increasing",
+                          desc: "Regulators now require auditable proof of non-bias in hiring AI. Companies without reports are first to be targeted."
+                        },
+                        {
+                          title: "Viral Bias: Brand Damage",
+                          desc: "Social media exposure of a single biased question can destroy your company's hiring reputation overnight."
+                        },
+                        {
+                          title: "12,000 Candidate Lawsuit",
+                          desc: "A small 'background' question triggered a massive class-action suit spanning 12,000 rejected candidates."
+                        },
+                        {
+                          title: "Cost of Bad Hires: 1.5x Salary",
+                          desc: "Biased questions mask true talent, leading to expensive hiring mistakes that cost 1.5x the employee's annual salary."
+                        },
+                        {
+                          title: "Compliance Deadlines",
+                          desc: "New 'Skills-First' mandates are being enforced. Verifiable proof of non-bias is no longer optional for enterprise teams."
+                        },
+                        {
+                          title: "Productivity Boost 25%",
+                          desc: "Companies using Rifair AI report an average 25% boost in hiring productivity by focusing on what actually matters."
+                        }
+                      ].map((alert, i) => (
+                        i === activeAlertIdx && (
+                          <div key={i} className="space-y-2">
+                            <p className="text-sm font-black text-black tracking-tight leading-snug">
+                              {alert.title}
+                            </p>
+                            <p className="text-xs text-black/50 leading-relaxed font-medium">
+                              {alert.desc}
+                            </p>
                           </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
+                        )
+                      ))}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
 
-                <BiasDnaPanel />
-              </motion.div>
-            ) : (
-              <motion.div
-                key="sidebar-alerts"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                className="space-y-5 lg:sticky lg:top-28"
-              >
-                <div className="bg-white border-2 border-black rounded-2xl p-6 md:p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-6">
-                  <div className="flex items-center gap-2 border-b-2 border-black pb-4">
-                    <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
-                    <span className="text-[10px] font-black text-black uppercase tracking-[0.3em]">
-                      Recent Hiring Updates
-                    </span>
+                <div className="pt-6 relative">
+                  <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-black/20 via-black/5 to-black/20" />
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-[9px] font-black text-white bg-black px-2 py-0.5 rounded tracking-tighter">SECURE</span>
+                    <p className="text-[10px] font-black text-black uppercase tracking-[0.2em]">
+                      Rifair Shield Active
+                    </p>
                   </div>
-                  
-                  <div className="min-h-[140px] flex items-center">
-                    <AnimatePresence mode="wait">
-                      <motion.div
-                        key={activeAlertIdx}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.5 }}
-                        className="space-y-3"
-                      >
-                        {[
-                          {
-                            title: "Global Tech Firm Fined $2.4M",
-                            desc: "Discriminatory interview questions led to a massive class-action settlement. Bias is a multi-million dollar liability."
-                          },
-                          {
-                            title: "Turnover 40% Higher",
-                            desc: "Research shows biased interview questions lead to significantly higher turnover rates within the first 6 months."
-                          },
-                          {
-                            title: "EEOC Audits Increasing",
-                            desc: "Regulators now require auditable proof of non-bias in hiring AI. Companies without reports are first to be targeted."
-                          },
-                          {
-                            title: "Viral Bias: Brand Damage",
-                            desc: "Social media exposure of a single biased question can destroy your company's hiring reputation overnight."
-                          },
-                          {
-                            title: "12,000 Candidate Lawsuit",
-                            desc: "A small 'background' question triggered a massive class-action suit spanning 12,000 rejected candidates."
-                          },
-                          {
-                            title: "Cost of Bad Hires: 1.5x Salary",
-                            desc: "Biased questions mask true talent, leading to expensive hiring mistakes that cost 1.5x the employee's annual salary."
-                          },
-                          {
-                            title: "Compliance Deadlines",
-                            desc: "New 'Skills-First' mandates are being enforced. Verifiable proof of non-bias is no longer optional for enterprise teams."
-                          },
-                          {
-                            title: "Productivity Boost 25%",
-                            desc: "Companies using Rifair AI report an average 25% boost in hiring productivity by focusing on what actually matters."
-                          }
-                        ].map((alert, i) => (
-                          i === activeAlertIdx && (
-                            <div key={i} className="space-y-2">
-                              <p className="text-sm font-black text-black tracking-tight leading-snug">
-                                {alert.title}
-                              </p>
-                              <p className="text-xs text-black/50 leading-relaxed font-medium">
-                                {alert.desc}
-                              </p>
-                            </div>
-                          )
-                        ))}
-                      </motion.div>
-                    </AnimatePresence>
-                  </div>
-
-                  <div className="pt-6 relative">
-                    <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-black/20 via-black/5 to-black/20" />
-                    <div className="flex items-center gap-2 mb-4">
-                      <span className="text-[9px] font-black text-white bg-black px-2 py-0.5 rounded tracking-tighter">SECURE</span>
-                      <p className="text-[10px] font-black text-black uppercase tracking-[0.2em]">
-                        Rifair Shield Active
-                      </p>
+                  <div className="space-y-3">
+                    <div className="flex gap-3">
+                      <ShieldCheck className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                      <p className="text-[11px] font-bold text-black/70">Bulletproof legal compliance records.</p>
                     </div>
-                    <div className="space-y-3">
-                      <div className="flex gap-3">
-                        <ShieldCheck className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                        <p className="text-[11px] font-bold text-black/70">Bulletproof legal compliance records.</p>
-                      </div>
-                      <div className="flex gap-3">
-                        <Layers className="w-4 h-4 text-blue-600 flex-shrink-0" />
-                        <p className="text-[11px] font-bold text-black/70">Data-backed hiring productivity boost.</p>
-                      </div>
+                    <div className="flex gap-3">
+                      <Layers className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                      <p className="text-[11px] font-bold text-black/70">Data-backed hiring productivity boost.</p>
                     </div>
                   </div>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
+              </div>
+            </div>
+          </div>
+        )
+      )}
 
       {/* ── Upgrade bottom sheet (limit reached) ───────────────────── */}
       <BottomSheet

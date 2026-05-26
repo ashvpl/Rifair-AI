@@ -1142,20 +1142,22 @@ function NotificationsTab({ user, setMessage }: { user: any; setMessage: any }) 
               <h4 className="text-sm font-bold text-[#1D1D1F]">{opt.title}</h4>
               <p className="text-xs text-[#86868B] font-medium leading-relaxed">{opt.desc}</p>
             </div>
-            <button
+            <div 
               onClick={() => toggle(opt.id)}
               className={cn(
-                "w-11 h-6 rounded-full transition-colors relative shrink-0",
-                notifs[opt.id] ? "bg-black" : "bg-gray-200"
+                "w-14 h-7 rounded-full border relative flex-shrink-0 cursor-pointer p-1 transition-colors duration-200",
+                notifs[opt.id] ? "bg-black border-black" : "bg-black/10 border-black/5"
               )}
             >
-              <span
+              <motion.div 
+                animate={{ x: notifs[opt.id] ? 28 : 0 }}
+                transition={{ type: "spring", stiffness: 500, damping: 30 }}
                 className={cn(
-                  "absolute top-0.5 w-5 h-5 bg-white rounded-full transition-transform shadow-sm",
-                  notifs[opt.id] ? "translate-x-5.5" : "translate-x-0.5"
+                  "w-5 h-5 rounded-full shadow-lg",
+                  notifs[opt.id] ? "bg-white" : "bg-black"
                 )}
               />
-            </button>
+            </div>
           </div>
         ))}
       </div>

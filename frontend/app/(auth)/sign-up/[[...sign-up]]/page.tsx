@@ -13,7 +13,7 @@ export default function SignUpPage() {
 
   return (
     <AuthUI initialIsSignIn={false}>
-      <div className="w-full max-w-md z-10 px-6">
+      <div className="w-full max-w-md lg:max-w-lg xl:max-w-xl z-10 px-0 sm:px-6">
         <div className="mb-10 flex justify-center">
           <Image
             src="/rifair-logo.png"

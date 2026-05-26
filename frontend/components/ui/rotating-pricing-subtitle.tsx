@@ -25,7 +25,7 @@ export function RotatingPricingSubtitle() {
     }, [])
 
     return (
-        <div className="relative h-[60px] flex items-center justify-center max-w-2xl mx-auto overflow-hidden">
+        <div className="relative min-h-[90px] sm:min-h-[60px] flex items-center justify-center max-w-2xl mx-auto overflow-hidden py-2">
             <AnimatePresence mode="wait">
                 <motion.p
                     key={currentIndex}

@@ -104,18 +104,18 @@ export default function ExportButton({
       <div className={cn('relative group', className)}>
         <button
           disabled
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-neutral-200 text-neutral-400 text-sm font-medium cursor-not-allowed w-full justify-center"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl border border-neutral-200 text-neutral-400 text-[9px] sm:text-[10px] font-medium cursor-not-allowed w-full justify-center"
         >
-          <Lock className="w-4 h-4" /> {label}
+          <Lock className="w-3 h-3" /> {label}
         </button>
-        {/* Tooltip */}
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-3 bg-[#0a3d2e] rounded-xl text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-          <p className="font-semibold mb-1">PDF Export — Growth Only</p>
-          <p className="text-white/80">Export compliance-ready reports with your branding.</p>
-          <div className="mt-2 pt-2 border-t border-white/20">
-            <span className="text-[#1D9E75] font-semibold">Upgrade to Growth →</span>
+        {/* Tooltip - shows below to avoid overflow clipping */}
+        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-52 p-2.5 bg-[#0a3d2e] rounded-xl text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+          <p className="font-semibold mb-0.5 text-[10px]">PDF Export — Growth Only</p>
+          <p className="text-white/80 text-[9px]">Export compliance-ready reports with your branding.</p>
+          <div className="mt-1.5 pt-1.5 border-t border-white/20">
+            <span className="text-[#1D9E75] font-semibold text-[9px]">Upgrade to Growth →</span>
           </div>
-          <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#0a3d2e]" />
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-[#0a3d2e]" />
         </div>
       </div>
     );
@@ -123,18 +123,18 @@ export default function ExportButton({
 
   // Active Growth plan button
   return (
-    <div className={className}>
+    <div className={cn(className)}>
       <button
         onClick={handleExport}
         disabled={loading}
         className={cn(
-          'flex items-center gap-2 px-4 py-4 rounded-xl text-xs font-bold uppercase tracking-widest transition-all w-full justify-center',
+          'flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl text-[9px] sm:text-[10px] font-bold uppercase tracking-widest transition-all w-full justify-center',
           variant === 'primary' && (
-            type === 'analysis' ? 'bg-[#dc2626] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]' :
-            type === 'kit' || type === 'audit' ? 'bg-[#10b981] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]' :
-            type === 'jd' ? 'bg-[#f59e0b] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]' :
-            type === 'evaluation' ? 'bg-indigo-600 text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]' :
-            'bg-[#1D1D1F] text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
+            type === 'analysis' ? 'bg-[#dc2626] text-white border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]' :
+            type === 'kit' || type === 'audit' ? 'bg-[#10b981] text-white border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]' :
+            type === 'jd' ? 'bg-[#f59e0b] text-white border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]' :
+            type === 'evaluation' ? 'bg-indigo-600 text-white border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]' :
+            'bg-[#1D1D1F] text-white border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]'
           ),
           variant === 'primary' && 'hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5',
           variant === 'secondary' && (
@@ -150,13 +150,13 @@ export default function ExportButton({
         )}
       >
         {loading ? (
-          <Loader2 className="w-4 h-4 animate-spin" />
+          <Loader2 className="w-3 h-3 animate-spin" />
         ) : (
-          <FileText className="w-4 h-4" />
+          <FileText className="w-3 h-3" />
         )}
-        {loading ? 'Generating PDF...' : label}
+        {loading ? 'Generating...' : label}
       </button>
-      {error && <p className="text-xs text-red-600 mt-2 text-center">{error}</p>}
+      {error && <p className="text-[9px] text-red-600 mt-1 text-center">{error}</p>}
     </div>
   );
 }

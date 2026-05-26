@@ -58,6 +58,7 @@ export const SupportForm = () => {
           <CheckCircle2 className="w-10 h-10" />
         </div>
         <div className="space-y-2">
+          <h2 className="text-base font-bold tracking-tight">Trust Line</h2>
           <h2 className="text-2xl font-bold tracking-tight">Message Sent!</h2>
           <p className="text-muted-foreground max-w-sm mx-auto">
             We've received your message. We'll reply within 24 hours.
@@ -79,10 +80,10 @@ export const SupportForm = () => {
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className="p-4 sm:p-8 md:p-10 rounded-3xl bg-white/5 backdrop-blur-sm border border-border/50 space-y-8"
+      className="p-2 sm:p-4 md:p-6 rounded-3xl bg-white/5 backdrop-blur-sm border border-border/50 space-y-4"
     >
       <div className="space-y-2">
-        <h2 className="text-2xl font-bold tracking-tight">Send us a message</h2>
+        <h2 className="text-lg font-bold tracking-tight">Send us a message</h2>
         <p className="text-muted-foreground">Our team typically responds within 24 hours.</p>
       </div>
 
@@ -132,7 +133,7 @@ export const SupportForm = () => {
               id="subject"
               value={form.subject}
               onChange={(e) => setForm({ ...form, subject: e.target.value })}
-              className="w-full h-12 px-4 bg-background/50 border border-border/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all text-foreground/80 appearance-none"
+              className="w-full h-10 px-4 bg-background/50 border border-border/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all text-foreground/80 appearance-none"
             >
               <option value="Technical Issue">Technical Issue</option>
               <option value="Billing Question">Billing Question</option>
@@ -153,7 +154,7 @@ export const SupportForm = () => {
             placeholder="How can we help you today?"
             value={form.message}
             onChange={(e) => setForm({ ...form, message: e.target.value })}
-            className="w-full p-4 bg-background/50 border border-border/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all placeholder:text-muted-foreground/40 resize-none"
+            className="w-full p-3 bg-background/50 border border-border/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all placeholder:text-muted-foreground/40 resize-none"
           />
         </div>
 
@@ -164,10 +165,10 @@ export const SupportForm = () => {
         <button
           type="submit"
           disabled={loading}
-          className="group relative w-full h-14 bg-primary text-primary-foreground font-semibold rounded-xl overflow-hidden shadow-lg hover:shadow-primary/20 transition-all disabled:opacity-50"
+          className="group relative w-full h-10 bg-primary text-primary-foreground font-semibold rounded-xl overflow-hidden shadow-lg hover:shadow-primary/20 transition-all disabled:opacity-50"
         >
           <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-          <span className="relative z-10 flex items-center justify-center gap-2">
+          <span className="relative z-10 flex items-center justify-center gap-2 text-sm">
             {loading ? 'Sending...' : 'Send Message'}
             {!loading && <Send className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />}
           </span>

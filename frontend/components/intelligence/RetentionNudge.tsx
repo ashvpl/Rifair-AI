@@ -50,7 +50,7 @@ export function RetentionNudge({ userId }: RetentionNudgeProps) {
   return (
     <div
       className={`
-        fixed bottom-6 right-4 sm:right-6 max-w-[320px] w-[calc(100vw-2rem)] sm:w-auto
+        fixed bottom-[calc(60px+env(safe-area-inset-bottom)+16px)] sm:bottom-6 right-4 sm:right-6 max-w-[320px] w-[calc(100vw-2rem)] sm:w-auto
         bg-white border border-black/[0.08] rounded-2xl shadow-xl p-4 z-50
         transition-all duration-500 ease-out
         ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}

@@ -383,7 +383,7 @@ export function AuthFormContainer({ isSignIn, onToggle }: { isSignIn: boolean; o
     };
 
     return (
-        <div className="mx-auto grid w-[350px] gap-2">
+        <div className="mx-auto grid w-full max-w-[min(380px,calc(100vw-2rem))] gap-2">
             {isSignIn ? <SignInForm /> : <SignUpForm />}
             <div className="text-center text-sm">
                 {isSignIn ? "Don't have an account?" : "Already have an account?"}{" "}
@@ -442,10 +442,10 @@ export function AuthRotatingText({
       <AnimatePresence mode="wait">
         <motion.p
           key={index}
-          initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="absolute inset-0 flex items-center justify-center text-center text-xl md:text-2xl font-bold text-white tracking-tight leading-relaxed font-mono px-4"
         >
           “{messages[index]}”
@@ -538,7 +538,7 @@ export function AuthUI({ children, initialIsSignIn = true }: AuthUIProps) {
         }
       `}</style>
 
-      <div className="flex min-h-screen items-center justify-center p-6 md:min-h-0 md:py-12 z-20 bg-background/50 backdrop-blur-sm">
+      <div className="flex min-h-screen items-center justify-center px-4 py-6 sm:p-6 md:min-h-0 md:py-12 z-20 bg-background/50 backdrop-blur-sm overflow-x-hidden w-full">
         {children || <AuthFormContainer isSignIn={isSignIn} onToggle={toggleForm} />}
       </div>
 

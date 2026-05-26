@@ -37,15 +37,15 @@ const chartConfig = {
 
 export function BiasTrendChart({ data = defaultData, className }: BiasTrendChartProps) {
   return (
-    <div className={cn('w-full h-full min-h-[300px]', className)}>
+    <div className={cn('w-full h-full min-h-[180px] sm:min-h-[220px] md:min-h-[300px]', className)}>
         <ChartContainer config={chartConfig} className="h-full w-full">
           <ComposedChart
             data={data}
             margin={{
-              top: 20,
-              right: 20,
-              left: 0,
-              bottom: 20,
+              top: 10,
+              right: 10,
+              left: -20,
+              bottom: 5,
             }}
           >
             <defs>
@@ -67,17 +67,17 @@ export function BiasTrendChart({ data = defaultData, className }: BiasTrendChart
               dataKey="date"
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 11, fill: '#86868B', fontWeight: 600 }}
-              tickMargin={12}
+              tick={{ fontSize: 9, fill: '#86868B', fontWeight: 600 }}
+              tickMargin={8}
             />
 
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 11, fill: '#86868B', fontWeight: 600 }}
+              tick={{ fontSize: 9, fill: '#86868B', fontWeight: 600 }}
               domain={[0, 100]}
               tickCount={6}
-              tickMargin={12}
+              tickMargin={8}
             />
 
             <ChartTooltip

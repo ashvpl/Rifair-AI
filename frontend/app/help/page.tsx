@@ -21,7 +21,7 @@ export default function HelpPage() {
         
         <HelpCards />
 
-        <section className="max-w-7xl mx-auto px-6 py-24">
+        <section className="max-w-7xl mx-auto px-6 py-24 bg-gray-100">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
             <div className="lg:col-span-2">
               <SupportForm />

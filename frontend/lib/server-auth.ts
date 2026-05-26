@@ -24,7 +24,7 @@ export async function getBackendToken(
   // ── Stage 1: Use forwarded client token if available ──────────────────
   // This eliminates the double-retrieval failure: if the client already
   // obtained a valid token, we trust and forward it without re-generating.
-  if (incomingToken && incomingToken.trim().length > 0) {
+  if (incomingToken && incomingToken.trim().length > 0 && incomingToken.trim() !== 'null') {
     console.log(`[AUTH SESSION] [${context}] Using forwarded client token (skipping server-side re-generation)`);
     return incomingToken.trim();
   }
@@ -96,5 +96,5 @@ export function extractBearerToken(req: Request): string | null {
   const authHeader = req.headers.get('authorization');
   if (!authHeader || !authHeader.startsWith('Bearer ')) return null;
   const token = authHeader.slice(7).trim();
-  return token.length > 0 ? token : null;
+  return (token.length > 0 && token !== 'null') ? token : null;
 }

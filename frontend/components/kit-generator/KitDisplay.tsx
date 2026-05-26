@@ -94,22 +94,23 @@ export function KitDisplay({ kit }: { kit: KitData }) {
   if (showEvaluator) {
     return (
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <div className="flex items-center gap-3 mb-8">
+        <div className="flex items-center gap-2.5 mb-4 sm:mb-6">
           <button 
             onClick={() => {
+              const evaluateParam = searchParams.get('evaluate')
               if (evaluateParam) {
                 router.push(`/kit?reportId=${searchParams.get('reportId')}`)
               } else {
                 setShowEvaluator(false)
               }
             }}
-            className="w-10 h-10 rounded-2xl bg-white border border-black/[0.05] flex items-center justify-center text-[#86868B] hover:text-[#1D1D1F] hover:bg-[#F5F5F7] shadow-sm transition-all active:scale-95"
+            className="w-8 h-8 rounded-xl bg-white border border-black/[0.05] flex items-center justify-center text-[#86868B] hover:text-[#1D1D1F] hover:bg-[#F5F5F7] shadow-sm transition-all active:scale-95 text-xs font-bold"
           >
             ←
           </button>
           <div>
-            <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-0.5">Evaluation Mode</p>
-            <h2 className="text-xl md:text-2xl font-bold text-[#1D1D1F]">
+            <p className="text-[8px] sm:text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-0.5">Evaluation Mode</p>
+            <h2 className="text-sm sm:text-base md:text-lg font-bold text-[#1D1D1F]">
               {kit.role || 'Candidate'} Evaluation
             </h2>
           </div>
@@ -123,85 +124,73 @@ export function KitDisplay({ kit }: { kit: KitData }) {
     <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in duration-700">
  
       {/* ── Branded Header ────────────────────────────────────────────── */}
-      <div className="bg-[#10b981] border-2 border-black rounded-2xl md:rounded-[2.5rem] p-4 sm:p-6 md:p-8 lg:p-12 text-white relative overflow-hidden shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] md:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-colors duration-500">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-32 -mt-32" />
+      <div className="bg-[#10b981] border-2 border-black rounded-xl p-3.5 sm:p-5 text-white relative overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-colors duration-500">
+        <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-2xl -mr-24 -mt-24" />
         
-        <div className="relative z-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
-          <div className="space-y-4 w-full lg:max-w-xl">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10 backdrop-blur-md flex-shrink-0">
-                <Zap className="w-6 h-6 text-white" />
+        <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="space-y-2.5 w-full md:max-w-xl">
+            <div className="flex items-center gap-2">
+              <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center border border-white/10 backdrop-blur-md flex-shrink-0">
+                <Zap className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                <h1 className="text-base sm:text-lg font-black text-white tracking-tight leading-tight">
                   {kit.kit_title || `${kit.role} Interview Kit`}
                 </h1>
-                <p className="text-sm font-bold text-white/60 uppercase tracking-widest flex items-center gap-2 mt-0.5">
-                  <Briefcase className="w-3.5 h-3.5" />
+                <p className="text-[9px] font-black text-white/60 uppercase tracking-widest flex items-center gap-1 mt-0.5">
+                  <Briefcase className="w-3 h-3" />
                   Structured Hiring Framework
                 </p>
               </div>
             </div>
             
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-white/60 uppercase tracking-widest">
-                <CheckCircle2 className="w-4 h-4 text-white/80" />
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+              <div className="flex items-center gap-1 text-[10px] font-bold text-white/60 uppercase tracking-widest">
+                <CheckCircle2 className="w-3.5 h-3.5 text-white/80" />
                 Bias Verified
               </div>
-              <div className="flex items-center gap-2 text-xs font-bold text-white/60 uppercase tracking-widest">
-                <Clock className="w-4 h-4 text-white/80" />
+              <div className="flex items-center gap-1 text-[10px] font-bold text-white/60 uppercase tracking-widest">
+                <Clock className="w-3.5 h-3.5 text-white/80" />
                 {kit.estimated_duration_minutes || '45'} Min Session
               </div>
             </div>
  
-            <p className="text-sm text-white/80 leading-relaxed font-medium">
+            <p className="text-xs text-white/80 leading-relaxed font-medium line-clamp-2 md:line-clamp-none">
               {kit.kit_summary}
             </p>
           </div>
  
-          <div className="flex flex-col items-start lg:items-end gap-6 w-full lg:w-auto">
-            <div className="flex flex-wrap items-center gap-6 sm:gap-8 justify-between w-full lg:w-auto">
-              <div className="text-left lg:text-right">
-                <div className="text-[10px] font-black text-white/60 uppercase tracking-widest mb-1">Total Questions</div>
-                <div className="text-4xl sm:text-5xl font-black text-white tracking-tighter">
-                  {questions.length}<span className="text-xl text-white/40"> pts</span>
-                </div>
-              </div>
-              <div className={cn(
-                "px-6 py-4 rounded-3xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center justify-center text-center min-w-[140px] sm:min-w-[160px] bg-white text-black"
-              )}>
-                <span className="text-[10px] font-black uppercase tracking-widest opacity-60 mb-1">Session Duration</span>
-                <span className="text-xs font-black uppercase tracking-widest text-[#10b981]">{kit.estimated_duration_minutes || '—'} MIN</span>
+          <div className="flex flex-row md:flex-col items-center md:items-end gap-3 justify-between w-full md:w-auto border-t border-white/10 pt-2.5 md:border-t-0 md:pt-0">
+            <div className="text-left md:text-right">
+              <div className="text-[8px] font-black text-white/60 uppercase tracking-widest mb-0.5">Total Questions</div>
+              <div className="text-xl sm:text-2xl font-black text-white tracking-tighter">
+                {questions.length}<span className="text-xs text-white/40"> pts</span>
               </div>
             </div>
-            
-            <ExportButton 
-              type="kit" 
-              id={searchParams.get('reportId') || ''} 
-              planTier={planId} 
-              variant="secondary"
-              className="w-full h-14"
-            />
+            <div className="px-3 py-1.5 rounded-xl border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center justify-center text-center bg-white text-black min-w-[100px]">
+              <span className="text-[8px] font-black uppercase tracking-widest opacity-60 mb-0.5">Duration</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#10b981]">{kit.estimated_duration_minutes || '—'} MIN</span>
+            </div>
           </div>
         </div>
 
         {/* Stats row */}
-        <div className="flex gap-8 mt-10 pt-8 border-t border-white/10 relative z-10 overflow-x-auto no-scrollbar pb-1">
+        <div className="hidden sm:flex gap-4 mt-3 pt-3 border-t border-white/10 relative z-10 overflow-x-auto no-scrollbar pb-0.5">
           {types.filter(t => t !== 'all').map((type, index) => (
             <div key={String(type) || `type-${index}`} className="shrink-0">
-              <div className="text-xl font-bold tabular-nums">
+              <div className="text-sm font-bold tabular-nums">
                 {questions.filter(q => q.type === type).length}
               </div>
-              <div className="text-[10px] font-black text-emerald-300/70 uppercase tracking-widest capitalize whitespace-nowrap">
+              <div className="text-[8px] font-black text-emerald-300/70 uppercase tracking-widest capitalize whitespace-nowrap">
                 {String(type) || 'Undefined'}
               </div>
             </div>
           ))}
-          <div className="ml-auto shrink-0 pr-4">
-            <div className="text-xl font-bold tabular-nums">
+          <div className="ml-auto shrink-0 pr-2">
+            <div className="text-sm font-bold tabular-nums">
               {questions.length}
             </div>
-            <div className="text-[10px] font-black text-emerald-300/70 uppercase tracking-widest">
+            <div className="text-[8px] font-black text-emerald-300/70 uppercase tracking-widest">
               Total
             </div>
           </div>
@@ -311,19 +300,19 @@ export function KitDisplay({ kit }: { kit: KitData }) {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white border border-black/[0.05] rounded-2xl p-6"
+          className="bg-white border border-black/[0.05] rounded-xl p-3 sm:p-4"
         >
-          <h3 className="text-sm font-bold text-[#1D1D1F] mb-5 uppercase tracking-[0.05em]">
+          <h3 className="text-xs font-black text-[#1D1D1F] mb-3 uppercase tracking-[0.05em]">
             Evaluation Scorecard
           </h3>
-          <div className="space-y-4">
+          <div className="space-y-2">
             {kit.scorecard.competencies.map((c, i) => (
               <div key={i}>
-                <div className="flex justify-between text-xs mb-1.5">
+                <div className="flex justify-between text-[10px] sm:text-xs mb-1">
                   <span className="font-semibold text-[#1D1D1F]">{c.name}</span>
                   <span className="font-bold text-[#86868B] tabular-nums">{c.weight_percent}%</span>
                 </div>
-                <div className="h-1.5 bg-[#F5F5F7] rounded-full overflow-hidden">
+                <div className="h-1 bg-[#F5F5F7] rounded-full overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${c.weight_percent}%` }}
@@ -331,7 +320,7 @@ export function KitDisplay({ kit }: { kit: KitData }) {
                     className="h-full bg-gradient-to-r from-[#10b981] to-[#059669] rounded-full"
                   />
                 </div>
-                <p className="text-[11px] text-[#86868B] mt-1 font-medium">
+                <p className="text-[9px] sm:text-[10px] text-[#86868B] mt-0.5 font-medium">
                   Q{c.question_ids?.join(', Q')}
                 </p>
               </div>
@@ -341,22 +330,22 @@ export function KitDisplay({ kit }: { kit: KitData }) {
       )}
 
       {/* ── Interviewer Guide — Growth+ ─────────────────────────────── */}
-        {isGrowth && kit.interviewer_guide && (
+      {isGrowth && kit.interviewer_guide && (
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-br from-emerald-50/50 to-white border border-emerald-100/60 rounded-2xl p-6"
+          className="bg-gradient-to-br from-emerald-50/50 to-white border border-emerald-100/60 rounded-xl p-3 sm:p-4"
         >
-          <h3 className="text-sm font-bold text-[#1D1D1F] mb-4 uppercase tracking-[0.05em]">
+          <h3 className="text-xs font-black text-[#1D1D1F] mb-2.5 uppercase tracking-[0.05em]">
             Interviewer Guide
           </h3>
-          <div className="space-y-4">
+          <div className="space-y-2.5">
             {Object.entries(kit.interviewer_guide).map(([key, value]) => (
               <div key={key}>
-                <p className="text-[10px] font-bold text-[#86868B] uppercase tracking-[0.1em] mb-1 capitalize">
+                <p className="text-[8px] sm:text-[9px] font-bold text-[#86868B] uppercase tracking-[0.1em] mb-0.5 capitalize">
                   {key.replace(/_/g, ' ')}
                 </p>
-                <p className="text-[13px] text-[#424245] leading-relaxed">
+                <p className="text-[11px] sm:text-[12px] text-[#424245] leading-snug font-medium">
                   {value as string}
                 </p>
               </div>
@@ -366,7 +355,7 @@ export function KitDisplay({ kit }: { kit: KitData }) {
       )}
 
       {/* ── Candidate Evaluator CTA ──────────────────────────────────── */}
-      <div className="mt-8 pt-8 border-t border-black/[0.05]">
+      <div className="mt-4 pt-4 border-t border-black/[0.05]">
         <KitActions kit={kit} isPaid={isPaid} setShowEvaluator={setShowEvaluator} />
       </div>
     </div>
@@ -383,26 +372,26 @@ function KitActions({
   setShowEvaluator: (val: boolean) => void 
 }) {
   return (
-    <div className="bg-white border-2 border-black rounded-2xl p-8 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden">
+    <div className="bg-white border-2 border-black rounded-2xl p-4 sm:p-6 text-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden transition-all duration-300 hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5">
       <div className="absolute -top-24 -right-24 w-64 h-64 bg-gradient-to-br from-emerald-50 to-transparent rounded-full blur-[60px]" />
       
-      <div className="relative z-10 max-w-md mx-auto space-y-4">
-        <div className="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-2 text-2xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]">
+      <div className="relative z-10 max-w-md mx-auto space-y-2">
+        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-50 rounded-xl flex items-center justify-center mx-auto mb-1 text-lg sm:text-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)]">
           📋
         </div>
         <div>
-          <h3 className="text-lg font-bold text-[#1D1D1F] mb-2">
+          <h3 className="text-sm sm:text-base font-bold text-[#1D1D1F] mb-1">
             Ready to interview?
           </h3>
-          <p className="text-sm font-medium text-[#86868B] leading-relaxed">
+          <p className="text-[10px] sm:text-xs font-medium text-[#86868B] leading-normal">
             After conducting the interview, evaluate the candidate here. Score their answers and get an AI-powered hiring recommendation.
           </p>
         </div>
 
-        <div className="pt-4">
+        <div className="pt-2">
           <button
             onClick={() => setShowEvaluator(true)}
-            className="w-full bg-[#10b981] text-white py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-[#059669] shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none border-2 border-black transition-all"
+            className="w-full bg-[#10b981] text-white py-2.5 sm:py-3.5 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-[#059669] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none border-2 border-black transition-all"
           >
             Evaluate Candidate ↗
           </button>

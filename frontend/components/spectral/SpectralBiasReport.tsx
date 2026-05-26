@@ -59,7 +59,7 @@ export function SpectralBiasReport({ questions }: SpectralBiasReportProps) {
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       <AnimatePresence>
         {questions.map((q, idx) => {
           const score      = q.bias_score ?? 0;
@@ -82,53 +82,53 @@ export function SpectralBiasReport({ questions }: SpectralBiasReportProps) {
               exit={{ opacity: 0, y: -8 }}
               transition={{ type: "spring", stiffness: 400, damping: 30 }}
               className={cn(
-                "bg-white border-2 border-black rounded-xl sm:rounded-2xl md:rounded-[2rem] overflow-hidden transition-all duration-300",
+                "bg-white border border-black rounded-xl overflow-hidden transition-all duration-300",
                 isExpanded
-                  ? "shadow-none translate-x-1 translate-y-1"
-                  : "shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5"
+                  ? "shadow-none translate-x-0.5 translate-y-0.5"
+                  : "shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5"
               )}
             >
               {/* Question header */}
               <button
                 onClick={() => setExpanded(isExpanded ? null : questionId)}
-                className="w-full text-left p-5 md:p-6 cursor-pointer"
+                className="w-full text-left p-2 sm:p-2.5 lg:p-4 xl:p-5 cursor-pointer"
               >
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-2 lg:gap-3">
                   {/* Number badge */}
                   <div className={cn(
-                    "w-9 h-9 rounded-xl flex items-center justify-center text-sm font-black flex-shrink-0 mt-0.5 transition-all duration-300 border-2 border-black",
+                    "w-5 h-5 sm:w-7 sm:h-7 lg:w-8 lg:h-8 rounded-md flex items-center justify-center text-[9px] sm:text-xs lg:text-sm font-black flex-shrink-0 mt-0.5 transition-all duration-300 border border-black",
                     isExpanded
-                      ? "bg-[#dc2626] text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-                      : "bg-white text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                      ? "bg-[#dc2626] text-white shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
+                      : "bg-white text-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
                   )}>
                     {questionId}
                   </div>
 
                   <div className="flex-1 min-w-0">
                     {/* Tags row */}
-                    <div className="flex items-center gap-2 mb-2.5 flex-wrap">
+                    <div className="flex items-center gap-1 lg:gap-2 mb-0.5 flex-wrap">
                       <span className={cn(
-                        "text-[10px] font-bold px-2.5 py-1 rounded-lg border uppercase tracking-wide flex items-center gap-1",
+                        "text-[7px] sm:text-[9px] lg:text-[10px] font-black px-1.5 py-0.5 rounded border uppercase tracking-wider flex items-center gap-1",
                         typeStyle.bg, typeStyle.text, typeStyle.border
                       )}>
-                        {isNeutral ? <ShieldCheck className="h-3 w-3" /> : <AlertTriangle className="h-3 w-3" />}
+                        {isNeutral ? <ShieldCheck className="h-2 w-2 lg:h-2.5 lg:w-2.5" /> : <AlertTriangle className="h-2 w-2 lg:h-2.5 lg:w-2.5" />}
                         {isNeutral ? "Neutral" : biasLevel}
                       </span>
                       {!isNeutral && (
-                        <span className="text-[11px] text-[#86868B] font-medium flex items-center gap-1">
+                        <span className="text-[7px] sm:text-[9px] lg:text-[10px] text-[#86868B] font-medium flex items-center gap-1">
                           Score: <span className={cn("font-bold", typeStyle.text)}>{score}</span>
                         </span>
                       )}
                       {q.detectionMethod && (
-                        <span className="hidden sm:inline text-[11px] text-[#86868B] font-medium">
+                        <span className="hidden sm:inline text-[7px] sm:text-[9px] lg:text-[10px] text-[#86868B] font-medium">
                           · {q.detectionMethod === "full" ? "AI Detected" : "Rule Detected"}
                         </span>
                       )}
                       {q.flags && q.flags.length > 0 && (
                         <div className="hidden sm:flex flex-wrap gap-1">
-                          <span className="text-[11px] text-[#86868B] font-medium">·</span>
+                          <span className="text-[7px] sm:text-[9px] lg:text-[10px] text-[#86868B] font-medium">·</span>
                           {q.flags.map((f, fi) => (
-                            <span key={fi} className="text-[10px] text-[#86868B] font-medium uppercase tracking-wider">
+                            <span key={fi} className="text-[7px] sm:text-[9px] lg:text-[10px] text-[#86868B] font-medium uppercase tracking-wider">
                               {f.category}
                             </span>
                           ))}
@@ -137,12 +137,12 @@ export function SpectralBiasReport({ questions }: SpectralBiasReportProps) {
                     </div>
 
                     {/* Question text */}
-                    <p className="text-base font-black text-[#1D1D1F] leading-relaxed tracking-tight highlight-container" dangerouslySetInnerHTML={{ __html: q.highlighted || q.original }} />
+                    <p className="text-[10px] sm:text-xs md:text-sm lg:text-base xl:text-lg font-semibold text-[#1D1D1F] leading-snug tracking-tight highlight-container mt-0.5" dangerouslySetInnerHTML={{ __html: q.highlighted || q.original }} />
                   </div>
 
                   {/* Expand icon */}
                   <span className={cn(
-                    "text-[#86868B] flex-shrink-0 transition-transform duration-300 text-lg",
+                    "text-[#86868B] flex-shrink-0 transition-transform duration-300 text-xs lg:text-sm mt-1",
                     isExpanded ? "rotate-180" : ""
                   )}>
                     ↓
@@ -160,37 +160,37 @@ export function SpectralBiasReport({ questions }: SpectralBiasReportProps) {
                     transition={{ duration: 0.25, ease: "easeInOut" }}
                     className="overflow-hidden bg-[#dc2626]/[0.01]"
                   >
-                    <div className="p-4 sm:p-6 md:p-8 space-y-6 md:space-y-8 border-t border-black/[0.04]">
+                    <div className="p-2 sm:p-2.5 lg:p-4 xl:p-5 space-y-1.5 lg:space-y-3 xl:space-y-4 border-t border-black/[0.04]">
                       {isNeutral ? (
-                        <div className="bg-emerald-50/50 border-2 border-emerald-100 rounded-xl sm:rounded-2xl md:rounded-[2rem] p-4 sm:p-6 md:p-8 text-center shadow-[4px_4px_0px_0px_rgba(16,185,129,0.1)]">
-                          <ShieldCheck className="w-12 h-12 text-emerald-500 mx-auto mb-4" />
-                          <p className="text-lg font-black text-emerald-700 uppercase tracking-widest">Compliance Verified</p>
-                          <p className="text-sm text-emerald-600/80 font-medium mt-2">This question passed our fairness checks. No significant bias detected.</p>
+                        <div className="bg-emerald-50/50 border border-emerald-100 rounded-xl p-2 sm:p-2.5 lg:p-5 xl:p-6 text-center shadow-[2px_2px_0px_0px_rgba(16,185,129,0.06)]">
+                          <ShieldCheck className="w-5 h-5 lg:w-7 lg:h-7 text-emerald-500 mx-auto mb-1" />
+                          <p className="text-[9px] lg:text-xs font-black text-emerald-700 uppercase tracking-widest">Compliance Verified</p>
+                          <p className="text-[9px] lg:text-xs text-emerald-600/80 font-medium mt-0.5">This question passed our fairness checks. No significant bias detected.</p>
                         </div>
                       ) : (
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-1.5 sm:gap-2.5 lg:gap-4 xl:gap-5">
                           {/* Left: Issues & Rationale */}
-                          <div className="space-y-6">
+                          <div className="space-y-1.5 lg:space-y-3">
                             {/* Primary issue badge */}
                             {q.primary_issue && (
-                              <div className="bg-red-50 border-2 border-red-100 rounded-2xl p-4 flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-xl bg-red-100 border-2 border-red-200 flex items-center justify-center">
-                                  <AlertTriangle className="w-4 h-4 text-red-600" />
+                              <div className="bg-red-50 border border-red-100 rounded-lg p-1.5 lg:p-3 flex items-center gap-1.5 lg:gap-3">
+                                <div className="w-5 h-5 lg:w-7 lg:h-7 rounded-md bg-red-100 border border-red-200 flex items-center justify-center flex-shrink-0">
+                                  <AlertTriangle className="w-2.5 h-2.5 lg:w-3.5 lg:h-3.5 text-red-600" />
                                 </div>
                                 <div>
-                                  <p className="text-[10px] font-black text-red-600 uppercase tracking-widest">Primary Violation</p>
-                                  <p className="text-sm font-bold text-red-900 leading-tight">{q.primary_issue}</p>
+                                  <p className="text-[7px] lg:text-[9px] font-black text-red-600 uppercase tracking-widest">Primary Violation</p>
+                                  <p className="text-[9px] sm:text-[10px] lg:text-xs xl:text-sm font-bold text-red-900 leading-tight">{q.primary_issue}</p>
                                 </div>
                               </div>
                             )}
 
                             {/* Detailed rationale card */}
-                            <div className="bg-white border-2 border-black rounded-2xl p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
-                              <div className="flex items-center gap-2 mb-4">
-                                <Info className="w-4 h-4 text-indigo-600" />
-                                <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">Bias Rationale</p>
+                            <div className="bg-white border border-black rounded-lg p-1.5 lg:p-3 shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,0.02)]">
+                              <div className="flex items-center gap-1 mb-0.5">
+                                <Info className="w-2.5 h-2.5 lg:w-3.5 lg:h-3.5 text-indigo-600" />
+                                <p className="text-[7px] lg:text-[9px] font-black text-indigo-600 uppercase tracking-widest">Bias Rationale</p>
                               </div>
-                              <p className="text-sm text-[#1D1D1F] font-medium leading-relaxed italic">
+                              <p className="text-[9.5px] sm:text-[10.5px] lg:text-xs xl:text-sm text-[#1D1D1F] font-medium leading-snug italic">
                                 "{q.explanation || "This question contains potential bias markers that may inadvertently exclude qualified candidates based on non-essential criteria."}"
                               </p>
                             </div>
@@ -210,17 +210,17 @@ export function SpectralBiasReport({ questions }: SpectralBiasReportProps) {
                                 requiredPlan="starter"
                                 customPrompt="Unlock India-specific bias flags: caste signalling, regional discrimination, institution elitism, and colorism."
                               >
-                                <div className="bg-white border-2 border-black rounded-xl sm:rounded-2xl md:rounded-[2rem] p-4 sm:p-6 shadow-[4px_4px_0px_0px_rgba(249,115,22,0.1)] space-y-4">
+                                <div className="bg-white border border-black rounded-xl p-2 lg:p-4 shadow-[2.5px_2.5px_0px_0px_rgba(249,115,22,0.06)] space-y-1.5 lg:space-y-3">
                                   <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-2">
-                                      <Flag className="h-4 w-4 text-orange-600" />
-                                      <span className="text-[10px] font-black text-orange-600 uppercase tracking-widest">
+                                    <div className="flex items-center gap-1">
+                                      <Flag className="h-3 w-3 lg:h-4 lg:w-4 text-orange-600" />
+                                      <span className="text-[7px] lg:text-[9px] font-black text-orange-600 uppercase tracking-widest">
                                         India-Specific Context
                                       </span>
                                     </div>
                                     {q.india_analysis.verdict && (
                                       <span className={cn(
-                                        "text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest border-2",
+                                        "text-[7px] lg:text-[9px] font-black px-1.5 py-0.5 rounded border uppercase tracking-wider",
                                         q.india_analysis.verdict === "SEVERELY_BIASED" ? "bg-red-50 text-red-700 border-red-200" :
                                         "bg-orange-50 text-orange-700 border-orange-200"
                                       )}>
@@ -229,16 +229,16 @@ export function SpectralBiasReport({ questions }: SpectralBiasReportProps) {
                                     )}
                                   </div>
                                   
-                                  <div className="flex flex-wrap gap-2">
+                                  <div className="flex flex-wrap gap-1 lg:gap-2">
                                     {q.india_analysis.categories?.map((cat, ci) => (
-                                      <span key={ci} className="text-[10px] px-3 py-1 rounded-xl font-black border-2 border-black bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] uppercase tracking-tight">
+                                      <span key={ci} className="text-[7px] lg:text-[9px] px-1.5 py-0.5 rounded border border-black bg-white shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] uppercase tracking-tight font-black">
                                         {cat.replace(/_/g, " ")}
                                       </span>
                                     ))}
                                   </div>
 
                                   {q.india_analysis.explanation && (
-                                    <p className="text-xs text-slate-600 font-medium leading-relaxed border-l-2 border-orange-200 pl-4">
+                                    <p className="text-[9px] lg:text-xs xl:text-sm text-slate-600 font-medium leading-relaxed border-l-2 border-orange-200 pl-2">
                                       {q.india_analysis.explanation}
                                     </p>
                                   )}
@@ -248,12 +248,12 @@ export function SpectralBiasReport({ questions }: SpectralBiasReportProps) {
                           </div>
 
                           {/* Right: Recommended Rewrite */}
-                          <div className="space-y-6">
-                            <div className="bg-white border-2 border-black rounded-xl sm:rounded-2xl md:rounded-[2rem] overflow-hidden shadow-[8px_8px_0px_0px_rgba(16,185,129,0.05)]">
-                              <div className="p-6 border-b-2 border-black/[0.04] bg-emerald-50/[0.3]">
-                                <div className="flex items-center gap-2">
-                                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                                  <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Fairness Reconstruction</p>
+                          <div className="space-y-1.5 lg:space-y-3">
+                            <div className="bg-white border border-black rounded-xl overflow-hidden shadow-[2px_2px_0px_0px_rgba(16,185,129,0.03)]">
+                              <div className="p-1.5 lg:p-3 border-b border-black/[0.04] bg-emerald-50/[0.3]">
+                                <div className="flex items-center gap-1">
+                                  <ShieldCheck className="w-2.5 h-2.5 lg:w-3.5 lg:h-3.5 text-emerald-600" />
+                                  <p className="text-[7px] lg:text-[9px] font-black text-emerald-600 uppercase tracking-widest">Fairness Reconstruction</p>
                                 </div>
                               </div>
                               <BlurredRewritePreview
@@ -267,9 +267,9 @@ export function SpectralBiasReport({ questions }: SpectralBiasReportProps) {
 
                             {/* Signals / Tags */}
                             {signals.length > 0 && (
-                              <div className="flex flex-wrap gap-2">
+                              <div className="flex flex-wrap gap-1 lg:gap-2">
                                 {signals.map((sig, si) => (
-                                  <span key={si} className="text-[9px] font-black px-2.5 py-1 bg-slate-100 text-slate-500 rounded-lg uppercase tracking-widest">
+                                  <span key={si} className="text-[7px] lg:text-[9px] font-black px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded uppercase tracking-wider">
                                     # {sig}
                                   </span>
                                 ))}

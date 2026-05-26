@@ -151,7 +151,7 @@ export function IndustrialPricing() {
                     description={<RotatingPricingSubtitle />}
                     plans={mappedPlans}
                     currencySymbol={currency === 'inr' ? '₹' : '$'}
-                    className="pt-80 pb-24" // Significantly increased padding
+                    className="pt-16 sm:pt-20 lg:pt-24 pb-20"
                 />
             </main>
 

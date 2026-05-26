@@ -415,18 +415,18 @@ function ScoringStep({
 
   return (
     <div>
-      <div className="flex items-center gap-3 mb-6">
+      <div className="flex items-center gap-2.5 mb-4 sm:mb-6">
         <button
           onClick={onBack}
-          className="w-10 h-10 rounded-2xl bg-white border border-black/[0.12] flex items-center justify-center text-[#1D1D1F] hover:text-[#000] hover:bg-[#F5F5F7] shadow-sm transition-all active:scale-95"
+          className="w-8 h-8 rounded-xl bg-white border border-black/[0.12] flex items-center justify-center text-[#1D1D1F] hover:text-[#000] hover:bg-[#F5F5F7] shadow-sm transition-all active:scale-95 text-xs font-bold"
         >
           ←
         </button>
         <div>
-          <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-0.5">
+          <p className="text-[8px] sm:text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-0.5">
             Custom Evaluation Mode
           </p>
-          <h2 className="text-xl font-bold text-[#1D1D1F]">{session.title}</h2>
+          <h2 className="text-sm sm:text-base md:text-lg font-bold text-[#1D1D1F]">{session.title}</h2>
         </div>
       </div>
       <CandidateEvaluator kit={kitLike} />
