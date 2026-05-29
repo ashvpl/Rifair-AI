@@ -203,24 +203,24 @@ export default function LandingBelowFold() {
               </p>
             </div>
             <div className="flex-1 flex flex-col justify-center">
-              <InteractiveAccordion
+            <InteractiveAccordion
                 items={[
                   {
                     id: 1,
                     title: "HR Teams",
-                    imageUrl: "/images/models/hr-leader.png",
+                    imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600&h=600",
                     desc: "Perfect for recruiting teams looking to remove unconscious bias from their workflow.",
                   },
                   {
                     id: 2,
                     title: "Startups",
-                    imageUrl: "/images/models/startup-founder.png",
+                    imageUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=600&h=600",
                     desc: "Agile teams ensuring cultural fairness and diversity from day one.",
                   },
                   {
                     id: 3,
                     title: "Enterprises",
-                    imageUrl: "/images/models/enterprise-leaders.png",
+                    imageUrl: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=600&h=600",
                     desc: "Scale fair hiring practices across thousands of employees and teams.",
                   },
                 ]}
@@ -229,9 +229,9 @@ export default function LandingBelowFold() {
           </div>
         </div>
       </section>
-
+ 
       <TestimonialsSection />
-
+ 
       <section className="py-16 md:py-24 px-6 lg:px-12 relative w-full bg-[#F5F5F7] border-t border-black/[0.05]">
         <div className="max-w-7xl mx-auto space-y-12">
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 pb-12 md:pb-24 border-b border-black/[0.03]">
@@ -266,7 +266,7 @@ export default function LandingBelowFold() {
               href: "/sign-in?redirect_url=/analyze",
               icon: <ArrowRight className="h-6 w-6" />,
             }}
-            backgroundImage="/images/models/final-cta-hero.png"
+            backgroundImage="/corporate-woman.jpg"
             className="shadow-[0_20px_100px_rgba(0,0,0,0.08)]"
           />
         </div>

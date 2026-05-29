@@ -5,8 +5,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Script from "next/script";
 
 export const metadata: Metadata = {
-  title: "Rifair AI | Interview Bias & Hiring Risk Intelligence",
+  title: "Rifair AI | Operating System for Modern Hiring",
   description: "Detect hidden bias in interview questions using AI.",
+  manifest: "/site.webmanifest",
   icons: {
     icon: [
       { url: "/favicon.ico" },
@@ -50,6 +51,10 @@ export default function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://open-shiner-20.clerk.accounts.dev" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://open-shiner-20.clerk.accounts.dev" />
+      </head>
       <body className="font-sans antialiased overflow-x-clip" suppressHydrationWarning>
         <script
           dangerouslySetInnerHTML={{
@@ -57,6 +62,13 @@ export default function RootLayout({
               window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
               });
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                  navigator.serviceWorker.register('/sw.js')
+                    .then((reg) => console.log('[SW] Service Worker registered:', reg.scope))
+                    .catch((err) => console.error('[SW] Service Worker registration failed:', err));
+                });
+              }
             `,
           }}
         />

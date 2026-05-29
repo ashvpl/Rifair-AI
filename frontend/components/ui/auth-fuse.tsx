@@ -350,35 +350,58 @@ export function AuthFormContainer({ isSignIn, onToggle }: { isSignIn: boolean; o
     const clerk = useClerk();
     const [socialLoading, setSocialLoading] = useState(false);
     
-    // Check if clerk is actually ready
-    const isReady = !!clerk.client;
+    // Maintain a mutable ref to the clerk instance to avoid stale closures in the loading queue
+    const clerkRef = React.useRef(clerk);
+    useEffect(() => {
+        clerkRef.current = clerk;
+    }, [clerk]);
 
     const handleSocialLogin = async (strategy: "oauth_google") => {
-        if (!isReady) {
-            console.error("Clerk client not ready");
-            return;
-        }
-
         setSocialLoading(true);
         console.log("Social login initiated", { strategy, isSignIn });
-        
-        try {
-            if (isSignIn) {
-                await clerk.client.signIn.authenticateWithRedirect({
-                    strategy,
-                    redirectUrl: "/sso-callback",
-                    redirectUrlComplete: "/dashboard",
-                });
-            } else {
-                await clerk.client.signUp.authenticateWithRedirect({
-                    strategy,
-                    redirectUrl: "/sso-callback",
-                    redirectUrlComplete: "/dashboard",
-                });
+
+        const performRedirect = async (clerkInstance: any) => {
+            try {
+                if (isSignIn) {
+                    await clerkInstance.client.signIn.authenticateWithRedirect({
+                        strategy,
+                        redirectUrl: "/sso-callback",
+                        redirectUrlComplete: "/dashboard",
+                    });
+                } else {
+                    await clerkInstance.client.signUp.authenticateWithRedirect({
+                        strategy,
+                        redirectUrl: "/sso-callback",
+                        redirectUrlComplete: "/dashboard",
+                    });
+                }
+            } catch (err) {
+                console.error("Social login error", err);
+                setSocialLoading(false);
             }
-        } catch (err) {
-            console.error("Social login error", err);
-            setSocialLoading(false);
+        };
+
+        if (clerk.client) {
+            await performRedirect(clerk);
+        } else {
+            console.log("Clerk client not ready. Queueing social login...");
+            const checkInterval = setInterval(async () => {
+                const currentClerk = clerkRef.current;
+                if (currentClerk && currentClerk.client) {
+                    clearInterval(checkInterval);
+                    console.log("Clerk client loaded. Triggering queued redirect.");
+                    await performRedirect(currentClerk);
+                }
+            }, 100);
+
+            // Set a timeout to clear the interval if it takes too long (e.g. 10s)
+            setTimeout(() => {
+                clearInterval(checkInterval);
+                if (!clerkRef.current || !clerkRef.current.client) {
+                    console.error("Clerk client failed to load in time.");
+                    setSocialLoading(false);
+                }
+            }, 10000);
         }
     };
 
@@ -398,7 +421,7 @@ export function AuthFormContainer({ isSignIn, onToggle }: { isSignIn: boolean; o
                 variant="outline" 
                 type="button" 
                 onClick={() => handleSocialLogin("oauth_google")}
-                disabled={socialLoading || !isReady}
+                disabled={socialLoading}
             >
                 {socialLoading ? (
                     <div className="flex items-center gap-2">
@@ -407,7 +430,12 @@ export function AuthFormContainer({ isSignIn, onToggle }: { isSignIn: boolean; o
                     </div>
                 ) : (
                     <>
-                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google icon" className="mr-2 h-4 w-4" />
+                        <svg viewBox="0 0 48 48" className="mr-2 h-4 w-4 shrink-0" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                            <path fill="#4285F4" d="M46.5 24c0-1.63-.15-3.2-.43-4.73H24v9.02h12.7c-.55 2.87-2.17 5.31-4.6 6.93l7.15 5.54C43.5 36.62 46.5 30.93 46.5 24z"/>
+                            <path fill="#FBBC05" d="M10.54 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.98-6.19z"/>
+                            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.15-5.54c-2.02 1.35-4.6 2.15-7.74 2.15-6.26 0-11.57-4.22-13.46-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                        </svg>
                         Continue with Google
                     </>
                 )}
@@ -457,27 +485,27 @@ export function AuthRotatingText({
 
 const allAuthImages = [
     {
-        src: "/images/models/final-cta-hero.png",
+        src: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800&h=600",
         alt: "Professional leadership"
     },
     {
-        src: "/images/models/hr-leader.png",
+        src: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600&h=600",
         alt: "Modern HR management"
     },
     {
-        src: "/images/models/startup-founder.png",
+        src: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=600&h=600",
         alt: "Innovative entrepreneurship"
     },
     {
-        src: "/images/models/enterprise-leaders.png",
+        src: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=600&h=600",
         alt: "Collaborative corporate leadership"
     },
     {
-        src: "/images/models/testimonial-woman-1.png",
+        src: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=150&h=150",
         alt: "Focused recruitment professional"
     },
     {
-        src: "/images/models/testimonial-man-1.png",
+        src: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150&h=150",
         alt: "Confident hiring manager"
     }
 ];

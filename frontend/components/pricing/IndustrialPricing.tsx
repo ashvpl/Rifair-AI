@@ -89,8 +89,6 @@ export function IndustrialPricing() {
                 { text: 'AI hire / hold / reject recommendation', status: 'enabled' },
                 { text: 'Strengths + gaps breakdown', status: 'enabled' },
                 { text: 'Evaluation report PDF', status: 'disabled' },
-                { text: 'DASHBOARD', status: 'enabled', isHeader: true },
-                { text: 'Session bias report', status: 'enabled' },
             ]
         },
         {

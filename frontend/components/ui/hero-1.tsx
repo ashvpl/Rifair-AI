@@ -47,7 +47,7 @@ export function HeroSection() {
 			</div>
 
 			{/* main content */}
-			<div className="relative flex flex-col items-center justify-center gap-6 lg:gap-8 pt-16 lg:pt-24 xl:pt-32 pb-8 lg:pb-12 xl:pb-16 px-4 sm:px-6 lg:px-8">
+			<div className="relative flex flex-col items-center justify-center gap-6 lg:gap-8 pt-28 sm:pt-32 lg:pt-24 xl:pt-32 pb-8 lg:pb-12 xl:pb-16 px-4 sm:px-6 lg:px-8">
 
 				<div className="flex flex-col items-center gap-1 md:gap-2 w-full max-w-5xl">
 					{/* Hero title wrapper — word-break prevention */}
@@ -56,7 +56,7 @@ export function HeroSection() {
 							text="The Operating System"
 							fontSize="text-2xl sm:text-3xl md:text-4xl lg:text-[56px] xl:text-[64px]"
 							textColor="text-[#1D1D1F]"
-							overlayColor="text-indigo-600"
+							overlayColor="text-indigo-700"
 							letterDelay={0.06}
 							className="w-full block"
 						/>
@@ -64,7 +64,7 @@ export function HeroSection() {
 							text="for Modern Hiring"
 							fontSize="text-2xl sm:text-3xl md:text-4xl lg:text-[56px] xl:text-[64px]"
 							textColor="text-[#1D1D1F]"
-							overlayColor="text-emerald-600"
+							overlayColor="text-emerald-700"
 							letterDelay={0.05}
 							className="w-full block"
 						/>
@@ -72,7 +72,7 @@ export function HeroSection() {
 				</div>
 
 				<p
-					className="fade-in slide-in-from-bottom-10 mx-auto max-w-3xl animate-in fill-mode-backwards text-center text-sm sm:text-base lg:text-lg xl:text-xl text-foreground/80 tracking-wider delay-200 duration-500 ease-out font-medium"
+					className="fade-in slide-in-from-bottom-10 mx-auto max-w-3xl animate-in fill-mode-backwards text-center text-sm sm:text-base lg:text-lg xl:text-xl tracking-wider delay-200 duration-500 ease-out font-semibold text-[#111111]"
 				>
 					Generate interview kits, evaluate candidates, analyze job descriptions, audit hiring processes, and eliminate bias — all in one AI-powered platform.
 				</p>
@@ -102,7 +102,7 @@ export function HeroSection() {
 export function LogosSection() {
 	return (
 		<LogoCloud
-			className="opacity-60 max-w-4xl mx-auto"
+			className="opacity-80 max-w-4xl mx-auto"
 			logos={logos.filter((logo) => logo.alt !== "GitHub Logo")}
 		/>
 	);

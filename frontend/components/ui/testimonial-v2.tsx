@@ -17,19 +17,19 @@ interface Testimonial {
 const testimonials: Testimonial[] = [
   {
     text: "Rifair AI transformed our hiring process. We've seen a 40% increase in diverse hires since we started using their bias-detection engine.",
-    image: "/images/models/testimonial-woman-1.png",
+    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=150&h=150",
     name: "Sarah Jenkins",
     role: "Head of Talent at TechFlow",
   },
   {
     text: "The interview kit generation is a game-changer. It ensures every candidate gets the same fair treatment while saving our managers hours of prep time.",
-    image: "/images/models/testimonial-man-1.png",
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150&h=150",
     name: "Marcus Chen",
     role: "Director of People Ops at ScaleUp",
   },
   {
     text: "Finally, a tool that actually understands the nuance of language in job descriptions and interviews. Rifair is essential for any modern HR stack.",
-    image: "/images/models/hr-leader.png",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=150&h=150",
     name: "Elena Rodriguez",
     role: "DEI Lead at Global Corp",
   },
@@ -186,7 +186,11 @@ export function TestimonialsSection() {
           role="region"
           aria-label="Scrolling Testimonials"
         >
-          <TestimonialsColumn testimonials={firstColumn} duration={15} />
+          {/* Mobile view: single column scrolling all testimonials in a continuous loop */}
+          <TestimonialsColumn testimonials={testimonials} duration={30} className="md:hidden" />
+
+          {/* Desktop view: parallel columns with partitioned testimonials */}
+          <TestimonialsColumn testimonials={firstColumn} className="hidden md:block" duration={15} />
           <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" duration={19} />
           <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" duration={17} />
         </div>
