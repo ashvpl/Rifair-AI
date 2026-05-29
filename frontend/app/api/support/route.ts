@@ -56,10 +56,9 @@ export async function POST(req: NextRequest) {
 
     const logoUrl = 'https://rifairai.com/rifair-logo.png'
 
-    // 2. Send notification email to your team
     await resend.emails.send({
       from: 'Rifair AI <support@rifairai.com>',
-      to: 'rifairaiteam@gmail.com',
+      to: 'support@rifairai.com',
       subject: `[Support Ticket] ${subject} — ${full_name}`,
       html: `
         <div style="font-family:sans-serif; max-width:600px; margin:0 auto; color: #1f2937;">

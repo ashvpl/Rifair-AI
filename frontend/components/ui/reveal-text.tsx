@@ -110,35 +110,22 @@ export function RevealText({
                       mass: 0.8,
                     }}
                   >
-                    {/* Base text layer */}
-                    <motion.span 
-                      className={cn("absolute inset-0 transition-colors duration-300 py-0 lg:py-2", textColor)}
-                      animate={{ 
-                        opacity: hoveredIndex === index ? 0 : 1 
-                      }}
-                      transition={{ duration: 0.1 }}
-                    >
-                      {letter}
-                    </motion.span>
-                    {/* Image text layer with background panning */}
-                    <motion.span
-                      className="text-transparent bg-clip-text bg-cover bg-no-repeat bg-center py-0 lg:py-2"
-                      animate={{ 
-                        opacity: hoveredIndex === index ? 1 : 0,
-                        scale: hoveredIndex === index ? 1.1 : 1
-                      }}
-                      transition={{ 
-                        opacity: { duration: 0.15 },
-                        scale: { duration: 0.4, ease: "easeOut" }
-                      }}
+                    {/* Single dynamic text layer with hover-based image background transition */}
+                    <span
+                      className={cn(
+                        "transition-all duration-300 py-0 lg:py-2 select-none inline-block",
+                        hoveredIndex === index
+                          ? "text-transparent bg-clip-text bg-cover bg-no-repeat bg-center scale-110"
+                          : textColor
+                      )}
                       style={{
-                        backgroundImage: `url('${letterImages[index % letterImages.length]}')`,
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
+                        backgroundImage: hoveredIndex === index ? `url('${letterImages[index % letterImages.length]}')` : 'none',
+                        WebkitBackgroundClip: hoveredIndex === index ? 'text' : 'unset',
+                        WebkitTextFillColor: hoveredIndex === index ? 'transparent' : 'unset',
                       }}
                     >
                       {letter}
-                    </motion.span>
+                    </span>
                     
                     {/* Overlay text sweep */}
                     {showOverlay && (

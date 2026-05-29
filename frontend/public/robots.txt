@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Host
+Host: https://rifairai.com
+
+# Sitemaps
+Sitemap: https://rifairai.com/sitemap.xml
