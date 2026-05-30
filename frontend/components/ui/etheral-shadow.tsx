@@ -66,8 +66,17 @@ export function Component({
     className,
     showTitle = true
 }: ShadowOverlayProps) {
+    const [isMobileOrTablet, setIsMobileOrTablet] = React.useState(false);
+    useEffect(() => {
+        const mq = window.matchMedia("(max-width: 1023px)");
+        setIsMobileOrTablet(mq.matches);
+        const handler = (e: MediaQueryListEvent) => setIsMobileOrTablet(e.matches);
+        mq.addEventListener("change", handler);
+        return () => mq.removeEventListener("change", handler);
+    }, []);
+
     const id = useInstanceId();
-    const animationEnabled = animation && animation.scale > 0;
+    const animationEnabled = animation && animation.scale > 0 && !isMobileOrTablet;
     const feColorMatrixRef = useRef<SVGFEColorMatrixElement>(null);
     const hueRotateMotionValue = useMotionValue(180);
     const hueRotateAnimation = useRef<AnimationPlaybackControls | null>(null);

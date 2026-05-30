@@ -239,35 +239,28 @@ export function SVGFollower({
   }, [removeDelay])
 
   useEffect(() => {
+    // On coarse touch devices (mobile/tablet), we completely skip execution to save CPU/GPU overhead
+    const isCoarse = window.matchMedia("(pointer: coarse)").matches
+    if (isCoarse) return
+
     if (!svgRef.current) return
     
     // Clear any existing content in the SVG to prevent orphaned paths from hot reloads or Strict Mode
     svgRef.current.innerHTML = ""
     
-    // On coarse touch devices (mobile/tablet), we can completely skip mousemove to save CPU
-    const isCoarse = window.matchMedia("(pointer: coarse)").matches
-    
     followersRef.current = colors.map((color) => new Follower(svgRef.current!, color))
-    
-    if (!isCoarse) {
-      window.addEventListener("mousemove", handleMouseMove, { passive: true })
-    }
-    
-    window.addEventListener("touchmove", handleTouchMove, { passive: true })
+    window.addEventListener("mousemove", handleMouseMove, { passive: true })
     animate()
 
     return () => {
-      if (!isCoarse) {
-        window.removeEventListener("mousemove", handleMouseMove)
-      }
-      window.removeEventListener("touchmove", handleTouchMove)
+      window.removeEventListener("mousemove", handleMouseMove)
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current)
       }
       // Important: Cleanup follower paths on unmount
       followersRef.current.forEach(f => f.destroy())
     }
-  }, [colors, animate, handleMouseMove, handleTouchMove])
+  }, [colors, animate, handleMouseMove])
 
   return (
     <div

@@ -13,7 +13,7 @@ import { X, Menu } from "lucide-react";
 const menus = [
   {
     id: 0,
-    title: 'About Us',
+    title: 'About',
     url: '/#about-us',
     dropdown: false,
   },
@@ -115,7 +115,7 @@ export function NavBarDemo() {
           {/* Branding */}
           <div className="flex shrink-0">
             <Link href="/" className="flex items-center group w-full" onClick={() => setMobileMenuOpen(false)}>
-              <div className="relative h-[36px] md:h-[40px] w-[130px] md:w-[160px] flex items-center">
+              <div className="relative h-[36px] md:h-[40px] w-[130px] md:w-[170px] lg:w-[220px] flex items-center">
                 <Image 
                   src="/rifair-logo.png" 
                   alt="Rifair AI" 
@@ -128,8 +128,8 @@ export function NavBarDemo() {
             </Link>
           </div>
           
-          {/* Center Navigation — hidden on mobile */}
-          <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 z-[100]">
+          {/* Center Navigation — hidden on mobile, relative on tablet, absolute on desktop */}
+          <div className="hidden md:flex md:relative md:left-auto md:translate-x-0 lg:absolute lg:left-1/2 lg:-translate-x-1/2 z-[100] mx-4">
             <NavBar list={menus} />
           </div>
 
@@ -140,12 +140,12 @@ export function NavBarDemo() {
             ) : (
               <>
                 <Link href="/sign-in" className="hidden sm:block">
-                  <Button variant="ghost" className="font-bold text-[#1D1D1F] hover:bg-black/5 rounded-full px-4 md:px-6 transition-colors">
+                  <Button variant="ghost" className="font-bold text-[#1D1D1F] hover:bg-black/5 rounded-full px-3 lg:px-6 transition-colors">
                     Login
                   </Button>
                 </Link>
                 <Link href="/sign-up" className="hidden md:block">
-                  <Button className="font-bold bg-black text-white hover:bg-black/90 rounded-full px-6 shadow-xl transition-all hover:scale-105 active:scale-95">
+                  <Button className="font-bold bg-black text-white hover:bg-black/90 rounded-full px-4 lg:px-6 shadow-xl transition-all hover:scale-105 active:scale-95">
                     Sign Up
                   </Button>
                 </Link>

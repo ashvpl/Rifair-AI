@@ -29,7 +29,7 @@ const Menu = ({ list }: MenuProps) => {
               <li key={item.id} className={'relative'}>
                 <Link
                   className={`
-                    relative flex items-center justify-center rounded px-8 py-3 transition-all
+                    whitespace-nowrap relative flex items-center justify-center rounded px-4 lg:px-8 py-3 transition-all
                     hover:bg-black/5
                     ${hovered === item?.id ? 'bg-black/5' : ''}
                   `}
