@@ -9,6 +9,7 @@ import { BlurTextAnimation } from "@/components/ui/blur-text-animation";
 import { HeroSection2 } from "@/components/ui/hero-section-2";
 import FooterSection from "@/components/ui/footer-section";
 import { TestimonialsSection } from "@/components/ui/testimonial-v2";
+import { IntroVideoSection } from "@/components/landing/intro-video-section";
 
 export default function LandingBelowFold() {
   return (
@@ -27,6 +28,11 @@ export default function LandingBelowFold() {
           <FeatureCarousel />
         </div>
       </section>
+
+      <IntroVideoSection 
+        youtubeUrl="https://youtu.be/WTbW7Ydch8s?si=6k1TJefVUNOSSL8a" 
+        posterImage="/images/video-thumbnail.jpg" 
+      />
 
       <RifairCoreFeatures />
 
