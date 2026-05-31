@@ -99,6 +99,7 @@ export function useSubscription(): SubscriptionState {
     }
     if (type === 'jdAnalyses') {
       if (plan.jdAnalysesLimit === null) return false
+      if (plan.jdAnalysesLimit === 0) return false // no access at all — handled by plan gate, not a usage limit
       return (usage.jdAnalysesUsed ?? 0) >= plan.jdAnalysesLimit
     }
     if (type === 'evaluations') {
