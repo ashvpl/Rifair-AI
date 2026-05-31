@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { generateKit, getReportById } from "@/lib/api";
 import { useSearchParams, useRouter } from "next/navigation";
-import { UsageLimitBanner } from "@/components/pricing/FeatureGate";
+import { UsageLimitBanner, SectionLimitLock } from "@/components/pricing/FeatureGate";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -254,6 +254,7 @@ export default function KitGeneratorPage() {
             <KitDisplay kit={kit} />
           </motion.div>
         ) : (
+          <SectionLimitLock type="kits" serviceLabel="interview kit generations">
           <motion.div 
             key="interface-grid"
             initial={{ opacity: 0 }}
@@ -389,6 +390,7 @@ export default function KitGeneratorPage() {
               </div>
             </div>
           </motion.div>
+          </SectionLimitLock>
         )}
       </AnimatePresence>
         </>

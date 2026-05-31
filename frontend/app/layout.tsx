@@ -80,6 +80,8 @@ export default function RootLayout({
         >
           <ClerkProvider
             publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!}
+            signInUrl="/sign-in"
+            signUpUrl="/sign-up"
             appearance={{
               variables: {
                 colorPrimary: "#737373",

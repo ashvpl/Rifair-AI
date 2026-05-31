@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { analyzeQuestions, getReportById, getBiasSession } from "@/lib/api";
 import { useSearchParams, useRouter } from "next/navigation";
-import { FeatureGate, UsageLimitBanner } from "@/components/pricing/FeatureGate";
+import { FeatureGate, UsageLimitBanner, SectionLimitLock } from "@/components/pricing/FeatureGate";
 import { QuestionInput } from "@/components/QuestionInput";
 import { LoadingState } from "@/components/LoadingState";
 import { BiasScoreRing } from "@/components/spectral/BiasScoreRing";
@@ -368,14 +368,16 @@ export default function AnalyzePage() {
       </AnimatePresence>
 
       {!reportId && !report && (
-        <div className="space-y-5 md:space-y-8 max-w-4xl">
-          <QuestionInput
-            onAnalyze={handleAnalyze}
-            isLoading={isLoading}
-            initialText=""
-            initialName=""
-          />
-        </div>
+        <SectionLimitLock type="analyses" serviceLabel="bias analyses">
+          <div className="space-y-5 md:space-y-8 max-w-4xl">
+            <QuestionInput
+              onAnalyze={handleAnalyze}
+              isLoading={isLoading}
+              initialText=""
+              initialName=""
+            />
+          </div>
+        </SectionLimitLock>
       )}
 
       {!isLoading && report && questions.length > 0 ? (

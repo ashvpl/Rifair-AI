@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 
 import { CustomEvaluationFlow } from "@/components/eval/CustomEvaluationFlow";
 import { useBackendToken } from "@/hooks/useBackendToken";
+import { SectionLimitLock } from "@/components/pricing/FeatureGate";
 
 export default function EvaluationsPage() {
   const { isLoaded, userId } = useAuth();
@@ -114,6 +115,9 @@ export default function EvaluationsPage() {
           </Button>
         </Link>
       </div>
+
+      {/* ── Entry Points + Kit Library: locked when evaluations limit reached ── */}
+      <SectionLimitLock type="evaluations" serviceLabel="candidate evaluations">
 
       {/* ── Entry Points ─────────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -280,6 +284,8 @@ export default function EvaluationsPage() {
           </AnimatePresence>
         </div>
       )}
+
+      </SectionLimitLock>  {/* end SectionLimitLock */}
 
       {/* Section Header: Recent Evaluations */}
       {evaluations.length > 0 && (

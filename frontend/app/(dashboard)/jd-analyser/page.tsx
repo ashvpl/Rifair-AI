@@ -7,6 +7,7 @@ import { FileSearch, ArrowRight, CheckCircle2, Lock, ChevronDown } from 'lucide-
 import { JDAnalysisResult } from '@/components/jd/JDAnalysisResult'
 import { JDGeneratorResult } from '@/components/jd/JDGeneratorResult'
 import { useSubscription } from '@/hooks/useSubscription'
+import { SectionLimitLock } from '@/components/pricing/FeatureGate'
 import { useContentModeration } from '@/hooks/useContentModeration'
 import { ContentWarning } from '@/components/moderation/ContentWarning'
 import Link from 'next/link'
@@ -194,6 +195,7 @@ export default function JDAnalyserPage() {
         </button>
       </div>
 
+      <SectionLimitLock type="jdAnalyses" enabled={hasAccess}>
       <div className={`space-y-4 transition-all duration-500 ${(!hasAccess && !planLoading) ? 'opacity-40 pointer-events-none select-none blur-[4px]' : ''}`}>
         {mode === 'generate' ? (
           <JDGenerator
@@ -403,6 +405,7 @@ export default function JDAnalyserPage() {
           </>
         )}
       </div>
+      </SectionLimitLock>
 
       {/* ── Mobile Sticky Submit Bar ─────────────────────────────────────────── */}
       {mode === 'analyse' && (
