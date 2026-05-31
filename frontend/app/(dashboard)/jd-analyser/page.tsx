@@ -195,7 +195,7 @@ export default function JDAnalyserPage() {
         </button>
       </div>
 
-      <SectionLimitLock type="jdAnalyses" enabled={hasAccess}>
+      <SectionLimitLock type="jdAnalyses">
       <div className={`space-y-4 transition-all duration-500 ${(!hasAccess && !planLoading) ? 'opacity-40 pointer-events-none select-none blur-[4px]' : ''}`}>
         {mode === 'generate' ? (
           <JDGenerator
