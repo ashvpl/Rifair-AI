@@ -10,6 +10,7 @@ import { Plus, X, AlertTriangle, CheckCircle, Loader2, ShieldCheck, ArrowRight, 
 import { cn } from '@/lib/utils'
 import { CandidateEvaluator } from '@/components/evaluation/CandidateEvaluator'
 import { LoadingState } from '@/components/LoadingState'
+import { SectionLimitLock } from '@/components/pricing/FeatureGate'
 import BiasCheckResults from './BiasCheckResults'
 import { useBackendToken } from '@/hooks/useBackendToken'
 
@@ -562,7 +563,9 @@ export function CustomEvaluationFlow({
       <AnimatePresence mode="wait">
         {step === 'input' && (
           <motion.div key="input" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <InputStep onSubmit={handleInputSubmit} />
+            <SectionLimitLock type="evaluations" serviceLabel="candidate evaluations">
+              <InputStep onSubmit={handleInputSubmit} />
+            </SectionLimitLock>
           </motion.div>
         )}
         {step === 'bias' && session && (

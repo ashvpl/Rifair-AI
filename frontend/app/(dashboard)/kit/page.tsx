@@ -193,7 +193,9 @@ export default function KitGeneratorPage() {
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
           >
-            <KitAuditUploader />
+            <SectionLimitLock type="analyses" serviceLabel="bias analyses">
+              <KitAuditUploader />
+            </SectionLimitLock>
           </motion.div>
         </AnimatePresence>
       )}

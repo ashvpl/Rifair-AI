@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { CandidateEvaluator } from '../evaluation/CandidateEvaluator'
 import QuestionCard from './QuestionCard'
+import { SectionLimitLock } from '@/components/pricing/FeatureGate'
 import ExportButton from '@/components/pdf/ExportButton'
 
 interface KitQuestion {
@@ -115,7 +116,9 @@ export function KitDisplay({ kit }: { kit: KitData }) {
             </h2>
           </div>
         </div>
-        <CandidateEvaluator kit={kit} />
+        <SectionLimitLock type="evaluations" serviceLabel="candidate evaluations">
+          <CandidateEvaluator kit={kit} />
+        </SectionLimitLock>
       </div>
     )
   }
