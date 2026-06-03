@@ -188,10 +188,7 @@ export const REVEAL_TEXT_BACKGROUNDS = [
   unsplashUrl("photo-1557683917-29d509bd6617", { w: 1000, q: 80 }),
 ] as const;
 
-export const INTRO_VIDEO_POSTER = unsplashUrl(
-  "photo-1487412720507-e7ab37603c6f",
-  { w: 1280, q: 85 }
-);
+export const INTRO_VIDEO_POSTER = "/images/video-thumbnail.jpg";
 
 export const LANDING_CTA_BACKGROUND = unsplashUrl(
   "photo-1497366216548-37526070297c",
