@@ -47,6 +47,13 @@ export interface Usage {
   evaluationsUsed: number
   apiCallsUsed: number
   month: string
+  /** Billing-aligned usage window key (YYYY-MM-DD) */
+  periodKey?: string
+  /** ISO timestamp when monthly quotas refresh; null if upgrade-only (free) */
+  resetsAt?: string | null
+  /** True when limits only reset after purchasing/upgrading a paid plan */
+  resetsOnUpgradeOnly?: boolean
+  billingCycle?: BillingCycle
 }
 
 export interface PaymentRecord {

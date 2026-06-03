@@ -1,5 +1,6 @@
 const subscriptionService = require("../services/subscriptionService");
 const usageService = require("../services/usageService");
+const { resolveUsagePeriod } = require("../utils/usagePeriod");
 
 async function getDetails(req, res) {
   try {
@@ -11,6 +12,9 @@ async function getDetails(req, res) {
       usageService.getUsage(userId),
       subscriptionService.getPaymentHistory(userId)
     ]);
+
+    const periodMeta = resolveUsagePeriod(subscription);
+    const usageMeta = usage?._usageMeta || periodMeta;
 
     res.json({
       subscription: subscription ? {
@@ -33,6 +37,10 @@ async function getDetails(req, res) {
         evaluationsUsed: usage.evaluations_used || 0,
         apiCallsUsed: usage.api_calls_used || 0,
         month: usage.month,
+        periodKey: usageMeta.periodKey || usage.month,
+        resetsAt: usageMeta.resetsAt || null,
+        resetsOnUpgradeOnly: usageMeta.resetsOnUpgradeOnly ?? periodMeta.resetsOnUpgradeOnly,
+        billingCycle: usageMeta.billingCycle || periodMeta.billingCycle,
       } : null,
       payments: (payments || []).map(p => ({
         id: p.id,

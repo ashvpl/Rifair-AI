@@ -14,25 +14,35 @@ const menus = [
   {
     id: 0,
     title: 'About',
-    url: '/#about-us',
+    url: '/about',
     dropdown: false,
   },
   {
     id: 1,
-    title: 'Dashboard',
-    url: '/dashboard',
-    dropdown: false,
+    title: 'Features',
+    url: '#',
+    dropdown: true,
+    items: [
+      { id: 10, title: 'AI Interview Kit Generator', url: '/features/interview-kit-generator' },
+      { id: 11, title: 'Interview Bias Checker', url: '/features/bias-checker' },
+      { id: 12, title: 'AI Job Description Optimizer', url: '/features/job-description-optimizer' },
+      { id: 13, title: 'Candidate Evaluation Scorecard', url: '/features/candidate-evaluation' },
+    ],
   },
   {
     id: 2,
-    title: 'Pricing',
-    url: '/pricing',
-    dropdown: false,
+    title: 'Resources',
+    url: '#',
+    dropdown: true,
+    items: [
+      { id: 20, title: 'Blog', url: '/blog' },
+      { id: 21, title: 'Hiring Guides', url: '/blog?category=guides' },
+    ],
   },
   {
     id: 3,
-    title: 'Features',
-    url: '/#core-features',
+    title: 'Pricing',
+    url: '/pricing',
     dropdown: false,
   },
 ];
@@ -201,17 +211,38 @@ export function NavBarDemo() {
             </div>
 
             {/* Nav Links */}
-            <nav className="flex-1 flex flex-col px-4 pt-8">
-              {menus.map((item) => (
-                <Link
-                  key={item.id}
-                  href={item.url}
-                  className="mobile-nav-link text-[18px] font-semibold text-[#1D1D1F] py-[16px] border-b border-black/[0.06]"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.title}
-                </Link>
-              ))}
+            <nav className="flex-1 flex flex-col px-4 pt-8 overflow-y-auto">
+              {menus.map((item) => {
+                if (item.dropdown && item.items) {
+                  return (
+                    <div key={item.id} className="border-b border-black/[0.06] py-4 flex flex-col gap-2">
+                      <span className="text-[18px] font-semibold text-[#1D1D1F]">{item.title}</span>
+                      <div className="flex flex-col gap-3 pl-4 mt-1">
+                        {item.items.map((sub) => (
+                          <Link
+                            key={sub.id}
+                            href={sub.url}
+                            className="text-base font-semibold text-[#86868B] hover:text-[#1D1D1F] transition-colors"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            {sub.title}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                }
+                return (
+                  <Link
+                    key={item.id}
+                    href={item.url}
+                    className="mobile-nav-link text-[18px] font-semibold text-[#1D1D1F] py-[16px] border-b border-black/[0.06]"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item.title}
+                  </Link>
+                );
+              })}
 
               {/* Auth links for mobile */}
               <div className="mt-8 flex flex-col gap-3">

@@ -2,6 +2,7 @@
 
 import { MiniNavbar } from "@/components/ui/mini-navbar";
 import Image from "next/image";
+import { DEMO_NAVBAR_BACKGROUND } from "@/lib/site-images";
 
 export default function NavbarDemo() {
   return (
@@ -9,7 +10,7 @@ export default function NavbarDemo() {
       {/* Background with higher resolution stars/dark aesthetic */}
       <div className="absolute inset-0 z-0">
         <Image 
-          src="https://images.unsplash.com/photo-1506318137071-a8e063b4b47e?q=80&w=3540&auto=format&fit=crop"
+          src={DEMO_NAVBAR_BACKGROUND}
           alt="Cosmic Background"
           fill
           priority

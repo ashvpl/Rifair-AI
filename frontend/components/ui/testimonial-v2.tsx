@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from "framer-motion";
 import { Sun, Moon } from 'lucide-react';
 import { TrustedByRotator } from "@/components/ui/trusted-by-rotator";
+import { TESTIMONIAL_AVATARS } from "@/lib/site-images";
 
 // --- Types ---
 interface Testimonial {
@@ -17,55 +18,55 @@ interface Testimonial {
 const testimonials: Testimonial[] = [
   {
     text: "Rifair AI transformed our hiring process. We've seen a 40% increase in diverse hires since we started using their bias-detection engine.",
-    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=150&h=150",
+    image: TESTIMONIAL_AVATARS.sarah,
     name: "Sarah Jenkins",
     role: "Head of Talent at TechFlow",
   },
   {
     text: "The interview kit generation is a game-changer. It ensures every candidate gets the same fair treatment while saving our managers hours of prep time.",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150&h=150",
+    image: TESTIMONIAL_AVATARS.marcus,
     name: "Marcus Chen",
     role: "Director of People Ops at ScaleUp",
   },
   {
     text: "Finally, a tool that actually understands the nuance of language in job descriptions and interviews. Rifair is essential for any modern HR stack.",
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=150&h=150",
+    image: TESTIMONIAL_AVATARS.elena,
     name: "Elena Rodriguez",
     role: "DEI Lead at Global Corp",
   },
   {
     text: "Ethical AI is a priority for us. Rifair makes it easy to implement fair hiring practices at scale without slowing down our growth.",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150&h=150",
+    image: TESTIMONIAL_AVATARS.david,
     name: "David Kim",
     role: "CEO of NextGen",
   },
   {
     text: "Our candidates have actually commented on how professional and relevant our interview questions are. Highly recommend Rifair.",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150&h=150",
+    image: TESTIMONIAL_AVATARS.amina,
     name: "Amina Yusuf",
     role: "HR Manager at BrightPath",
   },
   {
     text: "The real-time bias scoring helps me coach hiring managers on the fly. It's like having a DEI expert sitting next to you.",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150&h=150",
+    image: TESTIMONIAL_AVATARS.james,
     name: "James Wilson",
     role: "Senior Recruiter",
   },
   {
     text: "Rifair's library of inclusive interview kits has set a new standard for our department. We're never going back to manual prep.",
-    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=150&h=150",
+    image: TESTIMONIAL_AVATARS.sophia,
     name: "Sophia Watkins",
     role: "Talent Acquisition Partner",
   },
   {
     text: "As a hiring manager, I want to focus on skills. Rifair filters out the noise and helps me find the best talent based on merit alone.",
-    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=150&h=150",
+    image: TESTIMONIAL_AVATARS.thomas,
     name: "Thomas Mueller",
     role: "VP of Engineering",
   },
   {
     text: "Rifair isn't just a tool; it's a partner in building a more equitable workplace. The results speak for themselves.",
-    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150&h=150",
+    image: TESTIMONIAL_AVATARS.sophie,
     name: "Sophie Laurent",
     role: "Culture Strategist",
   },

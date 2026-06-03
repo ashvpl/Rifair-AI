@@ -9,6 +9,7 @@ const { callAIWithFallback }    = require('../ai/universalCaller');
 const { buildEvaluationPrompt } = require('../prompts/evaluationPrompt');
 const { getSubscription }       = require('../services/subscriptionService');
 const { getUsage, incrementUsage } = require('../services/usageService');
+const { getPlanLimit }          = require('../utils/planLimits');
 const { parseJSON }             = require('../utils/parseJSON');
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -27,17 +28,9 @@ const evaluateCandidate = async (req, res) => {
     const sub = await getSubscription(userId);
     const planId = sub?.plan_id ?? 'free';
 
-    const EVAL_LIMITS = {
-      free:       1,
-      lite:       3,
-      starter:    5,
-      growth:     20,
-      enterprise: null,
-    };
+    const limit = getPlanLimit(planId, 'evaluations');
 
-    const limit = EVAL_LIMITS[planId];
-
-    if (limit !== null) {
+    if (limit !== null && limit !== undefined) {
       // ── USAGE TABLE is the single source of truth ──────────────────────────
       // We read from the dedicated `usage` table, NOT from candidate_evaluations.
       // This means deleting evaluation history NEVER resets this counter.

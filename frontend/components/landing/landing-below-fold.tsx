@@ -10,6 +10,11 @@ import { HeroSection2 } from "@/components/ui/hero-section-2";
 import FooterSection from "@/components/ui/footer-section";
 import { TestimonialsSection } from "@/components/ui/testimonial-v2";
 import { IntroVideoSection } from "@/components/landing/intro-video-section";
+import {
+  INTRO_VIDEO_POSTER,
+  LANDING_AUDIENCE_IMAGES,
+  LANDING_CTA_BACKGROUND,
+} from "@/lib/site-images";
 
 export default function LandingBelowFold() {
   return (
@@ -31,7 +36,7 @@ export default function LandingBelowFold() {
 
       <IntroVideoSection 
         youtubeUrl="https://youtu.be/WTbW7Ydch8s?si=6k1TJefVUNOSSL8a" 
-        posterImage="/images/video-thumbnail.jpg" 
+        posterImage={INTRO_VIDEO_POSTER}
       />
 
       <RifairCoreFeatures />
@@ -214,19 +219,19 @@ export default function LandingBelowFold() {
                   {
                     id: 1,
                     title: "HR Teams",
-                    imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600&h=600",
+                    imageUrl: LANDING_AUDIENCE_IMAGES.hrTeams.src,
                     desc: "Perfect for recruiting teams looking to remove unconscious bias from their workflow.",
                   },
                   {
                     id: 2,
                     title: "Startups",
-                    imageUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=600&h=600",
+                    imageUrl: LANDING_AUDIENCE_IMAGES.startups.src,
                     desc: "Agile teams ensuring cultural fairness and diversity from day one.",
                   },
                   {
                     id: 3,
                     title: "Enterprises",
-                    imageUrl: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=600&h=600",
+                    imageUrl: LANDING_AUDIENCE_IMAGES.enterprises.src,
                     desc: "Scale fair hiring practices across thousands of employees and teams.",
                   },
                 ]}
@@ -272,7 +277,7 @@ export default function LandingBelowFold() {
               href: "/sign-in?redirect_url=/analyze",
               icon: <ArrowRight className="h-6 w-6" />,
             }}
-            backgroundImage="/corporate-woman.jpg"
+            backgroundImage={LANDING_CTA_BACKGROUND}
             className="shadow-[0_20px_100px_rgba(0,0,0,0.08)]"
           />
         </div>

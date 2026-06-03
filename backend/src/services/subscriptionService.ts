@@ -150,14 +150,12 @@ export async function logPayment(userId: string, paymentData: any) {
 }
 
 export async function cancelSubscription(userId: string) {
+  // Downgrade plan only — preserve billing period anchors so usage counters are not reset
   const { error } = await supabaseAdmin
     .from("subscriptions")
     .update({
       plan_id: "free",
       status: "active",
-      billing_cycle: "monthly",
-      current_period_start: new Date().toISOString(),
-      current_period_end: new Date(Date.now() + 100 * 365 * 24 * 60 * 60 * 1000).toISOString(),
       cancelled_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     })

@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
-import { useAuth } from "@clerk/nextjs";
 
 interface MenuItem {
   title: string;
@@ -19,17 +18,25 @@ export default function FooterSection({
     {
       title: "Products",
       links: [
-        { text: "Bias Analysis", url: "/analyze" },
-        { text: "Interview Kits", url: "/kit" },
-        { text: "Job Descriptions", url: "/jd-analyser" },
-        { text: "Candidate Evaluations", url: "/evaluations" },
+        { text: "Interview Kit Generator", url: "/features/interview-kit-generator" },
+        { text: "Bias Checker", url: "/features/bias-checker" },
+        { text: "Job Description Optimizer", url: "/features/job-description-optimizer" },
+        { text: "Candidate Evaluation Scorecard", url: "/features/candidate-evaluation" },
+      ],
+    },
+    {
+      title: "Resources",
+      links: [
+        { text: "Blog", url: "/blog" },
+        { text: "Hiring Guides", url: "/blog?category=guides" },
+        { text: "Feature Pages", url: "/features/interview-kit-generator" },
       ],
     },
     {
       title: "Company",
       links: [
-        { text: "About Us", url: "/#about-us" },
-        { text: "Contact", url: "/help" },
+        { text: "About Us", url: "/about" },
+        { text: "Contact", url: "/contact" },
       ],
     },
     {
@@ -42,7 +49,6 @@ export default function FooterSection({
     },
   ],
 }) {
-  const { isSignedIn } = useAuth();
   return (
             <footer className="bg-gray-100 py-24 border-t border-black/[0.03] relative z-10">
       <div className="max-w-7xl mx-auto px-6">
@@ -81,21 +87,12 @@ export default function FooterSection({
                     <li
                       key={linkIdx}
                     >
-                      {(() => {
-                        const isProductLink = section.title === "Products";
-                        const finalUrl = (!isSignedIn && isProductLink) 
-                          ? `/sign-in?redirect_url=${encodeURIComponent(link.url)}` 
-                          : link.url;
-
-                        return (
-                          <Link 
-                            href={finalUrl}
-                            className="text-sm font-bold text-black/40 hover:text-primary transition-all duration-300 inline-block"
-                          >
-                            {link.text}
-                          </Link>
-                        );
-                      })()}
+                      <Link 
+                        href={link.url}
+                        className="text-sm font-bold text-black/40 hover:text-primary transition-all duration-300 inline-block"
+                      >
+                        {link.text}
+                      </Link>
                     </li>
                   ))}
                 </ul>

@@ -22,18 +22,11 @@ const { runUnifiedPipeline }                = require("../utils/pipeline");
 const { withTimeout, logger }               = require("../utils/helpers");
 const { getSubscription }                  = require("../services/subscriptionService");
 const { getUsage, incrementUsage }         = require("../services/usageService");
+const { getPlanLimit }                     = require("../utils/planLimits");
 const { buildSingleCallKitPrompt }          = require("../ai/singleCallPrompt");
 const { callAIWithFallback }                = require("../ai/universalCaller");
 const { getCachedKit, setCachedKit }        = require("../ai/cache");
 const { parseJSON }                         = require("../utils/parseJSON");
-
-const KIT_LIMITS = {
-  free:       3,
-  lite:       10,
-  starter:    20,
-  growth:     50,
-  enterprise: null,
-};
 
 const generateKit = async (req, res) => {
   try {
@@ -64,9 +57,9 @@ const generateKit = async (req, res) => {
       ]);
       resolvedPlanId = sub?.plan_id || "free";
       const kitsUsed = usage?.kits_used || 0;
-      const kitLimit = KIT_LIMITS[resolvedPlanId];
+      const kitLimit = getPlanLimit(resolvedPlanId, 'kits');
 
-      if (kitLimit !== null && kitsUsed >= kitLimit) {
+      if (kitLimit !== null && kitLimit !== undefined && kitsUsed >= kitLimit) {
         return res.status(403).json({
           error:      "limit_reached",
           message:    `You have used all ${kitLimit} kit generations this month.`,

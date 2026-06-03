@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { REVEAL_TEXT_BACKGROUNDS } from "@/lib/site-images";
 
 interface RevealTextProps {
   text?: string;
@@ -27,13 +28,7 @@ export function RevealText({
   overlayDuration = 0.4,
   springDuration = 600,
   className,
-  letterImages = [
-    "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1000", 
-    "https://images.unsplash.com/photo-1557682250-33bd709cbe85?q=80&w=1000",
-    "https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=1000",
-    "https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?q=80&w=1000",
-    "https://images.unsplash.com/photo-1557683917-29d509bd6617?q=80&w=1000",
-  ]
+  letterImages = [...REVEAL_TEXT_BACKGROUNDS],
 }: RevealTextProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [showOverlay, setShowOverlay] = useState(false);

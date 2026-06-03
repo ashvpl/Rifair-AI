@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Play, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { INTRO_VIDEO_POSTER } from "@/lib/site-images";
 
 interface IntroVideoSectionProps {
   youtubeUrl?: string;
@@ -23,7 +24,7 @@ export function IntroVideoSection({
   youtubeUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ", // Default fallback video
   title = "See Rifair AI in Action",
   subtitle = "Discover how our ethical AI engine eliminates hiring bias and delivers perfect, objective interview kits in seconds.",
-  posterImage = "/corporate-woman.jpg", // Pre-existing image in public directory
+  posterImage = INTRO_VIDEO_POSTER,
 }: IntroVideoSectionProps) {
   const [isOpen, setIsOpen] = useState(false);
   const videoId = getYouTubeId(youtubeUrl);

@@ -29,6 +29,17 @@ export default function DashboardPage() {
   const { isLoaded, userId } = useAuth();
   const { getAuthToken } = useBackendToken();
   const { usage, planId, usagePercent, isLoading: isSubLoading } = useSubscription();
+
+  const usageResetLabel = useMemo(() => {
+    if (!usage) return null;
+    if (usage.resetsOnUpgradeOnly) {
+      return "Limits refresh when you upgrade to a paid plan";
+    }
+    if (usage.resetsAt) {
+      return `Resets ${format(new Date(usage.resetsAt), "MMM d, yyyy")}`;
+    }
+    return null;
+  }, [usage]);
   const [history, setHistory] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [intelligenceProfile, setIntelligenceProfile] = useState<any>(null);
@@ -474,7 +485,12 @@ export default function DashboardPage() {
         >
           <div className="bg-white rounded-xl lg:rounded-xl p-4 sm:p-5 lg:p-6 xl:p-8 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] lg:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between h-full">
             <div className="space-y-3 sm:space-y-4">
-              <h3 className="text-[10px] lg:text-xs font-black text-black uppercase tracking-[0.2em]">Monthly Usage</h3>
+              <div>
+                <h3 className="text-[10px] lg:text-xs font-black text-black uppercase tracking-[0.2em]">Monthly Usage</h3>
+                {usageResetLabel && (
+                  <p className="mt-1 text-[10px] sm:text-xs text-[#86868B] font-medium">{usageResetLabel}</p>
+                )}
+              </div>
               <div className="space-y-4 sm:space-y-6">
                 <UsageMeter 
                   label="Analyses" 

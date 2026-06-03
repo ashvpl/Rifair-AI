@@ -20,14 +20,7 @@ const { runUnifiedPipeline }               = require("../utils/pipeline");
 const { withTimeout, logger }              = require("../utils/helpers");
 const { getSubscription }                  = require("../services/subscriptionService");
 const { getUsage, incrementUsage }         = require("../services/usageService");
-
-const LIMITS = {
-  free:       10,
-  lite:       20,
-  starter:    40,
-  growth:     150,
-  enterprise: null,
-};
+const { getPlanLimit }                     = require("../utils/planLimits");
 
 // Simple in-process cache (keyed on mode + context + short text prefix)
 const globalCache = new Map();
@@ -65,9 +58,9 @@ const analyzeText = async (req, res) => {
       ]);
       const planId       = sub?.plan_id      || "free";
       const analysesUsed = usage?.analyses_used || 0;
-      const limit        = LIMITS[planId];
+      const limit        = getPlanLimit(planId, 'analyses');
 
-      if (limit !== null && analysesUsed >= limit) {
+      if (limit !== null && limit !== undefined && analysesUsed >= limit) {
         let teaserCheck;
         try {
           teaserCheck = await withTimeout(

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { cn } from "@/lib/utils";
+import { INTERACTIVE_ACCORDION_DEMO_IMAGES } from "@/lib/site-images";
 
 interface AccordionItemData {
   id: number;
@@ -89,17 +90,17 @@ export default function LandingAccordionItem() {
     {
       id: 1,
       title: 'Voice Assistant',
-      imageUrl: 'https://images.unsplash.com/photo-1628258334105-2a0b3d6efee1?q=80&w=1974&auto=format&fit=crop',
+      imageUrl: INTERACTIVE_ACCORDION_DEMO_IMAGES[0],
     },
     {
        id: 2,
        title: 'AI Image Generation',
-       imageUrl: 'https://images.unsplash.com/photo-1677756119517-756a188d2d94?q=80&w=2070&auto=format&fit=crop',
+       imageUrl: INTERACTIVE_ACCORDION_DEMO_IMAGES[1],
     },
     {
        id: 3,
        title: 'AI Chatbot',
-       imageUrl: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1974&auto=format&fit=crop',
+       imageUrl: INTERACTIVE_ACCORDION_DEMO_IMAGES[2],
     },
   ];
 

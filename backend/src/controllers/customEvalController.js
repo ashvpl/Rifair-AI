@@ -16,6 +16,7 @@
 const { supabase }                = require('../config/supabase');
 const { getSubscription }         = require('../services/subscriptionService');
 const { getUsage, incrementUsage }= require('../services/usageService');
+const { getPlanLimit }            = require('../utils/planLimits');
 const { runUnifiedPipeline }      = require('../utils/pipeline');
 const { callAIWithFallback }      = require('../ai/universalCaller');
 const { withTimeout }             = require('../utils/helpers');
@@ -27,14 +28,6 @@ const {
 }                                 = require('../prompts/customEvalPrompts');
 
 // ── Constants ──────────────────────────────────────────────────────────────
-
-const EVAL_LIMITS = {
-  free:       1,
-  lite:       3,
-  starter:    5,
-  growth:     20,
-  enterprise: null,
-};
 
 const MAX_QUESTIONS  = 15;
 const MIN_Q_LENGTH   = 10;
@@ -173,9 +166,9 @@ const createSession = async (req, res) => {
       getUsage(userId),
     ]);
     const planId     = sub?.plan_id ?? 'free';
-    const limit      = EVAL_LIMITS[planId];
+    const limit      = getPlanLimit(planId, 'evaluations');
 
-    if (limit !== null) {
+    if (limit !== null && limit !== undefined) {
       const evalsUsed = usageData?.evaluations_used ?? 0;
 
       if (evalsUsed >= limit) {

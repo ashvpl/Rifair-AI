@@ -7,6 +7,7 @@ import * as LabelPrimitive from "@radix-ui/react-label";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Eye, EyeOff } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AUTH_GALLERY_IMAGES } from "@/lib/site-images";
 
 export interface TypewriterProps {
   text: string | string[];
@@ -483,32 +484,7 @@ export function AuthRotatingText({
   );
 }
 
-const allAuthImages = [
-    {
-        src: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800&h=600",
-        alt: "Professional leadership"
-    },
-    {
-        src: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600&h=600",
-        alt: "Modern HR management"
-    },
-    {
-        src: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=600&h=600",
-        alt: "Innovative entrepreneurship"
-    },
-    {
-        src: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=600&h=600",
-        alt: "Collaborative corporate leadership"
-    },
-    {
-        src: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=150&h=150",
-        alt: "Focused recruitment professional"
-    },
-    {
-        src: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150&h=150",
-        alt: "Confident hiring manager"
-    }
-];
+const allAuthImages = AUTH_GALLERY_IMAGES;
 
 const allAuthMessages = [
     "Welcome back to the intelligence layer behind fair hiring.",

@@ -13,62 +13,56 @@ import {
 } from "@hugeicons/core-free-icons";
 import { cn } from "@/lib/utils";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { FEATURE_CAROUSEL_IMAGES } from "@/lib/site-images";
 
 const FEATURES = [
   {
     id: "language_intelligence",
     label: "Language Intelligence Layer",
     icon: GlobalSearchIcon,
-    image:
-      "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1200",
+    image: FEATURE_CAROUSEL_IMAGES[0],
     description: "Detects cultural, gender, and linguistic bias in real-time.",
   },
   {
     id: "semantics",
     label: "Semantic AI",
     icon: CommandFreeIcons,
-    image:
-      "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1200",
+    image: FEATURE_CAROUSEL_IMAGES[1],
     description: "Understands the deep intent of every interview question.",
   },
   {
     id: "patterns",
     label: "Pattern Layer",
     icon: DashboardSquare01Icon,
-    image:
-      "https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=1200",
+    image: FEATURE_CAROUSEL_IMAGES[2],
     description: "Identifies structural bias in question formation.",
   },
   {
     id: "generator",
     label: "Fair Generation",
     icon: CheckmarkCircle01Icon,
-    image:
-      "https://images.unsplash.com/photo-1578574577315-3fbeb0cecdc2?q=80&w=1200",
+    image: FEATURE_CAROUSEL_IMAGES[3],
     description: "Auto-generates inclusive, bias-free question alternatives.",
   },
   {
     id: "scoring",
     label: "Bias Scoring",
     icon: Pizza04Icon,
-    image:
-      "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200",
+    image: FEATURE_CAROUSEL_IMAGES[4],
     description: "Multi-parameter risk scores with explainable AI insights.",
   },
   {
     id: "enterprise",
     label: "Batch Audits",
     icon: AiCloudIcon,
-    image:
-      "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=1200",
+    image: FEATURE_CAROUSEL_IMAGES[5],
     description: "Audit entire question banks with enterprise precision.",
   },
   {
     id: "security",
     label: "Secured Data",
     icon: CheckmarkCircle01Icon,
-    image:
-      "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1200",
+    image: FEATURE_CAROUSEL_IMAGES[6],
     description: "Bank-grade security protocols for all talent intelligence.",
   },
 ];

@@ -3,30 +3,31 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { KIT_FEATURE_IMAGES } from "@/lib/site-images";
 
 const FEATURES = [
   {
     id: "recon",
     label: "AI Pattern Recon",
-    image: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1200",
+    image: KIT_FEATURE_IMAGES[0],
     description: "Deep semantic analysis of question intent."
   },
   {
     id: "neutralize",
     label: "Bias Neutralization",
-    image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1200",
+    image: KIT_FEATURE_IMAGES[1],
     description: "Automatic removal of non-inclusive language."
   },
   {
     id: "scoring",
     label: "Fairness Scoring",
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200",
+    image: KIT_FEATURE_IMAGES[2],
     description: "Explainable risk scores for every parameter."
   },
   {
     id: "localize",
     label: "Localized Expertise",
-    image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1200",
+    image: KIT_FEATURE_IMAGES[3],
     description: "Adapts to role, seniority, and culture."
   }
 ];

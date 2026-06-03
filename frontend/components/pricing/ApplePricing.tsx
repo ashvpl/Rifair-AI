@@ -13,6 +13,7 @@ import { Plan } from "@/lib/pricing/types"
 import { CheckoutButton } from "@/components/pricing/CheckoutButton"
 import { useSubscription } from "@/hooks/useSubscription"
 import { TrustedByRotator } from "@/components/ui/trusted-by-rotator"
+import { PRICING_TESTIMONIAL_AVATARS } from "@/lib/site-images"
 import {
   Dialog,
   DialogContent,
@@ -115,16 +116,16 @@ export function ApplePricing({
   // Mock testimonials for now
   const mockTestimonials: Record<string, Testimonial[]> = {
     free: [
-      { id: 1, name: "Alexia Rivera", role: "Solo Dev", content: "Perfect for my side projects. The bias score is a eye-opener!", rating: 5, avatar: "https://i.pravatar.cc/150?u=1" }
+      { id: 1, name: "Alexia Rivera", role: "Solo Dev", content: "Perfect for my side projects. The bias score is a eye-opener!", rating: 5, avatar: PRICING_TESTIMONIAL_AVATARS.alexia }
     ],
     starter: [
-      { id: 2, name: "Jim", role: "HR Manager", content: "Advanced kits saved us 10+ hours a week. Essential tool.", rating: 5, avatar: "https://i.pravatar.cc/150?u=12" }
+      { id: 2, name: "Jim", role: "HR Manager", content: "Advanced kits saved us 10+ hours a week. Essential tool.", rating: 5, avatar: PRICING_TESTIMONIAL_AVATARS.jim }
     ],
     growth: [
-      { id: 3, name: "Marcus Thorne", role: "Director of Talent", content: "The compliance suite is top-notch. Batch analysis is a beast!", rating: 5, avatar: "https://i.pravatar.cc/150?u=68" }
+      { id: 3, name: "Marcus Thorne", role: "Director of Talent", content: "The compliance suite is top-notch. Batch analysis is a beast!", rating: 5, avatar: PRICING_TESTIMONIAL_AVATARS.marcusThorne }
     ],
     enterprise: [
-      { id: 4, name: "Elena Rodriguez", role: "VP People", company: "Fortune 500", content: "Tailored to our scale. The custom models are incredibly accurate.", rating: 5, avatar: "https://i.pravatar.cc/150?u=4" }
+      { id: 4, name: "Elena Rodriguez", role: "VP People", company: "Fortune 500", content: "Tailored to our scale. The custom models are incredibly accurate.", rating: 5, avatar: PRICING_TESTIMONIAL_AVATARS.elenaRodriguez }
     ]
   }
 
