@@ -19,8 +19,7 @@ const { getSubscription }                  = require("../services/subscriptionSe
 const { getUsage, incrementUsage }         = require("../services/usageService");
 const { supabase }                        = require("../config/supabase");
 const { parseJSON }                       = require("../utils/parseJSON");
-
-const GROWTH_PLANS = ["growth", "enterprise"];
+const { getPlanLimit }                    = require("../utils/planLimits");
 
 // ── Prompt builder ──────────────────────────────────────────────────────────
 function buildJDAnalysisPrompt(jobDescription, companyType, role) {
@@ -195,20 +194,22 @@ const analyzeJd = async (req, res) => {
       const sub = await getSubscription(userId);
       currentPlanId = sub?.plan_id || "free";
       
-      if (!GROWTH_PLANS.includes(currentPlanId)) {
+      const limit = getPlanLimit(currentPlanId, 'jdAnalyses');
+      if (limit === 0) {
         return res.status(403).json({
           error:        "plan_required",
-          message:      "JD Analyser is available on the Growth plan and above.",
+          message:      "JD Analyser is not available on your plan. Please upgrade.",
           requiredPlan: "growth",
           upgradeUrl:   "/pricing?highlight=growth&feature=jd_analyser",
         });
       }
 
       currentUsage = await getUsage(userId);
-      if (currentPlanId === "growth" && (currentUsage?.jd_analyses_used || 0) >= 20) {
+      const used = currentUsage?.jd_analyses_used || 0;
+      if (limit !== null && used >= limit) {
         return res.status(403).json({
           error: "limit_reached",
-          message: "You have reached your limit of 20 JD analyses for this month.",
+          message: `You have reached your limit of ${limit} JD operations for this month.`,
           upgradeUrl: "/pricing?addon=jd_analyses",
         });
       }

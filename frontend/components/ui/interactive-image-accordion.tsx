@@ -35,8 +35,16 @@ const AccordionItem = ({
         alt={item.title}
         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         onError={(e) => { 
-          (e.target as HTMLImageElement).onerror = null; 
-          (e.target as HTMLImageElement).src = 'https://placehold.co/450x500/2d3748/ffffff?text=Image+Error'; 
+          const img = e.target as HTMLImageElement;
+          img.onerror = null;
+          img.style.display = 'none';
+          const parent = img.parentElement;
+          if (parent && !parent.querySelector('.fallback-bg')) {
+            const fallback = document.createElement('div');
+            fallback.className = 'fallback-bg absolute inset-0 w-full h-full';
+            fallback.style.background = 'linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%)';
+            parent.insertBefore(fallback, parent.firstChild);
+          }
         }}
       />
       

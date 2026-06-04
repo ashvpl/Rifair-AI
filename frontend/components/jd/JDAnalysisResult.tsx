@@ -53,40 +53,40 @@ export function JDAnalysisResult({ result, onReset, reportId }: { result: any; o
     <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in duration-700">
 
       {/* ── Hero card ────────────────────────────────────────────── */}
-            <motion.div
+      <motion.div
         initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
         className={cn(
-          'rounded-xl sm:rounded-2xl md:rounded-[2.5rem] p-4 sm:p-6 md:p-8 lg:p-12 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] md:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden text-white transition-colors duration-500',
+          'rounded-xl p-3.5 sm:p-5 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden text-white transition-colors duration-500',
           result.overall_verdict === 'INCLUSIVE' ? 'bg-emerald-600' :
           result.overall_verdict === 'MILD_BIAS' ? 'bg-amber-600' :
           result.overall_verdict === 'BIASED' ? 'bg-[#f59e0b]' : 'bg-red-600'
         )}
       >
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-32 -mt-32" />
+        <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-2xl -mr-24 -mt-24" />
         
-        <div className="relative z-10 flex flex-row justify-between items-start gap-3 sm:gap-8">
-          <div className="space-y-2 sm:space-y-4 flex-1 min-w-0">
-            <div className="flex items-center gap-2 sm:gap-3">
-              <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl bg-white/10 flex items-center justify-center border border-white/10 backdrop-blur-md flex-shrink-0">
-                <FileText className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
+        <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="space-y-2.5 w-full md:max-w-xl">
+            <div className="flex items-center gap-2">
+              <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center border border-white/10 backdrop-blur-md flex-shrink-0">
+                <FileText className="w-5 h-5 text-white" />
               </div>
-              <div className="min-w-0 flex-1">
-                <h1 className="text-sm xs:text-base sm:text-2xl lg:text-3xl font-extrabold text-white tracking-tight break-words leading-tight">
+              <div>
+                <h1 className="text-base sm:text-lg font-black text-white tracking-tight leading-tight">
                   {result.headline || "Job Description Analysis"}
                 </h1>
-                <p className="text-[9px] sm:text-sm font-bold text-white/60 uppercase tracking-widest flex items-center gap-1 mt-0.5">
+                <p className="text-[9px] font-black text-white/60 uppercase tracking-widest flex items-center gap-1 mt-0.5">
                   <Briefcase className="w-3 h-3" />
                   Talent Acquisition
                 </p>
               </div>
             </div>
             
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              <div className="flex items-center gap-1 text-[9px] sm:text-xs font-bold text-white/60 uppercase tracking-widest">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+              <div className="flex items-center gap-1 text-[10px] font-bold text-white/60 uppercase tracking-widest">
                 <CheckCircle2 className="w-3.5 h-3.5 text-white/80" />
                 Audit Verified
               </div>
-              <div className="flex items-center gap-1 text-[9px] sm:text-xs font-bold text-white/60 uppercase tracking-widest">
+              <div className="flex items-center gap-1 text-[10px] font-bold text-white/60 uppercase tracking-widest">
                 <span className={cn(
                   "w-1.5 h-1.5 rounded-full",
                   (result.legal_risk_level === 'HIGH' || result.legal_risk_level === 'CRITICAL') ? 'bg-red-400' : 'bg-emerald-400'
@@ -95,39 +95,29 @@ export function JDAnalysisResult({ result, onReset, reportId }: { result: any; o
               </div>
             </div>
  
-            <p className="text-[10px] xs:text-xs sm:text-sm text-white/80 leading-relaxed font-medium line-clamp-3 sm:line-clamp-none">
+            <p className="text-xs text-white/80 leading-relaxed font-medium line-clamp-2 md:line-clamp-none">
               {result.summary}
             </p>
           </div>
  
-          <div className="flex flex-col items-end gap-3 w-[110px] xs:w-[130px] sm:w-auto shrink-0 self-stretch justify-between">
-            <div className="flex flex-col items-end gap-2 w-full">
-              <div className="text-right">
-                <div className="text-[8px] sm:text-[10px] font-black text-white/60 uppercase tracking-widest mb-0.5">Inclusivity Score</div>
-                <div className="text-xl xs:text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tighter leading-none">
-                  {result.overall_inclusivity_score}<span className="text-xs sm:text-xl text-white/40">/100</span>
-                </div>
-              </div>
-              <div className={cn(
-                "w-full px-2 py-1.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-3xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center justify-center text-center bg-white text-black"
-              )}>
-                <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest opacity-60 mb-0.5">Verdict</span>
-                <span className={cn(
-                  "text-[9px] sm:text-xs font-black uppercase tracking-widest truncate max-w-full",
-                  result.overall_verdict === 'INCLUSIVE' ? 'text-emerald-600' :
-                  result.overall_verdict === 'MILD_BIAS' ? 'text-amber-600' :
-                  result.overall_verdict === 'BIASED' ? 'text-[#f59e0b]' : 'text-red-600'
-                )}>{config.label}</span>
+          <div className="flex flex-row md:flex-col items-center md:items-end gap-3 justify-between w-full md:w-auto border-t border-white/10 pt-2.5 md:border-t-0 md:pt-0">
+            <div className="text-left md:text-right">
+              <div className="text-[8px] font-black text-white/60 uppercase tracking-widest mb-0.5">Inclusivity Score</div>
+              <div className="text-xl sm:text-2xl font-black text-white tracking-tighter">
+                {result.overall_inclusivity_score}<span className="text-xs text-white/40">/100</span>
               </div>
             </div>
-            
-            <ExportButton 
-              type="jd" 
-              id={reportId || ''} 
-              planTier={planId} 
-              variant="secondary"
-              className="w-full h-8 xs:h-10 sm:h-14 text-[9px] xs:text-[10px] sm:text-xs py-1"
-            />
+            <div className={cn(
+              "px-3 py-1.5 rounded-xl border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center justify-center text-center bg-white text-black min-w-[100px]"
+            )}>
+              <span className="text-[8px] font-black uppercase tracking-widest opacity-60 mb-0.5">Verdict</span>
+              <span className={cn(
+                "text-[10px] font-black uppercase tracking-widest truncate max-w-full",
+                result.overall_verdict === 'INCLUSIVE' ? 'text-emerald-600' :
+                result.overall_verdict === 'MILD_BIAS' ? 'text-amber-600' :
+                result.overall_verdict === 'BIASED' ? 'text-[#f59e0b]' : 'text-red-600'
+              )}>{config.label}</span>
+            </div>
           </div>
         </div>
       </motion.div>
@@ -706,6 +696,7 @@ export function JDAnalysisResult({ result, onReset, reportId }: { result: any; o
           planTier={planId} 
           label="Export JD Report"
           className="w-full sm:flex-1"
+          buttonClassName="h-14 text-xs font-black uppercase tracking-widest rounded-2xl"
         />
       </div>
     </div>

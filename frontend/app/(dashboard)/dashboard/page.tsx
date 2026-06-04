@@ -28,13 +28,10 @@ import { useBackendToken } from "@/hooks/useBackendToken";
 export default function DashboardPage() {
   const { isLoaded, userId } = useAuth();
   const { getAuthToken } = useBackendToken();
-  const { usage, planId, usagePercent, isLoading: isSubLoading } = useSubscription();
+  const { usage, planId, usagePercent, canUse, isLoading: isSubLoading } = useSubscription();
 
   const usageResetLabel = useMemo(() => {
     if (!usage) return null;
-    if (usage.resetsOnUpgradeOnly) {
-      return "Limits refresh when you upgrade to a paid plan";
-    }
     if (usage.resetsAt) {
       return `Resets ${format(new Date(usage.resetsAt), "MMM d, yyyy")}`;
     }
@@ -510,7 +507,7 @@ export default function DashboardPage() {
                   limit={currentPlan.evaluationsLimit} 
                   percent={usagePercent("evaluations")} 
                 />
-                {(planId === 'growth' || planId === 'enterprise') && (
+                {(currentPlan.jdAnalysesLimit === null || currentPlan.jdAnalysesLimit > 0) && (
                   <UsageMeter 
                     label="Job Descriptions" 
                     used={usage?.jdAnalysesUsed ?? 0} 
@@ -597,7 +594,7 @@ export default function DashboardPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.55 }}
       >
-        {planId === 'growth' || planId === 'enterprise' ? (
+        {canUse('jd_analyzer') ? (
           <div className="relative overflow-hidden bg-gradient-to-br from-[#f59e0b] via-[#d97706] to-[#b45309] rounded-xl lg:rounded-xl p-3.5 sm:p-5 lg:p-6 xl:p-8 text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] lg:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]">
             <div className="absolute -right-8 -top-8 w-48 h-48 rounded-full border border-white/[0.07]" />
             <div className="absolute -right-2 -top-2 w-32 h-32 rounded-full border border-white/[0.07]" />

@@ -6,8 +6,7 @@ const { getUsage, incrementUsage }         = require("../services/usageService")
 const { supabase }                        = require("../config/supabase");
 const { parseJSON }                       = require("../utils/parseJSON");
 const { buildJDGeneratorPrompt }          = require("../ai/jd-gen-prompt");
-
-const GROWTH_PLANS = ["growth", "enterprise"];
+const { getPlanLimit }                    = require("../utils/planLimits");
 
 const generateJd = async (req, res) => {
   try {
@@ -23,22 +22,22 @@ const generateJd = async (req, res) => {
     const sub = await getSubscription(userId);
     currentPlanId = sub?.plan_id || "free";
     
-    if (!GROWTH_PLANS.includes(currentPlanId)) {
+    const limit = getPlanLimit(currentPlanId, 'jdAnalyses');
+    if (limit === 0) {
       return res.status(403).json({
         error:        "upgrade_required",
-        message:      "JD Generator is available on the Growth plan.",
+        message:      "JD Generator is not available on your plan. Please upgrade.",
         upgradeUrl:   "/pricing",
       });
     }
 
     currentUsage = await getUsage(userId);
     const used = currentUsage?.jd_analyses_used || 0;
-    const JD_LIMIT = 20;
 
-    if (used >= JD_LIMIT) {
+    if (limit !== null && used >= limit) {
       return res.status(403).json({
         error: "limit_reached",
-        message: `You have used all ${JD_LIMIT} JD operations this month.`,
+        message: `You have reached your limit of ${limit} JD operations for this month.`,
         upgradeUrl: "/pricing",
       });
     }

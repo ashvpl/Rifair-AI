@@ -76,14 +76,14 @@ export const FEATURE_RELATED_BLOG_PREVIEWS: Array<
     slug: "how-to-detect-bias-in-interview-questions",
     title: "How to Detect Bias in Interview Questions",
     category: "Interview Bias",
-    src: unsplashUrl("photo-1607962833295-f97e651010b1", { w: 600, q: 80 }),
+    src: unsplashUrl("photo-1573497620053-ea5300f94f21", { w: 600, q: 80 }),
     alt: "Recruiters auditing interview scripts for bias",
   },
   {
     slug: "how-to-write-bias-free-job-description",
     title: "How to Write a Bias-Free Job Description",
     category: "Job Descriptions",
-    src: unsplashUrl("photo-1633158828358-948a0177da9c", { w: 600, q: 80 }),
+    src: unsplashUrl("photo-1499750310107-5fef28a66643", { w: 600, q: 80 }),
     alt: "Inclusive job posting review on a laptop",
   },
 ];
@@ -119,15 +119,15 @@ export const AUTH_GALLERY_IMAGES: SiteImage[] = [
 /** Landing “Who is it for?” accordion. */
 export const LANDING_AUDIENCE_IMAGES = {
   hrTeams: {
-    src: unsplashUrl("photo-1529156069895-f3740c742e3b", { w: 600, h: 600, q: 80 }),
+    src: unsplashUrl("photo-1521737604893-d14cc237f11d", { w: 600, h: 600, q: 80 }),
     alt: "HR team planning fair hiring workflows",
   },
   startups: {
-    src: unsplashUrl("photo-1552664730-d307ca884978", { w: 600, h: 600, q: 80 }),
+    src: unsplashUrl("photo-1559136555-9303baea8ebd", { w: 600, h: 600, q: 80 }),
     alt: "Startup founders discussing early hires",
   },
   enterprises: {
-    src: unsplashUrl("photo-1600880292089-90aede5dca7b", { w: 600, h: 600, q: 80 }),
+    src: unsplashUrl("photo-1497366216548-37526070297c", { w: 600, h: 600, q: 80 }),
     alt: "Enterprise leadership team in a boardroom",
   },
 } as const;
@@ -166,17 +166,17 @@ export const FEATURE_CAROUSEL_IMAGES = [
 
 /** Kit generator marketing cards (dashboard). */
 export const KIT_FEATURE_IMAGES = [
-  unsplashUrl("photo-1551836022-d5d88e94316e", { w: 1200, q: 80 }),
-  unsplashUrl("photo-1573164574572-496b364cfd56", { w: 1200, q: 80 }),
+  unsplashUrl("photo-1460925895917-afdab827c52f", { w: 1200, q: 80 }),
+  unsplashUrl("photo-1522071820081-009f0129c71c", { w: 1200, q: 80 }),
   unsplashUrl("photo-1542744173-8e7e53415bb0", { w: 1200, q: 80 }),
-  unsplashUrl("photo-1598257926326-4f35f3952c7b", { w: 1200, q: 80 }),
+  unsplashUrl("photo-1531538606174-0f90ff5dce83", { w: 1200, q: 80 }),
 ] as const;
 
 /** Default demo accordion imagery (component showcase). */
 export const INTERACTIVE_ACCORDION_DEMO_IMAGES = [
-  unsplashUrl("photo-1628258334105-2a0b3d6efee1", { w: 1974, q: 80 }),
-  unsplashUrl("photo-1677756119517-756a188d2d94", { w: 2070, q: 80 }),
-  unsplashUrl("photo-1515879218367-8466d910aaa4", { w: 1974, q: 80 }),
+  unsplashUrl("photo-1518770660439-4636190af475", { w: 1974, q: 80 }),
+  unsplashUrl("photo-1485827404703-89b55fcc595e", { w: 2070, q: 80 }),
+  unsplashUrl("photo-1488590528505-98d2b5aba04b", { w: 1974, q: 80 }),
 ] as const;
 
 /** Decorative backgrounds for reveal-text animation. */

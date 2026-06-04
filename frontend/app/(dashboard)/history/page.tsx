@@ -115,7 +115,8 @@ export default function HistoryPage() {
       report.input_text?.startsWith("Kit Audit: ");
     const isJdAnalysis =
       report.categories?.analysis_type === "jd_analysis" ||
-      report.input_text?.startsWith("JD Analysis");
+      report.input_text?.startsWith("JD Analysis") ||
+      report.input_text?.startsWith("Job Description Analysis");
     const isJdGenerated =
       report.categories?.analysis_type === "jd_generated" ||
       report.input_text?.startsWith("JD Generated");
@@ -286,7 +287,8 @@ export default function HistoryPage() {
                 report.input_text?.startsWith("Kit Audit: ");
               const isJdAnalysis =
                 typeInCategories === "jd_analysis" ||
-                report.input_text?.startsWith("JD Analysis");
+                report.input_text?.startsWith("JD Analysis") ||
+                report.input_text?.startsWith("Job Description Analysis");
               const isJdGenerated =
                 typeInCategories === "jd_generated" ||
                 report.input_text?.startsWith("JD Generated");

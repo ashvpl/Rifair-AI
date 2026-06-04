@@ -45,6 +45,7 @@ export function IndustrialPricing() {
             features: [
                 { text: 'BIAS DETECTION', status: 'enabled', isHeader: true },
                 { text: '5 analyses per month', status: 'enabled' },
+                { text: '1 JD analysis per month', status: 'enabled' },
                 { text: 'Bias score (0-100)', status: 'enabled' },
                 { text: 'Bias category tags (Gender, Age, etc.)', status: 'enabled' },
                 { text: '1-line issue summary', status: 'enabled' },
@@ -73,7 +74,7 @@ export function IndustrialPricing() {
                 { text: '40 analyses per month', status: 'enabled' },
                 { text: 'Full explanation (3-layer: what, who, why)', status: 'enabled' },
                 { text: 'AI rewritten question', status: 'enabled' },
-                { text: 'JD analyser (0)', status: 'disabled' },
+                { text: '5 JD analyses per month', status: 'enabled' },
                 { text: 'Keyword evidence highlighter', status: 'disabled' },
                 { text: 'Batch analysis', status: 'disabled' },
                 { text: 'INTERVIEW KIT', status: 'enabled', isHeader: true },

@@ -10,12 +10,12 @@ export const PLANS: Plan[] = [
     },
     analysesLimit: 10,
     kitLimit: 3,
-    jdAnalysesLimit: 0,
+    jdAnalysesLimit: 1,
     evaluationsLimit: 1,
     apiCallsLimit: 0,
     seatsLimit: 1,
     features: [
-      'bias_score', 'kit_basic'
+      'bias_score', 'kit_basic', 'jd_analyzer'
     ],
     ctaLabel: 'Get started free',
     ctaVariant: 'outline'
@@ -49,13 +49,13 @@ export const PLANS: Plan[] = [
     },
     analysesLimit: 40,
     kitLimit: 20,
-    jdAnalysesLimit: 0,
+    jdAnalysesLimit: 5,
     evaluationsLimit: 5,
     apiCallsLimit: 0,
     seatsLimit: 1,
     features: [
       'bias_score', 'explanation', 'bias_trends',
-      'kit_advanced', 'candidate_analysis', 'candidate_reports'
+      'kit_advanced', 'candidate_analysis', 'candidate_reports', 'jd_analyzer'
     ],
     ctaLabel: 'Get plan',
     ctaVariant: 'default'
@@ -165,7 +165,7 @@ export const FEATURE_GATES: Record<string, PlanId[]> = {
   batch:                ['growth', 'enterprise'],
   bias_dna:             ['growth', 'enterprise'],
   keyword_highlighter:  ['growth', 'enterprise'],
-  jd_analyzer:          ['growth', 'enterprise'],
+  jd_analyzer:          ['free', 'starter', 'growth', 'enterprise'],
   bias_chat:            ['growth', 'enterprise'],
   kit_unlimited:        ['growth', 'enterprise'],
   dashboard_full:       ['growth', 'enterprise'],
@@ -219,6 +219,7 @@ export const PLAN_DISPLAY_FEATURES: Record<PlanId, string[]> = {
     '5 analyses / month',
     '1 interview kit',
     '1 candidate evaluation',
+    '1 JD Op (Gen + Audit) / month',
     'Bias score analysis',
   ],
   lite: [
@@ -234,6 +235,7 @@ export const PLAN_DISPLAY_FEATURES: Record<PlanId, string[]> = {
     '40 analyses / month',
     '20 interview kits',
     '5 candidate evaluations',
+    '5 JD Ops (Gen + Audit) / month',
     'Everything in Lite, plus:',
     'Detailed bias trend analysis',
     'Advanced interview kit generation',

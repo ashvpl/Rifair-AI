@@ -4,7 +4,7 @@ const PLANS = {
     usd: { monthly: 0, annual: 0 },
     analysesLimit: 5,
     kitLimit: 1,
-    jdAnalysesLimit: 0,
+    jdAnalysesLimit: 1,
     evaluationsLimit: 1,
   },
   lite: {
@@ -20,7 +20,7 @@ const PLANS = {
     usd: { monthly: 12, annual: 10 },
     analysesLimit: 40,
     kitLimit: 20,
-    jdAnalysesLimit: 0,
+    jdAnalysesLimit: 5,
     evaluationsLimit: 5,
   },
   growth: {

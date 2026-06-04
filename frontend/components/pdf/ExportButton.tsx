@@ -104,7 +104,10 @@ export default function ExportButton({
       <div className={cn('relative group', className)}>
         <button
           disabled
-          className="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl border border-neutral-200 text-neutral-400 text-[9px] sm:text-[10px] font-medium cursor-not-allowed w-full justify-center"
+          className={cn(
+            "flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl border border-neutral-200 text-neutral-400 text-[9px] sm:text-[10px] font-medium cursor-not-allowed w-full justify-center",
+            buttonClassName
+          )}
         >
           <Lock className="w-3 h-3" /> {label}
         </button>
@@ -146,7 +149,8 @@ export default function ExportButton({
           ),
           variant === 'ghost' && 'text-neutral-600 hover:bg-neutral-100',
           loading && 'opacity-70 cursor-wait',
-          'active:scale-[0.98]'
+          'active:scale-[0.98]',
+          buttonClassName
         )}
       >
         {loading ? (

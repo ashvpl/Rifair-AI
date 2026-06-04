@@ -155,31 +155,56 @@ export function JDGeneratorResult({
     <div className="space-y-3">
 
       {/* ── Hero Stats Card ── */}
-      <div className="bg-[#f59e0b] border-2 border-black rounded-xl p-3 sm:p-4 text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-        <div className="flex items-start gap-2.5 min-w-0">
-          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/15 flex items-center justify-center border border-white/10 flex-shrink-0 mt-0.5">
-            <span className="font-mono text-[10px] font-black">JD</span>
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="font-mono text-[8px] sm:text-[9px] bg-white/20 text-white px-2 py-0.5 rounded-full font-black tracking-wide uppercase">
-                ✓ Bias-Free · AI Generated
-              </span>
+      <div className="bg-[#f59e0b] border-2 border-black rounded-xl p-3.5 sm:p-5 text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden transition-colors duration-500">
+        <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-2xl -mr-24 -mt-24" />
+        
+        <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="space-y-2.5 w-full md:max-w-xl">
+            <div className="flex items-center gap-2">
+              <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center border border-white/10 backdrop-blur-md flex-shrink-0">
+                <span className="font-mono text-sm font-black text-white">JD</span>
+              </div>
+              <div>
+                <h1 className="text-base sm:text-lg font-black text-white tracking-tight leading-tight">
+                  {result.headline || "Job Description"}
+                </h1>
+                <p className="text-[9px] font-black text-white/60 uppercase tracking-widest flex items-center gap-1 mt-0.5">
+                  ✓ Bias-Free · AI Generated
+                </p>
+              </div>
             </div>
-            <h2 className="font-sans text-xs sm:text-sm font-extrabold leading-tight mt-1 line-clamp-1">
-              {result.headline}
-            </h2>
-            <p className="font-mono text-[8px] sm:text-[9px] opacity-75 mt-0.5 line-clamp-1 tracking-tight">
-              {result.meta?.role} · {result.meta?.company} · {result.meta?.location} · {result.meta?.work_mode}
+            
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+              <div className="text-[10px] font-bold text-white/60 uppercase tracking-widest">
+                {[result.meta?.role, result.meta?.company, result.meta?.location, result.meta?.work_mode].filter(Boolean).join(' · ')}
+              </div>
+            </div>
+
+            <p className="text-xs text-white/80 leading-relaxed font-medium line-clamp-2 md:line-clamp-none">
+              This job description was generated with inclusive, bias-free terminology to attract a wider, high-quality candidate pool.
             </p>
           </div>
+
+          <div className="flex flex-row md:flex-col items-center md:items-end gap-3 justify-between w-full md:w-auto border-t border-white/10 pt-2.5 md:border-t-0 md:pt-0">
+            <div className="text-left md:text-right">
+              <div className="text-[8px] font-black text-white/60 uppercase tracking-widest mb-0.5">Reach</div>
+              <div className="text-xl sm:text-2xl font-black text-white tracking-tighter">
+                {shortReach}
+              </div>
+            </div>
+            <div className="px-3 py-1.5 rounded-xl border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center justify-center text-center bg-white text-black min-w-[100px]">
+              <span className="text-[8px] font-black uppercase tracking-widest opacity-60 mb-0.5">Words</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#f59e0b]">{result.conversion_insights?.word_count ?? '—'}</span>
+            </div>
+          </div>
         </div>
-        <div className="border-t border-white/15 my-2.5" />
-        <div className="flex items-center justify-between gap-2 text-white">
-          {stats.map(stat => (
-            <div key={stat.label} className="text-center flex-1 min-w-0">
-              <div className="font-sans text-xs sm:text-sm font-black leading-none truncate">{stat.value}</div>
-              <div className="font-mono text-[7px] sm:text-[8px] opacity-75 uppercase tracking-wide mt-0.5 truncate">{stat.label}</div>
+
+        {/* Stats row */}
+        <div className="hidden sm:flex gap-4 mt-3 pt-3 border-t border-white/10 relative z-10 overflow-x-auto no-scrollbar pb-0.5">
+          {stats.slice(1).map(stat => (
+            <div key={stat.label} className="shrink-0">
+              <div className="text-sm font-bold tabular-nums">{stat.value}</div>
+              <div className="text-[8px] font-black text-amber-300/70 uppercase tracking-widest capitalize whitespace-nowrap">{stat.label}</div>
             </div>
           ))}
         </div>
@@ -282,21 +307,24 @@ export function JDGeneratorResult({
       />
 
       {/* ── Bottom Action Buttons ── */}
-      <div className="flex flex-col sm:flex-row gap-2.5 pt-1 no-print">
-        <ExportButton
-          type="jd"
-          id={reportId || ''}
-          planTier={planId}
-          variant="primary"
-          label="Export JD Report"
-          className="w-full sm:flex-1"
-        />
+      <div className="flex flex-col sm:flex-row gap-4 pt-6 no-print">
         <button
           onClick={onReset}
-          className="w-full sm:flex-1 py-3 sm:py-4 border-2 border-black text-neutral-800 rounded-xl text-xs font-black bg-white hover:bg-neutral-50 transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5"
+          className="w-full sm:flex-1 h-12 border-2 border-black text-neutral-800 rounded-2xl text-xs font-black bg-white hover:bg-neutral-50 transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5"
         >
           ← Generate another JD
         </button>
+        <div className="w-full sm:flex-1">
+          <ExportButton
+            type="jd"
+            id={reportId || ''}
+            planTier={planId}
+            variant="primary"
+            label="Export JD Report"
+            className="w-full h-12"
+            buttonClassName="h-12 text-xs font-black uppercase tracking-widest rounded-2xl"
+          />
+        </div>
       </div>
     </div>
   )

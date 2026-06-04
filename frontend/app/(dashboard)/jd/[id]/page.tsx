@@ -30,14 +30,28 @@ export default function JDReportPage({ params }: { params: Promise<{ id: string 
         if (!token) return;
         const data = await getReportById(id, token);
         if (data.report) {
-          const parsed = safeParseReport(data.report);
-          setResult(parsed.categories); // The JD result is stored in categories
+          const rawReport = data.report;
+          const parsed = safeParseReport(rawReport);
+          const categories = parsed.categories || {};
+
+          // Reliably detect analysis_type from all possible storage locations:
+          // 1. Inside the categories JSON blob (new reports)
+          // 2. At the top-level DB row (some older reports)
+          // 3. From input_text prefix (fallback for legacy reports)
+          const analysisType =
+            categories.analysis_type ||
+            rawReport.analysis_type ||
+            (rawReport.input_text?.startsWith('JD Generated') ? 'jd_generated' : null) ||
+            (rawReport.input_text?.startsWith('JD Analysis') ? 'jd_analysis' : null) ||
+            (rawReport.input_text?.startsWith('Job Description Analysis') ? 'jd_analysis' : null);
+
+          setResult({ ...categories, analysis_type: analysisType });
         } else {
-          setError("Analysis report not found");
+          setError("Report not found");
         }
       } catch (err) {
-        console.error("Failed to load JD analysis:", err);
-        setError("Failed to load analysis details");
+        console.error("Failed to load JD report:", err);
+        setError("Failed to load report details");
       } finally {
         setIsLoading(false);
       }
@@ -61,16 +75,16 @@ export default function JDReportPage({ params }: { params: Promise<{ id: string 
   return (
     <div className="max-w-5xl mx-auto pt-2 pb-20 px-0 animate-in fade-in duration-700">
       {isGenerated ? (
-        <JDGeneratorResult 
-          result={result} 
+        <JDGeneratorResult
+          result={result}
           reportId={id}
-          onReset={() => router.push('/jd-analyser')} 
+          onReset={() => router.push('/jd-analyser')}
         />
       ) : (
-        <JDAnalysisResult 
-          result={result} 
+        <JDAnalysisResult
+          result={result}
           reportId={id}
-          onReset={() => router.push('/jd-analyser')} 
+          onReset={() => router.push('/jd-analyser')}
         />
       )}
     </div>

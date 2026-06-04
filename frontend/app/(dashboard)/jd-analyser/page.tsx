@@ -41,10 +41,10 @@ export default function JDAnalyserPage() {
 
   const [showFeatures, setShowFeatures] = useState(false)
   const router = useRouter()
-  const { planId, isLoading: planLoading } = useSubscription()
+  const { planId, isLoading: planLoading, canUse } = useSubscription()
   const { getAuthToken } = useBackendToken()
 
-  const hasAccess = planId === 'growth' || planId === 'enterprise'
+  const hasAccess = canUse('jd_analyzer')
 
   const charCount = jd.length
   const wordCount = jd.trim() ? jd.trim().split(/\s+/).length : 0
@@ -135,7 +135,7 @@ export default function JDAnalyserPage() {
   const canSubmit = !!(jd.trim()) && !loading && charCount <= 12000
 
   return (
-    <div className="w-full min-h-screen relative pb-28 md:pb-8">
+    <div className="w-full relative pb-28 md:pb-8">
       {loading && <LoadingState text="Analysing" />}
 
       {/* Page Header */}
@@ -159,9 +159,9 @@ export default function JDAnalyserPage() {
                 Premium Feature
               </h2>
               <p className="text-xs text-[#86868B] mb-5 leading-relaxed font-medium">
-                Upgrade to the Growth plan to unlock our powerful Job Description Analyser. Instantly detect bias, get inclusivity scores, and generate complete bias-free rewrites.
+                Upgrade your plan to unlock our powerful Job Description Analyser. Instantly detect bias, get inclusivity scores, and generate complete bias-free rewrites.
               </p>
-              <Link href="/pricing?highlight=growth&feature=jd_analyser">
+              <Link href="/pricing">
                 <button className="w-full bg-[#1D1D1F] text-white px-5 py-3 rounded-xl text-sm font-bold shadow-lg hover:bg-black active:scale-[0.98] transition-all min-h-[44px]">
                   Upgrade to Unlock →
                 </button>
