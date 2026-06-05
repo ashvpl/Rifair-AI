@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Clock, Calendar, User, ArrowRight, CheckCircle, AlertTriangle, HelpCircle } from "lucide-react";
 import { BlogSubscribeForm } from "@/components/blog/BlogSubscribeForm";
 import { BLOG_IMAGES } from "@/lib/site-images";
+import { DEFAULT_KEYWORDS } from "@/lib/seo";
 
 interface FAQ {
   q: string;
@@ -478,22 +479,44 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const data = ARTICLES_DATA[resolvedParams.slug];
   if (!data) return {};
 
+  const articleKeywords = [
+    data.category.toLowerCase(),
+    data.title.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, ""),
+    ...resolvedParams.slug.split("-")
+  ];
+  const keywords = [...DEFAULT_KEYWORDS, ...articleKeywords];
+
   return {
     title: `${data.title} | Rifair AI`,
     description: data.metaDesc,
+    keywords,
     alternates: {
       canonical: `https://rifairai.com/blog/${resolvedParams.slug}`,
+    },
+    robots: {
+      index: true,
+      follow: true,
     },
     openGraph: {
       title: `${data.title} | Rifair AI`,
       description: data.metaDesc,
       url: `https://rifairai.com/blog/${resolvedParams.slug}`,
       type: "article",
+      siteName: "Rifair AI",
+      images: [
+        {
+          url: "https://rifairai.com/opengraph-image.png",
+          width: 1200,
+          height: 630,
+          alt: `${data.title} | Rifair AI Blog`,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: `${data.title} | Rifair AI`,
       description: data.metaDesc,
+      images: ["https://rifairai.com/opengraph-image.png"],
     },
   };
 }

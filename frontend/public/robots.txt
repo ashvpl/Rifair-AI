@@ -1,6 +1,25 @@
 User-agent: *
 Allow: /
 
+# Private authenticated app routes — do not index
+Disallow: /dashboard
+Disallow: /dashboard/
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api/
+Disallow: /sign-in
+Disallow: /sign-up
+Disallow: /sso-callback
+
+# Internal/demo routes — do not index
+Disallow: /demo
+Disallow: /demo-features
+Disallow: /demo-hero
+Disallow: /demo-navbar
+Disallow: /demo-shimmer
+Disallow: /demo-sign-in
+Disallow: /internal
+
 # Host
 Host: https://rifairai.com
 

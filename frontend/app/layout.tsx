@@ -3,18 +3,59 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
 import Script from "next/script";
+import { DEFAULT_KEYWORDS } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Rifair AI | Operating System for Modern Hiring",
-  description: "Detect hidden bias in interview questions using AI.",
+  title: {
+    default: "Rifair AI | AI Interview Kits, Bias Checks & Hiring Scorecards",
+    template: "%s | Rifair AI",
+  },
+  description: "Rifair AI helps HR teams generate structured interview kits, evaluate candidates with scorecards, analyze hiring bias, and optimize job descriptions using AI.",
+  keywords: DEFAULT_KEYWORDS,
+  authors: [{ name: "Rifair AI", url: "https://rifairai.com" }],
+  creator: "Rifair AI",
+  publisher: "Rifair AI",
+  metadataBase: new URL("https://rifairai.com"),
+  alternates: {
+    canonical: "https://rifairai.com/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  openGraph: {
+    type: "website",
+    siteName: "Rifair AI",
+    title: "Rifair AI | AI Interview Kits, Bias Checks & Hiring Scorecards",
+    description: "Generate interview kits, evaluate candidates, analyze bias, and optimize job descriptions with an AI hiring copilot built for HR teams.",
+    url: "https://rifairai.com/",
+    images: [
+      {
+        url: "https://rifairai.com/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Rifair AI - AI Hiring Copilot for Structured, Fair, and Faster Recruitment",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Rifair AI | AI Interview Kits, Bias Checks & Hiring Scorecards",
+    description: "Generate interview kits, evaluate candidates, analyze bias, and optimize job descriptions with an AI hiring copilot built for HR teams.",
+    images: ["https://rifairai.com/opengraph-image.png"],
+  },
   manifest: "/site.webmanifest",
   icons: {
     icon: [
       { url: "/favicon.ico" },
       { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon-96x96.png", sizes: "96x96" }
+      { url: "/favicon-96x96.png", sizes: "96x96" },
     ],
-    apple: "/apple-touch-icon.png"
+    apple: "/apple-touch-icon.png",
   },
 };
 

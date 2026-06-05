@@ -36,6 +36,7 @@ export default function FooterSection({
       title: "Company",
       links: [
         { text: "About Us", url: "/about" },
+        { text: "Pricing", url: "/pricing" },
         { text: "Contact", url: "/contact" },
       ],
     },

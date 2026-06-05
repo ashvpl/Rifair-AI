@@ -9,6 +9,7 @@ import FooterSection from "@/components/ui/footer-section";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, ShieldAlert, Sparkles, Check, ArrowRight, Play, FileText, BarChart3, Edit3 } from "lucide-react";
 import { FEATURE_RELATED_BLOG_PREVIEWS } from "@/lib/site-images";
+import { DEFAULT_KEYWORDS } from "@/lib/seo";
 
 // Types for feature details
 interface Step {
@@ -57,12 +58,12 @@ const FEATURES_MAP: Record<string, FeatureData> = {
   "interview-kit-generator": {
     slug: "interview-kit-generator",
     toolName: "AI Interview Kit Generator",
-    h1: "AI Interview Kit Generator | Create Structured Interviews in Seconds",
+    h1: "AI Interview Kit Generator for HR Teams",
     subheadline: "Stop using unstructured interviews. Generate bias-free, role-specific interview kits in 30 seconds with AI.",
     ctaText: "Generate Interview Kit Now",
     dashboardRoute: "/kit",
-    metaTitle: "AI Interview Kit Generator for Recruiters | Rifair AI",
-    metaDesc: "Generate structured interview kits, role-specific questions, evaluation criteria, and candidate scorecards in seconds with AI. Try free for 14 days.",
+    metaTitle: "AI Interview Kit Generator for HR Teams | Rifair AI",
+    metaDesc: "Generate structured interview kits with role-specific questions, evaluation criteria, and hiring scorecards using Rifair AI.",
     problemTitle: "The Problem with Unstructured Interviews",
     problems: [
       "Unstructured interviews lack standardized questions, leading to inconsistent candidate evaluations.",
@@ -103,12 +104,12 @@ const FEATURES_MAP: Record<string, FeatureData> = {
   "bias-checker": {
     slug: "bias-checker",
     toolName: "Interview Question Bias Checker",
-    h1: "Interview Question Bias Checker | Detect Hidden Hiring Biases",
+    h1: "AI Bias Checker for Interview Questions",
     subheadline: "Detect and fix biased, unfair, or irrelevant interview questions before candidates hear them.",
     ctaText: "Check Question Bias Now",
     dashboardRoute: "/analyze",
-    metaTitle: "Interview Question Bias Checker | Rifair AI",
-    metaDesc: "Identify biased or gender-coded questions in your hiring process. Replace them with fair, skills-focused alternatives with AI. Try free.",
+    metaTitle: "AI Bias Checker for Interview Questions | Rifair AI",
+    metaDesc: "Detect biased, leading, unclear, or unfair interview questions with Rifair AI’s bias checker built for HR teams and recruiters.",
     problemTitle: "The Problem with Hidden Bias",
     problems: [
       "48% of HR managers admit that unconscious bias affects their hiring outcomes [shrm:1].",
@@ -149,12 +150,12 @@ const FEATURES_MAP: Record<string, FeatureData> = {
   "job-description-optimizer": {
     slug: "job-description-optimizer",
     toolName: "AI Job Description Optimizer",
-    h1: "AI Job Description Optimizer | Write Clear, Inclusive Job Ads",
+    h1: "AI Job Description Optimizer",
     subheadline: "Optimize job descriptions for clarity, inclusivity, required skills, and candidate relevance with AI.",
     ctaText: "Optimize Job Description Now",
     dashboardRoute: "/jd-analyser",
-    metaTitle: "AI Job Description Optimizer for Hiring Teams | Rifair AI",
-    metaDesc: "Write clear, inclusive, and bias-free job descriptions. Improve candidate applicant quality in seconds using AI. Try free for 14 days.",
+    metaTitle: "AI Job Description Optimizer | Rifair AI",
+    metaDesc: "Improve job descriptions for clarity, inclusivity, structure, and hiring effectiveness with Rifair AI’s job description optimizer.",
     problemTitle: "The Problem with Standard Job Descriptions",
     problems: [
       "Overloaded skill checklists discourage highly qualified female and minority candidates.",
@@ -195,12 +196,12 @@ const FEATURES_MAP: Record<string, FeatureData> = {
   "candidate-evaluation": {
     slug: "candidate-evaluation",
     toolName: "Candidate Evaluation Scorecard",
-    h1: "AI Candidate Evaluation Scorecard | Structured Interview Grading",
+    h1: "AI Candidate Evaluation Scorecards",
     subheadline: "Evaluate candidates fairly with role-specific scorecards, scoring criteria, and consistent grading rubrics.",
     ctaText: "Create Evaluation Scorecard",
     dashboardRoute: "/evaluations",
-    metaTitle: "AI Candidate Evaluation Assistant for Recruiters | Rifair AI",
-    metaDesc: "Grade candidates objectively. Set standardized scoring criteria, rubrics, and feedback flows with Rifair AI. Try free.",
+    metaTitle: "AI Candidate Evaluation Scorecards | Rifair AI",
+    metaDesc: "Evaluate candidates with structured scorecards, consistent rubrics, and role-specific criteria using Rifair AI.",
     problemTitle: "The Problem with Subjective Evaluations",
     problems: [
       "Hiring decisions are often made based on 'gut feeling' rather than skills scorecards.",
@@ -246,22 +247,45 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const data = FEATURES_MAP[resolvedParams.slug];
   if (!data) return {};
 
+  const slugKeywords: Record<string, string[]> = {
+    "interview-kit-generator": ["interview kit generator", "generate interview questions", "interview scoring rubric", "structured interview templates", "behavioral interview questions"],
+    "bias-checker": ["interview bias checker", "hiring bias checker", "fair hiring software", "detect recruitment bias", "unconscious bias in hiring"],
+    "candidate-evaluation": ["candidate evaluation scorecard", "hiring scorecards", "structured candidate assessment", "standardized applicant rating"],
+    "job-description-optimizer": ["job description optimizer", "inclusive job descriptions", "job post bias checker", "write bias-free job specs"]
+  };
+  const keywords = [...DEFAULT_KEYWORDS, ...(slugKeywords[resolvedParams.slug] || [])];
+
   return {
     title: data.metaTitle,
     description: data.metaDesc,
+    keywords,
     alternates: {
       canonical: `https://rifairai.com/features/${resolvedParams.slug}`,
+    },
+    robots: {
+      index: true,
+      follow: true,
     },
     openGraph: {
       title: data.metaTitle,
       description: data.metaDesc,
       url: `https://rifairai.com/features/${resolvedParams.slug}`,
       type: "website",
+      siteName: "Rifair AI",
+      images: [
+        {
+          url: "https://rifairai.com/opengraph-image.png",
+          width: 1200,
+          height: 630,
+          alt: `${data.h1} | Rifair AI`,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: data.metaTitle,
       description: data.metaDesc,
+      images: ["https://rifairai.com/opengraph-image.png"],
     },
   };
 }
@@ -302,7 +326,47 @@ export default async function FeaturePage({ params }: { params: { slug: string }
       "@type": "Organization",
       "name": "Rifair AI",
       "url": "https://rifairai.com"
-    }
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "ratingCount": "94"
+    },
+    "review": data.testimonials.map(t => ({
+      "@type": "Review",
+      "author": {
+        "@type": "Person",
+        "name": t.author
+      },
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5"
+      },
+      "reviewBody": t.text
+    }))
+  };
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": `How does the ${data.toolName} work?`,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": `${data.steps.map((s, idx) => `${idx + 1}. ${s.title}: ${s.desc}`).join(" ")}`
+        }
+      },
+      {
+        "@type": "Question",
+        "name": `Who is the ${data.toolName} built for?`,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": `It is built specifically for ${data.useCases.map(u => u.role).join(", ")}, helping them with ${data.useCases.map(u => u.title.toLowerCase()).join(" and ")}.`
+        }
+      }
+    ]
   };
 
   return (
@@ -310,6 +374,10 @@ export default async function FeaturePage({ params }: { params: { slug: string }
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <NavBarDemo />
 

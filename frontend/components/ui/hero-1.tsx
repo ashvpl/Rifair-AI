@@ -50,6 +50,10 @@ export function HeroSection() {
 			<div className="relative flex flex-col items-center justify-center gap-6 lg:gap-8 pt-28 sm:pt-32 lg:pt-24 xl:pt-32 pb-8 lg:pb-12 xl:pb-16 px-4 sm:px-6 lg:px-8">
 
 				<div className="flex flex-col items-center gap-1 md:gap-2 w-full max-w-5xl">
+					{/* Semantic SEO H1 - Visible and styled elegantly */}
+					<h1 className="text-[#86868B] text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-center mb-2">
+						AI Hiring Copilot for Structured, Fair, and Faster Recruitment
+					</h1>
 					{/* Hero title wrapper — word-break prevention */}
 					<div className="w-full text-center flex flex-col items-center gap-2">
 						<RevealText 

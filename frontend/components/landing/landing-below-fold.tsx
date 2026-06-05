@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState } from "react";
 import { ArrowRight, CheckCircle, ShieldAlert } from "lucide-react";
 import { motion } from "framer-motion";
 import { RifairCoreFeatures } from "@/components/ui/rifair-features";
@@ -16,7 +17,33 @@ import {
   LANDING_CTA_BACKGROUND,
 } from "@/lib/site-images";
 
+const FAQS_DATA = [
+  {
+    q: "What is Rifair AI?",
+    a: "Rifair AI is an AI-powered hiring copilot that helps HR teams generate interview kits, evaluate candidates, analyze bias, and optimize job descriptions."
+  },
+  {
+    q: "Who is Rifair AI built for?",
+    a: "Rifair AI is built for HR professionals, recruiters, hiring managers, startup founders, talent teams, and recruitment agencies."
+  },
+  {
+    q: "How is Rifair AI different from using ChatGPT or Claude directly?",
+    a: "ChatGPT and Claude are powerful general-purpose AI tools, but HR teams often need repeatable workflows, consistent outputs, role-specific structures, and reusable evaluation formats. Rifair AI is purpose-built for hiring workflows — interview kits, scorecards, bias checks, and job description optimization in one structured platform."
+  },
+  {
+    q: "Can Rifair AI help reduce hiring bias?",
+    a: "Rifair AI can help identify biased, leading, unclear, or inconsistent language in interview questions and job descriptions so hiring teams can make their process more structured and fair."
+  },
+  {
+    q: "Does Rifair AI replace recruiters?",
+    a: "No. Rifair AI supports recruiters by reducing repetitive work and helping them create more structured hiring materials. Final hiring decisions remain with human teams."
+  }
+];
+
+
 export default function LandingBelowFold() {
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+
   return (
     <>
       <section
@@ -242,7 +269,53 @@ export default function LandingBelowFold() {
       </section>
  
       <TestimonialsSection />
- 
+
+      {/* Frequently Asked Questions */}
+      <section className="py-16 lg:py-24 px-6 lg:px-12 w-full bg-[#F5F5F7] border-t border-black/[0.05]">
+        <div className="max-w-4xl mx-auto space-y-12">
+          <div className="text-center space-y-4">
+            <h2 className="text-3xl lg:text-4xl font-black text-[#1D1D1F] tracking-tighter">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-[#86868B] text-sm sm:text-base font-semibold">
+              Everything you need to know about our structured hiring workflows and AI engine.
+            </p>
+          </div>
+          <div className="space-y-4">
+            {FAQS_DATA.map((faq, idx) => {
+              const isOpen = openFaqIndex === idx;
+              return (
+                <div
+                  key={idx}
+                  className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_rgba(0,0,0,1)] overflow-hidden transition-all duration-300"
+                >
+                  <button
+                    onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
+                    className="w-full text-left p-6 flex justify-between items-center focus:outline-none"
+                  >
+                    <h3 className="text-base sm:text-lg font-black text-[#1D1D1F] tracking-tight pr-4">
+                      {faq.q}
+                    </h3>
+                    <span className="text-xl font-bold transition-transform duration-300 shrink-0 select-none">
+                      {isOpen ? "−" : "+"}
+                    </span>
+                  </button>
+                  <div
+                    className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                      isOpen ? "max-h-[300px] border-t-2 border-black/5" : "max-h-0"
+                    }`}
+                  >
+                    <p className="p-6 text-[#86868B] text-xs sm:text-sm leading-relaxed font-semibold">
+                      {faq.a}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
       <section className="py-16 md:py-24 px-6 lg:px-12 relative w-full bg-[#F5F5F7] border-t border-black/[0.05]">
         <div className="max-w-7xl mx-auto space-y-12">
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 pb-12 md:pb-24 border-b border-black/[0.03]">

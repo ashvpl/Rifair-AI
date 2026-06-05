@@ -146,7 +146,7 @@ export function IndustrialPricing() {
 
             <main className="flex-1">
                 <PricingContainer
-                    title="Fair hiring starts here."
+                    title="Simple Pricing for Smarter Hiring Teams"
                     description={<RotatingPricingSubtitle />}
                     plans={mappedPlans}
                     currencySymbol={currency === 'inr' ? '₹' : '$'}

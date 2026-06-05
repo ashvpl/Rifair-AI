@@ -7,18 +7,39 @@ import FooterSection from "@/components/ui/footer-section";
 import { Button } from "@/components/ui/button";
 import { Clock, BookOpen, ArrowRight, Sparkles } from "lucide-react";
 import { blogListingImage } from "@/lib/site-images";
+import { DEFAULT_KEYWORDS } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Hiring, Recruiting, and Fair Interviewing Blog | Rifair AI",
-  description: "Guides on structured interviews, fair hiring, bias-free questions, candidate evaluation, and AI-powered recruiting.",
+  title: "Rifair AI Blog | Fair Hiring, Interview Kits, and HR Automation",
+  description: "Read practical guides on fair hiring, structured interviews, candidate evaluation, job descriptions, recruitment automation, and AI for HR teams.",
+  keywords: DEFAULT_KEYWORDS,
   alternates: {
     canonical: "https://rifairai.com/blog",
   },
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
-    title: "Hiring, Recruiting, and Fair Interviewing Blog | Rifair AI",
-    description: "Guides on structured interviews, fair hiring, bias-free questions, candidate evaluation, and AI-powered recruiting.",
+    title: "Rifair AI Blog | Fair Hiring, Interview Kits, and HR Automation",
+    description: "Read practical guides on fair hiring, structured interviews, candidate evaluation, job descriptions, recruitment automation, and AI for HR teams.",
     url: "https://rifairai.com/blog",
     type: "website",
+    siteName: "Rifair AI",
+    images: [
+      {
+        url: "https://rifairai.com/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Rifair AI Blog - Fair Hiring and AI Recruitment Insights",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Rifair AI Blog | Fair Hiring, Interview Kits, and HR Automation",
+    description: "Read practical guides on fair hiring, structured interviews, candidate evaluation, job descriptions, recruitment automation, and AI for HR teams.",
+    images: ["https://rifairai.com/opengraph-image.png"],
   },
 };
 

@@ -4,30 +4,69 @@ import { NavBarDemo } from "@/components/ui/navbar-demo";
 import FooterSection from "@/components/ui/footer-section";
 import { Button } from "@/components/ui/button";
 import { Mail, MessageSquare, ShieldCheck, Heart } from "lucide-react";
+import { DEFAULT_KEYWORDS, CONTACT_KEYWORDS } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Contact Us | Rifair AI",
-  description: "Get in touch with the Rifair AI team for support, feature inquiries, or feedback on our ethical hiring assistant.",
+  title: "Contact Rifair AI | AI Hiring Copilot for HR Teams",
+  description: "Contact Rifair AI for demos, feedback, partnerships, or support related to AI-powered hiring workflows and recruitment automation.",
+  keywords: [...DEFAULT_KEYWORDS, ...CONTACT_KEYWORDS],
   alternates: {
     canonical: "https://rifairai.com/contact",
   },
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
-    title: "Contact Us | Rifair AI",
-    description: "Get in touch with the Rifair AI team for support, feature inquiries, or feedback on our ethical hiring assistant.",
+    title: "Contact Rifair AI | AI Hiring Copilot for HR Teams",
+    description: "Contact Rifair AI for demos, feedback, partnerships, or support related to AI-powered hiring workflows and recruitment automation.",
     url: "https://rifairai.com/contact",
     type: "website",
+    siteName: "Rifair AI",
+    images: [
+      {
+        url: "https://rifairai.com/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Contact Rifair AI - AI Hiring Copilot for HR Teams",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contact Rifair AI | AI Hiring Copilot for HR Teams",
+    description: "Contact Rifair AI for demos, feedback, partnerships, or support related to AI-powered hiring workflows and recruitment automation.",
+    images: ["https://rifairai.com/opengraph-image.png"],
   },
 };
 
 export default function ContactPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Contact Rifair AI",
+    "description": "Get in touch with Rifair AI for support, enterprise pricing requests, general feedback, or partnerships.",
+    "url": "https://rifairai.com/contact",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "Rifair AI",
+      "url": "https://rifairai.com",
+      "logo": "https://rifairai.com/logo.png"
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-[#F5F5F7] font-sans selection:bg-primary/20 selection:text-primary transition-colors duration-500">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <NavBarDemo />
 
       <main className="flex-grow pt-24 md:pt-32">
         <section className="px-6 lg:px-12 py-16 text-center max-w-4xl mx-auto space-y-6">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-[#1D1D1F] tracking-tight leading-tight">
-            Get in Touch
+            Contact Rifair AI
           </h1>
           <p className="text-[#86868B] text-lg md:text-xl font-medium max-w-2xl mx-auto">
             Have questions about our enterprise plans, custom AI models, features, or need support? We're here to help.

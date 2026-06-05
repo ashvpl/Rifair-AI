@@ -1,0 +1,69 @@
+# Rifair AI
+
+Rifair AI is an AI-powered hiring copilot for HR teams, recruiters, startups, hiring managers, and talent acquisition teams.
+
+## What Rifair AI Does
+
+Rifair AI helps hiring teams:
+
+* Generate structured interview kits with role-specific questions and scoring rubrics
+* Create role-specific interview questions aligned to core competencies
+* Evaluate candidates using structured scorecards and rubrics
+* Analyze bias in interview questions and flag unfair, leading, or exclusionary wording
+* Optimize job descriptions for clarity, inclusivity, structure, and hiring effectiveness
+* Standardize hiring workflows across teams and departments
+* Reduce repetitive recruitment documentation work
+* Support fair, structured, and faster recruitment workflows
+
+## Who Rifair AI Is For
+
+Rifair AI is designed for:
+
+* HR professionals and HR generalists
+* Recruiters and talent sourcers
+* Talent acquisition teams
+* Hiring managers
+* Startup founders hiring their first team
+* Recruitment agencies
+* SMEs building structured hiring processes
+* Enterprises standardizing interview panels
+
+## What Rifair AI Is Not
+
+Rifair AI is NOT primarily an interview preparation tool for students or job seekers. It is focused on HR workflows and recruitment teams. Final hiring decisions remain with human teams.
+
+## Core Product Capabilities
+
+1. **Interview Kit Generator** — Generate structured interview kits with competency-based questions, scoring rubrics, and evaluation criteria for any job role.
+2. **Bias Checker** — Detect biased, leading, unclear, or unfair interview questions and get AI-suggested fair alternatives.
+3. **Candidate Evaluation Scorecards** — Create role-specific evaluation scorecards to compare candidates consistently and fairly.
+4. **Job Description Optimizer** — Improve job descriptions for clarity, inclusivity, structure, and hiring effectiveness.
+
+## Important Pages
+
+* Homepage: https://rifairai.com/
+* Bias Checker: https://rifairai.com/features/bias-checker
+* Interview Kit Generator: https://rifairai.com/features/interview-kit-generator
+* Candidate Evaluation: https://rifairai.com/features/candidate-evaluation
+* Job Description Optimizer: https://rifairai.com/features/job-description-optimizer
+* Pricing: https://rifairai.com/pricing
+* Blog: https://rifairai.com/blog
+* About: https://rifairai.com/about
+* Contact: https://rifairai.com/contact
+
+## Brand Positioning
+
+Rifair AI is a web-based AI hiring platform that helps HR teams create fairer, more structured, and more consistent hiring workflows. It is purpose-built for hiring workflows — not a general-purpose AI chatbot.
+
+## Primary Keywords
+
+AI hiring copilot, AI recruitment software, interview kit generator, candidate evaluation software, hiring scorecards, interview bias checker, job description optimizer, fair hiring software, structured interview platform, HR automation, talent acquisition software, recruitment workflow software.
+
+## Differentiation from General AI Tools
+
+ChatGPT and Claude are powerful general-purpose AI tools, but HR teams need repeatable workflows, consistent outputs, role-specific structures, and reusable evaluation formats. Rifair AI is purpose-built for hiring workflows — interview kits, scorecards, bias checks, and job description optimization in one structured platform.
+
+## Contact
+
+Use the public contact method shown on the website: https://rifairai.com/contact
+Email: support@rifairai.com
