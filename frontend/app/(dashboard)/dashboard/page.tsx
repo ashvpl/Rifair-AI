@@ -91,6 +91,7 @@ export default function DashboardPage() {
 
   const stats = useMemo(() => {
     if (!history.length) return {
+      totalWorkflows: 0,
       analysisCount: 0,
       avgBiasScore: 0,
       highBiasFlags: 0,
@@ -103,11 +104,15 @@ export default function DashboardPage() {
     const uniqueHistory = Array.from(new Map(history.map(item => [item.id, item])).values())
       .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
+    // totalWorkflows = all records (kits + analyses) — used for hero banner & TOTAL WORKFLOWS card
+    const totalWorkflows = uniqueHistory.length;
+
     const analyses = uniqueHistory.filter(item => {
       const isKit = item.categories?.analysis_type === 'kit' || item.input_text?.startsWith("Interview Kit: ");
       return !isKit;
     });
 
+    // analysisCount = bias-analysis records only (excludes kits) — used for bias metrics
     const analysisCount = analyses.length;
     
     // Avg Bias Score
@@ -168,6 +173,7 @@ export default function DashboardPage() {
       .slice(-10);
 
     return {
+      totalWorkflows,
       analysisCount,
       avgBiasScore,
       highBiasFlags,
@@ -179,7 +185,8 @@ export default function DashboardPage() {
   }, [history]);
 
   const heroContent = useMemo(() => {
-    if (stats.analysisCount === 0) {
+    // Show empty state only when there are truly zero records (no kits, no analyses)
+    if (stats.totalWorkflows === 0) {
       return {
         bg: 'bg-[#f0f9ff]',
         border: 'border-blue-100',
@@ -190,6 +197,21 @@ export default function DashboardPage() {
         subtitle: "Start with a role or job description. Rifair will generate your interview kit, scorecard, and hiring insights.",
         cta: "Build Your First Hiring Workflow",
         ctaLink: '/kit'
+      };
+    }
+
+    // Has kits but no bias analyses yet — encourage running an analysis
+    if (stats.analysisCount === 0 && stats.totalWorkflows > 0) {
+      return {
+        bg: 'bg-[#f0fdf4]',
+        border: 'border-green-100',
+        titleColor: 'text-green-900',
+        subtitleColor: 'text-green-800/70',
+        buttonBg: 'bg-green-600 hover:bg-green-700',
+        title: `${stats.totalWorkflows} kit${stats.totalWorkflows > 1 ? 's' : ''} generated — run a bias check next`,
+        subtitle: "Your interview kit is ready. Analyze it for bias to get a full hiring health score.",
+        cta: "Run a bias analysis",
+        ctaLink: '/analyze'
       };
     }
     
@@ -250,7 +272,19 @@ export default function DashboardPage() {
   const jdAnalysesPercent = usagePercent("jdAnalyses");
 
   const healthScoreDetails = useMemo(() => {
-    // No data at all — show empty state, never show placeholder/demo numbers
+    // No data at all (no kits, no analyses) — show empty state
+    if (stats.totalWorkflows === 0) {
+      return {
+        isDemo: false,
+        score: undefined,
+        interviewQuality: undefined,
+        biasRisk: undefined,
+        jdQuality: undefined,
+        evaluationConsistency: undefined,
+      };
+    }
+
+    // Has kits but no bias analyses — can't compute bias-based scores yet
     if (stats.analysisCount === 0) {
       return {
         isDemo: false,
@@ -375,12 +409,12 @@ export default function DashboardPage() {
         animate="show"
         className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6"
       >
-        {/* TOTAL ANALYSES */}
+        {/* TOTAL WORKFLOWS */}
         <motion.div variants={itemVariants} className="bg-white p-3 lg:p-4 rounded-xl lg:rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] lg:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300">
           <div className="space-y-1.5 lg:space-y-3">
             <p className="text-[9px] lg:text-xs font-black text-black/40 uppercase tracking-[0.2em]">TOTAL WORKFLOWS</p>
             <div className="space-y-0.5">
-              <p className="text-2xl lg:text-3xl xl:text-4xl font-black text-[#1D1D1F] tracking-tighter">{stats.analysisCount}</p>
+              <p className="text-2xl lg:text-3xl xl:text-4xl font-black text-[#1D1D1F] tracking-tighter">{stats.totalWorkflows}</p>
             </div>
           </div>
         </motion.div>
