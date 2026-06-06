@@ -5,25 +5,17 @@ import Link from "next/link";
 import { Lock } from "lucide-react";
 
 interface HiringHealthScoreCardProps {
-  /** Overall score 0-100. Omit to show empty/demo state. */
+  /** Overall score 0-100. Omit to show empty/no-data state. */
   score?: number | undefined;
   interviewQuality?: number | undefined;
   biasRisk?: number | undefined;
   jdQuality?: number | undefined;
   evaluationConsistency?: number | undefined;
-  /** If true, shows labelled example preview — use for new users with no data. */
+  /** Reserved: no longer used for new users — card shows empty state instead. */
   isDemo?: boolean | undefined;
   /** If true, shows upgrade prompt instead of score. */
   isLocked?: boolean | undefined;
 }
-
-const DEMO_VALUES = {
-  score: 87,
-  interviewQuality: 90,
-  biasRisk: 85,
-  jdQuality: 82,
-  evaluationConsistency: 91,
-};
 
 function ScoreArc({ score, color = "#10b981" }: { score: number; color?: string }) {
   const radius = 44;
@@ -83,6 +75,44 @@ function SubScoreBar({ label, value, color }: { label: string; value: number; co
   );
 }
 
+/** Returns a dynamic, data-driven insight based on the weakest real sub-score. */
+function getDynamicInsight(
+  score: number,
+  interviewQuality?: number | null,
+  biasRisk?: number | null,
+  jdQuality?: number | null,
+  evaluationConsistency?: number | null,
+): string {
+  const areas = [
+    {
+      name: "interview quality",
+      value: interviewQuality ?? 100,
+      advice: "Analyse more interview questions to reduce bias and improve quality.",
+    },
+    {
+      name: "bias risk",
+      value: biasRisk !== null && biasRisk !== undefined ? 100 - biasRisk : 100,
+      advice: "Some questions carry bias risk — review your flagged questions.",
+    },
+    {
+      name: "JD quality",
+      value: jdQuality ?? 100,
+      advice: "Job description quality can improve — try the JD analyser.",
+    },
+    {
+      name: "evaluation consistency",
+      value: evaluationConsistency ?? 100,
+      advice: "Run more analyses to build a consistent evaluation baseline.",
+    },
+  ];
+
+  const weakest = areas.reduce((prev, curr) => (curr.value < prev.value ? curr : prev));
+
+  if (score >= 85) return "Your hiring workflow looks strong. Keep running analyses to maintain this score.";
+  if (score >= 70) return `Good progress. Weakest area: ${weakest.name}. ${weakest.advice}`;
+  return `Needs attention. ${weakest.advice}`;
+}
+
 export function HiringHealthScoreCard({
   score,
   interviewQuality,
@@ -92,12 +122,14 @@ export function HiringHealthScoreCard({
   isDemo = false,
   isLocked = false,
 }: HiringHealthScoreCardProps) {
-  const hasData = typeof score === "number";
-  const displayScore = hasData ? score! : isDemo ? DEMO_VALUES.score : null;
-  const iq = interviewQuality ?? (isDemo ? DEMO_VALUES.interviewQuality : null);
-  const br = biasRisk ?? (isDemo ? DEMO_VALUES.biasRisk : null);
-  const jd = jdQuality ?? (isDemo ? DEMO_VALUES.jdQuality : null);
-  const ec = evaluationConsistency ?? (isDemo ? DEMO_VALUES.evaluationConsistency : null);
+  const hasRealData = typeof score === "number";
+  // displayScore: only show a number if real data exists (isDemo path removed for new users)
+  const displayScore = hasRealData ? score! : null;
+
+  const iq = interviewQuality ?? null;
+  const br = biasRisk ?? null;
+  const jd = jdQuality ?? null;
+  const ec = evaluationConsistency ?? null;
 
   const subScores = [
     { label: "Interview Quality", value: iq, color: "#10b981" },
@@ -105,6 +137,12 @@ export function HiringHealthScoreCard({
     { label: "JD Quality", value: jd, color: "#6366f1" },
     { label: "Evaluation Consistency", value: ec, color: "#3b82f6" },
   ];
+
+  // Dynamic insight derived from real data only
+  const insight =
+    hasRealData && displayScore !== null
+      ? getDynamicInsight(displayScore, iq, br, jd, ec)
+      : null;
 
   return (
     <div
@@ -117,14 +155,14 @@ export function HiringHealthScoreCard({
         <h3 id="hiring-health-heading" className="text-xs sm:text-base lg:text-xl font-black text-[#1D1D1F] tracking-tight">
           Hiring Health Score
         </h3>
-        {isDemo && (
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-[#F5F5F7] border border-black/[0.06] text-[#86868B]">
-            Example Preview
-          </span>
-        )}
         {isLocked && (
           <span className="flex items-center gap-1 text-[9px] font-black uppercase tracking-[0.15em] px-2 py-0.5 rounded-full bg-amber-50 border border-amber-100 text-amber-700">
             <Lock className="w-2.5 h-2.5" /> Locked
+          </span>
+        )}
+        {hasRealData && !isLocked && (
+          <span className="text-[9px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-600">
+            Live Data
           </span>
         )}
       </div>
@@ -145,25 +183,33 @@ export function HiringHealthScoreCard({
           </Link>
         </div>
       ) : displayScore === null ? (
-        // No data empty state
+        // Empty state — no real data yet
         <div className="flex flex-col items-center justify-center py-8 space-y-3 text-center">
           <div className="w-20 h-20 rounded-full border-4 border-dashed border-[#E5E7EB] flex items-center justify-center">
             <span className="font-mono text-2xl font-black text-[#D1D5DB]">—</span>
           </div>
           <div className="space-y-1">
-            <p className="text-sm font-black text-[#1D1D1F]">Not enough data yet</p>
-            <p className="text-xs font-medium text-[#86868B]">Run your first workflow to generate a hiring health score.</p>
+            <p className="text-sm font-black text-[#1D1D1F]">No data yet</p>
+            <p className="text-xs font-medium text-[#86868B]">
+              Run your first analysis to generate a real hiring health score.
+            </p>
           </div>
+          <Link
+            href="/analyze"
+            className="mt-1 px-4 py-2 bg-[#1D1D1F] text-white rounded-full text-xs font-black hover:bg-black/80 active:scale-[0.97] transition-all duration-150"
+          >
+            Run First Analysis →
+          </Link>
         </div>
       ) : (
-        // Score display
+        // Real score display
         <div className="space-y-5">
           <ScoreArc score={displayScore} />
 
-          {/* Recommendation */}
-          {isDemo && (
+          {/* Dynamic data-driven recommendation */}
+          {insight && (
             <p className="text-xs font-medium text-[#86868B] text-center leading-relaxed">
-              Your workflow is strong, but job description clarity can improve.
+              {insight}
             </p>
           )}
 

@@ -250,9 +250,10 @@ export default function DashboardPage() {
   const jdAnalysesPercent = usagePercent("jdAnalyses");
 
   const healthScoreDetails = useMemo(() => {
+    // No data at all — show empty state, never show placeholder/demo numbers
     if (stats.analysisCount === 0) {
       return {
-        isDemo: true,
+        isDemo: false,
         score: undefined,
         interviewQuality: undefined,
         biasRisk: undefined,
@@ -260,11 +261,34 @@ export default function DashboardPage() {
         evaluationConsistency: undefined,
       };
     }
+
+    // All scores derived from real analysis data
+    // interviewQuality: inverse of avg bias (higher bias = lower quality)
     const interviewQuality = Math.round(100 - stats.avgBiasScore);
+
+    // biasRisk: direct avg bias score (lower is better)
     const biasRisk = stats.avgBiasScore;
-    const jdQuality = 80;
-    const evaluationConsistency = Math.min(100, 75 + stats.analysisCount);
-    const score = Math.round((interviewQuality + (100 - biasRisk) + jdQuality + evaluationConsistency) / 4);
+
+    // jdQuality: derived from fairness score (how many analyses were low-bias)
+    // Scaled from fairnessScore — a proxy for how well-structured the hiring questions are
+    const jdQuality = stats.fairnessScore;
+
+    // evaluationConsistency: based on how many analyses done — more = more consistent process
+    // Starts at 60 for first analysis, scales up to 95 at 35+ analyses
+    const rawConsistency = stats.analysisCount >= 35
+      ? 95
+      : Math.round(60 + (stats.analysisCount / 35) * 35);
+    const evaluationConsistency = Math.min(95, rawConsistency);
+
+    // Overall score: weighted average
+    // interviewQuality and biasRisk (inverted) carry more weight
+    const score = Math.round(
+      (interviewQuality * 0.35) +
+      ((100 - biasRisk) * 0.35) +
+      (jdQuality * 0.15) +
+      (evaluationConsistency * 0.15)
+    );
+
     return {
       isDemo: false,
       score,
