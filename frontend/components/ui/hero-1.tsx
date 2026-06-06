@@ -57,16 +57,16 @@ export function HeroSection() {
 					{/* Hero title wrapper — word-break prevention */}
 					<div className="w-full text-center flex flex-col items-center gap-2">
 						<RevealText 
-							text="The Operating System"
-							fontSize="text-2xl sm:text-3xl md:text-4xl lg:text-[56px] xl:text-[64px]"
+							text="The Hiring Operating System"
+							fontSize="text-2xl sm:text-4xl md:text-5xl lg:text-[64px] xl:text-[72px]"
 							textColor="text-[#1D1D1F]"
 							overlayColor="text-indigo-700"
 							letterDelay={0.06}
 							className="w-full block"
 						/>
 						<RevealText 
-							text="for Modern Hiring"
-							fontSize="text-2xl sm:text-3xl md:text-4xl lg:text-[56px] xl:text-[64px]"
+							text="for Modern Teams"
+							fontSize="text-2xl sm:text-4xl md:text-5xl lg:text-[64px] xl:text-[72px]"
 							textColor="text-[#1D1D1F]"
 							overlayColor="text-emerald-700"
 							letterDelay={0.05}
@@ -78,7 +78,7 @@ export function HeroSection() {
 				<p
 					className="fade-in slide-in-from-bottom-10 mx-auto max-w-3xl animate-in fill-mode-backwards text-center text-sm sm:text-base lg:text-lg xl:text-xl tracking-wider delay-200 duration-500 ease-out font-semibold text-[#111111]"
 				>
-					Generate interview kits, evaluate candidates, analyze job descriptions, audit hiring processes, and eliminate bias — all in one AI-powered platform.
+					Generate interview kits, evaluate candidates with scorecards, optimize job descriptions, and detect hiring bias — all in one structured AI workflow.
 				</p>
 
 				<div className="fade-in slide-in-from-bottom-10 flex animate-in flex-row flex-wrap items-center justify-center gap-2 lg:gap-3 fill-mode-backwards pt-2 delay-300 duration-500 ease-out w-full max-w-xs sm:max-w-none">
@@ -90,12 +90,19 @@ export function HeroSection() {
 							</Button>
 						</Link>
 					) : (
-						<Link href="/sign-in?redirect_url=/analyze" className="w-full sm:w-auto">
-							<Button className="w-full sm:w-auto rounded-full font-bold h-10 lg:h-12 px-6 lg:px-8" size="lg">
-								Try Free Analysis{" "}
-								<ArrowRightIcon className="size-4 ms-2" />
-							</Button>
-						</Link>
+						<>
+							<Link href="/sign-in?redirect_url=/kit" className="w-full sm:w-auto">
+								<Button className="w-full sm:w-auto rounded-full font-bold h-10 lg:h-12 px-6 lg:px-8" size="lg">
+									Start Free Hiring Audit{" "}
+									<ArrowRightIcon className="size-4 ms-2" />
+								</Button>
+							</Link>
+							<Link href="#workflow" className="w-full sm:w-auto">
+								<Button variant="outline" className="w-full sm:w-auto rounded-full font-bold h-10 lg:h-12 px-6 lg:px-8 border-black/20 hover:border-black/40" size="lg">
+									View Workflow
+								</Button>
+							</Link>
+						</>
 					)}
 				</div>
 			</div>

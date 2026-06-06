@@ -24,6 +24,9 @@ import { useSubscription } from "@/hooks/useSubscription";
 import { PLANS } from "@/lib/pricing/plans";
 import { PersonalisedInsights } from "@/components/intelligence/PersonalisedInsights";
 import { useBackendToken } from "@/hooks/useBackendToken";
+import { WorkflowQuickActions } from "@/components/dashboard/WorkflowQuickActions";
+import { DashboardCopilotCard } from "@/components/dashboard/DashboardCopilotCard";
+import { HiringHealthScoreCard } from "@/components/dashboard/HiringHealthScoreCard";
 
 export default function DashboardPage() {
   const { isLoaded, userId } = useAuth();
@@ -183,10 +186,10 @@ export default function DashboardPage() {
         titleColor: 'text-blue-900',
         subtitleColor: 'text-blue-800/70',
         buttonBg: 'bg-blue-600 hover:bg-blue-700',
-        title: "Welcome to Rifair AI",
-        subtitle: "Paste your first set of interview questions to get a bias score instantly.",
-        cta: "Run your first analysis",
-        ctaLink: '/analyze'
+        title: "Build your first hiring workflow",
+        subtitle: "Start with a role or job description. Rifair will generate your interview kit, scorecard, and hiring insights.",
+        cta: "Build Your First Hiring Workflow",
+        ctaLink: '/kit'
       };
     }
     
@@ -246,6 +249,32 @@ export default function DashboardPage() {
   const kitsPercent = usagePercent("kits");
   const jdAnalysesPercent = usagePercent("jdAnalyses");
 
+  const healthScoreDetails = useMemo(() => {
+    if (stats.analysisCount === 0) {
+      return {
+        isDemo: true,
+        score: undefined,
+        interviewQuality: undefined,
+        biasRisk: undefined,
+        jdQuality: undefined,
+        evaluationConsistency: undefined,
+      };
+    }
+    const interviewQuality = Math.round(100 - stats.avgBiasScore);
+    const biasRisk = stats.avgBiasScore;
+    const jdQuality = 80;
+    const evaluationConsistency = Math.min(100, 75 + stats.analysisCount);
+    const score = Math.round((interviewQuality + (100 - biasRisk) + jdQuality + evaluationConsistency) / 4);
+    return {
+      isDemo: false,
+      score,
+      interviewQuality,
+      biasRisk,
+      jdQuality,
+      evaluationConsistency,
+    };
+  }, [stats]);
+
   if (isLoading || isSubLoading) {
     return (
       <div className="flex flex-col justify-center items-center py-40 space-y-6">
@@ -269,9 +298,14 @@ export default function DashboardPage() {
     <div className="max-w-[1240px] mx-auto space-y-5 lg:space-y-8 pb-4 pt-4">
       
       {/* Dashboard Title Row — stacks vertically on mobile */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2">
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-[#1D1D1F] tracking-tighter">Hiring intelligence dashboard</h1>
-        <p className="text-[10px] font-bold text-[#86868B] uppercase tracking-[0.3em] whitespace-nowrap">Last updated: today</p>
+      <div className="space-y-1">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-[#1D1D1F] tracking-tighter">Hiring Workflow Dashboard</h1>
+          <p className="text-[10px] font-bold text-[#86868B] uppercase tracking-[0.3em] whitespace-nowrap">Last updated: today</p>
+        </div>
+        <p className="text-xs sm:text-sm font-medium text-[#86868B]">
+          Build interview kits, evaluate candidates, optimize job descriptions, and track hiring quality.
+        </p>
       </div>
 
       <div className="mb-2"><UsageLimitBanner /></div>
@@ -306,6 +340,10 @@ export default function DashboardPage() {
         </div>
       </motion.div>
 
+      <DashboardCopilotCard />
+
+      <WorkflowQuickActions />
+
       {/* 4-Metric Grid */}
       <motion.div 
         variants={containerVariants}
@@ -316,7 +354,7 @@ export default function DashboardPage() {
         {/* TOTAL ANALYSES */}
         <motion.div variants={itemVariants} className="bg-white p-3 lg:p-4 rounded-xl lg:rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] lg:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300">
           <div className="space-y-1.5 lg:space-y-3">
-            <p className="text-[9px] lg:text-xs font-black text-black/40 uppercase tracking-[0.2em]">TOTAL ANALYSES</p>
+            <p className="text-[9px] lg:text-xs font-black text-black/40 uppercase tracking-[0.2em]">TOTAL WORKFLOWS</p>
             <div className="space-y-0.5">
               <p className="text-2xl lg:text-3xl xl:text-4xl font-black text-[#1D1D1F] tracking-tighter">{stats.analysisCount}</p>
             </div>
@@ -356,7 +394,7 @@ export default function DashboardPage() {
         {/* HIGH BIAS FLAGS */}
         <motion.div variants={itemVariants} className={cn("p-3 lg:p-4 rounded-xl lg:rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] lg:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300", flagCardStyle.bg)}>
           <div className="space-y-1.5 lg:space-y-3">
-            <p className={cn("text-[9px] lg:text-xs font-black uppercase tracking-[0.2em]", flagCardStyle.label)}>HIGH BIAS FLAGS</p>
+            <p className={cn("text-[9px] lg:text-xs font-black uppercase tracking-[0.2em]", flagCardStyle.label)}>BIAS FLAGS</p>
             <div className="space-y-0.5">
               <p className={cn("tracking-tighter font-black", stats.analysisCount === 0 ? "text-sm text-[#86868B]" : "text-2xl lg:text-3xl xl:text-4xl " + flagCardStyle.text)}>
                 {stats.analysisCount === 0 ? "No data yet" : stats.highBiasFlags}
@@ -369,7 +407,7 @@ export default function DashboardPage() {
         {/* FAIRNESS SCORE */}
         <motion.div variants={itemVariants} className="bg-white p-3 lg:p-4 rounded-xl lg:rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] lg:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300">
           <div className="space-y-1.5 lg:space-y-3">
-            <p className="text-[9px] lg:text-xs font-black text-black/40 uppercase tracking-[0.2em]">FAIRNESS SCORE</p>
+            <p className="text-[9px] lg:text-xs font-black text-black/40 uppercase tracking-[0.2em]">HIRING FAIRNESS</p>
             <div className="space-y-0.5">
               <div className="flex items-baseline gap-0.5">
                 <p className={cn(
@@ -396,6 +434,15 @@ export default function DashboardPage() {
           </div>
         </motion.div>
       </motion.div>
+
+      <HiringHealthScoreCard
+        isDemo={healthScoreDetails.isDemo}
+        score={healthScoreDetails.score}
+        interviewQuality={healthScoreDetails.interviewQuality}
+        biasRisk={healthScoreDetails.biasRisk}
+        jdQuality={healthScoreDetails.jdQuality}
+        evaluationConsistency={healthScoreDetails.evaluationConsistency}
+      />
 
       {/* ── Personalised Insights Panel ────────────────────────────────── */}
       {intelligenceProfile && (

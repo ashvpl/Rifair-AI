@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { NavBarDemo } from "@/components/ui/navbar-demo";
 import { HeroSection, LogosSection } from "@/components/ui/hero-1";
 import { DebugPerfLogger } from "@/components/debug/perf-logger";
+import { MetricsBar } from "@/components/marketing/MetricsBar";
 
 const EtherealShadow = dynamic(
   () => import("@/components/ui/etheral-shadow").then((mod) => mod.Component),
@@ -45,7 +46,10 @@ export function LandingPageShell() {
           </div>
         </section>
 
-        {/* Separated Powered by section with solid white background */}
+        {/* Premium Metrics Bar — directly below hero */}
+        <MetricsBar />
+
+        {/* Powered-by logos section */}
         <section className="relative z-10 space-y-8 bg-white border-t border-black/[0.08] pt-12 pb-16 px-4 overflow-hidden">
           <h2 className="text-center font-black text-sm uppercase text-[#555555] tracking-[0.3em]">
             Powered by

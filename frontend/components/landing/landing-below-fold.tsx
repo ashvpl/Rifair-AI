@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { ArrowRight, CheckCircle, ShieldAlert } from "lucide-react";
+import { ArrowRight, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { RifairCoreFeatures } from "@/components/ui/rifair-features";
-import FeatureCarousel from "@/components/ui/feature-carousel";
 import { InteractiveAccordion } from "@/components/ui/interactive-image-accordion";
 import { BlurTextAnimation } from "@/components/ui/blur-text-animation";
 import { HeroSection2 } from "@/components/ui/hero-section-2";
@@ -16,19 +15,23 @@ import {
   LANDING_AUDIENCE_IMAGES,
   LANDING_CTA_BACKGROUND,
 } from "@/lib/site-images";
+import { WorkflowPipeline } from "@/components/marketing/WorkflowPipeline";
+import { InteractiveWorkflowDemo } from "@/components/marketing/InteractiveWorkflowDemo";
+import { WorkflowComparison } from "@/components/marketing/WorkflowComparison";
+import { ShieldAlert } from "lucide-react";
 
 const FAQS_DATA = [
   {
     q: "What is Rifair AI?",
-    a: "Rifair AI is an AI-powered hiring copilot that helps HR teams generate interview kits, evaluate candidates, analyze bias, and optimize job descriptions."
+    a: "Rifair AI is an AI-powered hiring workflow copilot that helps HR teams generate structured interview kits, evaluate candidates with scorecards, optimize job descriptions, and detect hiring bias — all in one platform."
   },
   {
     q: "Who is Rifair AI built for?",
-    a: "Rifair AI is built for HR professionals, recruiters, hiring managers, startup founders, talent teams, and recruitment agencies."
+    a: "Rifair AI is built for HR professionals, recruiters, hiring managers, startup founders, talent teams, and recruitment agencies who want to structure and accelerate their hiring process."
   },
   {
-    q: "How is Rifair AI different from using ChatGPT or Claude directly?",
-    a: "ChatGPT and Claude are powerful general-purpose AI tools, but HR teams often need repeatable workflows, consistent outputs, role-specific structures, and reusable evaluation formats. Rifair AI is purpose-built for hiring workflows — interview kits, scorecards, bias checks, and job description optimization in one structured platform."
+    q: "How is Rifair AI different from using a general AI tool directly?",
+    a: "General AI tools are powerful but require prompt engineering and produce inconsistent outputs. Rifair AI is purpose-built for hiring workflows — interview kits, scorecards, bias checks, and job description optimization in one repeatable, structured platform."
   },
   {
     q: "Can Rifair AI help reduce hiring bias?",
@@ -46,28 +49,23 @@ export default function LandingBelowFold() {
 
   return (
     <>
-      <section
-        id="how-it-works"
-        className="py-16 lg:py-24 px-6 lg:px-12 relative overflow-hidden bg-[#F5F5F7]"
-      >
-        <div className="max-w-7xl mx-auto space-y-12 md:space-y-20">
-          <div className="text-center space-y-4">
-            <h2 className="font-black text-[#1D1D1F] text-2xl lg:text-4xl tracking-tight">How It Works</h2>
-            <p className="text-[#86868B] text-base lg:text-lg mt-4 font-medium">
-              Eight steps to institutionalizing fairness.
-            </p>
-          </div>
-          <FeatureCarousel />
-        </div>
-      </section>
+      {/* 1. Workflow Pipeline — from JD to hiring decision */}
+      <WorkflowPipeline />
 
-      <IntroVideoSection 
-        youtubeUrl="https://youtu.be/WTbW7Ydch8s?si=6k1TJefVUNOSSL8a" 
+      {/* 2. Interactive Demo */}
+      <InteractiveWorkflowDemo />
+
+      {/* 3. Intro Video */}
+      <IntroVideoSection
+        youtubeUrl="https://youtu.be/WTbW7Ydch8s?si=6k1TJefVUNOSSL8a"
         posterImage={INTRO_VIDEO_POSTER}
+        subtitle="From job descriptions and interview kits to candidate scorecards and hiring decisions — everything your team needs in one structured AI workflow."
       />
 
+      {/* 5. Core Capabilities (reordered — Interview Kits first) */}
       <RifairCoreFeatures />
 
+      {/* 6. Bias demo — repositioned as fairness layer illustration */}
       <section className="py-16 lg:py-32 px-6 lg:px-12 bg-[#101012] text-white relative border-y border-black/[0.03] overflow-hidden">
         <div
           className="absolute top-1/2 left-3/4 -translate-y-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full pointer-events-none opacity-20 z-0 blur-[120px]"
@@ -79,7 +77,7 @@ export default function LandingBelowFold() {
           <div className="space-y-6 md:space-y-10 relative z-20">
             <h2 className="text-2xl md:text-3xl lg:text-4xl text-white text-left font-semibold -tracking-wider mb-8">
               <BlurTextAnimation
-                text="See the difference in real-time."
+                text="See the fairness layer in action."
                 fontSize="text-4xl md:text-5xl lg:text-6xl"
                 textColor="text-white"
                 className="font-black"
@@ -89,7 +87,7 @@ export default function LandingBelowFold() {
             </h2>
             <div className="text-base text-white/60 leading-relaxed font-medium min-h-[4em]">
               <BlurTextAnimation
-                text="Our engine doesn't just block bad questions. It fundamentally rebuilds them, cutting out subtle signals of bias while purely focusing on core competencies."
+                text="The Bias Layer doesn't just flag bad questions — it rebuilds them, removing subtle signals that skew evaluations while keeping focus on core competencies."
                 fontSize="text-xl"
                 textColor="text-white/60"
                 className="font-medium"
@@ -173,6 +171,10 @@ export default function LandingBelowFold() {
         </div>
       </section>
 
+      {/* 7. General AI vs Rifair Comparison */}
+      <WorkflowComparison />
+
+      {/* 8. Why Rifair / Who is it for */}
       <section
         id="about-us"
         className="py-16 lg:py-32 px-6 lg:px-12 relative w-full bg-[#F5F5F7] border-y border-black/[0.05] overflow-hidden"
@@ -184,29 +186,29 @@ export default function LandingBelowFold() {
                 Why Rifair AI?
               </h2>
               <p className="text-[#86868B] text-xl font-medium leading-relaxed max-w-lg">
-                We help you build a hiring process that is faster, fairer, and focused entirely on talent.
+                We help you build a hiring process that is faster, more structured, and focused on talent.
               </p>
             </div>
             <div className="flex-1 grid gap-4">
               {[
                 {
-                  title: "Hire for Talent, Not Bias",
-                  desc: "We help you spot the best people by removing the hidden biases that often cloud human judgment.",
+                  title: "Build Interview Kits in Minutes",
+                  desc: "Stop wasting hours on interview prep. Get professional, structured interview kits in seconds.",
                   number: "01",
                 },
                 {
-                  title: "Save Days of Planning",
-                  desc: "Stop wasting hours on interview prep. Get professional, fair, and ready-to-use interview kits in seconds.",
+                  title: "Evaluate Consistently",
+                  desc: "Score candidates fairly using structured scorecards — not gut feelings. Make better decisions with shared data.",
                   number: "02",
                 },
                 {
-                  title: "Decisions You Can Trust",
-                  desc: "Build a hiring process you can be proud of. Every decision is backed by clear data, making your choices fair and transparent.",
+                  title: "Optimize Job Descriptions",
+                  desc: "Write job descriptions that attract more diverse talent and remove language that narrows your pipeline.",
                   number: "03",
                 },
                 {
-                  title: "Better Questions, Better Hires",
-                  desc: "Our AI doesn't just check your questions; it makes them better so you can find the person who actually fits the job.",
+                  title: "Detect Hiring Bias",
+                  desc: "Our AI identifies biased, vague, or inconsistent questions so your team can make the process fairer.",
                   number: "04",
                 },
               ].map((point, i) => (
@@ -217,6 +219,7 @@ export default function LandingBelowFold() {
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
                   className="group p-4 sm:p-5 lg:p-6 rounded-2xl bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] lg:shadow-[6px_6px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all duration-300"
+                  style={{ willChange: 'transform' }}
                 >
                   <div className="flex items-center gap-6">
                     <span className="text-2xl font-black text-black/10 group-hover:text-primary/20 transition-colors duration-500 tabular-nums">
@@ -247,19 +250,19 @@ export default function LandingBelowFold() {
                     id: 1,
                     title: "HR Teams",
                     imageUrl: LANDING_AUDIENCE_IMAGES.hrTeams.src,
-                    desc: "Perfect for recruiting teams looking to remove unconscious bias from their workflow.",
+                    desc: "Build structured hiring workflows, generate interview kits, and evaluate candidates consistently across every role.",
                   },
                   {
                     id: 2,
                     title: "Startups",
                     imageUrl: LANDING_AUDIENCE_IMAGES.startups.src,
-                    desc: "Agile teams ensuring cultural fairness and diversity from day one.",
+                    desc: "Move fast without sacrificing quality. Create repeatable hiring workflows from day one.",
                   },
                   {
                     id: 3,
                     title: "Enterprises",
                     imageUrl: LANDING_AUDIENCE_IMAGES.enterprises.src,
-                    desc: "Scale fair hiring practices across thousands of employees and teams.",
+                    desc: "Standardize hiring practices across teams, regions, and roles with a shared structured workflow.",
                   },
                 ]}
               />
@@ -267,10 +270,11 @@ export default function LandingBelowFold() {
           </div>
         </div>
       </section>
- 
+
+      {/* 9. Testimonials */}
       <TestimonialsSection />
 
-      {/* Frequently Asked Questions */}
+      {/* 11. FAQ */}
       <section className="py-16 lg:py-24 px-6 lg:px-12 w-full bg-[#F5F5F7] border-t border-black/[0.05]">
         <div className="max-w-4xl mx-auto space-y-12">
           <div className="text-center space-y-4">
@@ -278,7 +282,7 @@ export default function LandingBelowFold() {
               Frequently Asked Questions
             </h2>
             <p className="text-[#86868B] text-sm sm:text-base font-semibold">
-              Everything you need to know about our structured hiring workflows and AI engine.
+              Everything you need to know about our AI hiring workflow platform.
             </p>
           </div>
           <div className="space-y-4">
@@ -292,6 +296,8 @@ export default function LandingBelowFold() {
                   <button
                     onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
                     className="w-full text-left p-6 flex justify-between items-center focus:outline-none"
+                    style={{ touchAction: 'manipulation' }}
+                    aria-expanded={isOpen}
                   >
                     <h3 className="text-base sm:text-lg font-black text-[#1D1D1F] tracking-tight pr-4">
                       {faq.q}
@@ -316,6 +322,7 @@ export default function LandingBelowFold() {
         </div>
       </section>
 
+      {/* 12. Trust row */}
       <section className="py-16 md:py-24 px-6 lg:px-12 relative w-full bg-[#F5F5F7] border-t border-black/[0.05]">
         <div className="max-w-7xl mx-auto space-y-12">
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 pb-12 md:pb-24 border-b border-black/[0.03]">
@@ -328,7 +335,7 @@ export default function LandingBelowFold() {
             <div className="flex items-center gap-3 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-500 cursor-default">
               <CheckCircle className="h-4 w-4" />
               <span className="text-[10px] font-black text-black uppercase tracking-[0.3em]">
-                Built for inclusive organizations
+                Built for structured organizations
               </span>
             </div>
             <div className="flex items-center gap-3 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-500 cursor-default">
@@ -338,16 +345,18 @@ export default function LandingBelowFold() {
               </span>
             </div>
           </div>
+
+          {/* Updated CTA section */}
           <HeroSection2
             title={
               <>
-                Ready to build <br /> fair hiring systems?
+                Ready to structure<br /> your hiring process?
               </>
             }
-            subtitle="Join a movement of world-class organizations building the future of unbiased, skills-first recruitment."
+            subtitle="Create interview kits, scorecards, job description audits, and bias-aware evaluations with Rifair AI."
             callToAction={{
-              text: "Start Free Audit",
-              href: "/sign-in?redirect_url=/analyze",
+              text: "Start Free Hiring Audit",
+              href: "/sign-in?redirect_url=/kit",
               icon: <ArrowRight className="h-6 w-6" />,
             }}
             backgroundImage={LANDING_CTA_BACKGROUND}
@@ -356,7 +365,46 @@ export default function LandingBelowFold() {
         </div>
       </section>
 
-      <FooterSection />
+      {/* Updated Footer */}
+      <FooterSection
+        tagline="Rifair AI helps HR teams and startup founders build structured hiring workflows with AI-powered interview kits, candidate scorecards, job description optimization, and bias analysis."
+        menuItems={[
+          {
+            title: "Product",
+            links: [
+              { text: "Hiring Workflow", url: "/features/interview-kit-generator" },
+              { text: "Interview Kit Generator", url: "/features/interview-kit-generator" },
+              { text: "Candidate Scorecards", url: "/features/candidate-evaluation" },
+              { text: "Job Description Optimizer", url: "/features/job-description-optimizer" },
+              { text: "Bias Checker", url: "/features/bias-checker" },
+            ],
+          },
+          {
+            title: "Resources",
+            links: [
+              { text: "Blog", url: "/blog" },
+              { text: "Hiring Guides", url: "/blog?category=guides" },
+              { text: "Feature Pages", url: "/features/interview-kit-generator" },
+            ],
+          },
+          {
+            title: "Company",
+            links: [
+              { text: "About Us", url: "/about" },
+              { text: "Pricing", url: "/pricing" },
+              { text: "Contact", url: "/contact" },
+            ],
+          },
+          {
+            title: "Legal",
+            links: [
+              { text: "Privacy Policy", url: "/privacy" },
+              { text: "Terms of Service", url: "/terms" },
+              { text: "Refund Policy", url: "/refund" },
+            ],
+          },
+        ]}
+      />
     </>
   );
 }

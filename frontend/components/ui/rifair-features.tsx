@@ -192,18 +192,8 @@ export function RifairCoreFeatures() {
   const features = [
     {
       id: "01",
-      title: "Bias Analysis",
-      description: "Scan your interview questions to find and fix hidden biases instantly. Ensure every candidate gets a fair shot from day one.",
-      animation: <BiasAnalysisAnimation />,
-      color: "text-[#EF4444]",
-      bgColor: "bg-[#EF4444]",
-      cta: "Analyze Questions",
-      href: "/analyze"
-    },
-    {
-      id: "02",
       title: "Interview Kits",
-      description: "Create professional interview guides with high-quality questions. Save hours of prep and stay consistent across every interview.",
+      description: "Generate structured, role-specific interview questions and evaluation rubrics in seconds. Save hours of prep and stay consistent across every interview.",
       animation: <InterviewKitAnimation />,
       color: "text-[#10B981]",
       bgColor: "bg-[#10B981]",
@@ -211,9 +201,9 @@ export function RifairCoreFeatures() {
       href: "/kit"
     },
     {
-      id: "03",
+      id: "02",
       title: "JD Optimizer",
-      description: "Write job descriptions that attract more diverse talent. Automatically remove biased language and attract the right fit faster.",
+      description: "Write job descriptions that attract the right talent. Remove unclear, exclusionary language and improve role alignment before you publish.",
       animation: <JDOptimizerAnimation />,
       color: "text-[#EAB308]",
       bgColor: "bg-[#EAB308]",
@@ -221,14 +211,24 @@ export function RifairCoreFeatures() {
       href: "/jd-analyser"
     },
     {
-      id: "04",
-      title: "Evaluation Hub",
-      description: "Score candidates fairly using objective data, not gut feelings. Make better hiring decisions with clear, shared evaluation reports.",
+      id: "03",
+      title: "Candidate Scorecards",
+      description: "Evaluate candidates with consistent, structured scorecards. Compare fairly and make better hiring decisions backed by clear criteria.",
       animation: <EvaluationAnimation />,
       color: "text-[#6366f1]",
       bgColor: "bg-[#6366f1]",
       cta: "Evaluate Candidates",
       href: "/evaluations"
+    },
+    {
+      id: "04",
+      title: "Bias Analysis",
+      description: "A fairness layer across your entire workflow. Detect biased, leading, or vague interview questions and support more consistent evaluations.",
+      animation: <BiasAnalysisAnimation />,
+      color: "text-[#EF4444]",
+      bgColor: "bg-[#EF4444]",
+      cta: "Analyze Questions",
+      href: "/analyze"
     }
   ]
 
@@ -241,17 +241,17 @@ export function RifairCoreFeatures() {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-10 md:gap-16">
                 <div className="space-y-4">
                   <h2 className="font-black text-black tracking-tight text-3xl lg:text-5xl xl:text-6xl leading-[1]">
-                    The Core <br /> <span className="text-black/30">Capabilities.</span>
+                    One Platform. <br /> <span className="text-black/30">Every Hiring Step.</span>
                   </h2>
-                  <p className="text-black/60 text-base lg:text-lg font-medium max-w-xl leading-relaxed">Enterprise-grade infrastructure for teams who refuse to compromise on hiring quality and fairness.</p>
+                  <p className="text-black/60 text-base lg:text-lg font-medium max-w-xl leading-relaxed">Purpose-built hiring tools that work as a structured workflow — not just one-off generators.</p>
                 </div>
                 <motion.div
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="shrink-0"
                 >
-                    <Link href="/analyze" className="flex items-center gap-3 font-black text-sm uppercase tracking-widest text-white bg-black px-8 py-5 rounded-2xl hover:bg-black/80 transition-all duration-500 group">
-                        Explore Full Audit
+                    <Link href="/kit" className="flex items-center gap-3 font-black text-sm uppercase tracking-widest text-white bg-black px-8 py-5 rounded-2xl hover:bg-black/80 transition-all duration-500 group">
+                        Build Your First Hiring Workflow
                         <ArrowUpRight className="h-4 w-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                     </Link>
                 </motion.div>
