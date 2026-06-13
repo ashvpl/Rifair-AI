@@ -2,7 +2,7 @@ import { API_BASE_URL } from "./config";
 
 export const API_BASE = API_BASE_URL;
 
-async function fetchWithAuth(endpoint: string, options: RequestInit = {}, token?: string | null) {
+export async function fetchWithAuth(endpoint: string, options: RequestInit = {}, token?: string | null) {
   console.log(`[FRONTEND API DEBUG] Calling endpoint: ${endpoint}`);
   console.log(`[FRONTEND API DEBUG] Token passed to fetchWithAuth: ${token ? 'YES (length: ' + token.length + ')' : 'NO'}`);
 
@@ -21,6 +21,7 @@ async function fetchWithAuth(endpoint: string, options: RequestInit = {}, token?
   const response = await fetch(`${API_BASE}${endpoint}`, {
     ...options,
     headers,
+    credentials: 'include',
   });
 
   // Safely parse JSON — the response may be an HTML error page (502, 504, etc.)

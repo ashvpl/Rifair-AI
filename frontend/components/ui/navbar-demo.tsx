@@ -45,6 +45,12 @@ const menus = [
     url: '/pricing',
     dropdown: false,
   },
+  {
+    id: 4,
+    title: 'Try Demo',
+    url: '/demo',
+    dropdown: false,
+  },
 ];
 
 export function NavBarDemo() {
@@ -246,10 +252,17 @@ export function NavBarDemo() {
 
               {/* Auth links for mobile */}
               <div className="mt-8 flex flex-col gap-3">
+                {/* Try Demo — always shown in mobile nav */}
+                <Link href="/demo" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="outline" className="w-full h-12 font-bold border-black/15 rounded-full text-base">
+                    Try Demo
+                  </Button>
+                </Link>
+
                 {isLoaded && !isSignedIn && (
                   <>
                     <Link href="/sign-in" onClick={() => setMobileMenuOpen(false)}>
-                      <Button variant="outline" className="w-full h-12 font-bold rounded-full text-base">
+                      <Button variant="ghost" className="w-full h-12 font-bold rounded-full text-base">
                         Login
                       </Button>
                     </Link>

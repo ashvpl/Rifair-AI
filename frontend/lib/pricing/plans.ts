@@ -184,6 +184,9 @@ export const FEATURE_GATES: Record<string, PlanId[]> = {
   // ── Custom Evaluations (P0) ──
   custom_eval:          ['free', 'lite', 'starter', 'growth', 'enterprise'],
   custom_eval_rewrite:  ['starter', 'growth', 'enterprise'],
+
+  // ── Hiring Workflow Builder MVP ──
+  workflows:            ['free', 'lite', 'starter', 'growth', 'enterprise'],
 }
 
 /** Human-readable display labels for features (used on pricing page) */

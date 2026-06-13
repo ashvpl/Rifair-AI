@@ -1,85 +1,56 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useSearchParams } from "next/navigation";
 import {
   LayoutDashboard,
-  ShieldAlert,
-  FileText,
-  History,
-  Settings,
-  Home,
-  ChevronDown,
-  Crown,
-  FileSearch,
+  Layers,
+  Users,
   ClipboardCheck,
+  CalendarCheck,
+  BarChart3,
+  ShieldCheck,
+  FileText,
+  Blocks,
+  Settings,
   X,
-  LifeBuoy,
+  Menu,
+  ChevronDown
 } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import { UserDropdown } from "@/components/ui/user-dropdown";
 import { cn } from "@/lib/utils";
 import { useSubscription } from "@/hooks/useSubscription";
 import { motion, AnimatePresence } from "framer-motion";
+import { listWorkflows } from "@/lib/workflows/workflowService";
+import { useBackendToken } from "@/hooks/useBackendToken";
 
-type MenuItem = { name: string; href: string; icon?: React.ElementType | string };
-
-const Menu = ({ children, items }: { children: React.ReactNode; items: MenuItem[] }) => {
-  const [isOpened, setIsOpened] = useState(false);
-
-  return (
-    <div>
-      <button
-        className="w-full flex items-center justify-between text-gray-600 p-2 rounded-lg hover:bg-gray-50 active:bg-gray-100 duration-150"
-        onClick={() => setIsOpened((v) => !v)}
-        aria-expanded={isOpened}
-        aria-controls="submenu"
-      >
-        <div className="flex items-center gap-x-2">{children}</div>
-        <ChevronDown
-          className={`w-5 h-5 duration-150 ${isOpened ? "rotate-180" : ""}`}
-          aria-hidden="true"
-        />
-      </button>
-
-      {isOpened && (
-        <ul id="submenu" className="mx-4 px-2 border-l text-sm font-medium">
-          {items.map((item, idx) => (
-            <li key={idx}>
-              <Link
-                href={item.href}
-                className="flex items-center gap-x-2 text-gray-600 p-2 rounded-lg hover:bg-gray-50 active:bg-gray-100 duration-150"
-              >
-                {item.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
+type MenuItem = { 
+  name: string; 
+  href: string; 
+  icon: React.ElementType; 
+  comingSoon?: boolean; 
+  badge?: string | null; 
 };
 
 // ─── Bottom Navigation Bar (Mobile/Tablet ≤ 1023px) ───────────────────────────
 export function BottomNav() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const isEvaluateMode = pathname === "/kit" && searchParams.get("evaluate") === "true";
 
   const navItems = [
-    { name: "Dashboard", href: "/dashboard",   icon: LayoutDashboard },
-    { name: "Analyze",   href: "/analyze",      icon: ShieldAlert },
-    { name: "Kits",      href: "/kit",           icon: FileText },
-    { name: "JD",        href: "/jd-analyser",  icon: FileSearch },
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { name: "Workflows", href: "/dashboard/workflows", icon: Layers },
     { name: "Evaluations", href: "/evaluations", icon: ClipboardCheck },
+    { name: "Settings", href: "/settings", icon: Settings },
   ];
 
   return (
     <nav className="bottom-nav lg:hidden" aria-label="Bottom navigation">
       {navItems.map((item) => {
-        const isActive = isEvaluateMode ? false : pathname === item.href;
+        const isActive = pathname === item.href;
         return (
           <Link
             key={item.name}
@@ -105,32 +76,40 @@ export function BottomNav() {
 // ─── Main Sidebar Component ────────────────────────────────────────────────────
 const SidebarWithSubmenu = () => {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const { planId, isLoading, canUse } = useSubscription();
-  
-  const isEvaluateMode = pathname === "/kit" && searchParams.get("evaluate") === "true";
-
-  const navigation = [
-    { name: "Dashboard",    href: "/dashboard",   icon: LayoutDashboard, badge: null },
-    { name: "Analyze",      href: "/analyze",      icon: ShieldAlert,     badge: null },
-    { name: "Kit Generator",href: "/kit",           icon: FileText,        badge: null },
-    { name: "Job Descriptions",  href: "/jd-analyser",  icon: FileSearch,      badge: null },
-    { 
-      name: "Candidate Evaluations", 
-      href: "/evaluations",  
-      icon: ClipboardCheck,  
-      badge: null 
-    },
-    { name: "History",      href: "/history",       icon: History,         badge: null },
-  ];
-
-  const navsFooter = [
-    { name: "Settings",      href: "/settings", icon: Settings },
-    { name: "Back to Home",  href: "/",         icon: Home },
-    { name: "Get Help",      href: "/help",     icon: LifeBuoy },
-  ];
-
+  const { isLoaded, userId } = useAuth();
+  const { planId, isLoading } = useSubscription();
+  const { getAuthToken } = useBackendToken();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeWorkflowTitle, setActiveWorkflowTitle] = useState<string | null>(null);
+
+  // Fetch latest workflow for the active workflow card
+  useEffect(() => {
+    async function fetchLatest() {
+      if (!isLoaded || !userId) return;
+      try {
+        const token = await getAuthToken();
+        if (!token) return;
+        const workflows = await listWorkflows(token);
+        if (Array.isArray(workflows) && workflows.length > 0) {
+          setActiveWorkflowTitle(workflows[0].role_title || "Untitled Workflow");
+        }
+      } catch {
+        // Silent — sidebar widget is non-critical
+      }
+    }
+    fetchLatest();
+  }, [isLoaded, userId, getAuthToken]);
+
+  const navigation: MenuItem[] = [
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { name: "Workflows", href: "/dashboard/workflows", icon: Layers },
+    { name: "History", href: "/history", icon: Users },
+    { name: "Evaluations", href: "/evaluations", icon: ClipboardCheck },
+    { name: "Interviews", href: "/kit", icon: CalendarCheck },
+    { name: "Analytics", href: "/analyze", icon: BarChart3 },
+    { name: "Integrations", href: "#coming-soon", icon: Blocks, comingSoon: true },
+    { name: "Settings", href: "/settings", icon: Settings },
+  ];
 
   // Close menu when route changes
   useEffect(() => {
@@ -163,7 +142,7 @@ const SidebarWithSubmenu = () => {
           {/* Hamburger on the top-left */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="w-10 h-10 -ml-2 rounded-xl flex items-center justify-center active:scale-90 transition-transform hover:bg-black/[0.04] touch-target"
+            className="w-10 h-10 -ml-2 rounded-xl flex items-center justify-center active:scale-90 transition-transform hover:bg-black/[0.04]"
             aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
           >
             <AnimatePresence mode="wait" initial={false}>
@@ -185,9 +164,7 @@ const SidebarWithSubmenu = () => {
                   exit={{ opacity: 0, rotate: -45 }}
                   transition={{ duration: 0.15 }}
                 >
-                  <svg className="w-5 h-5 text-[#1D1D1F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 6h16M4 12h16m-7 6h7" />
-                  </svg>
+                  <Menu className="w-5 h-5 text-[#1D1D1F]" />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -200,12 +177,12 @@ const SidebarWithSubmenu = () => {
                 {planId} plan
               </span>
             )}
-            <Link href="/dashboard" className="flex items-center h-[42px] -mr-2">
+            <Link href="/dashboard" className="flex items-center h-[56px] -mr-2">
               <Image
                 src="/rifair-logo.png"
                 alt="Rifair AI"
-                width={140}
-                height={140}
+                width={180}
+                height={180}
                 className="w-auto h-full object-contain"
                 priority
               />
@@ -249,82 +226,32 @@ const SidebarWithSubmenu = () => {
               <p className="text-[9px] font-black text-[#86868B] uppercase tracking-[0.18em] px-3 mb-3 mt-1">
                 Navigation
               </p>
-              {navigation
-                .filter((item) => item.href === "/history")
-                .map((item, idx) => {
+              {navigation.map((item, idx) => {
                 const isActive = pathname === item.href;
                 return (
                   <Link
                     key={idx}
-                    href={item.href}
+                    href={item.comingSoon ? "#" : item.href}
                     className={cn(
-                      "flex items-center gap-3 px-3 py-3.5 rounded-2xl transition-all duration-150 min-h-[52px] group",
+                      "flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-150 min-h-[44px] group",
                       isActive
-                        ? "bg-[#1D1D1F] text-white"
-                        : "text-[#424245] hover:bg-[#F5F5F7] active:bg-[#EBEBEB]"
+                        ? "bg-[#17141F] text-white"
+                        : "text-[#6B6875] hover:bg-[#F5F5F7] active:bg-[#EBEBEB]"
                     )}
                   >
                     <item.icon className={cn(
                       "w-5 h-5 flex-shrink-0 transition-colors",
-                      isActive ? "text-white" : "text-[#86868B] group-hover:text-[#1D1D1F]"
+                      isActive ? "text-white" : "text-[#6B6875] group-hover:text-[#17141F]"
                     )} />
-                    <span className="text-[15px] font-semibold">{item.name}</span>
-                    {item.badge && (
-                      <span className="ml-auto text-[9px] font-black px-1.5 py-0.5 rounded-md bg-white/20 text-white uppercase tracking-wider">
-                        {item.badge}
+                    <span className="text-sm font-semibold">{item.name}</span>
+                    {item.comingSoon && (
+                      <span className="ml-auto text-[8px] font-bold px-1.5 py-0.5 rounded bg-black/[0.05] text-[#86868B] uppercase tracking-wider scale-90">
+                        Soon
                       </span>
                     )}
                   </Link>
                 );
               })}
-
-              {/* Divider */}
-              <div className="my-3 h-px bg-black/[0.06] mx-3" />
-
-              <p className="text-[9px] font-black text-[#86868B] uppercase tracking-[0.18em] px-3 mb-3">
-                Account
-              </p>
-
-              {navsFooter.map((item, idx) => {
-                const isActive = pathname === item.href;
-                return (
-                  <Link
-                    key={idx}
-                    href={item.href}
-                    className={cn(
-                      "flex items-center gap-3 px-3 py-3.5 rounded-2xl transition-all duration-150 min-h-[52px]",
-                      isActive
-                        ? "bg-[#F5F5F7] text-[#1D1D1F] font-semibold"
-                        : "text-[#86868B] hover:bg-[#F5F5F7] hover:text-[#424245] active:bg-[#EBEBEB]"
-                    )}
-                  >
-                    <item.icon className="w-5 h-5 flex-shrink-0" />
-                    <span className="text-[15px] font-medium">{item.name}</span>
-                  </Link>
-                );
-              })}
-
-              {/* Upgrade CTA */}
-              <div className="pt-3 pb-2">
-                <Link
-                  href="/pricing"
-                  className="flex items-center gap-3 px-3 py-3.5 rounded-2xl bg-[#1D1D1F] text-white min-h-[52px] transition-transform active:scale-[0.98] shadow-md border border-white/10"
-                >
-                  <Crown className="w-5 h-5 text-amber-400 flex-shrink-0" />
-                  <div>
-                    <p className="text-[13px] font-bold leading-tight">Upgrade Plan</p>
-                    {!isLoading && planId === 'free' && (
-                      <p className="text-[11px] text-emerald-300/80 mt-0.5">Unlock premium features</p>
-                    )}
-                  </div>
-                  {!isLoading && planId === 'free' && (
-                    <span className="ml-auto flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-emerald-400 opacity-75" />
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-300" />
-                    </span>
-                  )}
-                </Link>
-              </div>
             </div>
 
             {/* Profile footer */}
@@ -332,10 +259,10 @@ const SidebarWithSubmenu = () => {
               <div className="flex items-center gap-3 px-3 py-2 rounded-2xl hover:bg-[#F5F5F7] transition-colors">
                 <UserDropdown />
                 <div className="flex flex-col min-w-0">
-                  <span className="text-[11px] font-black text-[#1D1D1F] uppercase tracking-[0.12em] leading-none mb-0.5">
+                  <span className="text-[11px] font-black text-[#17141F] uppercase tracking-[0.12em] leading-none mb-0.5">
                     Account
                   </span>
-                  <span className="text-[11px] font-medium text-[#86868B] truncate">
+                  <span className="text-[11px] font-medium text-[#6B6875] truncate">
                     {isLoading ? "Loading..." : `${planId.charAt(0).toUpperCase() + planId.slice(1)} Plan`}
                   </span>
                 </div>
@@ -346,130 +273,79 @@ const SidebarWithSubmenu = () => {
       </AnimatePresence>
 
       {/* ── Desktop Sidebar (lg+) ─────────────────────────────────────────── */}
-      <nav className="hidden lg:flex flex-col w-72 h-screen border-r border-black/[0.05] bg-white z-20 shadow-none">
-        <div className="flex flex-col h-full">
+      <nav className="hidden lg:flex flex-col w-[260px] h-screen border-r border-[#E7E5EF] bg-white sticky top-0 shrink-0 z-20 overflow-y-auto scrollbar-none justify-between p-6">
+        <div className="flex flex-col gap-6">
           {/* Logo */}
-          <div className="flex items-center justify-center h-[80px] border-b border-black/[0.03] shrink-0">
-            <Link href="/dashboard" className="flex items-center justify-center group w-full relative h-[40px]">
-              <Image
+          <div className="flex items-center justify-start h-14 px-2 shrink-0">
+            <Link href="/dashboard" className="flex items-center">
+              <img
                 src="/rifair-logo.png"
                 alt="Rifair AI"
-                width={200}
-                height={200}
-                className="absolute h-[140px] w-auto object-contain scale-[1.25] origin-center"
-                priority
-                onError={(e) => {
-                  const target = e.target as HTMLElement;
-                  target.style.display = 'none';
-                }}
+                className="h-12 w-auto object-contain"
               />
             </Link>
           </div>
 
-          {/* Nav */}
-          <div className="overflow-y-auto flex-1 px-4 py-4">
-            <ul className="text-sm font-medium space-y-1">
-              {navigation.map((item, idx) => {
-                const isActive = isEvaluateMode 
-                  ? item.href === "/evaluations" 
-                  : pathname === item.href;
-                return (
-                  <li key={idx}>
-                    <Link
-                      href={item.href}
-                      className={cn(
-                        "flex items-center gap-x-2 p-3 rounded-xl transition-all duration-150 min-h-[44px]",
-                        isActive
-                          ? "bg-black/[0.03] text-foreground font-semibold"
-                          : "text-gray-600 hover:text-foreground hover:bg-gray-50 active:bg-gray-100"
-                      )}
-                    >
-                      <item.icon className={cn(
-                        "w-5 h-5 flex-shrink-0",
-                        isActive ? "text-primary stroke-[2.5px]" : "text-gray-500"
-                      )} />
-                      <span className="flex-1">{item.name}</span>
-                      {item.badge && (
-                        <span className="text-[9px] font-black px-1.5 py-0.5 rounded-md bg-primary/10 text-primary uppercase tracking-wider">
-                          {item.badge}
-                        </span>
-                      )}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-
-            <div className="pt-4 mt-4 border-t border-black/[0.03]">
-              <ul className="text-sm font-medium space-y-1">
-                {navsFooter.map((item, idx) => {
-                  const isActive = pathname === item.href;
-                  return (
-                    <li key={idx}>
-                      <Link
-                        href={item.href}
-                        className={cn(
-                          "flex items-center gap-x-2 p-3 rounded-xl transition-all duration-150 min-h-[44px]",
-                          isActive
-                            ? "bg-black/[0.03] text-foreground font-semibold"
-                            : "text-gray-600 hover:text-foreground hover:bg-gray-50 active:bg-gray-100"
-                        )}
-                      >
-                        <item.icon className={cn(
-                          "w-5 h-5",
-                          isActive ? "text-primary stroke-[2.5px]" : "text-gray-500"
-                        )} />
-                        {item.name}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
+          {/* Navigation */}
+          <div className="space-y-1">
+            {navigation.map((item, idx) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={idx}
+                  href={item.comingSoon ? "#" : item.href}
+                  className={cn(
+                    "flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-150 min-h-[42px] group text-sm font-semibold",
+                    isActive
+                      ? "bg-[#17141F] text-white"
+                      : "text-[#6B6875] hover:text-[#17141F] hover:bg-[#F5F5F7] active:bg-[#EBEBEB]"
+                  )}
+                >
+                  <item.icon className={cn(
+                    "w-4.5 h-4.5 flex-shrink-0 transition-colors",
+                    isActive ? "text-white" : "text-[#6B6875] group-hover:text-[#17141F]"
+                  )} />
+                  <span className="flex-1">{item.name}</span>
+                  {item.comingSoon && (
+                    <span className="text-[8px] font-black px-1.5 py-0.5 rounded bg-black/[0.05] text-[#86868B] uppercase tracking-wider shrink-0 scale-90">
+                      Soon
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
           </div>
+        </div>
 
-          {/* Upgrade */}
-          <div className="px-4 py-2 border-t border-black/[0.03]">
-            <Link
-              href="/pricing"
-              className={cn(
-                "flex items-center gap-x-3 p-3 rounded-xl transition-all duration-150 min-h-[44px] group",
-                pathname === "/pricing"
-                  ? "bg-primary/10 text-primary font-bold"
-                  : "text-gray-600 hover:text-primary hover:bg-primary/[0.03]"
-              )}
-            >
-              <div className="relative">
-                <Crown className={cn(
-                  "w-5 h-5 transition-colors",
-                  pathname === "/pricing" ? "text-amber-500" : "text-gray-500 group-hover:text-amber-500"
-                )} />
-                {!isLoading && planId === 'free' && (
-                  <span className="absolute -top-1 -right-1 flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
-                  </span>
+        {/* Lower Cards Section */}
+        <div className="space-y-4 pt-6 border-t border-[#E7E5EF] mt-8">
+          {/* Active Workflow Card */}
+          <div className="bg-[#F8F8FB] border border-[#E7E5EF] rounded-2xl p-4 space-y-2.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold text-[#6B6875] uppercase tracking-wider">Active Workflow</span>
+              <Link href="/dashboard/workflows">
+                <ChevronDown className="w-3.5 h-3.5 text-[#6B6875] cursor-pointer hover:text-[#17141F] transition-colors" />
+              </Link>
+            </div>
+            <div className="space-y-1">
+              <p className="text-xs font-bold text-[#17141F] truncate">
+                {activeWorkflowTitle ?? "No workflows yet"}
+              </p>
+              <div className="flex items-center gap-1.5">
+                {activeWorkflowTitle ? (
+                  <>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E]" />
+                    <span className="text-[10px] font-bold text-[#22C55E] uppercase tracking-wider">Active</span>
+                  </>
+                ) : (
+                  <Link href="/dashboard/workflows/new" className="text-[10px] font-bold text-[#5B45D6] uppercase tracking-wider hover:underline">
+                    + Create one
+                  </Link>
                 )}
               </div>
-              <span className="text-sm font-medium">Upgrade Plan</span>
-            </Link>
-          </div>
-
-          {/* Profile footer */}
-          <div className="px-4 py-6 shrink-0 border-t border-black/[0.03] bg-black/[0.01]">
-            <div className="flex items-center gap-x-3 transition-opacity">
-              <div className="relative group p-1">
-                <div className="absolute inset-0 bg-primary/10 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
-                <UserDropdown />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-[11px] font-black text-foreground uppercase tracking-[0.15em] mb-0.5">Account Profile</span>
-                <span className="text-[10px] font-medium text-gray-500">
-                  {isLoading ? "Loading..." : `${planId.charAt(0).toUpperCase() + planId.slice(1)} Plan`}
-                </span>
-              </div>
             </div>
           </div>
+
         </div>
       </nav>
       <BottomNav />

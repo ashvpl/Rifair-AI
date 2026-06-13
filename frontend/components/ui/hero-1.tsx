@@ -52,13 +52,13 @@ export function HeroSection() {
 				<div className="flex flex-col items-center gap-1 md:gap-2 w-full max-w-5xl">
 					{/* Semantic SEO H1 - Visible and styled elegantly */}
 					<h1 className="text-[#86868B] text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-center mb-2">
-						AI Hiring Copilot for Structured, Fair, and Faster Recruitment
+						The Structured Hiring Platform for Modern Teams
 					</h1>
 					{/* Hero title wrapper — word-break prevention */}
 					<div className="w-full text-center flex flex-col items-center gap-2">
 						<RevealText 
-							text="The Hiring Operating System"
-							fontSize="text-2xl sm:text-4xl md:text-5xl lg:text-[64px] xl:text-[72px]"
+							text="The Structured Hiring Platform"
+							fontSize="text-2xl sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[64px]"
 							textColor="text-[#1D1D1F]"
 							overlayColor="text-indigo-700"
 							letterDelay={0.06}
@@ -66,7 +66,7 @@ export function HeroSection() {
 						/>
 						<RevealText 
 							text="for Modern Teams"
-							fontSize="text-2xl sm:text-4xl md:text-5xl lg:text-[64px] xl:text-[72px]"
+							fontSize="text-2xl sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[64px]"
 							textColor="text-[#1D1D1F]"
 							overlayColor="text-emerald-700"
 							letterDelay={0.05}
@@ -78,32 +78,39 @@ export function HeroSection() {
 				<p
 					className="fade-in slide-in-from-bottom-10 mx-auto max-w-3xl animate-in fill-mode-backwards text-center text-sm sm:text-base lg:text-lg xl:text-xl tracking-wider delay-200 duration-500 ease-out font-semibold text-[#111111]"
 				>
-					Generate interview kits, evaluate candidates with scorecards, optimize job descriptions, and detect hiring bias — all in one structured AI workflow.
+					Generate interview kits, candidate scorecards, job description improvements, and bias-aware hiring workflows — all in one AI-powered workspace.
 				</p>
 
-				<div className="fade-in slide-in-from-bottom-10 flex animate-in flex-row flex-wrap items-center justify-center gap-2 lg:gap-3 fill-mode-backwards pt-2 delay-300 duration-500 ease-out w-full max-w-xs sm:max-w-none">
-					{isSignedIn ? (
-						<Link href="/dashboard" className="w-full sm:w-auto">
-							<Button className="w-full sm:w-auto rounded-full font-bold h-10 lg:h-12 px-6 lg:px-8" size="lg">
-								Dashboard{" "}
-								<ArrowRightIcon className="size-4 ms-2" />
-							</Button>
-						</Link>
-					) : (
-						<>
-							<Link href="/sign-in?redirect_url=/kit" className="w-full sm:w-auto">
+				<div className="fade-in slide-in-from-bottom-10 flex flex-col items-center animate-in fill-mode-backwards pt-2 delay-300 duration-500 ease-out w-full">
+					<div className="flex flex-row flex-wrap items-center justify-center gap-2 lg:gap-3 w-full max-w-xs sm:max-w-none">
+						{isSignedIn ? (
+							<Link href="/dashboard" className="w-full sm:w-auto">
 								<Button className="w-full sm:w-auto rounded-full font-bold h-10 lg:h-12 px-6 lg:px-8" size="lg">
-									Start Free Hiring Audit{" "}
+									Build Your First Hiring Workflow{" "}
 									<ArrowRightIcon className="size-4 ms-2" />
 								</Button>
 							</Link>
-							<Link href="#workflow" className="w-full sm:w-auto">
-								<Button variant="outline" className="w-full sm:w-auto rounded-full font-bold h-10 lg:h-12 px-6 lg:px-8 border-black/20 hover:border-black/40" size="lg">
-									View Workflow
-								</Button>
-							</Link>
-						</>
-					)}
+						) : (
+							<>
+								<Link href="/demo" className="w-full sm:w-auto">
+									<Button className="w-full sm:w-auto rounded-full font-bold h-10 lg:h-12 px-6 lg:px-8" size="lg">
+										Try Demo
+										<ArrowRightIcon className="size-4 ms-2" />
+									</Button>
+								</Link>
+								<Link href="/sign-up" className="w-full sm:w-auto">
+									<Button variant="outline" className="w-full sm:w-auto rounded-full font-bold h-10 lg:h-12 px-6 lg:px-8 border-black/20 hover:border-black/40" size="lg">
+										Start Free
+									</Button>
+								</Link>
+							</>
+						)}
+					</div>
+					<p className="mt-4 text-[10px] sm:text-xs font-semibold text-[#86868B] tracking-wide text-center">
+						{isSignedIn
+							? "Built for recruiters, HR teams, startup founders, and hiring managers."
+							: "No signup required to try the demo."}
+					</p>
 				</div>
 			</div>
 		</section>

@@ -3,8 +3,8 @@ import { LandingPageShell } from "@/components/landing/landing-page-shell";
 import { SOCIAL_LINKS, DEFAULT_KEYWORDS } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Rifair AI | AI Interview Kits, Candidate Scorecards & Hiring Workflows",
-  description: "Rifair AI helps HR teams and startups generate interview kits, evaluate candidates with scorecards, optimize job descriptions, and detect hiring bias using AI.",
+  title: "Rifair AI | Structured Hiring Platform for Interview Kits & Scorecards",
+  description: "Rifair AI helps recruiters and HR teams generate interview kits, candidate scorecards, job description improvements, and bias-aware hiring workflows using AI.",
   keywords: DEFAULT_KEYWORDS,
   alternates: {
     canonical: "https://rifairai.com/",
@@ -16,22 +16,22 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "Rifair AI",
-    title: "Rifair AI | AI Hiring Workflow Copilot for Modern Teams",
-    description: "Generate interview kits, evaluate candidates with scorecards, optimize job descriptions, and detect hiring bias — all in one AI-powered hiring workflow.",
+    title: "Rifair AI | Structured Hiring Platform for Interview Kits & Scorecards",
+    description: "Rifair AI helps recruiters and HR teams generate interview kits, candidate scorecards, job description improvements, and bias-aware hiring workflows using AI.",
     url: "https://rifairai.com/",
     images: [
       {
         url: "https://rifairai.com/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "Rifair AI - AI Hiring Workflow Copilot",
+        alt: "Rifair AI - Structured Hiring Platform",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rifair AI | AI Interview Kits, Candidate Scorecards & Hiring Workflows",
-    description: "Generate interview kits, evaluate candidates with scorecards, optimize job descriptions, and detect hiring bias — all in one AI-powered hiring workflow.",
+    title: "Rifair AI | Structured Hiring Platform for Interview Kits & Scorecards",
+    description: "Rifair AI helps recruiters and HR teams generate interview kits, candidate scorecards, job description improvements, and bias-aware hiring workflows using AI.",
     images: ["https://rifairai.com/opengraph-image.png"],
   },
 };

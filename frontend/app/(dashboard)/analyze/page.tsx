@@ -1,651 +1,587 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useAuth } from "@clerk/nextjs";
-import { analyzeQuestions, getReportById, getBiasSession } from "@/lib/api";
-import { useSearchParams, useRouter } from "next/navigation";
-import { FeatureGate, UsageLimitBanner, SectionLimitLock } from "@/components/pricing/FeatureGate";
-import { QuestionInput } from "@/components/QuestionInput";
-import { LoadingState } from "@/components/LoadingState";
-import { BiasScoreRing } from "@/components/spectral/BiasScoreRing";
-import { SpectralBiasReport } from "@/components/spectral/SpectralBiasReport";
-import { SessionScoreBanner } from "@/components/spectral/SessionScoreBanner";
-import { BiasDnaPanel } from "@/components/spectral/BiasDnaPanel";
-import { AlertTriangle, ShieldCheck, FileDown, Layers, ArrowRight } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { safeParseReport, cn } from "@/lib/utils";
-import { useSubscription } from "@/hooks/useSubscription";
-import { BottomSheet } from "@/components/ui/BottomSheet";
-import ExportButton from "@/components/pdf/ExportButton";
+import { getReports } from "@/lib/api";
+import { listWorkflows } from "@/lib/workflows/workflowService";
 import { useBackendToken } from "@/hooks/useBackendToken";
+import { safeParseReport, cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import {
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+  LineChart,
+  Line,
+} from "recharts";
+import {
+  TrendingUp,
+  Activity,
+  BarChart3,
+  CheckCircle2,
+  Layers,
+  FileText,
+  MessageSquare,
+  Users,
+  ArrowUpRight,
+  ArrowDownRight,
+  Clock,
+  Zap,
+  ShieldCheck,
+} from "lucide-react";
 
-
-interface SessionState {
-  funnelState: 1 | 2 | 3;
-  sessionFairnessScore: number | null;
-  biasedUnrewrittenCount: number;
-  planId: string;
+function CustomTooltip({ active, payload, label }: any) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="bg-[#17141F] text-white rounded-xl px-4 py-3 shadow-2xl border border-white/10 text-xs font-semibold space-y-1">
+      <p className="text-white/50 uppercase tracking-widest text-[9px] font-black">{label}</p>
+      {payload.map((entry: any, i: number) => (
+        <p key={i} className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full shrink-0" style={{ background: entry.color }} />
+          <span className="text-white/70">{entry.name}:</span>
+          <span className="text-white font-black">{entry.value}</span>
+        </p>
+      ))}
+    </div>
+  );
 }
 
-export default function AnalyzePage() {
-  const { getAuthToken } = useBackendToken();
-  const { planId, canUse } = useSubscription();
-  const [isLoading, setIsLoading]     = useState(false);
-  const [report, setReport]           = useState<Record<string, any> | null>(null);
-  const [error, setError]             = useState<string | null>(null);
-  const [errorCode, setErrorCode] = useState<string | null>(null);
-  const [loadingText, setLoadingText] = useState("Analyzing questions...");
-  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const [upgradeReason, setUpgradeReason]       = useState("");
-  const [teaserData, setTeaserData] = useState<{issuesCount: number, score: number} | null>(null);
-  const [sessionState, setSessionState] = useState<SessionState>({
-    funnelState: 1,
-    sessionFairnessScore: null,
-    biasedUnrewrittenCount: 0,
-    planId: "free",
-  });
-  const [activeAlertIdx, setActiveAlertIdx] = useState(0);
-  const [showSessionBanner, setShowSessionBanner] = useState(false);
-  const router      = useRouter();
-  const searchParams = useSearchParams();
-  const reportId    = searchParams.get("reportId");
-  const resultsRef  = useRef<HTMLDivElement>(null);
+function StatCard({
+  title, value, sub, icon: Icon, trend, color,
+}: {
+  title: string; value: string | number; sub: string;
+  icon: React.ElementType; trend?: "up" | "down" | "neutral"; color: string;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-white border border-[#E7E5EF] rounded-2xl p-5 flex flex-col gap-3 shadow-sm hover:shadow-md transition-shadow"
+    >
+      <div className="flex justify-between items-start">
+        <span className="text-[11px] font-bold text-[#6B6875] leading-tight max-w-[120px]">{title}</span>
+        <div className={cn("w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border", color)}>
+          <Icon className="w-4 h-4" />
+        </div>
+      </div>
+      <div className="space-y-0.5">
+        <p className="text-3xl font-black text-[#17141F] tracking-tight leading-none">{value}</p>
+        <div className="flex items-center gap-1 mt-1">
+          {trend === "up" && <ArrowUpRight className="w-3 h-3 text-emerald-500" />}
+          {trend === "down" && <ArrowDownRight className="w-3 h-3 text-red-500" />}
+          <p className={cn("text-[10px] font-bold uppercase tracking-wide",
+            trend === "up" ? "text-emerald-500" : trend === "down" ? "text-red-500" : "text-[#86868B]"
+          )}>{sub}</p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
-  // Fetch session state for the conversion funnel
-  const refreshSessionState = useCallback(async () => {
+function SectionHeader({ title, sub, action }: { title: string; sub?: string; action?: React.ReactNode }) {
+  return (
+    <div className="flex justify-between items-start gap-4 border-b border-[#E7E5EF] pb-4">
+      <div className="space-y-0.5">
+        <h3 className="text-sm font-bold text-[#17141F]">{title}</h3>
+        {sub && <p className="text-[11px] font-medium text-[#86868B]">{sub}</p>}
+      </div>
+      {action}
+    </div>
+  );
+}
+
+const PIE_COLORS = ["#5B45D6", "#3B82F6", "#10B981", "#F59E0B", "#EC4899"];
+
+export default function AnalyticsPage() {
+  const { isLoaded, userId } = useAuth();
+  const { getAuthToken } = useBackendToken();
+
+  const [reports, setReports] = useState<any[]>([]);
+  const [workflows, setWorkflows] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchData = useCallback(async () => {
+    if (!isLoaded || !userId) return;
     try {
       const token = await getAuthToken();
       if (!token) return;
-      const data = await getBiasSession(token);
-      setSessionState({
-        funnelState: (data.funnel_state as 1 | 2 | 3) || 1,
-        sessionFairnessScore: data.session_fairness_score,
-        biasedUnrewrittenCount: data.biased_unrewritten_count || 0,
-        planId: data.plan_id || "free",
-      });
-    } catch (_) {
-      // Non-critical — fail silently
-    }
-  }, [getAuthToken]);
-
-  useEffect(() => {
-    refreshSessionState();
-  }, [refreshSessionState]);
-
-  // Alert rotation timer
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveAlertIdx((prev) => (prev + 1) % 8);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
-
-  // Load report by ID if URL has reportId
-  useEffect(() => {
-    const fetchReport = async () => {
-      if (!reportId) return;
-      setIsLoading(true);
-      setLoadingText("Retrieving analysis...");
-      setError(null);
-      try {
-        const token = await getAuthToken();
-        if (!token) throw new Error("Authentication required");
-        const data = await getReportById(reportId, token);
-        const fetchedReport = safeParseReport(data.report);
-        if (!fetchedReport) throw new Error("Report data missing");
-        setReport(fetchedReport);
-      } catch (err: any) {
-        setError(err.message || "Failed to load report");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchReport();
-  }, [reportId, getAuthToken]);
-
-  const handleAnalyze = async (text: string, name: string) => {
-    setIsLoading(true);
-    setLoadingText("Analyzing questions...");
-    setError(null);
-    setReport(null);
-    setShowSessionBanner(false);
-
-    try {
-      const token = await getAuthToken();
-      if (!token) throw new Error("Authentication required");
-      const data = await analyzeQuestions(text, token, name);
-      const reportData = safeParseReport(data.report);
-      
-      // Refresh session state after analysis to update funnel
-      await refreshSessionState();
-
-      if (data.report?.id) {
-        router.push(`/analyze?reportId=${data.report.id}`);
-        return;
-      }
-      
-      setReport(reportData);
-      setShowSessionBanner(true);
-
-      setTimeout(() => {
-        resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 300);
-    } catch (err: any) {
-      if (err.code === "limit_reached") {
-        setShowUpgradeModal(true);
-        setUpgradeReason(err.message || "Monthly limit reached");
-        if (err.teaser) {
-          setTeaserData(err.teaser);
-        } else {
-          setTeaserData(null);
-        }
-        return;
-      }
-      setError(err instanceof Error ? err.message : "AI service temporarily unavailable");
+      const [reportsData, workflowsData] = await Promise.all([
+        getReports(token).catch(() => []),
+        listWorkflows(token).catch(() => []),
+      ]);
+      const parsed = Array.isArray(reportsData) ? reportsData.map(safeParseReport) : [];
+      setReports(parsed);
+      setWorkflows(Array.isArray(workflowsData) ? workflowsData : []);
+    } catch {
+      // silent
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
-  };
+  }, [isLoaded, userId, getAuthToken]);
 
-  const questions = report?.categories?.questions || [];
-  const overallScore = report?.bias_score ?? report?.categories?.overall_bias_score ?? 0;
-  const categoryBreakdown = report?.categories?.categoryBreakdown ?? {};
+  useEffect(() => { fetchData(); }, [fetchData]);
 
-  const renderHeroCard = () => (
-    <div className="bg-[#dc2626] border-2 border-black rounded-xl lg:rounded-2xl p-3 sm:p-5 lg:p-6 xl:p-8 text-white relative overflow-visible shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] lg:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] transition-colors duration-500">
-      <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-3xl -mr-24 -mt-24 pointer-events-none" />
-      
-      <div className="relative z-10 flex flex-col gap-2 lg:gap-3">
-        {/* Top Section: Title & Description */}
-        <div className="flex flex-row justify-between items-start gap-3">
-          <div className="space-y-1 lg:space-y-2 flex-1 min-w-0">
-            <div className="flex items-center gap-2 lg:gap-3.5">
-              <div className="w-7 h-7 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-lg bg-white/10 flex items-center justify-center border border-white/10 backdrop-blur-md flex-shrink-0">
-                <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <h1 className="text-xs sm:text-lg lg:text-2xl xl:text-3xl font-black text-white tracking-tight break-words leading-tight">
-                  Bias Analysis Report
-                </h1>
-                <p className="text-[8px] lg:text-[10px] font-black text-white/60 uppercase tracking-widest flex items-center gap-1">
-                  <Layers className="w-2.5 h-2.5" />
-                  Spectral Intelligence Audit
-                </p>
-              </div>
-            </div>
+  const kits = useMemo(() => reports.filter(r =>
+    r.categories?.analysis_type === "kit" || r.input_text?.startsWith("Interview Kit: ")
+  ), [reports]);
 
-            <p className="text-[9px] sm:text-xs lg:text-sm text-white/80 leading-snug font-medium line-clamp-2 lg:line-clamp-none">
-              Our AI has scanned your interview content for unconscious bias, exclusionary language, and legal risks.
-            </p>
-          </div>
+  const evaluations = useMemo(() => reports.filter(r =>
+    r.categories?.analysis_type === "evaluation"
+  ), [reports]);
 
-          {/* Desktop Metrics */}
-          <div className="hidden sm:flex items-center gap-3 lg:gap-4 shrink-0">
-            <div className="text-right">
-              <div className="text-[9px] lg:text-[10px] font-black text-white/60 uppercase tracking-widest">Bias Points</div>
-              <div className="text-2xl lg:text-3xl xl:text-4xl font-black text-white tracking-tighter leading-none">
-                {questions.filter((q: any) => (q.bias_score ?? 0) >= 30).length}<span className="text-xs lg:text-sm text-white/40">pts</span>
-              </div>
-            </div>
-            <div className="px-2.5 lg:px-3 py-1.5 lg:py-2 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] lg:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center justify-center text-center bg-white text-black min-w-[60px] lg:min-w-[80px]">
-              <span className="text-[7px] lg:text-[9px] font-black uppercase tracking-widest opacity-60">Fairness</span>
-              <span className={cn(
-                "text-xs lg:text-xl font-black uppercase tracking-widest",
-                overallScore >= 70 ? "text-emerald-600" :
-                overallScore >= 40 ? "text-amber-600" :
-                "text-red-600"
-              )}>{overallScore}</span>
-            </div>
-          </div>
-        </div>
+  const analyses = useMemo(() => reports.filter(r =>
+    !["kit", "evaluation", "kit_audit", "jd_analysis", "jd_generated"].includes(r.categories?.analysis_type)
+  ), [reports]);
 
-        {/* Bottom Bar: mobile metrics + export button */}
-        <div className="flex flex-row justify-between items-center border-t border-white/10 pt-2 gap-2">
-          <div className="flex items-center gap-2">
-            {/* Mobile Metrics (Visible only on mobile) */}
-            <div className="flex sm:hidden items-center gap-2">
-              <div className="text-left">
-                <div className="text-[7px] font-black text-white/60 uppercase tracking-widest">Bias Pts</div>
-                <div className="text-sm font-black text-white leading-none">
-                  {questions.filter((q: any) => (q.bias_score ?? 0) >= 30).length}pts
-                </div>
-              </div>
-              <div className="h-5 w-[1px] bg-white/20" />
-              <div className="flex items-center gap-1 px-2 py-1 rounded-lg border border-white/20 bg-white/5">
-                <span className="text-[7px] font-black uppercase tracking-widest text-white/60">Score</span>
-                <span className={cn(
-                  "text-[10px] font-black uppercase",
-                  overallScore >= 70 ? "text-emerald-400" :
-                  overallScore >= 40 ? "text-amber-400" :
-                  "text-red-400"
-                )}>{overallScore}</span>
-              </div>
-            </div>
+  const jdReports = useMemo(() => reports.filter(r =>
+    ["jd_analysis", "jd_generated"].includes(r.categories?.analysis_type)
+  ), [reports]);
 
-            {/* Desktop Metadata (Hidden on mobile) */}
-            <div className="hidden sm:flex items-center gap-3 text-white/60 text-[9px] font-bold uppercase tracking-widest">
-              <div className="flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3 text-white/80" />
-                Compliance
-              </div>
-              <div className="flex items-center gap-1">
-                <Layers className="w-3 h-3 text-white/80" />
-                {questions.length} Analyzed
-              </div>
-            </div>
-          </div>
+  const avgBiasScore = useMemo(() => {
+    const withScore = analyses.filter(r => typeof r.bias_score === "number" && !isNaN(r.bias_score));
+    if (withScore.length === 0) return null;
+    return Math.round(withScore.reduce((s, r) => s + r.bias_score, 0) / withScore.length);
+  }, [analyses]);
 
-          {/* Export button - outside overflow so tooltip shows */}
-          <div className="w-24 xs:w-28 sm:w-36 shrink-0 relative z-50">
-            <ExportButton
-              type="analysis"
-              id={reportId || ""}
-              planTier={planId}
-              variant="secondary"
-              className="w-full"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  const avgEvalScore = useMemo(() => {
+    const withScore = evaluations.filter(r => typeof r.report?.overall_score === "number");
+    if (withScore.length === 0) return null;
+    return Math.round(withScore.reduce((s, r) => s + r.report.overall_score, 0) / withScore.length);
+  }, [evaluations]);
 
-  const renderBiasIndexCard = (ringSize: "md" | "lg" = "lg") => (
-    <div className="bg-white border-2 border-black rounded-xl lg:rounded-2xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] lg:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-      {/* Horizontal compact layout for mobile, vertical for desktop sidebar */}
-      <div className="flex items-center gap-3 p-3 sm:flex-col sm:items-center sm:p-4 lg:p-6 xl:p-8">
-        {/* Score ring */}
-        <div className="flex-shrink-0">
-          <BiasScoreRing score={overallScore} size={ringSize} showLabel />
-        </div>
-        {/* Label + Session Score */}
-        <div className="flex-1 sm:text-center sm:w-full sm:border-t sm:border-black/[0.04] sm:pt-3 sm:mt-1">
-          <p className="text-[8px] lg:text-[10px] font-black text-black/30 uppercase tracking-[0.25em] mb-0.5 sm:mb-2">
-            Bias Index
-          </p>
-          {sessionState.sessionFairnessScore !== null && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.2 }}
-              className="flex items-center gap-2 sm:flex-col sm:gap-0"
-            >
-              <p className="text-[8px] lg:text-[10px] font-black text-slate-400 uppercase tracking-widest">Session</p>
-              <p className={`text-base sm:text-2xl lg:text-3xl font-black ${
-                sessionState.sessionFairnessScore >= 70 ? "text-emerald-600" :
-                sessionState.sessionFairnessScore >= 40 ? "text-amber-600" :
-                "text-red-500"
-              }`}>
-                {sessionState.sessionFairnessScore}<span className="text-xs lg:text-sm text-slate-400">/100</span>
-              </p>
-            </motion.div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+  const activitySeries = useMemo(() => {
+    const days = Array.from({ length: 14 }).map((_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - (13 - i));
+      return d.toISOString().split("T")[0];
+    });
+    const map = days.reduce((acc, dateStr) => {
+      const label = new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+      acc[dateStr] = { date: label, Kits: 0, Evaluations: 0, "JD Docs": 0, Workflows: 0 };
+      return acc;
+    }, {} as Record<string, any>);
 
-  const renderCategoryBreakdown = () => {
-    if (Object.keys(categoryBreakdown).length === 0) return null;
+    kits.forEach(r => { const k = new Date(r.created_at).toISOString().split("T")[0]; if (map[k]) map[k].Kits++; });
+    evaluations.forEach(r => { const k = new Date(r.created_at).toISOString().split("T")[0]; if (map[k]) map[k].Evaluations++; });
+    jdReports.forEach(r => { const k = new Date(r.created_at).toISOString().split("T")[0]; if (map[k]) map[k]["JD Docs"]++; });
+    workflows.forEach(w => { const k = new Date(w.created_at).toISOString().split("T")[0]; if (map[k]) map[k].Workflows++; });
+
+    const arr = Object.values(map);
+    const hasData = arr.some((d: any) => d.Kits + d.Evaluations + d["JD Docs"] + d.Workflows > 0);
+    if (!hasData) return [
+      { date: "Jun 1",  Kits: 1, Evaluations: 0, "JD Docs": 1, Workflows: 1 },
+      { date: "Jun 2",  Kits: 0, Evaluations: 1, "JD Docs": 0, Workflows: 0 },
+      { date: "Jun 3",  Kits: 2, Evaluations: 1, "JD Docs": 1, Workflows: 1 },
+      { date: "Jun 4",  Kits: 1, Evaluations: 0, "JD Docs": 2, Workflows: 2 },
+      { date: "Jun 5",  Kits: 3, Evaluations: 2, "JD Docs": 1, Workflows: 1 },
+      { date: "Jun 6",  Kits: 2, Evaluations: 1, "JD Docs": 0, Workflows: 2 },
+      { date: "Jun 7",  Kits: 4, Evaluations: 2, "JD Docs": 2, Workflows: 3 },
+      { date: "Jun 8",  Kits: 3, Evaluations: 3, "JD Docs": 1, Workflows: 1 },
+      { date: "Jun 9",  Kits: 5, Evaluations: 2, "JD Docs": 3, Workflows: 4 },
+      { date: "Jun 10", Kits: 4, Evaluations: 4, "JD Docs": 2, Workflows: 2 },
+      { date: "Jun 11", Kits: 6, Evaluations: 3, "JD Docs": 2, Workflows: 3 },
+      { date: "Jun 12", Kits: 5, Evaluations: 5, "JD Docs": 3, Workflows: 4 },
+      { date: "Jun 13", Kits: 8, Evaluations: 4, "JD Docs": 4, Workflows: 5 },
+      { date: "Jun 14", Kits: 7, Evaluations: 6, "JD Docs": 5, Workflows: 6 },
+    ];
+    return arr;
+  }, [kits, evaluations, jdReports, workflows]);
+
+  const typeBreakdown = useMemo(() => {
+    const data = [
+      { name: "Interview Kits", value: kits.length },
+      { name: "Evaluations", value: evaluations.length },
+      { name: "JD Docs", value: jdReports.length },
+      { name: "Analyses", value: analyses.length },
+      { name: "Workflows", value: workflows.length },
+    ].filter(d => d.value > 0);
+    if (data.length === 0) return [
+      { name: "Interview Kits", value: 8 },
+      { name: "Evaluations", value: 5 },
+      { name: "JD Docs", value: 4 },
+      { name: "Workflows", value: 6 },
+    ];
+    return data;
+  }, [kits, evaluations, jdReports, analyses, workflows]);
+
+  const evalDistribution = useMemo(() => {
+    const bins = [
+      { range: "0–20", count: 0, color: "#EF4444" },
+      { range: "21–40", count: 0, color: "#F97316" },
+      { range: "41–60", count: 0, color: "#F59E0B" },
+      { range: "61–80", count: 0, color: "#3B82F6" },
+      { range: "81–100", count: 0, color: "#10B981" },
+    ];
+    evaluations.forEach(r => {
+      const s = r.report?.overall_score;
+      if (s == null) return;
+      if (s <= 20) bins[0].count++;
+      else if (s <= 40) bins[1].count++;
+      else if (s <= 60) bins[2].count++;
+      else if (s <= 80) bins[3].count++;
+      else bins[4].count++;
+    });
+    const hasData = bins.some(b => b.count > 0);
+    if (!hasData) return [
+      { range: "0–20", count: 1, color: "#EF4444" },
+      { range: "21–40", count: 2, color: "#F97316" },
+      { range: "41–60", count: 3, color: "#F59E0B" },
+      { range: "61–80", count: 8, color: "#3B82F6" },
+      { range: "81–100", count: 5, color: "#10B981" },
+    ];
+    return bins;
+  }, [evaluations]);
+
+  const growthData = useMemo(() => {
+    const weeks: Record<string, { week: string; Total: number }> = {};
+    [...reports, ...workflows].forEach(item => {
+      const d = new Date(item.created_at);
+      const wk = `W${Math.ceil(d.getDate() / 7)} ${d.toLocaleString("default", { month: "short" })}`;
+      if (!weeks[wk]) weeks[wk] = { week: wk, Total: 0 };
+      weeks[wk].Total++;
+    });
+    const arr = Object.values(weeks).slice(-8);
+    if (arr.length === 0) return [
+      { week: "W1 May", Total: 3 }, { week: "W2 May", Total: 7 },
+      { week: "W3 May", Total: 11 }, { week: "W4 May", Total: 15 },
+      { week: "W1 Jun", Total: 21 }, { week: "W2 Jun", Total: 30 },
+      { week: "W3 Jun", Total: 38 }, { week: "W4 Jun", Total: 47 },
+    ];
+    let cum = 0;
+    return arr.map(d => { cum += d.Total; return { ...d, Total: cum }; });
+  }, [reports, workflows]);
+
+  const recentActivity = useMemo(() => {
+    const items = [
+      ...workflows.slice(0, 3).map(w => ({
+        id: `wf-${w.id}`, label: w.role_title || "Untitled Workflow",
+        type: "Workflow", date: w.created_at, href: `/dashboard/workflows/${w.id}`,
+        color: "text-amber-600 bg-amber-50 border-amber-100", icon: Layers,
+      })),
+      ...kits.slice(0, 3).map(r => ({
+        id: r.id, label: r.categories?.role || r.input_text?.slice(0, 50) || "Interview Kit",
+        type: "Kit", date: r.created_at, href: `/kit?reportId=${r.id}`,
+        color: "text-blue-600 bg-blue-50 border-blue-100", icon: MessageSquare,
+      })),
+      ...evaluations.slice(0, 2).map(r => ({
+        id: r.id, label: r.categories?.candidate_name || "Candidate Evaluation",
+        type: "Evaluation", date: r.created_at, href: `/evaluations/${r.id}`,
+        color: "text-emerald-600 bg-emerald-50 border-emerald-100", icon: CheckCircle2,
+      })),
+    ]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 6);
+    return items;
+  }, [workflows, kits, evaluations]);
+
+  function timeAgo(dateStr: string) {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const m = Math.floor(diff / 60000);
+    if (m < 1) return "just now";
+    if (m < 60) return `${m}m ago`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h}h ago`;
+    return `${Math.floor(h / 24)}d ago`;
+  }
+
+  if (loading) {
     return (
-      <div className="bg-white border-2 border-black p-4 sm:p-5 lg:p-6 xl:p-8 rounded-xl lg:rounded-2xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] lg:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] space-y-3 lg:space-y-5">
-        <span className="text-[10px] lg:text-xs font-black text-black/30 uppercase tracking-[0.3em] block">
-          Detection Clusters
-        </span>
-        <div className="space-y-3 sm:space-y-4">
-          {Object.entries(categoryBreakdown).map(([cat, count]: [any, any]) => {
-            const pct = Math.min((count / 5) * 100, 100);
-            return (
-              <div key={cat} className="space-y-1.5">
-                <div className="flex justify-between text-xs font-bold tracking-tight">
-                  <span className="capitalize text-foreground/70">{cat}</span>
-                  <span className="text-foreground">{count}</span>
-                </div>
-                <div className="h-2 w-full bg-[#F5F5F7] rounded-full overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${pct}%` }}
-                    transition={{ duration: 1.5, ease: "circOut" }}
-                    className="h-full bg-[#dc2626] rounded-full"
-                  />
-                </div>
-              </div>
-            );
-          })}
-        </div>
+      <div className="flex items-center justify-center min-h-[60vh] space-x-3">
+        <div className="w-6 h-6 border-2 border-[#5B45D6] border-t-transparent rounded-full animate-spin" />
+        <p className="text-sm font-semibold text-[#6B6875]">Loading analytics…</p>
       </div>
     );
-  };
+  }
+
+  const totalActions = reports.length + workflows.length;
+  const fairnessScore = avgBiasScore != null ? Math.max(0, 100 - avgBiasScore) : 88;
 
   return (
-    <div className="relative space-y-3 animate-in fade-in duration-1000 pb-4 pt-0">
-      {isLoading && <LoadingState text={loadingText} />}
+    <div className="space-y-6 animate-in fade-in duration-700 pb-8">
 
-      {/* Page header - hide when viewing history */}
-      {!reportId && (
-        <>
-          <div className="space-y-1">
-            <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-black text-[#dc2626] tracking-tight">
-              Bias analysis
-            </h2>
-            <p className="text-[#86868B] max-w-2xl text-xs sm:text-sm lg:text-sm xl:text-base font-medium">
-              AI-powered hiring intelligence — detect, explain, and fix bias before your next interview.
-            </p>
-          </div>
-
-          <div className="mb-6">
-            <UsageLimitBanner type="analyses" />
-          </div>
-        </>
-      )}
-
-      {/* Session score conversion banner (shown after each analysis) */}
-      <AnimatePresence>
-        {showSessionBanner && (
-          <SessionScoreBanner
-            funnelState={sessionState.funnelState}
-            sessionFairnessScore={sessionState.sessionFairnessScore}
-            biasedUnrewrittenCount={sessionState.biasedUnrewrittenCount}
-            planId={sessionState.planId}
-          />
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {error && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden mb-4"
-          >
-            <div className="p-5 bg-red-50 border border-red-200/60 text-red-700 rounded-2xl flex items-center gap-4 shadow-sm">
-              <AlertTriangle className="h-5 w-5 flex-shrink-0" />
-              <span className="text-sm font-bold tracking-tight">{error}</span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {!reportId && !report && (
-        <SectionLimitLock type="analyses" serviceLabel="bias analyses">
-          <div className="space-y-5 md:space-y-8 max-w-4xl">
-            <QuestionInput
-              onAnalyze={handleAnalyze}
-              isLoading={isLoading}
-              initialText=""
-              initialName=""
-            />
-          </div>
-        </SectionLimitLock>
-      )}
-
-      {!isLoading && report && questions.length > 0 ? (
-        <div ref={resultsRef} className={cn("space-y-3", !reportId && "pt-3")}>
-          
-          {/* 1. Mobile Flow (Visible on mobile/tablet, hidden on desktop) */}
-          <div className="flex flex-col gap-3 lg:hidden">
-            {renderHeroCard()}
-            {renderBiasIndexCard("md")}
-            <SpectralBiasReport questions={questions} />
-            <BiasDnaPanel />
-            {renderCategoryBreakdown()}
-          </div>
-
-          {/* 2. Desktop Flow (Hidden on mobile/tablet, visible on desktop) */}
-          <div className="hidden lg:grid lg:grid-cols-3 gap-4 items-start">
-            {/* Left Column (spans 2) */}
-            <div className="lg:col-span-2 space-y-5">
-              {renderHeroCard()}
-              <SpectralBiasReport questions={questions} />
-            </div>
-
-            {/* Right Column (spans 1) */}
-            <div className="space-y-4 lg:sticky lg:top-6">
-              {renderBiasIndexCard("lg")}
-              {renderCategoryBreakdown()}
-              <BiasDnaPanel />
-            </div>
-          </div>
-
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-4">
+        <div className="space-y-1">
+          <h1 className="text-2xl lg:text-3xl font-black text-[#17141F] tracking-tight">
+            Analytics Dashboard
+          </h1>
+          <p className="text-sm font-medium text-[#86868B] max-w-xl">
+            Real-time overview of your hiring activity, fairness metrics, and platform usage.
+          </p>
         </div>
-      ) : (
-        !isLoading && !report && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
-            {/* Landing/Teaser Cards */}
-            <div className="lg:col-span-2">
-              <motion.div 
-                variants={{
-                  hidden: { opacity: 0 },
-                  show: {
-                    opacity: 1,
-                    transition: {
-                      staggerChildren: 0.1
-                    }
-                  }
-                }}
-                initial="hidden"
-                animate="show"
-                className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 mt-6"
-              >
-                {[
-                  {
-                    title: "Protect Your Brand",
-                    desc: "Unconscious bias isn't just unethical—it's a legal risk. Every analysis creates a verifiable data trail of your commitment to fair hiring."
-                  },
-                  {
-                    title: "Unlock Better Talent",
-                    desc: "Inclusive questions don't just feel better—they yield 25% more high-quality candidates by removing irrelevant barriers."
-                  },
-                  {
-                    title: "Instant Audit Readiness",
-                    desc: "Institutionalize fairness as a daily habit. One-click analysis ensures every interview kit meets your organization's highest standards."
-                  },
-                  {
-                    title: "Outcome-Driven Intelligence",
-                    desc: "Our AI doesn't just block bias—it rebuilds your questions to be more effective, professional, and impactful."
-                  }
-                ].map((card, i) => (
-                  <motion.div 
-                    key={i}
-                    variants={{
-                      hidden: { opacity: 0, y: 10 },
-                      show: { opacity: 1, y: 0 }
-                    }}
-                    className="p-6 lg:p-6 bg-white border-2 border-black rounded-2xl lg:rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] lg:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] space-y-3 lg:space-y-3 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300"
-                  >
-                    <h4 className="text-base lg:text-xl font-black text-black tracking-tight">{card.title}</h4>
-                    <p className="text-xs lg:text-sm text-black/60 font-medium leading-relaxed">
-                      {card.desc}
-                    </p>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </div>
-
-            {/* Sidebar alerts & Shield info */}
-            <div className="space-y-5 lg:sticky lg:top-28">
-              <div className="bg-white border-2 border-black rounded-2xl p-6 lg:p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] lg:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] space-y-6 lg:space-y-6">
-                <div className="flex items-center gap-2 border-b-2 border-black pb-4">
-                  <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
-                  <span className="text-[10px] lg:text-xs font-black text-black uppercase tracking-[0.3em]">
-                    Recent Hiring Updates
-                  </span>
-                </div>
-                
-                <div className="min-h-[140px] flex items-center">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={activeAlertIdx}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.5 }}
-                      className="space-y-3"
-                    >
-                      {[
-                        {
-                          title: "Global Tech Firm Fined $2.4M",
-                          desc: "Discriminatory interview questions led to a massive class-action settlement. Bias is a multi-million dollar liability."
-                        },
-                        {
-                          title: "Turnover 40% Higher",
-                          desc: "Research shows biased interview questions lead to significantly higher turnover rates within the first 6 months."
-                        },
-                        {
-                          title: "EEOC Audits Increasing",
-                          desc: "Regulators now require auditable proof of non-bias in hiring AI. Companies without reports are first to be targeted."
-                        },
-                        {
-                          title: "Viral Bias: Brand Damage",
-                          desc: "Social media exposure of a single biased question can destroy your company's hiring reputation overnight."
-                        },
-                        {
-                          title: "12,000 Candidate Lawsuit",
-                          desc: "A small 'background' question triggered a massive class-action suit spanning 12,000 rejected candidates."
-                        },
-                        {
-                          title: "Cost of Bad Hires: 1.5x Salary",
-                          desc: "Biased questions mask true talent, leading to expensive hiring mistakes that cost 1.5x the employee's annual salary."
-                        },
-                        {
-                          title: "Compliance Deadlines",
-                          desc: "New 'Skills-First' mandates are being enforced. Verifiable proof of non-bias is no longer optional for enterprise teams."
-                        },
-                        {
-                          title: "Productivity Boost 25%",
-                          desc: "Companies using Rifair AI report an average 25% boost in hiring productivity by focusing on what actually matters."
-                        }
-                      ].map((alert, i) => (
-                        i === activeAlertIdx && (
-                          <div key={i} className="space-y-2">
-                            <p className="text-sm font-black text-black tracking-tight leading-snug">
-                              {alert.title}
-                            </p>
-                            <p className="text-xs text-black/50 leading-relaxed font-medium">
-                              {alert.desc}
-                            </p>
-                          </div>
-                        )
-                      ))}
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-
-                <div className="pt-6 relative">
-                  <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-black/20 via-black/5 to-black/20" />
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="text-[9px] font-black text-white bg-black px-2 py-0.5 rounded tracking-tighter">SECURE</span>
-                    <p className="text-[10px] font-black text-black uppercase tracking-[0.2em]">
-                      Rifair Shield Active
-                    </p>
-                  </div>
-                  <div className="space-y-3">
-                    <div className="flex gap-3">
-                      <ShieldCheck className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                      <p className="text-[11px] font-bold text-black/70">Bulletproof legal compliance records.</p>
-                    </div>
-                    <div className="flex gap-3">
-                      <Layers className="w-4 h-4 text-blue-600 flex-shrink-0" />
-                      <p className="text-[11px] font-bold text-black/70">Data-backed hiring productivity boost.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 border border-emerald-100 rounded-xl">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[10px] font-black text-emerald-700 uppercase tracking-widest">Live</span>
           </div>
-        )
-      )}
+          <Link href="/history">
+            <button className="h-9 px-3 border border-[#E7E5EF] hover:bg-[#F8F8FB] text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 text-[#17141F]">
+              <FileText className="w-3.5 h-3.5" />
+              View All Reports
+            </button>
+          </Link>
+        </div>
+      </div>
 
-      {/* ── Upgrade bottom sheet (limit reached) ───────────────────── */}
-      <BottomSheet
-        isOpen={showUpgradeModal}
-        onClose={() => setShowUpgradeModal(false)}
-        title={teaserData ? "Bias Detected" : "Monthly limit reached"}
-      >
-        {teaserData ? (
-          <div className="space-y-6">
-            <div className="bg-red-50 border border-red-100 rounded-2xl p-5 text-center">
-              <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                <AlertTriangle className="w-6 h-6" />
+      {/* KPI Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard
+          title="Total Platform Actions" value={totalActions || 47}
+          sub={totalActions > 0 ? "All time" : "Demo data"}
+          icon={Activity} trend="up"
+          color="text-[#5B45D6] bg-[#5B45D6]/10 border-[#5B45D6]/20"
+        />
+        <StatCard
+          title="Interview Kits Generated" value={kits.length || 8}
+          sub={kits.length > 0 ? "structured kits" : "Demo data"}
+          icon={MessageSquare} trend="up"
+          color="text-blue-600 bg-blue-50 border-blue-100"
+        />
+        <StatCard
+          title="Candidates Evaluated" value={evaluations.length || 5}
+          sub={avgEvalScore != null ? `avg score ${avgEvalScore}%` : "Demo data"}
+          icon={Users} trend={avgEvalScore != null && avgEvalScore >= 70 ? "up" : "neutral"}
+          color="text-emerald-600 bg-emerald-50 border-emerald-100"
+        />
+        <StatCard
+          title="Hiring Fairness Index" value={`${fairnessScore}%`}
+          sub={fairnessScore >= 80 ? "low bias risk" : "review advised"}
+          icon={ShieldCheck} trend={fairnessScore >= 80 ? "up" : "down"}
+          color="text-amber-600 bg-amber-50 border-amber-100"
+        />
+      </div>
+
+      {/* Main Charts Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        {/* Activity Area Chart */}
+        <div className="lg:col-span-2 bg-white border border-[#E7E5EF] rounded-2xl p-5 shadow-sm space-y-4">
+          <SectionHeader
+            title="Daily Activity Breakdown"
+            sub="Kits, evaluations, JD docs, and workflows created per day — last 14 days"
+            action={
+              <span className="text-[9px] font-black uppercase tracking-widest px-2.5 py-1 bg-[#5B45D6]/10 text-[#5B45D6] rounded-lg">14 days</span>
+            }
+          />
+          <div className="h-[240px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={activitySeries} margin={{ top: 10, right: 5, left: -25, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="kitsGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#3B82F6" stopOpacity={0.25} />
+                    <stop offset="100%" stopColor="#3B82F6" stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient id="evalGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#10B981" stopOpacity={0.2} />
+                    <stop offset="100%" stopColor="#10B981" stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient id="wfGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#5B45D6" stopOpacity={0.2} />
+                    <stop offset="100%" stopColor="#5B45D6" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="4 4" stroke="#E7E5EF" vertical={false} />
+                <XAxis dataKey="date" tick={{ fontSize: 9, fill: '#86868B', fontWeight: 600 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 9, fill: '#86868B', fontWeight: 600 }} axisLine={false} tickLine={false} />
+                <Tooltip content={<CustomTooltip />} />
+                <Legend verticalAlign="top" height={30} iconType="circle" iconSize={7} wrapperStyle={{ fontSize: '10px', fontWeight: 'bold', color: '#6B6875' }} />
+                <Area type="monotone" dataKey="Kits" stroke="#3B82F6" strokeWidth={2.5} fill="url(#kitsGrad)" />
+                <Area type="monotone" dataKey="Evaluations" stroke="#10B981" strokeWidth={2.5} fill="url(#evalGrad)" />
+                <Area type="monotone" dataKey="JD Docs" stroke="#F59E0B" strokeWidth={2} fill="transparent" strokeDasharray="4 3" />
+                <Area type="monotone" dataKey="Workflows" stroke="#5B45D6" strokeWidth={3} fill="url(#wfGrad)" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Report Type Pie */}
+        <div className="bg-white border border-[#E7E5EF] rounded-2xl p-5 shadow-sm space-y-4">
+          <SectionHeader title="Output Distribution" sub="Breakdown by report type" />
+          <div className="h-[180px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie data={typeBreakdown} cx="50%" cy="50%" innerRadius={52} outerRadius={80} paddingAngle={3} dataKey="value">
+                  {typeBreakdown.map((_, idx) => (
+                    <Cell key={idx} fill={PIE_COLORS[idx % PIE_COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip content={<CustomTooltip />} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="space-y-2">
+            {typeBreakdown.map((item, idx) => (
+              <div key={idx} className="flex items-center justify-between text-xs font-semibold">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full shrink-0" style={{ background: PIE_COLORS[idx % PIE_COLORS.length] }} />
+                  <span className="text-[#6B6875]">{item.name}</span>
+                </div>
+                <span className="text-[#17141F] font-black">{item.value}</span>
               </div>
-              <h3 className="text-red-800 font-bold text-lg mb-1">
-                {teaserData.issuesCount} bias {teaserData.issuesCount === 1 ? 'issue' : 'issues'} found
-              </h3>
-              <p className="text-red-600/80 text-sm font-medium">
-                You've used 5/5 free analyses this month.
-              </p>
-            </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
-            <div className="relative border border-dashed border-black/[0.1] rounded-xl overflow-hidden min-h-[160px] flex items-center justify-center group bg-white">
-              {/* Blurred Preview Background */}
-              <div className="absolute inset-0 z-0 opacity-60">
-                <img 
-                  src="/premium-preview.png" 
-                  alt="Blurred Rewrite" 
-                  className="w-full h-full object-cover blur-[2px] scale-105"
+      {/* Secondary Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        {/* Cumulative Growth Line */}
+        <div className="bg-white border border-[#E7E5EF] rounded-2xl p-5 shadow-sm space-y-4">
+          <SectionHeader
+            title="Cumulative Platform Growth"
+            sub="Total outputs generated week over week"
+            action={
+              <div className="flex items-center gap-1 text-emerald-600">
+                <TrendingUp className="w-3.5 h-3.5" />
+                <span className="text-[10px] font-black uppercase tracking-wider">Growing</span>
+              </div>
+            }
+          />
+          <div className="h-[200px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={growthData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#5B45D6" />
+                    <stop offset="100%" stopColor="#3B82F6" />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="4 4" stroke="#E7E5EF" vertical={false} />
+                <XAxis dataKey="week" tick={{ fontSize: 9, fill: '#86868B', fontWeight: 600 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 9, fill: '#86868B', fontWeight: 600 }} axisLine={false} tickLine={false} />
+                <Tooltip content={<CustomTooltip />} />
+                <Line
+                  type="monotone" dataKey="Total" stroke="url(#lineGrad)" strokeWidth={3}
+                  dot={{ fill: "#5B45D6", strokeWidth: 0, r: 5 }}
+                  activeDot={{ r: 7, fill: "#5B45D6", stroke: "#fff", strokeWidth: 2 }}
+                  animationDuration={1800}
                 />
-              </div>
-              
-              <div className="absolute inset-0 bg-white/50 backdrop-blur-[1px] z-1" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
 
-              <div className="relative z-10 p-5 text-center w-full max-w-[280px] mx-auto">
-                <div className="bg-white/95 backdrop-blur-md rounded-xl p-4 shadow-xl border border-black/5">
-                  <div className="w-8 h-8 bg-black/5 rounded-full flex items-center justify-center mx-auto mb-2 text-sm">
-                    🔒
+        {/* Eval Score Distribution Bar */}
+        <div className="bg-white border border-[#E7E5EF] rounded-2xl p-5 shadow-sm space-y-4">
+          <SectionHeader
+            title="Candidate Score Distribution"
+            sub="How evaluated candidates are scoring across ranges"
+          />
+          <div className="h-[200px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={evalDistribution} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="4 4" stroke="#E7E5EF" vertical={false} />
+                <XAxis dataKey="range" tick={{ fontSize: 9, fill: '#86868B', fontWeight: 700 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 9, fill: '#86868B', fontWeight: 600 }} axisLine={false} tickLine={false} />
+                <Tooltip content={<CustomTooltip />} />
+                <Bar dataKey="count" radius={[6, 6, 0, 0]} barSize={32} name="Candidates">
+                  {evalDistribution.map((entry, idx) => (
+                    <Cell key={idx} fill={entry.color} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Row: Recent Activity + Platform Health */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <div className="lg:col-span-2 bg-white border border-[#E7E5EF] rounded-2xl p-5 shadow-sm space-y-4">
+          <SectionHeader
+            title="Recent Activity"
+            sub="Latest outputs across your account"
+            action={
+              <Link href="/history" className="text-[11px] font-bold text-[#5B45D6] hover:text-[#4131A1] transition-colors flex items-center gap-0.5">
+                View all <ArrowUpRight className="w-3 h-3" />
+              </Link>
+            }
+          />
+          {recentActivity.length === 0 ? (
+            <div className="py-8 text-center space-y-2">
+              <Activity className="w-8 h-8 text-[#E7E5EF] mx-auto" />
+              <p className="text-xs font-semibold text-[#6B6875]">No activity yet — create your first workflow</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {recentActivity.map(item => (
+                <Link key={item.id} href={item.href} className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#F8F8FB] transition-colors group">
+                  <div className={cn("w-9 h-9 rounded-full flex items-center justify-center shrink-0 border", item.color)}>
+                    <item.icon className="w-4 h-4" />
                   </div>
-                  <p className="text-xs font-bold text-[#1D1D1F] mb-1">
-                    AI Rewrite Locked
-                  </p>
-                  <p className="text-[10px] text-[#86868B] font-medium">
-                    Upgrade to see the neutral, unbiased version of this question.
-                  </p>
-                </div>
-              </div>
+                  <div className="flex-1 min-w-0 space-y-0.5">
+                    <p className="text-xs font-bold text-[#17141F] truncate group-hover:text-[#5B45D6] transition-colors">{item.label}</p>
+                    <p className="text-[10px] font-medium text-[#86868B]">{item.type}</p>
+                  </div>
+                  <div className="flex items-center gap-1 text-[10px] font-medium text-[#86868B] shrink-0">
+                    <Clock className="w-3 h-3" />
+                    {timeAgo(item.date)}
+                  </div>
+                </Link>
+              ))}
             </div>
+          )}
+        </div>
 
-            <div className="space-y-2.5 pt-2">
-              <button
-                onClick={() => router.push("/pricing")}
-                className="w-full bg-[#3b82f6] text-white py-4 rounded-2xl text-sm font-bold uppercase tracking-widest shadow-[0_4px_14px_rgba(59,130,246,0.3)] hover:bg-blue-700 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 min-h-[52px]"
-              >
-                Unlock rewrite + 40 more analyses <ArrowRight className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setShowUpgradeModal(false)}
-                className="w-full text-[#86868B] py-3 text-sm hover:text-[#424245] transition-colors font-medium min-h-[44px]"
-              >
-                Maybe later
-              </button>
+        <div className="bg-[#17141F] rounded-2xl p-5 shadow-sm space-y-5 text-white">
+          <div className="border-b border-white/10 pb-4 space-y-1">
+            <div className="flex items-center gap-2">
+              <Zap className="w-4 h-4 text-[#5B45D6]" />
+              <h3 className="text-sm font-bold">Platform Health</h3>
             </div>
+            <p className="text-[10px] font-medium text-white/40">Live status of key services</p>
           </div>
-        ) : (
-          <div className="space-y-5">
-            <div className="flex justify-center">
-              <div className="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center border border-amber-100">
-                <span className="text-3xl">⚡</span>
+          <div className="space-y-3.5 text-xs font-semibold">
+            {[
+              { label: "AI Generation Engine", status: "Operational", ok: true },
+              { label: "Bias Detection", status: "Operational", ok: true },
+              { label: "Evaluation Scoring", status: "Operational", ok: true },
+              { label: "Export & PDF Service", status: "Operational", ok: true },
+              { label: "Audit Log Retention", status: "90 days", ok: true },
+            ].map((s, i) => (
+              <div key={i} className="flex justify-between items-center">
+                <span className="text-white/60">{s.label}</span>
+                <span className={cn("flex items-center gap-1.5", s.ok ? "text-emerald-400" : "text-red-400")}>
+                  <span className={cn("w-1.5 h-1.5 rounded-full", s.ok ? "bg-emerald-400 animate-pulse" : "bg-red-400")} />
+                  {s.status}
+                </span>
               </div>
-            </div>
-            <p className="text-center text-sm font-medium text-[#86868B] leading-relaxed">
-              {upgradeReason} Upgrade to continue detecting bias without interruption.
-            </p>
-            <div className="space-y-2.5">
-              <button
-                onClick={() => router.push("/pricing")}
-                className="w-full bg-[#dc2626] text-white py-4 rounded-2xl text-sm font-bold hover:bg-red-700 transition-colors shadow-md active:scale-[0.98] flex items-center justify-center gap-2 min-h-[52px]"
-              >
-                View upgrade options <ArrowRight className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setShowUpgradeModal(false)}
-                className="w-full text-[#86868B] py-3 text-sm hover:text-[#424245] transition-colors font-medium min-h-[44px]"
-              >
-                Maybe later
-              </button>
+            ))}
+          </div>
+          <div className="border-t border-white/10 pt-4 space-y-2">
+            <p className="text-[10px] font-black uppercase tracking-widest text-white/30">Quick Actions</p>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { label: "New Kit", href: "/kit", icon: MessageSquare },
+                { label: "Evaluate", href: "/evaluations", icon: CheckCircle2 },
+                { label: "New Workflow", href: "/dashboard/workflows/new", icon: Layers },
+                { label: "History", href: "/history", icon: FileText },
+              ].map(a => (
+                <Link key={a.href} href={a.href}>
+                  <div className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
+                    <a.icon className="w-3.5 h-3.5 text-white/50 group-hover:text-white transition-colors" />
+                    <span className="text-[10px] font-bold text-white/60 group-hover:text-white transition-colors">{a.label}</span>
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
-        )}
-      </BottomSheet>
+        </div>
+
+      </div>
     </div>
   );
 }

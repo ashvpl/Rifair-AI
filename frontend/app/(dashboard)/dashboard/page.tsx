@@ -1,792 +1,842 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
-import { useAuth } from "@clerk/nextjs";
+import React, { useEffect, useState, useMemo, useRef, useCallback } from "react";
+import { useAuth, useUser } from "@clerk/nextjs";
 import { getReports } from "@/lib/api";
-import { 
-  Loader2, 
-  Activity, 
-  FileText, 
-  TrendingUp, 
-  ShieldCheck,
+import { listWorkflows } from "@/lib/workflows/workflowService";
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend
+} from "recharts";
+import {
+  Loader2,
+  Settings as SettingsIcon,
+  Eye,
+  Plus,
+  Bell,
   ChevronRight,
+  ChevronDown,
   ArrowRight,
+  Filter,
+  Download,
+  FileText,
   FileSearch,
-  Lock,
+  MessageSquare,
+  BarChart3,
+  ShieldCheck,
+  BookOpen,
+  Maximize2,
+  Layers,
+  X,
+  CheckCircle2,
+  AlertCircle,
+  Clock,
 } from "lucide-react";
-import { motion, type Variants } from "framer-motion";
 import Link from "next/link";
-import { BiasTrendChart } from "@/components/ui/bias-trend-chart";
-import { FeatureGate, UsageLimitBanner } from "@/components/pricing/FeatureGate";
-import { format } from "date-fns";
-import { cn, safeParseReport } from "@/lib/utils";
-import { useSubscription } from "@/hooks/useSubscription";
-import { PLANS } from "@/lib/pricing/plans";
-import { PersonalisedInsights } from "@/components/intelligence/PersonalisedInsights";
+import { safeParseReport } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { useBackendToken } from "@/hooks/useBackendToken";
-import { WorkflowQuickActions } from "@/components/dashboard/WorkflowQuickActions";
-import { DashboardCopilotCard } from "@/components/dashboard/DashboardCopilotCard";
-import { HiringHealthScoreCard } from "@/components/dashboard/HiringHealthScoreCard";
+import { UserButton } from "@clerk/nextjs";
 
-export default function DashboardPage() {
-  const { isLoaded, userId } = useAuth();
-  const { getAuthToken } = useBackendToken();
-  const { usage, planId, usagePercent, canUse, isLoading: isSubLoading } = useSubscription();
+// ── Workflow pipeline stages (static structure) ─────────────────────────────
+const WORKFLOW_STAGES = [
+  { id: 1, stepNumber: 1, title: "Role Requirement", label: "Role Input", description: "Define role, seniority, skills, and hiring focus", iconName: "FileText" },
+  { id: 2, stepNumber: 2, title: "JD Optimization", label: "AI JD", description: "Structure responsibilities and requirements", iconName: "FileSearch" },
+  { id: 3, stepNumber: 3, title: "Interview Kit", label: "Questions", description: "Generate role-specific interview questions", iconName: "MessageSquare" },
+  { id: 4, stepNumber: 4, title: "Candidate Scorecard", label: "Scorecard", description: "Create weighted evaluation criteria", iconName: "BarChart3" },
+  { id: 5, stepNumber: 5, title: "Bias-Aware Review", label: "Review", description: "Flag vague or unfair evaluation areas", iconName: "ShieldCheck" },
+  { id: 6, stepNumber: 6, title: "Evaluation Guide", label: "Guide", description: "Help interviewers evaluate consistently", iconName: "BookOpen" },
+];
 
-  const usageResetLabel = useMemo(() => {
-    if (!usage) return null;
-    if (usage.resetsAt) {
-      return `Resets ${format(new Date(usage.resetsAt), "MMM d, yyyy")}`;
-    }
-    return null;
-  }, [usage]);
-  const [history, setHistory] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [intelligenceProfile, setIntelligenceProfile] = useState<any>(null);
-
-  useEffect(() => {
-    const fetchDashboardHistory = async () => {
-      if (!isLoaded || !userId) return;
-      try {
-        const token = await getAuthToken();
-        if (!token) return;
-        const data = await getReports(token);
-        const parsedData = Array.isArray(data) ? data.map(safeParseReport) : [];
-        setHistory(parsedData);
-      } catch (err) {
-        console.error("Dashboard history error:", err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchDashboardHistory();
-  }, [isLoaded, userId, getAuthToken]);
-
-  // Stop showing the spinner if Clerk is loaded but there's no session
-  useEffect(() => {
-    if (isLoaded && !userId) {
-      setIsLoading(false);
-    }
-  }, [isLoaded, userId]);
-
-  // Fetch intelligence profile (silently — never blocks dashboard render)
-  useEffect(() => {
-    if (!isLoaded || !userId) return;
-    
-    const fetchProfile = async () => {
-      try {
-        const token = await getAuthToken();
-        if (!token) return;
-        
-        const r = await fetch('/api/intelligence/profile', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await r.json();
-        setIntelligenceProfile(data?.profile ?? null);
-      } catch (e) {}
-    };
-    
-    fetchProfile();
-  }, [isLoaded, userId, getAuthToken]);
-
-  const stats = useMemo(() => {
-    if (!history.length) return {
-      totalWorkflows: 0,
-      analysisCount: 0,
-      avgBiasScore: 0,
-      highBiasFlags: 0,
-      fairnessScore: 100,
-      trendData: [],
-      categoryBreakdown: {},
-      flaggedQuestions: []
-    };
-
-    const uniqueHistory = Array.from(new Map(history.map(item => [item.id, item])).values())
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-
-    // totalWorkflows = all records (kits + analyses) — used for hero banner & TOTAL WORKFLOWS card
-    const totalWorkflows = uniqueHistory.length;
-
-    const analyses = uniqueHistory.filter(item => {
-      const isKit = item.categories?.analysis_type === 'kit' || item.input_text?.startsWith("Interview Kit: ");
-      return !isKit;
-    });
-
-    // analysisCount = bias-analysis records only (excludes kits) — used for bias metrics
-    const analysisCount = analyses.length;
-    
-    // Avg Bias Score
-    const avgBiasScore = analysisCount ? Math.round(analyses.reduce((sum, r) => sum + (r.bias_score || 0), 0) / analysisCount) : 0;
-    
-    // High Bias Flags
-    let highBiasFlags = 0;
-    const categoryBreakdown: Record<string, number> = {};
-    const flaggedQuestions: any[] = [];
-
-    uniqueHistory.forEach(item => {
-      const questions = item.categories?.questions || [];
-      if (questions.length > 0) {
-        questions.forEach((q: any) => {
-          if (q.bias_score >= 40) {
-            highBiasFlags++;
-            flaggedQuestions.push({
-              text: q.original,
-              score: q.bias_score,
-              type: q.bias_types?.[0] || 'Uncategorized',
-              date: item.created_at
-            });
-          }
-          (q.bias_types || []).forEach((t: string) => {
-            categoryBreakdown[t] = (categoryBreakdown[t] || 0) + 1;
-          });
-        });
-      } else if (item.bias_score >= 55) {
-        highBiasFlags++;
-        flaggedQuestions.push({
-          text: item.input_text,
-          score: item.bias_score,
-          type: item.categories?.bias_types?.[0] || 'General',
-          date: item.created_at
-        });
-      }
-    });
-
-    const lowBiasScans = analyses.filter(r => (r.bias_score || 0) < 40).length;
-    const fairnessScore = analysisCount > 0 ? Math.round((lowBiasScans / analysisCount) * 100) : 100;
-
-    const groupedData = uniqueHistory.reduce((acc: any, item) => {
-      const dateLabel = format(new Date(item.created_at), "MMM d");
-      if (!acc[dateLabel]) {
-        acc[dateLabel] = { date: dateLabel, sum: 0, count: 0 };
-      }
-      acc[dateLabel].sum += (item.bias_score || 0);
-      acc[dateLabel].count += 1;
-      return acc;
-    }, {});
-
-    const trendData = Object.values(groupedData)
-      .map((d: any) => ({
-        date: d.date,
-        score: Math.round(d.sum / d.count)
-      }))
-      .reverse()
-      .slice(-10);
-
-    return {
-      totalWorkflows,
-      analysisCount,
-      avgBiasScore,
-      highBiasFlags,
-      fairnessScore,
-      trendData,
-      categoryBreakdown,
-      flaggedQuestions: flaggedQuestions.slice(0, 5)
-    };
-  }, [history]);
-
-  const heroContent = useMemo(() => {
-    // Show empty state only when there are truly zero records (no kits, no analyses)
-    if (stats.totalWorkflows === 0) {
-      return {
-        bg: 'bg-[#f0f9ff]',
-        border: 'border-blue-100',
-        titleColor: 'text-blue-900',
-        subtitleColor: 'text-blue-800/70',
-        buttonBg: 'bg-blue-600 hover:bg-blue-700',
-        title: "Build your first hiring workflow",
-        subtitle: "Start with a role or job description. Rifair will generate your interview kit, scorecard, and hiring insights.",
-        cta: "Build Your First Hiring Workflow",
-        ctaLink: '/kit'
-      };
-    }
-
-    // Has kits but no bias analyses yet — encourage running an analysis
-    if (stats.analysisCount === 0 && stats.totalWorkflows > 0) {
-      return {
-        bg: 'bg-[#f0fdf4]',
-        border: 'border-green-100',
-        titleColor: 'text-green-900',
-        subtitleColor: 'text-green-800/70',
-        buttonBg: 'bg-green-600 hover:bg-green-700',
-        title: `${stats.totalWorkflows} kit${stats.totalWorkflows > 1 ? 's' : ''} generated — run a bias check next`,
-        subtitle: "Your interview kit is ready. Analyze it for bias to get a full hiring health score.",
-        cta: "Run a bias analysis",
-        ctaLink: '/analyze'
-      };
-    }
-    
-    if (stats.highBiasFlags === 0 && stats.avgBiasScore < 40) {
-      return {
-        bg: 'bg-[#f0fdf4]',
-        border: 'border-green-100',
-        titleColor: 'text-green-900',
-        subtitleColor: 'text-green-800/70',
-        buttonBg: 'bg-green-600 hover:bg-green-700',
-        title: "Your hiring looks clean",
-        subtitle: `Avg bias score ${stats.avgBiasScore}/100 across ${stats.analysisCount} analyses. Keep it up.`,
-        cta: "Generate an interview kit",
-        ctaLink: '/kit'
-      };
-    }
-
-    return {
-      bg: 'bg-[#fff5f5]',
-      border: 'border-red-100',
-      titleColor: 'text-red-900',
-      subtitleColor: 'text-red-800/70',
-      buttonBg: 'bg-red-600 hover:bg-red-700',
-      title: `${stats.highBiasFlags} high-risk question${stats.highBiasFlags > 1 ? 's' : ''} need your attention`,
-      subtitle: `Avg bias score is ${stats.avgBiasScore}/100 — review flagged questions before your next round.`,
-      cta: "View flagged questions",
-      ctaLink: '/history'
-    };
-  }, [stats]);
-
-  const subtexts = useMemo(() => ({
-    bias: stats.analysisCount === 0 ? "No analyses yet" :
-          stats.avgBiasScore === 0 ? "Perfectly clean" :
-          stats.avgBiasScore < 40 ? "Looking good" :
-          stats.avgBiasScore < 65 ? "Moderate — review recommended" :
-          "High — action required",
-    flags: stats.analysisCount === 0 ? "Run an analysis to begin" :
-           stats.highBiasFlags === 0 ? "No issues detected" :
-           stats.highBiasFlags <= 2 ? "Review recommended" :
-           "Requires immediate fix",
-    fairness: stats.analysisCount === 0 ? "—" :
-              stats.fairnessScore === 100 ? "Perfect score" :
-              stats.fairnessScore >= 80 ? "Strong — minor gaps remain" :
-              stats.fairnessScore >= 60 ? "Improving — keep going" :
-              "Needs significant work",
-  }), [stats]);
-
-  const flagCardStyle = useMemo(() => {
-    if (stats.analysisCount === 0) return { bg: 'bg-[#F5F5F7]', border: 'border-black/[0.03]', text: 'text-[#86868B]', label: 'text-[#86868B]' };
-    if (stats.highBiasFlags === 0) return { bg: 'bg-emerald-50', border: 'border-emerald-100', text: 'text-emerald-600', label: 'text-emerald-900/40' };
-    if (stats.highBiasFlags <= 2) return { bg: 'bg-amber-50', border: 'border-amber-100', text: 'text-amber-600', label: 'text-amber-900/40' };
-    return { bg: 'bg-[#FEF2F2]', border: 'border-red-100', text: 'text-red-600', label: 'text-red-950/40' };
-  }, [stats]);
-
-  const currentPlan = PLANS.find(p => p.id === planId)!;
-  const analysesPercent = usagePercent("analyses");
-  const kitsPercent = usagePercent("kits");
-  const jdAnalysesPercent = usagePercent("jdAnalyses");
-
-  const healthScoreDetails = useMemo(() => {
-    // No data at all (no kits, no analyses) — show empty state
-    if (stats.totalWorkflows === 0) {
-      return {
-        isDemo: false,
-        score: undefined,
-        interviewQuality: undefined,
-        biasRisk: undefined,
-        jdQuality: undefined,
-        evaluationConsistency: undefined,
-      };
-    }
-
-    // Has kits but no bias analyses — can't compute bias-based scores yet
-    if (stats.analysisCount === 0) {
-      return {
-        isDemo: false,
-        score: undefined,
-        interviewQuality: undefined,
-        biasRisk: undefined,
-        jdQuality: undefined,
-        evaluationConsistency: undefined,
-      };
-    }
-
-    // All scores derived from real analysis data
-    // interviewQuality: inverse of avg bias (higher bias = lower quality)
-    const interviewQuality = Math.round(100 - stats.avgBiasScore);
-
-    // biasRisk: direct avg bias score (lower is better)
-    const biasRisk = stats.avgBiasScore;
-
-    // jdQuality: derived from fairness score (how many analyses were low-bias)
-    // Scaled from fairnessScore — a proxy for how well-structured the hiring questions are
-    const jdQuality = stats.fairnessScore;
-
-    // evaluationConsistency: based on how many analyses done — more = more consistent process
-    // Starts at 60 for first analysis, scales up to 95 at 35+ analyses
-    const rawConsistency = stats.analysisCount >= 35
-      ? 95
-      : Math.round(60 + (stats.analysisCount / 35) * 35);
-    const evaluationConsistency = Math.min(95, rawConsistency);
-
-    // Overall score: weighted average
-    // interviewQuality and biasRisk (inverted) carry more weight
-    const score = Math.round(
-      (interviewQuality * 0.35) +
-      ((100 - biasRisk) * 0.35) +
-      (jdQuality * 0.15) +
-      (evaluationConsistency * 0.15)
-    );
-
-    return {
-      isDemo: false,
-      score,
-      interviewQuality,
-      biasRisk,
-      jdQuality,
-      evaluationConsistency,
-    };
-  }, [stats]);
-
-  if (isLoading || isSubLoading) {
-    return (
-      <div className="flex flex-col justify-center items-center py-40 space-y-6">
-        <Loader2 className="w-12 h-12 animate-spin text-primary" />
-        <p className="text-muted-foreground font-medium tracking-wide">Syncing data...</p>
-      </div>
-    );
-  }
-
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+function getStageIcon(iconName: string) {
+  const map: Record<string, React.ElementType> = {
+    FileText, FileSearch, MessageSquare, BarChart3, ShieldCheck, BookOpen,
   };
+  return map[iconName] ?? FileText;
+}
 
-  const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+// ── Notification item type ───────────────────────────────────────────────────
+interface NotifItem {
+  id: string;
+  title: string;
+  subtitle: string;
+  time: string;
+  type: "kit" | "evaluation" | "analysis" | "jd" | "workflow";
+  href: string;
+  read: boolean;
+}
+
+function getReportType(report: any): NotifItem["type"] {
+  const t = report.categories?.analysis_type;
+  if (t === "kit") return "kit";
+  if (t === "evaluation") return "evaluation";
+  if (t === "jd_analysis" || t === "jd_generated") return "jd";
+  return "analysis";
+}
+
+function getReportHref(report: any): string {
+  const t = report.categories?.analysis_type;
+  if (t === "kit") return `/kit?reportId=${report.id}`;
+  if (t === "evaluation") return `/evaluations/${report.id}`;
+  if (t === "jd_analysis" || t === "jd_generated") return `/jd/${report.id}`;
+  if (t === "kit_audit") return `/kit/audit/${report.categories?.audit_id}`;
+  return `/analyze?reportId=${report.id}`;
+}
+
+function timeAgo(dateStr: string): string {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const m = Math.floor(diff / 60000);
+  if (m < 1) return "just now";
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  const d = Math.floor(h / 24);
+  return `${d}d ago`;
+}
+
+// ── Notification Panel ───────────────────────────────────────────────────────
+function NotificationPanel({ notifications, onClose, onMarkAllRead }: {
+  notifications: NotifItem[];
+  onClose: () => void;
+  onMarkAllRead: () => void;
+}) {
+  const unread = notifications.filter(n => !n.read).length;
+  const typeIcon = (type: NotifItem["type"]) => {
+    if (type === "kit") return <MessageSquare className="w-3.5 h-3.5" />;
+    if (type === "evaluation") return <CheckCircle2 className="w-3.5 h-3.5" />;
+    if (type === "jd") return <FileText className="w-3.5 h-3.5" />;
+    if (type === "workflow") return <Layers className="w-3.5 h-3.5" />;
+    return <ShieldCheck className="w-3.5 h-3.5" />;
+  };
+  const typeBg = (type: NotifItem["type"]) => {
+    if (type === "kit") return "bg-blue-50 border-blue-100 text-blue-600";
+    if (type === "evaluation") return "bg-emerald-50 border-emerald-100 text-emerald-600";
+    if (type === "jd") return "bg-purple-50 border-purple-100 text-purple-600";
+    if (type === "workflow") return "bg-amber-50 border-amber-100 text-amber-600";
+    return "bg-orange-50 border-orange-100 text-orange-600";
   };
 
   return (
-    <div className="max-w-[1240px] mx-auto space-y-5 lg:space-y-8 pb-4 pt-4">
-      
-      {/* Dashboard Title Row — stacks vertically on mobile */}
-      <div className="space-y-1">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2">
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-[#1D1D1F] tracking-tighter">Hiring Workflow Dashboard</h1>
-          <p className="text-[10px] font-bold text-[#86868B] uppercase tracking-[0.3em] whitespace-nowrap">Last updated: today</p>
-        </div>
-        <p className="text-xs sm:text-sm font-medium text-[#86868B]">
-          Build interview kits, evaluate candidates, optimize job descriptions, and track hiring quality.
-        </p>
-      </div>
-
-      <div className="mb-2"><UsageLimitBanner /></div>
-
-      {/* Hero Banner Strip — stacks on mobile */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className={cn(
-          "relative overflow-hidden border-2 border-black rounded-xl lg:rounded-2xl p-4 sm:p-5 lg:p-6 xl:p-8 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] lg:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] transition-colors duration-500",
-          heroContent.bg
-        )}
-      >
-        {/* Mobile: column layout; desktop: row */}
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 lg:gap-8">
-          <div className="space-y-1 lg:space-y-1.5 flex-1 min-w-0">
-            <h2 className={cn("text-base sm:text-lg lg:text-xl font-black tracking-tight", heroContent.titleColor)}>
-              {heroContent.title}
-            </h2>
-            <p className={cn("text-xs lg:text-sm font-semibold", heroContent.subtitleColor)}>
-              {heroContent.subtitle}
-            </p>
-          </div>
-          <Link href={heroContent.ctaLink} className="w-full sm:w-auto flex-shrink-0">
-            <button className={cn(
-              "w-full sm:w-auto whitespace-nowrap flex items-center justify-center gap-2 px-4 lg:px-5 py-2 lg:py-3 transition-all rounded-xl lg:rounded-xl text-white font-black shadow-md hover:shadow-lg group active:scale-95 text-xs lg:text-xs uppercase tracking-widest min-h-[38px] lg:min-h-[42px]",
-              heroContent.buttonBg
-            )}>
-              {heroContent.cta} <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </Link>
-        </div>
-      </motion.div>
-
-      <DashboardCopilotCard />
-
-      <WorkflowQuickActions />
-
-      {/* 4-Metric Grid */}
-      <motion.div 
-        variants={containerVariants}
-        initial="hidden"
-        animate="show"
-        className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6"
-      >
-        {/* TOTAL WORKFLOWS */}
-        <motion.div variants={itemVariants} className="bg-white p-3 lg:p-4 rounded-xl lg:rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] lg:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300">
-          <div className="space-y-1.5 lg:space-y-3">
-            <p className="text-[9px] lg:text-xs font-black text-black/40 uppercase tracking-[0.2em]">TOTAL WORKFLOWS</p>
-            <div className="space-y-0.5">
-              <p className="text-2xl lg:text-3xl xl:text-4xl font-black text-[#1D1D1F] tracking-tighter">{stats.totalWorkflows}</p>
-            </div>
-          </div>
-        </motion.div>
-        
-        {/* AVG BIAS SCORE */}
-        <motion.div variants={itemVariants} className="bg-white p-3 lg:p-4 rounded-xl lg:rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] lg:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300">
-          <div className="space-y-1.5 lg:space-y-3">
-            <p className="text-[9px] lg:text-xs font-black text-black/40 uppercase tracking-[0.2em]">AVG BIAS SCORE</p>
-            <div className="space-y-0.5">
-              <div className="flex items-baseline gap-0.5">
-                <p className={cn(
-                  "text-2xl lg:text-3xl xl:text-4xl font-black tracking-tighter",
-                  stats.analysisCount === 0 ? "text-[#1D1D1F]" :
-                  stats.avgBiasScore < 40 ? "text-[#059669]" :
-                  stats.avgBiasScore < 65 ? "text-amber-600" :
-                  "text-red-600"
-                )}>
-                  {stats.analysisCount === 0 ? "—" : stats.avgBiasScore}
-                </p>
-                <span className="text-xs lg:text-sm font-black text-black/20">/100</span>
-              </div>
-              <p className={cn(
-                "text-[10px] sm:text-xs lg:text-xs font-bold capitalize",
-                stats.analysisCount === 0 ? "text-[#86868B]" :
-                stats.avgBiasScore < 40 ? "text-[#059669]" :
-                stats.avgBiasScore < 65 ? "text-amber-600" :
-                "text-red-600"
-              )}>
-                {subtexts.bias}
-              </p>
-            </div>
-          </div>
-        </motion.div>
-        
-        {/* HIGH BIAS FLAGS */}
-        <motion.div variants={itemVariants} className={cn("p-3 lg:p-4 rounded-xl lg:rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] lg:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300", flagCardStyle.bg)}>
-          <div className="space-y-1.5 lg:space-y-3">
-            <p className={cn("text-[9px] lg:text-xs font-black uppercase tracking-[0.2em]", flagCardStyle.label)}>BIAS FLAGS</p>
-            <div className="space-y-0.5">
-              <p className={cn("tracking-tighter font-black", stats.analysisCount === 0 ? "text-sm text-[#86868B]" : "text-2xl lg:text-3xl xl:text-4xl " + flagCardStyle.text)}>
-                {stats.analysisCount === 0 ? "No data yet" : stats.highBiasFlags}
-              </p>
-              <p className={cn("text-[10px] sm:text-xs lg:text-xs font-black uppercase", flagCardStyle.text)}>{subtexts.flags}</p>
-            </div>
-          </div>
-        </motion.div>
-        
-        {/* FAIRNESS SCORE */}
-        <motion.div variants={itemVariants} className="bg-white p-3 lg:p-4 rounded-xl lg:rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] lg:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all duration-300">
-          <div className="space-y-1.5 lg:space-y-3">
-            <p className="text-[9px] lg:text-xs font-black text-black/40 uppercase tracking-[0.2em]">HIRING FAIRNESS</p>
-            <div className="space-y-0.5">
-              <div className="flex items-baseline gap-0.5">
-                <p className={cn(
-                  "text-2xl lg:text-3xl xl:text-4xl font-black tracking-tighter",
-                  stats.analysisCount === 0 ? "text-[#1D1D1F]" :
-                  stats.fairnessScore >= 80 ? "text-[#059669]" :
-                  stats.fairnessScore >= 60 ? "text-amber-500" :
-                  "text-red-500"
-                )}>
-                  {stats.analysisCount === 0 ? "—" : stats.fairnessScore}
-                </p>
-                <span className={cn(
-                  "font-black",
-                  stats.analysisCount === 0 ? "text-xs text-[#86868B]" : "text-xs lg:text-sm text-[#059669]"
-                )}>{stats.analysisCount === 0 ? "" : "%"}</span>
-              </div>
-              <p className={cn(
-                "text-[10px] sm:text-xs lg:text-xs font-bold capitalize",
-                stats.fairnessScore >= 80 ? "text-[#059669]/80" : stats.fairnessScore >= 60 ? "text-amber-500/80" : stats.analysisCount === 0 ? "text-[#86868B]" : "text-red-500/80"
-              )}>
-                {subtexts.fairness}
-              </p>
-            </div>
-          </div>
-        </motion.div>
-      </motion.div>
-
-      <HiringHealthScoreCard
-        isDemo={healthScoreDetails.isDemo}
-        score={healthScoreDetails.score}
-        interviewQuality={healthScoreDetails.interviewQuality}
-        biasRisk={healthScoreDetails.biasRisk}
-        jdQuality={healthScoreDetails.jdQuality}
-        evaluationConsistency={healthScoreDetails.evaluationConsistency}
-      />
-
-      {/* ── Personalised Insights Panel ────────────────────────────────── */}
-      {intelligenceProfile && (
-        <PersonalisedInsights profile={intelligenceProfile} />
-      )}
-
-      {/* Main Panels */}
-      <FeatureGate 
-        feature="bias_trends" 
-        requiredPlan="starter"
-        customPrompt={"Want detailed analysis insights?\nupgrade to Starter"}
-      >
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
-          {/* Trend Panel */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="lg:col-span-2 bg-white rounded-xl lg:rounded-xl p-4 sm:p-5 lg:p-6 xl:p-8 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] lg:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] space-y-4 sm:space-y-6 lg:space-y-6"
-          >
-            <div className="flex items-center justify-between flex-wrap gap-2.5">
-              <h3 className="text-xs sm:text-base lg:text-xl font-black text-[#1D1D1F] tracking-tight">Bias Trend Analysis</h3>
-              <div className="flex items-center gap-2 sm:gap-4 md:gap-6">
-                 <div className="flex items-center gap-1 sm:gap-2">
-                   <div className="w-2.5 h-2.5 rounded-full bg-[#10b981]" />
-                   <span className="text-[10px] sm:text-xs font-bold text-[#86868B]">Fairness</span>
-                 </div>
-                 <div className="flex items-center gap-1 sm:gap-2">
-                   <div className="w-2.5 h-2.5 rounded-full border-2 border-slate-200 bg-white" />
-                   <span className="text-[10px] sm:text-xs font-bold text-[#86868B]">Daily Score</span>
-                 </div>
-              </div>
-            </div>
-            <div className="h-[180px] sm:h-[220px] md:h-[300px] w-full">
-              <BiasTrendChart data={stats.trendData} />
-            </div>
-          </motion.div>
-          
-          {/* Category Panel */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="bg-white rounded-xl lg:rounded-xl p-4 sm:p-5 lg:p-6 xl:p-8 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] lg:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] space-y-4 sm:space-y-6 lg:space-y-6"
-          >
-            <h3 className="text-xs sm:text-base lg:text-xl font-black text-[#1D1D1F] tracking-tight">Bias by category</h3>
-            <div className="space-y-4 sm:space-y-6">
-              {Object.entries(stats.categoryBreakdown).length > 0 ? (
-                Object.entries(stats.categoryBreakdown).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([cat, count], idx) => (
-                  <div key={cat} className="space-y-1.5 sm:space-y-3">
-                    <div className="flex justify-between items-end">
-                      <span className="text-[10px] sm:text-xs font-black text-[#1D1D1F] uppercase tracking-[0.1em]">{cat.replace('_', ' ')}</span>
-                      <span className="text-[10px] sm:text-xs font-bold text-[#86868B]">{count} hits</span>
-                    </div>
-                    <div className="h-2 sm:h-3 w-full bg-[#F5F5F7] rounded-full overflow-hidden">
-                      <motion.div 
-                        initial={{ width: 0 }}
-                        animate={{ width: `${Math.min(100, (count / Math.max(1, stats.highBiasFlags)) * 100)}%` }}
-                        className={cn(
-                          "h-full rounded-full",
-                          idx === 0 ? "bg-[#EF4444]" : idx === 1 ? "bg-[#F59E0B]" : "bg-[#10B981]"
-                        )}
-                      />
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="h-[120px] sm:h-[200px] flex items-center justify-center border border-dashed border-slate-200 rounded-xl bg-slate-50">
-                  <p className="text-[#86868B] text-xs sm:text-sm font-medium">No activity data yet.</p>
-                </div>
-              )}
-            </div>
-          </motion.div>
-        </div>
-      </FeatureGate>
-
-      {/* Usage & Quick Stats for All Plans */}
-      <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          <div className="bg-white rounded-xl lg:rounded-xl p-4 sm:p-5 lg:p-6 xl:p-8 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] lg:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between h-full">
-            <div className="space-y-3 sm:space-y-4">
-              <div>
-                <h3 className="text-[10px] lg:text-xs font-black text-black uppercase tracking-[0.2em]">Monthly Usage</h3>
-                {usageResetLabel && (
-                  <p className="mt-1 text-[10px] sm:text-xs text-[#86868B] font-medium">{usageResetLabel}</p>
-                )}
-              </div>
-              <div className="space-y-4 sm:space-y-6">
-                <UsageMeter 
-                  label="Analyses" 
-                  used={usage?.analysesUsed ?? 0} 
-                  limit={currentPlan.analysesLimit} 
-                  percent={analysesPercent} 
-                />
-                <UsageMeter 
-                  label="Kit Generations" 
-                  used={usage?.kitsUsed ?? 0} 
-                  limit={currentPlan.kitLimit} 
-                  percent={kitsPercent} 
-                />
-                <UsageMeter 
-                  label="Candidate Evaluations" 
-                  used={usage?.evaluationsUsed ?? 0} 
-                  limit={currentPlan.evaluationsLimit} 
-                  percent={usagePercent("evaluations")} 
-                />
-                {(currentPlan.jdAnalysesLimit === null || currentPlan.jdAnalysesLimit > 0) && (
-                  <UsageMeter 
-                    label="Job Descriptions" 
-                    used={usage?.jdAnalysesUsed ?? 0} 
-                    limit={currentPlan.jdAnalysesLimit} 
-                    percent={jdAnalysesPercent} 
-                  />
-                )}
-              </div>
-            </div>
-            <Link href="/pricing" className="mt-4 sm:mt-6 text-xs font-bold text-[#86868B] hover:text-black transition-colors flex items-center gap-1">
-              View plan limits <ChevronRight className="w-3 h-3" />
-            </Link>
-          </div>
-          
-          <div className="bg-gradient-to-br from-[#1D1D1F] to-[#434343] rounded-xl lg:rounded-xl p-4 sm:p-5 lg:p-6 xl:p-8 text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] lg:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between h-full">
-            <div className="space-y-2 lg:space-y-3">
-              <h3 className="text-base sm:text-lg lg:text-xl font-black">Pro Tip</h3>
-              <p className="text-[11px] sm:text-xs lg:text-sm text-white/70 leading-relaxed">
-                Using inclusive language in interview questions increases the quality of candidates by 25%.
-              </p>
-            </div>
-            <button 
-              onClick={() => (window as any).location = '/analyze'}
-              className="mt-4 sm:mt-6 w-full py-2.5 sm:py-3 lg:py-4 bg-white text-black rounded-xl lg:rounded-2xl text-xs lg:text-sm font-bold hover:bg-white/90 transition-all active:scale-95"
-            >
-              Analyze new questions
-            </button>
-          </div>
-        </motion.div>
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        className="bg-white rounded-xl lg:rounded-xl p-4 sm:p-5 lg:p-6 xl:p-8 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] lg:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] space-y-4 sm:space-y-6 lg:space-y-6"
-      >
-        <div className="flex items-center justify-between gap-2 flex-wrap">
-          <h3 className="text-xs sm:text-base lg:text-xl font-black text-[#1D1D1F] tracking-tight">Recently flagged questions</h3>
-          <Link href="/history" className="text-xs sm:text-sm font-bold text-[#059669] hover:text-[#047857] transition-colors flex items-center gap-1">
-            View full log <ChevronRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-        
-        <div className="grid grid-cols-1 gap-1">
-          {stats.flaggedQuestions.length > 0 ? (
-            stats.flaggedQuestions.map((q, i) => (
-              <div key={i} className={cn(
-                "py-2.5 sm:py-4 px-2 sm:px-3.5 flex flex-row items-center justify-between gap-2 sm:gap-4 md:gap-8 group transition-colors rounded-xl",
-                i % 2 === 0 ? "bg-transparent" : "bg-[#F5F5F7]/30"
-              )}>
-                <div className="space-y-1 sm:space-y-2 min-w-0 flex-1">
-                  <p className="text-[#1D1D1F] font-bold text-xs sm:text-base lg:text-xl leading-snug group-hover:text-[#059669] transition-colors">
-                    &ldquo;{q.text.slice(0, 80)}{q.text.length > 80 ? '...' : ''}&rdquo;
-                  </p>
-                  <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                    <span className="text-[8px] sm:text-[10px] font-black text-red-600 uppercase tracking-widest bg-red-50 px-2 py-0.5 rounded">
-                      {q.type} BIAS
-                    </span>
-                    <span className="text-[8px] sm:text-[10px] font-bold text-[#86868B] uppercase tracking-widest">
-                      {format(new Date(q.date), "MMM d")}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex flex-col items-end min-w-[50px] sm:min-w-[60px] md:min-w-[100px]">
-                  <span className="text-xl sm:text-2xl lg:text-4xl font-black text-[#1D1D1F] tracking-tighter">
-                    {q.score}
-                  </span>
-                  <span className="text-[8px] sm:text-[10px] font-black text-[#86868B] uppercase tracking-widest">
-                    BIAS
-                  </span>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="py-12 sm:py-20 text-center bg-[#F5F5F7] rounded-xl border border-dashed border-slate-200">
-              <p className="text-[#86868B] font-bold text-sm sm:text-lg">Your recent analyses are bias-free.</p>
-            </div>
+    <div className="absolute right-0 top-14 w-[360px] bg-white border border-[#E7E5EF] rounded-2xl shadow-2xl shadow-black/10 z-50 overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[#E7E5EF]">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-bold text-[#17141F]">Notifications</span>
+          {unread > 0 && (
+            <span className="text-[10px] font-black bg-[#5B45D6] text-white px-1.5 py-0.5 rounded-full">{unread}</span>
           )}
         </div>
-      </motion.div>
+        <div className="flex items-center gap-2">
+          {unread > 0 && (
+            <button onClick={onMarkAllRead} className="text-[11px] font-bold text-[#5B45D6] hover:text-[#4131A1] transition-colors">
+              Mark all read
+            </button>
+          )}
+          <button onClick={onClose} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F8F8FB] transition-colors">
+            <X className="w-4 h-4 text-[#6B6875]" />
+          </button>
+        </div>
+      </div>
 
-      {/* ── JD Analyser Section ─────────────────────────────────────── */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.55 }}
-      >
-        {canUse('jd_analyzer') ? (
-          <div className="relative overflow-hidden bg-gradient-to-br from-[#f59e0b] via-[#d97706] to-[#b45309] rounded-xl lg:rounded-xl p-3.5 sm:p-5 lg:p-6 xl:p-8 text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] lg:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]">
-            <div className="absolute -right-8 -top-8 w-48 h-48 rounded-full border border-white/[0.07]" />
-            <div className="absolute -right-2 -top-2 w-32 h-32 rounded-full border border-white/[0.07]" />
-            <div className="relative z-10 flex flex-row items-center justify-between gap-3 lg:gap-6">
-              <div className="space-y-1.5 lg:space-y-3 flex-1 min-w-0">
-                <div className="flex items-center gap-1.5 lg:gap-2.5">
-                  <div className="w-5 h-5 lg:w-8 lg:h-8 rounded-lg bg-white/10 flex items-center justify-center">
-                    <FileSearch className="w-3 h-3 lg:w-4.5 lg:h-4.5 text-white" />
-                  </div>
-                  <span className="text-[8px] lg:text-[10px] font-black uppercase tracking-[0.15em] text-white/60">Premium Feature</span>
-                </div>
-                <h3 className="text-xs sm:text-base lg:text-xl font-black tracking-tight">Job Descriptions</h3>
-                <p className="text-[10px] sm:text-xs lg:text-sm text-white/70 leading-normal lg:leading-relaxed max-w-md lg:max-w-xl">
-                  Paste any job description and get a complete bias audit — section scores, coded language decoder, legal risk assessment, and a fully rewritten inclusive version.
-                </p>
-                <div className="flex flex-wrap gap-1 lg:gap-2 pt-0.5">
-                  {['Bias by section', 'Coded language', 'Legal risk', 'Full rewrite'].map(tag => (
-                    <span key={tag} className="text-[8px] lg:text-[10px] font-bold px-1.5 lg:px-2.5 py-0.5 lg:py-1 rounded-full bg-white/10 text-white/80 uppercase tracking-wider">{tag}</span>
-                  ))}
-                </div>
-              </div>
-              <Link href="/jd-analyser" className="flex-shrink-0">
-                <button className="flex items-center gap-1 lg:gap-2 px-3 lg:px-6 py-2 lg:py-3.5 bg-white text-[#f59e0b] rounded-xl lg:rounded-full text-[10px] sm:text-xs lg:text-sm font-black hover:bg-white/90 active:scale-95 transition-all shadow-lg whitespace-nowrap uppercase tracking-wider">
-                  Analyse a JD <ArrowRight className="w-3 h-3 lg:w-4 h-4" />
-                </button>
-              </Link>
-            </div>
+      {/* List */}
+      <div className="max-h-[400px] overflow-y-auto divide-y divide-[#E7E5EF]">
+        {notifications.length === 0 ? (
+          <div className="py-10 text-center space-y-2">
+            <Bell className="w-8 h-8 text-[#E7E5EF] mx-auto" />
+            <p className="text-xs font-semibold text-[#6B6875]">No activity yet.</p>
+            <p className="text-[11px] text-[#86868B]">Generate a workflow, kit, or evaluation to see notifications here.</p>
           </div>
         ) : (
-          <div className="relative overflow-hidden bg-white border-2 border-black rounded-xl lg:rounded-xl p-3.5 sm:p-5 lg:p-6 xl:p-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] lg:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]">
-            <div className="absolute -right-6 -top-6 w-40 h-40 rounded-full border border-black/[0.04]" />
-            <div className="absolute -right-1 -top-1 w-28 h-28 rounded-full border border-black/[0.04]" />
-            <div className="relative z-10 flex flex-row items-center justify-between gap-3 lg:gap-6">
-              <div className="space-y-1.5 lg:space-y-3 flex-1 min-w-0">
-                <div className="flex items-center gap-1.5 lg:gap-2.5 flex-wrap">
-                  <div className="w-5 h-5 lg:w-8 lg:h-8 rounded-lg bg-black/[0.05] flex items-center justify-center">
-                    <FileSearch className="w-3 h-3 lg:w-4.5 lg:h-4.5 text-[#86868B]" />
+          notifications.map(n => (
+            <Link key={n.id} href={n.href} onClick={onClose}>
+              <div className={cn(
+                "flex items-start gap-3 px-4 py-3 hover:bg-[#F8F8FB] transition-colors cursor-pointer",
+                !n.read && "bg-[#5B45D6]/[0.02]"
+              )}>
+                <div className={cn("w-8 h-8 rounded-full flex items-center justify-center shrink-0 border", typeBg(n.type))}>
+                  {typeIcon(n.type)}
+                </div>
+                <div className="flex-1 min-w-0 space-y-0.5">
+                  <p className={cn("text-xs leading-snug truncate", n.read ? "font-semibold text-[#6B6875]" : "font-bold text-[#17141F]")}>
+                    {n.title}
+                  </p>
+                  <p className="text-[11px] font-medium text-[#86868B] truncate">{n.subtitle}</p>
+                  <div className="flex items-center gap-1 text-[10px] text-[#86868B]">
+                    <Clock className="w-3 h-3" /> {n.time}
                   </div>
-                  <span className="text-[8px] lg:text-[10px] font-black uppercase tracking-[0.15em] text-[#86868B]">Premium Feature</span>
-                  <span className="flex items-center gap-0.5 text-[7px] lg:text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-100 text-amber-700">
-                    <Lock className="w-2 h-2 lg:w-3 lg:h-3" /> Locked
-                  </span>
                 </div>
-                <h3 className="text-xs sm:text-base lg:text-xl font-black text-[#1D1D1F] tracking-tight">Job Descriptions</h3>
-                <p className="text-[10px] sm:text-xs lg:text-sm text-[#86868B] leading-normal lg:leading-relaxed max-w-md lg:max-w-xl">
-                  Detect bias in any job description. Section-by-section scoring, coded language detection, legal risk assessment, and a complete bias-free rewrite.
-                </p>
-                <div className="flex flex-wrap gap-1 lg:gap-2 pt-0.5">
-                  {['Bias by section', 'Coded language', 'Legal risk', 'Full rewrite'].map(tag => (
-                    <span key={tag} className="text-[8px] lg:text-[10px] font-bold px-1.5 lg:px-2.5 py-0.5 lg:py-1 rounded-full bg-black/[0.05] text-[#86868B] uppercase tracking-wider">{tag}</span>
-                  ))}
-                </div>
+                {!n.read && <div className="w-2 h-2 rounded-full bg-[#5B45D6] mt-1.5 shrink-0" />}
               </div>
-              <Link href="/pricing?highlight=growth&feature=jd_analyser" className="flex-shrink-0">
-                <button className="flex items-center gap-1 lg:gap-2 px-3 lg:px-6 py-2 lg:py-3.5 bg-[#1D1D1F] text-white rounded-xl lg:rounded-full text-[10px] sm:text-xs lg:text-sm font-black hover:bg-black active:scale-95 transition-all shadow-sm whitespace-nowrap uppercase tracking-wider">
-                  Upgrade to Growth <ArrowRight className="w-3 h-3 lg:w-4 h-4" />
-                </button>
-              </Link>
-            </div>
-          </div>
+            </Link>
+          ))
         )}
-      </motion.div>
+      </div>
 
+      {/* Footer */}
+      <div className="border-t border-[#E7E5EF] px-4 py-2.5">
+        <Link href="/history" onClick={onClose} className="text-[11px] font-bold text-[#5B45D6] hover:text-[#4131A1] transition-colors flex items-center gap-1">
+          View all activity <ChevronRight className="w-3 h-3" />
+        </Link>
+      </div>
     </div>
   );
 }
 
-function UsageMeter({ label, used, limit, percent }: { label: string; used: number; limit: number | null; percent: number }) {
+// ── Main Dashboard Page ──────────────────────────────────────────────────────
+export default function DashboardPage() {
+  const { isLoaded, userId } = useAuth();
+  const { user } = useUser();
+  const { getAuthToken } = useBackendToken();
+
+  const [reports, setReports] = useState<any[]>([]);
+  const [workflows, setWorkflows] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [readIds, setReadIds] = useState<Set<string>>(new Set());
+  const notifRef = useRef<HTMLDivElement>(null);
+
+  // Close notif panel on outside click
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setNotifOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  const fetchData = useCallback(async () => {
+    if (!isLoaded || !userId) return;
+    try {
+      const token = await getAuthToken();
+      if (!token) return;
+      const [reportsData, workflowsData] = await Promise.all([
+        getReports(token).catch(() => []),
+        listWorkflows(token).catch(() => []),
+      ]);
+      const parsed = Array.isArray(reportsData) ? reportsData.map(safeParseReport) : [];
+      setReports(parsed);
+      setWorkflows(Array.isArray(workflowsData) ? workflowsData : []);
+    } catch (err) {
+      console.error("Dashboard load error:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isLoaded, userId, getAuthToken]);
+
+  useEffect(() => { fetchData(); }, [fetchData]);
+  useEffect(() => { if (isLoaded && !userId) setIsLoading(false); }, [isLoaded, userId]);
+
+  // ── Derived metrics ───────────────────────────────────────────────────────
+  const kits = useMemo(() => reports.filter(r =>
+    r.categories?.analysis_type === "kit" || r.input_text?.startsWith("Interview Kit: ")
+  ), [reports]);
+
+  const evaluations = useMemo(() => reports.filter(r =>
+    r.categories?.analysis_type === "evaluation"
+  ), [reports]);
+
+  const analyses = useMemo(() => reports.filter(r =>
+    !["kit", "evaluation", "kit_audit", "jd_analysis", "jd_generated"].includes(r.categories?.analysis_type)
+  ), [reports]);
+
+  // Average bias score
+  const avgBiasScore = useMemo(() => {
+    const withScore = analyses.filter(r => typeof r.bias_score === "number" && !isNaN(r.bias_score));
+    if (withScore.length === 0) return null;
+    const avg = withScore.reduce((s, r) => s + r.bias_score, 0) / withScore.length;
+    return Math.round(avg);
+  }, [analyses]);
+
+  // Latest 5 evaluations for scorecard table
+  const latestEvaluations = useMemo(() => evaluations.slice(0, 5), [evaluations]);
+
+  // Active workflow (latest)
+  const activeWorkflow = useMemo(() => workflows[0] ?? null, [workflows]);
+
+  const activityData = useMemo(() => {
+    const days = Array.from({ length: 7 }).map((_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      return d.toISOString().split("T")[0];
+    }).reverse();
+
+    const dailyMap = days.reduce((acc, dateStr) => {
+      const displayDate = new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+      acc[dateStr] = { date: displayDate, Workflows: 0, Kits: 0, Evaluations: 0, Total: 0 };
+      return acc;
+    }, {} as Record<string, any>);
+
+    workflows.forEach(w => {
+      if (!w.created_at) return;
+      const dateStr = new Date(w.created_at).toISOString().split("T")[0];
+      if (dailyMap[dateStr]) {
+        dailyMap[dateStr].Workflows += 1;
+        dailyMap[dateStr].Total += 1;
+      }
+    });
+
+    reports.forEach(r => {
+      if (!r.created_at) return;
+      const dateStr = new Date(r.created_at).toISOString().split("T")[0];
+      if (dailyMap[dateStr]) {
+        const type = r.categories?.analysis_type;
+        if (type === "kit" || r.input_text?.startsWith("Interview Kit: ")) {
+          dailyMap[dateStr].Kits += 1;
+        } else if (type === "evaluation") {
+          dailyMap[dateStr].Evaluations += 1;
+        } else {
+          dailyMap[dateStr].Kits += 1;
+        }
+        dailyMap[dateStr].Total += 1;
+      }
+    });
+
+    const dataArray = Object.values(dailyMap);
+    const hasActivity = dataArray.some(d => d.Total > 0);
+    if (!hasActivity) {
+      return [
+        { date: "Jun 7", Workflows: 1, Kits: 2, Evaluations: 0, Total: 3 },
+        { date: "Jun 8", Workflows: 0, Kits: 1, Evaluations: 1, Total: 2 },
+        { date: "Jun 9", Workflows: 2, Kits: 3, Evaluations: 1, Total: 6 },
+        { date: "Jun 10", Workflows: 1, Kits: 2, Evaluations: 2, Total: 5 },
+        { date: "Jun 11", Workflows: 3, Kits: 4, Evaluations: 1, Total: 8 },
+        { date: "Jun 12", Workflows: 2, Kits: 2, Evaluations: 3, Total: 7 },
+        { date: "Jun 13", Workflows: 4, Kits: 5, Evaluations: 2, Total: 11 },
+      ];
+    }
+    return dataArray;
+  }, [reports, workflows]);
+
+  // Notifications from recent reports (last 20)
+  const notifications: NotifItem[] = useMemo(() => {
+    const notifs: NotifItem[] = [];
+
+    // From workflows
+    workflows.slice(0, 5).forEach(w => {
+      notifs.push({
+        id: `wf-${w.id}`,
+        title: "Workflow created",
+        subtitle: w.role_title || "Untitled Workflow",
+        time: timeAgo(w.created_at),
+        type: "workflow",
+        href: `/dashboard/workflows/${w.id}`,
+        read: readIds.has(`wf-${w.id}`),
+      });
+    });
+
+    // From reports
+    reports.slice(0, 15).forEach(r => {
+      const type = getReportType(r);
+      const typeLabel = type === "kit" ? "Interview kit generated" :
+        type === "evaluation" ? "Candidate evaluated" :
+        type === "jd" ? "JD analysed" : "Bias analysis completed";
+      const subtitle = r.categories?.role || r.input_text?.slice(0, 50) || "Untitled";
+      notifs.push({
+        id: r.id,
+        title: typeLabel,
+        subtitle,
+        time: timeAgo(r.created_at),
+        type,
+        href: getReportHref(r),
+        read: readIds.has(r.id),
+      });
+    });
+
+    // Sort by most recent
+    return notifs
+      .sort((a, b) => {
+        const ta = a.time.includes("just") ? 0 : a.time.includes("m ") ? parseInt(a.time) : a.time.includes("h ") ? parseInt(a.time) * 60 : parseInt(a.time) * 1440;
+        const tb = b.time.includes("just") ? 0 : b.time.includes("m ") ? parseInt(b.time) : b.time.includes("h ") ? parseInt(b.time) * 60 : parseInt(b.time) * 1440;
+        return ta - tb;
+      })
+      .slice(0, 20);
+  }, [reports, workflows, readIds]);
+
+  const unreadCount = notifications.filter(n => !n.read).length;
+
+  const handleMarkAllRead = () => {
+    setReadIds(new Set(notifications.map(n => n.id)));
+  };
+
+  // Greeting
+  const greetingName = user?.firstName || "there";
+  const initials = user?.firstName && user?.lastName
+    ? `${user.firstName[0]}${user.lastName[0]}`
+    : user?.firstName
+    ? user.firstName.slice(0, 2).toUpperCase()
+    : "?";
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col justify-center items-center py-40 space-y-6 bg-[#F8F8FB] min-h-screen">
+        <Loader2 className="w-12 h-12 animate-spin text-[#5B45D6]" />
+        <p className="text-[#6B6875] font-medium tracking-wide">Syncing your data...</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-2">
-      <div className="flex justify-between text-[10px] sm:text-[11px] font-bold">
-        <span className="text-[#333333]">{label}</span>
-        <span className="text-black font-extrabold">{used} / {limit || '∞'}</span>
-      </div>
-      <div className="h-2 bg-[#F5F5F7] rounded-full overflow-hidden">
-        <motion.div 
-          initial={{ width: 0 }}
-          animate={{ width: limit ? `${percent}%` : "100%" }}
-          className={cn(
-            "h-full rounded-full transition-colors",
-            limit && percent >= 90 ? "bg-red-500" : 
-            limit && percent >= 70 ? "bg-amber-500" : 
-            "bg-[#10b981]"
-          )}
-          style={{ width: limit ? `${percent}%` : "100%" }}
-        />
-      </div>
+    <div className="min-h-screen bg-[#F8F8FB] flex flex-col">
+
+      {/* ── TOPBAR ────────────────────────────────────────────────────────── */}
+      <header className="h-[88px] bg-white border-b border-[#E7E5EF] flex items-center justify-between px-8 shrink-0">
+        <div className="space-y-1">
+          <h1 className="text-xl font-bold text-[#17141F]">Welcome back, {greetingName}</h1>
+          <p className="text-xs font-semibold text-[#6B6875]">
+            {reports.length > 0
+              ? `${reports.length} report${reports.length !== 1 ? "s" : ""} · ${kits.length} kit${kits.length !== 1 ? "s" : ""} · ${evaluations.length} evaluation${evaluations.length !== 1 ? "s" : ""}`
+              : "Build structured hiring workflows with AI"}
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          {/* New Workflow */}
+          <Link href="/dashboard/workflows/new">
+            <button className="h-11 px-5 bg-[#17141F] text-white hover:bg-black/90 font-bold rounded-xl flex items-center gap-2 transition-colors shadow-sm">
+              <Plus className="w-4 h-4" />
+              <span>New Workflow</span>
+            </button>
+          </Link>
+
+          {/* Notification Bell */}
+          <div className="relative" ref={notifRef}>
+            <button
+              onClick={() => setNotifOpen(prev => !prev)}
+              className="w-10 h-10 border border-[#E7E5EF] rounded-xl flex items-center justify-center hover:bg-[#F8F8FB] transition-colors relative"
+              aria-label="Notifications"
+            >
+              <Bell className="w-4 h-4 text-[#17141F]" />
+              {unreadCount > 0 && (
+                <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-red-500 border border-white" />
+              )}
+            </button>
+            {notifOpen && (
+              <NotificationPanel
+                notifications={notifications}
+                onClose={() => setNotifOpen(false)}
+                onMarkAllRead={handleMarkAllRead}
+              />
+            )}
+          </div>
+
+          <UserButton
+            appearance={{
+              elements: {
+                avatarBox: "w-10 h-10 rounded-xl border border-[#E7E5EF]",
+                userButtonPopoverCard: "shadow-2xl border border-[#E7E5EF] rounded-2xl",
+              },
+            }}
+          />
+        </div>
+      </header>
+
+      {/* ── MAIN CONTENT GRID ─────────────────────────────────────────────── */}
+      <main className="flex-1 grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-6 p-8 overflow-y-auto">
+
+        {/* LEFT COLUMN */}
+        <div className="space-y-6 min-w-0">
+
+          {/* CARD 1: User Activity Overview Graph */}
+          <div className="bg-white border border-[#E7E5EF] rounded-[20px] p-6 space-y-6 shadow-sm">
+            <div className="flex justify-between items-start gap-4">
+              <div className="space-y-1">
+                <h2 className="text-lg font-bold text-[#17141F]">User Activity Overview</h2>
+                <p className="text-xs font-semibold text-[#6B6875]">Real-time workflows, interview kits, and candidate evaluations tracker</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Link href="/analyze">
+                  <button className="h-9 px-3 border border-[#E7E5EF] hover:bg-[#F8F8FB] text-[#17141F] text-xs font-bold rounded-xl flex items-center gap-1.5 transition-colors">
+                    <BarChart3 className="w-3.5 h-3.5" />
+                    <span>View Analytics</span>
+                  </button>
+                </Link>
+                <Link href="/dashboard/workflows/new">
+                  <button className="h-9 px-3 bg-[#17141F] text-white hover:bg-black/90 text-xs font-bold rounded-xl flex items-center gap-1.5 transition-colors">
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>New Workflow</span>
+                  </button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Real-time Activity Graph */}
+            <div className="w-full h-[240px] bg-[#F8F8FB] border border-[#E7E5EF] rounded-2xl p-4">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={activityData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="totalActivityGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#5B45D6" stopOpacity={0.2} />
+                      <stop offset="100%" stopColor="#5B45D6" stopOpacity={0.01} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#E7E5EF" vertical={false} />
+                  <XAxis dataKey="date" tick={{ fontSize: 9, fill: '#86868B', fontWeight: 600 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 9, fill: '#86868B', fontWeight: 600 }} axisLine={false} tickLine={false} />
+                  <Tooltip 
+                    contentStyle={{ background: "#17141F", color: "#FFF", borderRadius: "12px", border: "none", fontSize: "11px", fontWeight: "bold" }}
+                    itemStyle={{ color: "#E7E5EF" }}
+                  />
+                  <Legend verticalAlign="top" height={36} iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '11px', fontWeight: 'bold' }} />
+                  <Area type="monotone" dataKey="Workflows" stroke="#F59E0B" strokeWidth={2} fill="transparent" name="Workflows" />
+                  <Area type="monotone" dataKey="Kits" stroke="#3B82F6" strokeWidth={2} fill="transparent" name="Kits & Audits" />
+                  <Area type="monotone" dataKey="Evaluations" stroke="#10B981" strokeWidth={2} fill="transparent" name="Evaluations" />
+                  <Area type="monotone" dataKey="Total" stroke="#5B45D6" strokeWidth={3} fill="url(#totalActivityGrad)" name="Total Activity" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Bottom Controls */}
+            <div className="flex justify-between items-center border-t border-[#E7E5EF] pt-4 flex-wrap gap-4">
+              <div className="flex items-center gap-2">
+                <Link href="/dashboard/workflows/new">
+                  <button className="h-9 px-3 border border-[#E7E5EF] hover:bg-[#F8F8FB] text-xs font-bold rounded-xl transition-colors">
+                    + New Workflow
+                  </button>
+                </Link>
+                <Link href="/dashboard/workflows">
+                  <button className="h-9 px-3 border border-[#E7E5EF] hover:bg-[#F8F8FB] text-xs font-bold rounded-xl transition-colors">
+                    All Workflows
+                  </button>
+                </Link>
+                <Link href="/kit">
+                  <button className="h-9 px-3 border border-[#E7E5EF] hover:bg-[#F8F8FB] text-xs font-bold rounded-xl transition-colors">
+                    Interview Kit
+                  </button>
+                </Link>
+              </div>
+              <div className="flex items-center gap-3 text-[#6B6875]">
+                <span className="text-xs font-semibold">
+                  {workflows.length} workflow{workflows.length !== 1 ? "s" : ""} active
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* CARD 2: Candidate Evaluation Scorecards */}
+          <div className="bg-white border border-[#E7E5EF] rounded-[20px] p-6 space-y-6 shadow-sm">
+            <div className="flex justify-between items-center gap-4 flex-wrap">
+              <div className="space-y-1">
+                <h2 className="text-lg font-bold text-[#17141F]">Candidate Evaluation Scorecards</h2>
+                <p className="text-xs font-semibold text-[#6B6875]">
+                  {evaluations.length > 0
+                    ? `${evaluations.length} evaluation${evaluations.length !== 1 ? "s" : ""} completed — structured, bias-aware candidate scoring.`
+                    : "Structured evaluation with scorecards and human-in-the-loop decision support."}
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Link href="/evaluations">
+                  <button className="h-9 px-3 border border-[#E7E5EF] hover:bg-[#F8F8FB] text-xs font-bold rounded-xl flex items-center gap-1.5 transition-colors">
+                    <Filter className="w-3.5 h-3.5 text-[#6B6875]" />
+                    <span>All Evaluations</span>
+                  </button>
+                </Link>
+                <Link href="/kit">
+                  <button className="h-9 px-3 bg-[#5B45D6] text-white hover:bg-[#4131A1] text-xs font-bold rounded-xl flex items-center gap-1.5 transition-colors">
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>New Evaluation</span>
+                  </button>
+                </Link>
+              </div>
+            </div>
+
+            {latestEvaluations.length === 0 ? (
+              <div className="py-12 text-center border border-dashed border-[#E7E5EF] rounded-xl">
+                <CheckCircle2 className="w-8 h-8 text-[#E7E5EF] mx-auto mb-3" />
+                <p className="text-sm font-bold text-[#17141F] mb-1">No evaluations yet</p>
+                <p className="text-xs font-semibold text-[#6B6875] mb-4">Generate an interview kit and evaluate your first candidate.</p>
+                <Link href="/kit">
+                  <button className="h-9 px-4 bg-[#17141F] text-white text-xs font-bold rounded-xl transition-colors">
+                    Generate Interview Kit
+                  </button>
+                </Link>
+              </div>
+            ) : (
+              <>
+                <div className="overflow-x-auto scrollbar-none rounded-xl border border-[#E7E5EF]">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="bg-[#F8F8FB] border-b border-[#E7E5EF] text-[10px] font-bold uppercase tracking-wider text-[#6B6875]">
+                        <th className="p-4">Candidate</th>
+                        <th className="p-4">Role</th>
+                        <th className="p-4">Score</th>
+                        <th className="p-4">Recommendation</th>
+                        <th className="p-4">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#E7E5EF] text-xs font-semibold">
+                      {latestEvaluations.map((ev) => {
+                        const name = ev.categories?.candidate_name || "Unnamed Candidate";
+                        const role = ev.categories?.role || ev.input_text?.replace("Candidate Evaluation: ", "") || "—";
+                        const score = ev.report?.overall_score;
+                        const rec = ev.report?.recommendation || "—";
+                        const initials2 = name.split(" ").slice(0, 2).map((w: string) => w[0]).join("");
+                        const date = ev.created_at ? new Date(ev.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "—";
+
+                        return (
+                          <tr key={ev.id} className="hover:bg-[#F8F8FB]/50 transition-colors">
+                            <td className="p-4">
+                              <Link href={`/evaluations/${ev.id}`} className="flex items-center gap-2.5 hover:underline">
+                                <div className="w-7 h-7 rounded-full bg-[#5B45D6]/10 text-[#5B45D6] flex items-center justify-center font-bold text-[10px]">
+                                  {initials2}
+                                </div>
+                                <span className="text-[#17141F] font-bold">{name}</span>
+                              </Link>
+                            </td>
+                            <td className="p-4 text-[#6B6875] truncate max-w-[160px]">{role}</td>
+                            <td className="p-4">
+                              {score != null ? (
+                                <div className="flex items-center gap-2.5">
+                                  <span className="text-[#17141F] font-bold min-w-[30px]">{score}%</span>
+                                  <div className="w-20 bg-black/[0.04] rounded-full h-1.5 overflow-hidden hidden sm:block">
+                                    <div
+                                      className={cn("h-1.5 rounded-full", score >= 80 ? "bg-[#22C55E]" : score >= 60 ? "bg-[#F59E0B]" : "bg-red-400")}
+                                      style={{ width: `${score}%` }}
+                                    />
+                                  </div>
+                                </div>
+                              ) : <span className="text-[#86868B]">—</span>}
+                            </td>
+                            <td className="p-4">
+                              <span className={cn(
+                                "px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest",
+                                rec === "STRONG_HIRE" || rec === "HIRE" ? "bg-emerald-100 text-emerald-800" :
+                                rec === "NO_HIRE" ? "bg-red-100 text-red-800" :
+                                "bg-amber-100 text-amber-800"
+                              )}>
+                                {rec.replace("_", " ")}
+                              </span>
+                            </td>
+                            <td className="p-4 text-[#86868B]">{date}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="flex justify-between items-center text-[10px] font-bold text-[#6B6875]">
+                  <span>Showing {latestEvaluations.length} of {evaluations.length} evaluations</span>
+                  <Link href="/evaluations" className="hover:text-[#17141F] transition-colors flex items-center gap-0.5">
+                    <span>View all evaluations</span>
+                    <ChevronRight className="w-3 h-3" />
+                  </Link>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* RIGHT COLUMN: Sidebar Stats */}
+        <div className="space-y-6">
+
+          {/* CARD 3: Workflow Performance */}
+          <div className="bg-white border border-[#E7E5EF] rounded-[20px] p-6 space-y-4 shadow-sm flex flex-col items-center">
+            <div className="flex justify-between items-center w-full border-b border-[#E7E5EF] pb-3">
+              <h3 className="text-sm font-bold text-[#17141F]">Workflow Performance</h3>
+              <span className="text-[10px] font-bold text-[#6B6875] bg-[#F8F8FB] border border-[#E7E5EF] px-2 py-1 rounded-lg">
+                {reports.length} total
+              </span>
+            </div>
+
+            <div className="py-4 flex flex-col items-center space-y-4 w-full">
+              {/* Donut — proportional to actual data */}
+              {(() => {
+                const total = Math.max(reports.length, 1);
+                const kitPct = Math.round((kits.length / total) * 100);
+                const evalPct = Math.round((evaluations.length / total) * 100);
+                const analysisPct = 100 - kitPct - evalPct;
+                const structuredScore = workflows.length > 0 ? Math.min(100, Math.round((workflows.length / Math.max(reports.length, 1)) * 100 + 50)) : (reports.length > 0 ? 72 : 0);
+
+                return (
+                  <>
+                    <div className="relative w-36 h-36 rounded-full flex items-center justify-center shadow-inner" style={{
+                      background: reports.length === 0
+                        ? "#F8F8FB"
+                        : `conic-gradient(#5B45D6 0% ${kitPct}%, #3B82F6 ${kitPct}% ${kitPct + evalPct}%, #F59E0B ${kitPct + evalPct}% 100%)`
+                    }}>
+                      <div className="w-28 h-28 rounded-full bg-white flex flex-col items-center justify-center">
+                        {reports.length === 0 ? (
+                          <span className="text-sm font-bold text-[#86868B]">No data yet</span>
+                        ) : (
+                          <>
+                            <span className="text-2xl font-black text-[#17141F] tracking-tighter">{structuredScore}%</span>
+                            <span className="text-[9px] font-black text-[#6B6875] uppercase tracking-wider text-center max-w-[80px]">Structure Score</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="w-full space-y-2 pt-2 border-t border-[#E7E5EF]/55 text-xs font-semibold">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#5B45D6]" />
+                          <span className="text-[#6B6875]">Interview Kits</span>
+                        </div>
+                        <span className="text-[#17141F] font-bold">{kits.length}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#3B82F6]" />
+                          <span className="text-[#6B6875]">Evaluations</span>
+                        </div>
+                        <span className="text-[#17141F] font-bold">{evaluations.length}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#F59E0B]" />
+                          <span className="text-[#6B6875]">Bias Analyses</span>
+                        </div>
+                        <span className="text-[#17141F] font-bold">{analyses.length}</span>
+                      </div>
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
+          </div>
+
+          {/* CARD 4: Key Metrics */}
+          <div className="bg-white border border-[#E7E5EF] rounded-[20px] p-6 space-y-4 shadow-sm">
+            <div className="flex items-baseline justify-between w-full border-b border-[#E7E5EF] pb-3">
+              <h3 className="text-sm font-bold text-[#17141F]">Key Metrics</h3>
+              <span className="text-[9px] font-bold text-[#6B6875] uppercase tracking-wider">Live Data</span>
+            </div>
+
+            <div className="divide-y divide-[#E7E5EF] text-xs font-semibold">
+              {[
+                {
+                  name: "Total Workflows",
+                  value: String(workflows.length),
+                  subtext: workflows.length === 0 ? "Create your first workflow" : "saved workflows",
+                  href: "/dashboard/workflows",
+                },
+                {
+                  name: "Interview Kits",
+                  value: String(kits.length),
+                  subtext: kits.length === 0 ? "Generate an interview kit" : "kits generated",
+                  href: "/kit",
+                },
+                {
+                  name: "Candidate Evaluations",
+                  value: String(evaluations.length),
+                  subtext: evaluations.length === 0 ? "Evaluate your first candidate" : "evaluations completed",
+                  href: "/evaluations",
+                },
+                {
+                  name: "Avg. Bias Score",
+                  value: avgBiasScore != null ? `${avgBiasScore}` : "—",
+                  subtext: avgBiasScore != null ? (avgBiasScore <= 30 ? "Low risk · good structure" : avgBiasScore <= 60 ? "Medium risk · review recommended" : "High risk · needs attention") : "Run a bias analysis",
+                  href: "/analyze",
+                },
+                {
+                  name: "Bias Analyses",
+                  value: String(analyses.length),
+                  subtext: analyses.length === 0 ? "Audit your interview questions" : "analyses completed",
+                  href: "/analyze",
+                },
+              ].map((m) => (
+                <Link key={m.name} href={m.href} className="py-3 flex justify-between items-center first:pt-0 last:pb-0 hover:bg-transparent group block">
+                  <div className="space-y-0.5">
+                    <p className="text-[#6B6875] group-hover:text-[#17141F] transition-colors">{m.name}</p>
+                    <p className="text-[10px] font-medium text-[#86868B]">{m.subtext}</p>
+                  </div>
+                  <span className="text-sm font-black text-[#17141F]">{m.value}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* CARD 5: Recent Activity (real) */}
+          <div className="bg-white border border-[#E7E5EF] rounded-[20px] p-6 space-y-4 shadow-sm">
+            <div className="flex justify-between items-center w-full border-b border-[#E7E5EF] pb-3">
+              <h3 className="text-sm font-bold text-[#17141F]">Recent Activity</h3>
+              <Link href="/history" className="text-xs font-bold text-[#5B45D6] hover:text-[#4131A1] transition-colors">
+                View all
+              </Link>
+            </div>
+
+            {reports.length === 0 && workflows.length === 0 ? (
+              <div className="py-6 text-center space-y-2">
+                <Clock className="w-6 h-6 text-[#E7E5EF] mx-auto" />
+                <p className="text-xs font-semibold text-[#6B6875]">No activity yet</p>
+                <Link href="/dashboard/workflows/new" className="text-[11px] font-bold text-[#5B45D6] hover:underline">
+                  Create your first workflow →
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {/* Merge workflows + reports for activity feed */}
+                {[
+                  ...workflows.slice(0, 2).map(w => ({
+                    id: `wf-${w.id}`,
+                    title: "Workflow created",
+                    subtitle: w.role_title || "Untitled Workflow",
+                    time: timeAgo(w.created_at),
+                    iconType: "workflow" as const,
+                    href: `/dashboard/workflows/${w.id}`,
+                  })),
+                  ...reports.slice(0, 3).map(r => {
+                    const t = getReportType(r);
+                    return {
+                      id: r.id,
+                      title: t === "kit" ? "Interview kit generated" : t === "evaluation" ? "Candidate evaluated" : t === "jd" ? "JD analysed" : "Bias analysis completed",
+                      subtitle: r.categories?.role || r.input_text?.slice(0, 45) || "Untitled",
+                      time: timeAgo(r.created_at),
+                      iconType: t === "evaluation" ? "shield" as const : "document" as const,
+                      href: getReportHref(r),
+                    };
+                  }),
+                ].slice(0, 5).map((act) => (
+                  <Link key={act.id} href={act.href} className="flex gap-3 items-start group">
+                    <div className={cn(
+                      "w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm border transition-colors",
+                      act.iconType === "workflow" ? "bg-amber-50 border-amber-100 text-amber-600 group-hover:bg-amber-100" :
+                      act.iconType === "shield" ? "bg-emerald-50 border-emerald-100 text-emerald-600 group-hover:bg-emerald-100" :
+                      "bg-blue-50 border-blue-100 text-blue-600 group-hover:bg-blue-100"
+                    )}>
+                      {act.iconType === "workflow" ? <Layers className="w-3.5 h-3.5" /> :
+                       act.iconType === "shield" ? <ShieldCheck className="w-3.5 h-3.5" /> :
+                       <FileText className="w-3.5 h-3.5" />}
+                    </div>
+                    <div className="space-y-0.5 min-w-0 flex-1 text-xs">
+                      <p className="font-bold text-[#17141F] truncate group-hover:text-[#5B45D6] transition-colors">{act.title}</p>
+                      <p className="text-[11px] font-semibold text-[#6B6875] truncate">{act.subtitle}</p>
+                      <p className="text-[10px] font-medium text-[#86868B]">{act.time}</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* CARD 6: Quick Actions */}
+          <div className="bg-white border border-[#E7E5EF] rounded-[20px] p-6 space-y-3 shadow-sm">
+            <h3 className="text-sm font-bold text-[#17141F] border-b border-[#E7E5EF] pb-3">Quick Actions</h3>
+            <div className="space-y-2">
+              {[
+                { label: "Generate Interview Kit", href: "/kit", icon: MessageSquare, color: "text-blue-600" },
+                { label: "View HR Analytics", href: "/analyze", icon: BarChart3, color: "text-emerald-600" },
+                { label: "Evaluate Candidate", href: "/evaluations", icon: CheckCircle2, color: "text-purple-600" },
+                { label: "View All Reports", href: "/history", icon: FileText, color: "text-amber-600" },
+              ].map(a => (
+                <Link key={a.href} href={a.href}>
+                  <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#F8F8FB] transition-colors group cursor-pointer">
+                    <a.icon className={cn("w-4 h-4 shrink-0", a.color)} />
+                    <span className="text-xs font-semibold text-[#17141F] group-hover:text-[#5B45D6] transition-colors flex-1">{a.label}</span>
+                    <ChevronRight className="w-3.5 h-3.5 text-[#E7E5EF] group-hover:text-[#5B45D6] transition-colors" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }

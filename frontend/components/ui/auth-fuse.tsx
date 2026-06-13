@@ -176,12 +176,13 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
 );
 PasswordInput.displayName = "PasswordInput";
 
-import { useSignIn, useSignUp, useClerk, useUser } from "@clerk/nextjs";
+import { useClerk, useUser } from "@clerk/nextjs";
+import { useSignIn, useSignUp } from "@clerk/nextjs/legacy";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function SignInForm() {
-  const clerk = useClerk();
+  const { isLoaded, signIn, setActive } = useSignIn();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -190,27 +191,27 @@ export function SignInForm() {
 
   const handleSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!clerk.client) return;
+    if (!isLoaded || !signIn) return;
 
     setLoading(true);
     setError("");
 
     try {
-      const result = await clerk.client.signIn.create({
+      const result = await signIn.create({
         identifier: email,
         password,
       });
 
       if (result.status === "complete") {
-        await clerk.setActive({ session: result.createdSessionId });
+        await setActive({ session: result.createdSessionId });
         router.push("/dashboard");
       } else {
         console.log(result);
         setError("Something went wrong. Please check your credentials.");
       }
     } catch (err: any) {
-      console.error("error", err.errors[0].message);
-      setError(err.errors[0].message || "An error occurred during sign in.");
+      console.error("error", err);
+      setError(err.errors?.[0]?.message || "An error occurred during sign in.");
     } finally {
       setLoading(false);
     }
@@ -255,45 +256,145 @@ export function SignInForm() {
 }
 
 export function SignUpForm() {
-  const clerk = useClerk();
+  const { isLoaded, signUp, setActive } = useSignUp();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [pendingVerification, setPendingVerification] = useState(false);
+  const [code, setCode] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!clerk.client) return;
+    if (!isLoaded || !signUp) return;
 
     setLoading(true);
     setError("");
 
     try {
-      await clerk.client.signUp.create({
+      await signUp.create({
         emailAddress: email,
         password,
-        firstName: name.split(" ")[0],
-        lastName: name.split(" ").slice(1).join(" "),
+        firstName: name.split(" ")[0] || "",
+        lastName: name.split(" ").slice(1).join(" ") || "",
       });
 
       // Send verification email
-      await clerk.client.signUp.prepareEmailAddressVerification({ strategy: "email_code" });
-      
-      // Redirect to verification (standard Clerk route or handle locally)
-      // For simplicity, we'll let Clerk handle the next steps if they go to /sign-up/verify
-      // Or we could implement a verification UI here.
-      // Given the request, we'll assume standard flow or just redirect.
-      router.push("/sign-up/verify-email-address");
-      
+      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+      setPendingVerification(true);
     } catch (err: any) {
-      console.error("error", err.errors[0].message);
-      setError(err.errors[0].message || "An error occurred during sign up.");
+      console.error("error", err);
+      setError(err.errors?.[0]?.message || "An error occurred during sign up.");
     } finally {
       setLoading(false);
     }
   };
+
+  const handleVerification = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!isLoaded || !signUp) return;
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const completeSignUp = await signUp.attemptEmailAddressVerification({
+        code,
+      });
+
+      if (completeSignUp.status === "complete") {
+        setSuccess(true);
+        // Wait 2 seconds for a premium onboarding feedback experience
+        setTimeout(async () => {
+          await setActive({ session: completeSignUp.createdSessionId });
+          router.push("/dashboard");
+        }, 2000);
+      } else {
+        console.log(completeSignUp);
+        setError("Verification failed. Please check the code and try again.");
+      }
+    } catch (err: any) {
+      console.error("error", err);
+      setError(err.errors?.[0]?.message || "An error occurred during verification.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (success) {
+    return (
+      <div className="flex flex-col items-center justify-center text-center gap-6 py-8">
+        <motion.div
+          initial={{ scale: 0.5, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 200, damping: 15 }}
+          className="relative flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 border-2 border-primary/20"
+        >
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        </motion.div>
+        <div className="space-y-2">
+          <h1 className="text-2xl font-bold">Welcome to Rifair AI!</h1>
+          <p className="text-balance text-sm text-muted-foreground">
+            Account created successfully. Preparing your workspace...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (pendingVerification) {
+    return (
+      <form onSubmit={handleVerification} autoComplete="off" className="flex flex-col gap-8">
+        <div className="flex flex-col items-center gap-2 text-center">
+          <h1 className="text-2xl font-bold">Verify your email</h1>
+          <p className="text-balance text-sm text-muted-foreground text-center">
+            We have sent a verification code to <strong className="text-foreground">{email}</strong>.
+          </p>
+        </div>
+        <div className="grid gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="code">Verification Code</Label>
+            <Input
+              id="code"
+              name="code"
+              type="text"
+              placeholder="Enter 6-digit code"
+              required
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+            />
+          </div>
+          {error && <p className="text-xs text-destructive text-center">{error}</p>}
+          <Button type="submit" variant="outline" className="mt-2" disabled={loading}>
+            {loading ? "Verifying..." : "Verify Code"}
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            className="text-xs"
+            onClick={async () => {
+              if (!signUp) return;
+              setLoading(true);
+              try {
+                await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+                setError("");
+              } catch (err: any) {
+                setError(err.errors?.[0]?.message || "Failed to resend code.");
+              } finally {
+                setLoading(false);
+              }
+            }}
+            disabled={loading}
+          >
+            Resend Code
+          </Button>
+        </div>
+      </form>
+    );
+  }
 
   return (
     <form onSubmit={handleSignUp} autoComplete="on" className="flex flex-col gap-8">
@@ -342,6 +443,8 @@ export function SignUpForm() {
           {loading ? "Creating account..." : "Sign Up"}
         </Button>
       </div>
+      {/* Hidden Clerk CAPTCHA container to prevent Smart CAPTCHA console error */}
+      <div id="clerk-captcha" className="hidden" />
     </form>
   );
 }
@@ -471,6 +574,7 @@ export function AuthRotatingText({
       <AnimatePresence mode="wait">
         <motion.p
           key={index}
+          suppressHydrationWarning
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
@@ -487,16 +591,16 @@ export function AuthRotatingText({
 const allAuthImages = AUTH_GALLERY_IMAGES;
 
 const allAuthMessages = [
-    "Welcome back to the intelligence layer behind fair hiring.",
-    "Continue building smarter and unbiased hiring systems.",
+    "Welcome back to the intelligence layer behind structured hiring.",
+    "Continue building smarter, repeatable hiring workflows.",
     "Your AI-powered hiring workspace is ready.",
     "Trusted hiring decisions start here.",
-    "The future of ethical recruitment is already in your workflow.",
+    "The future of structured recruitment is already in your workflow.",
     "Start building the future of intelligent hiring.",
-    "Transform hiring into a fair and data-driven process.",
-    "Join the next generation of ethical recruitment.",
+    "Transform hiring into a structured and data-driven process.",
+    "Join the next generation of structured recruitment.",
     "Build hiring systems candidates can actually trust.",
-    "AI-powered fairness begins with your first decision."
+    "AI-powered evaluations begin with your first decision."
 ];
 
 interface AuthUIProps {

@@ -7,6 +7,7 @@ import rateLimit from 'express-rate-limit';
 import { env } from './core/config/env';
 import { secrets } from './core/secrets/secretManager';
 import aiRouter from './routes/ai';
+import workflowsRouter from './routes/workflows';
 
 // ─── Crash protection — log uncaught errors without exposing internals ────────
 process.on('uncaughtException', (err) => {
@@ -72,6 +73,7 @@ app.get('/health', (_req, res) => {
 
 // ─── AI Gateway Routes (TypeScript) ──────────────────────────────────────────
 app.use('/api/ai', aiRateLimit, aiRouter);
+app.use('/api/workflows', aiRateLimit, workflowsRouter);
 
 // ─── Legacy Routes (JS controllers) ──────────────────────────────────────────
 // eslint-disable-next-line @typescript-eslint/no-require-imports

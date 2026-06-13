@@ -1,31 +1,26 @@
 export const SITE_NAME = "Rifair AI";
 export const SITE_URL = "https://rifairai.com";
-export const DEFAULT_TITLE = "Rifair AI | AI Interview Kits, Bias Checks & Hiring Scorecards";
-export const DEFAULT_DESCRIPTION = "Rifair AI helps HR teams generate structured interview kits, evaluate candidates with scorecards, analyze hiring bias, and optimize job descriptions using AI.";
+export const DEFAULT_TITLE = "Rifair AI | Structured Hiring Platform for Interview Kits & Scorecards";
+export const DEFAULT_DESCRIPTION = "Rifair AI helps recruiters and HR teams generate interview kits, candidate scorecards, job description improvements, and bias-aware hiring workflows using AI.";
 
 export const DEFAULT_KEYWORDS = [
-  "AI hiring copilot",
-  "AI recruitment software",
+  "structured hiring platform",
+  "AI hiring workflow",
   "interview kit generator",
+  "candidate scorecard",
   "candidate evaluation software",
-  "hiring scorecards",
-  "bias checker for interview questions",
   "job description optimizer",
+  "hiring bias review",
+  "recruiter productivity tool",
+  "HRTech SaaS",
+  "recruitment workflow software",
   "fair hiring software",
   "structured interview platform",
   "HR automation",
   "recruitment automation",
   "talent acquisition software",
   "startup hiring software",
-  "diversity and inclusion in hiring",
-  "eliminate hiring bias",
-  "interview questions generator",
-  "behavioral interview questions template",
-  "competency framework builder",
-  "candidate assessment scorecard",
-  "structured hiring process",
-  "job post editor",
-  "inclusive recruiting tools"
+  "diversity and inclusion in hiring"
 ];
 
 export const ABOUT_KEYWORDS = [

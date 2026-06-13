@@ -4,7 +4,10 @@ import dynamic from "next/dynamic";
 import { NavBarDemo } from "@/components/ui/navbar-demo";
 import { HeroSection, LogosSection } from "@/components/ui/hero-1";
 import { DebugPerfLogger } from "@/components/debug/perf-logger";
-import { MetricsBar } from "@/components/marketing/MetricsBar";
+const MetricsBar = dynamic(
+  () => import("@/components/marketing/MetricsBar").then((mod) => mod.MetricsBar),
+  { ssr: false }
+);
 
 const EtherealShadow = dynamic(
   () => import("@/components/ui/etheral-shadow").then((mod) => mod.Component),

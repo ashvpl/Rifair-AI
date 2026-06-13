@@ -2,9 +2,19 @@
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
-import { ClipboardList, FileText, FileSearch, Users } from "lucide-react";
+import { ClipboardList, FileText, FileSearch, Users, Layers } from "lucide-react";
 
 const actions = [
+  {
+    label: "Build Hiring Workflow",
+    desc: "Create full end-to-end evaluation builder",
+    href: "/dashboard/workflows/new",
+    icon: Layers,
+    color: "text-blue-600",
+    bg: "bg-blue-50",
+    border: "border-blue-100",
+    hoverBorder: "hover:border-blue-300",
+  },
   {
     label: "Generate Interview Kit",
     desc: "Create structured questions and rubrics",
@@ -55,7 +65,7 @@ export function WorkflowQuickActions() {
       <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#86868B] mb-3">
         Quick Actions
       </p>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         {actions.map((action, i) => {
           const Icon = action.icon;
           return (
