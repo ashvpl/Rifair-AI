@@ -17,7 +17,9 @@ import {
   Settings,
   X,
   Menu,
-  ChevronDown
+  ChevronDown,
+  ArrowLeft,
+  Home
 } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { useAuth } from "@clerk/nextjs";
@@ -221,8 +223,16 @@ const SidebarWithSubmenu = () => {
             }}
             className="fixed left-0 top-0 bottom-0 w-[300px] max-w-[85vw] bg-white border-r border-black/[0.06] z-[46] lg:hidden shadow-[8px_0_40px_rgba(0,0,0,0.12)] flex flex-col"
           >
-            {/* Nav items */}
-            <div className="flex-1 overflow-y-auto px-4 py-3 space-y-1">
+            <div className="flex-1 overflow-y-auto px-4 py-2">
+            {/* Back to Home */}
+              <Link
+                href="/"
+                className="flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-150 min-h-[44px] group text-[#6B6875] hover:bg-[#F5F5F7] active:bg-[#EBEBEB] mb-2"
+              >
+                <ArrowLeft className="w-5 h-5 flex-shrink-0 text-[#6B6875] group-hover:text-[#17141F] transition-colors" />
+                <span className="text-sm font-semibold">Back to Home</span>
+              </Link>
+              <div className="h-px bg-black/[0.06] mb-3" />
               <p className="text-[9px] font-black text-[#86868B] uppercase tracking-[0.18em] px-3 mb-3 mt-1">
                 Navigation
               </p>
@@ -276,13 +286,22 @@ const SidebarWithSubmenu = () => {
       <nav className="hidden lg:flex flex-col w-[260px] h-screen border-r border-[#E7E5EF] bg-white sticky top-0 shrink-0 z-20 overflow-y-auto scrollbar-none justify-between p-6">
         <div className="flex flex-col gap-6">
           {/* Logo */}
-          <div className="flex items-center justify-start h-14 px-2 shrink-0">
-            <Link href="/dashboard" className="flex items-center">
-              <img
-                src="/rifair-logo.png"
-                alt="Rifair AI"
-                className="h-12 w-auto object-contain"
-              />
+          <div className="flex flex-col gap-3 px-2 shrink-0">
+            <div className="flex items-center justify-start h-14">
+              <Link href="/dashboard" className="flex items-center">
+                <img
+                  src="/rifair-logo.png"
+                  alt="Rifair AI"
+                  className="h-12 w-auto object-contain"
+                />
+              </Link>
+            </div>
+            <Link
+              href="/"
+              className="flex items-center gap-2 px-3 py-2 rounded-xl text-[#6B6875] hover:text-[#17141F] hover:bg-[#F5F5F7] transition-all duration-150 group text-sm font-semibold"
+            >
+              <ArrowLeft className="w-4 h-4 text-[#6B6875] group-hover:text-[#17141F] transition-colors" />
+              Back to Home
             </Link>
           </div>
 

@@ -1,0 +1,184 @@
+[
+  {
+    "id": "CAND_0002025",
+    "rank": 1,
+    "name": "Ira Dalal",
+    "currentTitle": "Senior AI Engineer",
+    "yearsExperience": 5.9,
+    "industry": "Consumer Electronics",
+    "location": "Trivandrum, Kerala",
+    "scores": {
+      "overall": 71,
+      "relevance": 75,
+      "experience": 74,
+      "behavior": 80,
+      "trust": 95,
+      "shipper": 92
+    },
+    "explainability": {
+      "strengths": [
+        "Top-tier Senior AI Engineer with 5.9 years of experience, demonstrating a strong match for our founding team",
+        "Proven builder who has shipped systems utilizing python, nlp, pinecone",
+        "Highly active with a 80% response rate and 30-day notice"
+      ],
+      "weaknesses": [],
+      "missingRequirements": []
+    },
+    "authenticity": {
+      "timelineValidation": "Verified",
+      "skillValidation": "Verified",
+      "honeypotRisk": "Low"
+    },
+    "behavior": {
+      "recruiterResponseRate": "80%",
+      "interviewCompletionRate": "81%",
+      "openToWorkStatus": "Actively Looking"
+    }
+  },
+  {
+    "id": "CAND_0071974",
+    "rank": 2,
+    "name": "Sai Verma",
+    "currentTitle": "Senior AI Engineer",
+    "yearsExperience": 7.8,
+    "industry": "Media",
+    "location": "Vizag, Andhra Pradesh",
+    "scores": {
+      "overall": 68,
+      "relevance": 69,
+      "experience": 70,
+      "behavior": 76,
+      "trust": 95,
+      "shipper": 92
+    },
+    "explainability": {
+      "strengths": [
+        "Top-tier Senior AI Engineer with 7.8 years of experience, demonstrating a strong match for our founding team",
+        "Proven builder who has shipped systems utilizing embeddings, qdrant, pinecone",
+        "Highly active with a 76% response rate and 45-day notice"
+      ],
+      "weaknesses": [],
+      "missingRequirements": []
+    },
+    "authenticity": {
+      "timelineValidation": "Verified",
+      "skillValidation": "Verified",
+      "honeypotRisk": "Low"
+    },
+    "behavior": {
+      "recruiterResponseRate": "76%",
+      "interviewCompletionRate": "85%",
+      "openToWorkStatus": "Actively Looking"
+    }
+  },
+  {
+    "id": "CAND_0099806",
+    "rank": 3,
+    "name": "Pranav Subramanian",
+    "currentTitle": "AI Engineer",
+    "yearsExperience": 4.6,
+    "industry": "AI/ML",
+    "location": "Bhubaneswar, Odisha",
+    "scores": {
+      "overall": 68,
+      "relevance": 71,
+      "experience": 68,
+      "behavior": 76,
+      "trust": 95,
+      "shipper": 92
+    },
+    "explainability": {
+      "strengths": [
+        "Top-tier AI Engineer with 4.6 years of experience, demonstrating a strong match for our founding team",
+        "Proven builder who has shipped systems utilizing embeddings, qdrant, weaviate",
+        "Highly active with a 76% response rate and 30-day notice"
+      ],
+      "weaknesses": [],
+      "missingRequirements": []
+    },
+    "authenticity": {
+      "timelineValidation": "Verified",
+      "skillValidation": "Verified",
+      "honeypotRisk": "Low"
+    },
+    "behavior": {
+      "recruiterResponseRate": "76%",
+      "interviewCompletionRate": "85%",
+      "openToWorkStatus": "Actively Looking"
+    }
+  },
+  {
+    "id": "CAND_0008295",
+    "rank": 4,
+    "name": "Om Mehta",
+    "currentTitle": "AI Research Engineer",
+    "yearsExperience": 6.5,
+    "industry": "Fintech",
+    "location": "Pune, Maharashtra",
+    "scores": {
+      "overall": 67,
+      "relevance": 68,
+      "experience": 67,
+      "behavior": 89,
+      "trust": 95,
+      "shipper": 92
+    },
+    "explainability": {
+      "strengths": [
+        "Top-tier AI Research Engineer with 6.5 years of experience, demonstrating a strong match for our founding team",
+        "Proven builder who has shipped systems utilizing python, weaviate",
+        "Highly active with a 89% response rate and 45-day notice"
+      ],
+      "weaknesses": [],
+      "missingRequirements": []
+    },
+    "authenticity": {
+      "timelineValidation": "Verified",
+      "skillValidation": "Verified",
+      "honeypotRisk": "Low"
+    },
+    "behavior": {
+      "recruiterResponseRate": "89%",
+      "interviewCompletionRate": "90%",
+      "openToWorkStatus": "Actively Looking"
+    }
+  },
+  {
+    "id": "CAND_0053591",
+    "rank": 5,
+    "name": "Anjali Bhatia",
+    "currentTitle": "AI Engineer",
+    "yearsExperience": 5.3,
+    "industry": "Transportation",
+    "location": "Toronto",
+    "scores": {
+      "overall": 67,
+      "relevance": 69,
+      "experience": 67,
+      "behavior": 81,
+      "trust": 95,
+      "shipper": 92
+    },
+    "explainability": {
+      "strengths": [
+        "Top-tier AI Engineer with 5.3 years of experience, demonstrating a strong match for our founding team",
+        "Proven builder who has shipped systems utilizing embeddings, milvus, qdrant",
+        "Highly active with a 81% response rate and 60-day notice"
+      ],
+      "weaknesses": [
+        "Notice period is 60 days"
+      ],
+      "missingRequirements": []
+    },
+    "authenticity": {
+      "timelineValidation": "Verified",
+      "skillValidation": "Verified",
+      "honeypotRisk": "Low"
+    },
+    "behavior": {
+      "recruiterResponseRate": "81%",
+      "interviewCompletionRate": "97%",
+      "openToWorkStatus": "Actively Looking"
+    }
+  }
+]

@@ -96,3 +96,22 @@ frontend/test_adapter*.js
 
 # ── TypeScript build info ────────────────────────────────────
 *.tsbuildinfo
+
+# Hackathon datasets
+candidates.jsonl
+sample_candidates.json
+
+# Generated ranking outputs
+submission.csv
+top_candidates.csv
+top_candidates.xlsx
+demo-results.json
+demo-metrics.json
+
+# Large exports
+*.xlsx
+*.xls
+
+# Local datasets
+datasets/
+data/

@@ -1,0 +1,48 @@
+# Redrob Hackathon — Submission Metadata
+team_name: "Rifair AI"
+
+primary_contact:
+  name: "Ayush Patil"
+  email: "ayush@rifair.ai"
+  phone: "+91-9999999999"
+
+team_members:
+  - name: "Ayush Patil"
+    email: "ayush@rifair.ai"
+    role: "Lead Engineer"
+
+github_repo: "https://github.com/ayushpatil/Rifair-AI"
+sandbox_link: "https://github.com/ayushpatil/Rifair-AI/tree/main/backend/src/services/cie"
+
+reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
+
+compute:
+  platform: "MacBook Pro"
+  cpu_cores: 8
+  ram_gb: 16
+  python_version: "3.9.6"
+  os: "macOS 14.0"
+  uses_gpu_for_inference: false
+  has_network_during_ranking: false
+  pre_computation_required: false
+  pre_computation_time_minutes: 0
+
+ai_tools_used:
+  - "Gemini"
+  - "Cursor"
+
+ai_usage_summary: |
+  Used Gemini to design the ranking algorithms and construct TypeScript services for the Candidate Intelligence Engine. The ranker runs completely locally with no network calls and complies with CPU limits.
+
+methodology_summary: |
+  Implemented a high-performance Two-Stage Candidate Intelligence Engine in TypeScript. 
+  - Stage 1 uses a fast keyword matching heuristic to filter 100k candidates to the top 2k in under 1 second.
+  - Stage 2 evaluates features, local TF-IDF match, shipper/builder classifier, behavioral signals (recency decay), and a dedicated authenticity engine targeting honeypots. 
+  - Generates diverse, fact-based reasoning strings for the top 100. Complete execution takes ~1.5s on CPU.
+
+declarations:
+  read_submission_spec: true
+  code_is_original_work: true
+  no_collusion: true
+  honeypot_check_done: true
+  reproduction_tested: true

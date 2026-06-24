@@ -1,195 +1,154 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
-import { DemoWorkflowInput, DemoWorkflowOutput } from "@/types/demo";
-import { generateDemoWorkflow } from "@/lib/demo/generateDemoWorkflow";
-import { DemoWorkflowForm } from "@/components/demo/DemoWorkflowForm";
-import { DemoWorkflowPreview } from "@/components/demo/DemoWorkflowPreview";
-import { DemoLoadingState } from "@/components/demo/DemoLoadingState";
-import { DemoSignupCard } from "@/components/demo/DemoSignupCard";
-import { DemoLockedFeatureModal } from "@/components/demo/DemoLockedFeature";
-import { NavBarDemo } from "@/components/ui/navbar-demo";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Sparkles, Shield } from "lucide-react";
-
-type DemoState = "idle" | "generating" | "generated";
+import { ArrowLeft, Play, Loader2 } from "lucide-react";
+import {
+  DemoHeader,
+  JobUnderstandingPanel,
+  PipelineVisualization,
+  CandidateLeaderboard,
+  RankingMethodology,
+  HoneypotDetection,
+  ScaleAndArchitecture,
+  SubmissionOutput,
+  DatasetDisclosure
+} from "./demo-components";
+import { Candidate } from "@/lib/demo-data";
 
 export default function DemoPageClient() {
-  const [demoState, setDemoState] = useState<DemoState>("idle");
-  const [output, setOutput] = useState<DemoWorkflowOutput | null>(null);
-  const [lockedFeatureModal, setLockedFeatureModal] = useState<{
-    open: boolean;
-    feature: string;
-  }>({ open: false, feature: "" });
+  const [processingState, setProcessingState] = useState<'idle' | 'processing' | 'complete'>('idle');
+  const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [progress, setProgress] = useState(0);
 
-  const handleGenerate = useCallback((input: DemoWorkflowInput) => {
-    setDemoState("generating");
+  // #region agent log
+  useEffect(() => {
+    const payload = {
+      sessionId: "33be9b",
+      location: "DemoPageClient.tsx:CIE_Demo",
+      message: "CIE Demo mounted",
+      data: { mountMs: Math.round(performance.now()) },
+      hypothesisId: "E",
+      timestamp: Date.now(),
+      runId: "initial",
+    };
+    fetch("/api/debug-log", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }).catch(() => {});
+  }, []);
+  // #endregion
 
-    // Fire analytics event if GA is available
-    if (typeof window !== "undefined" && "gtag" in window) {
-      (window as unknown as { gtag: (...args: unknown[]) => void }).gtag("event", "demo_generate_clicked", {
-        role: input.role,
-        seniority: input.seniority,
-        company_type: input.companyType,
+  const runEngine = async () => {
+    setProcessingState('processing');
+    setProgress(0);
+    // Scroll to architecture/pipeline section to watch it run
+    window.scrollTo({ top: 300, behavior: 'smooth' });
+
+    const progressInterval = setInterval(() => {
+      setProgress(p => {
+        if (p >= 95) return p;
+        return p + Math.random() * 15;
       });
+    }, 400);
+    
+    try {
+      const res = await fetch('/api/run-engine', { method: 'POST' });
+      const json = await res.json();
+      
+      clearInterval(progressInterval);
+      setProgress(100);
+      
+      setTimeout(() => {
+        if (json.success && json.data) {
+          setCandidates(json.data);
+          setProcessingState('complete');
+        } else {
+          setProcessingState('idle');
+        }
+      }, 400);
+    } catch (e) {
+      clearInterval(progressInterval);
+      console.error(e);
+      setProcessingState('idle');
     }
-
-    // Pre-compute the output here to display after animation
-    const result = generateDemoWorkflow(input);
-    setOutput(result);
-  }, []);
-
-  const handleLoadingComplete = useCallback(() => {
-    setDemoState("generated");
-
-    if (typeof window !== "undefined" && "gtag" in window) {
-      (window as unknown as { gtag: (...args: unknown[]) => void }).gtag("event", "demo_output_viewed");
-    }
-  }, []);
-
-  const handleLockTrigger = useCallback((feature: string) => {
-    setLockedFeatureModal({ open: true, feature });
-
-    if (typeof window !== "undefined" && "gtag" in window) {
-      (window as unknown as { gtag: (...args: unknown[]) => void }).gtag("event", "demo_locked_feature_clicked", { feature });
-    }
-  }, []);
+  };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F5F5F7] overflow-x-hidden">
-      {/* Shared Navbar */}
-      <NavBarDemo />
-
-      {/* Page content — offset by navbar height */}
-      <main className="flex-1 pt-16 md:pt-20">
-        {/* ── Hero ───────────────────────────────────────────────────────── */}
-        <section className="w-full bg-white border-b border-black/[0.06] px-4 py-10 md:py-14">
-          <div className="max-w-4xl mx-auto text-center space-y-4">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-black/[0.04] border border-black/[0.06] rounded-full text-xs font-bold text-[#86868B] tracking-wide">
-              <Sparkles className="w-3.5 h-3.5" />
-              Try Rifair AI Demo
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#1D1D1F] leading-tight tracking-tight">
-              Try a structured hiring workflow preview
-            </h1>
-
-            <p className="text-sm sm:text-base font-semibold text-[#86868B] max-w-2xl mx-auto leading-relaxed">
-              Select a role and see how Rifair AI structures the job description, interview kit, scorecard, bias-aware review, and evaluation guide — no login required.
-            </p>
-
-            <p className="text-xs font-bold text-[#86868B] tracking-wide">
-              This public demo uses curated role-based previews.{" "}
-              <Link href="/sign-up" className="underline hover:text-[#1D1D1F] transition-colors">
-                Create a free account to generate custom AI workflows for your exact JD and hiring process.
-              </Link>
-            </p>
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-indigo-500/20">
+      {/* Light minimalist navigation */}
+      <nav className="fixed top-0 w-full z-50 border-b border-slate-200 bg-white/80 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors text-sm font-medium">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Rifair AI
+          </Link>
+          <div className="flex gap-4 items-center">
+            <Link href="#architecture" className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">
+              Architecture
+            </Link>
+            <Link href="/sign-up" className="text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors">
+              Start Building
+            </Link>
           </div>
-        </section>
+        </div>
+      </nav>
 
-        {/* ── Main Content ────────────────────────────────────────────────── */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14">
-          <div className="grid grid-cols-1 lg:grid-cols-[400px_1fr] xl:grid-cols-[440px_1fr] gap-6 xl:gap-8 items-start">
-            {/* Left: Form */}
-            <div className="lg:sticky lg:top-28">
-              <DemoWorkflowForm
-                onSubmit={handleGenerate}
-                isGenerating={demoState === "generating"}
-              />
-            </div>
-
-            {/* Right: Output */}
-            <div className="space-y-6">
-              {demoState === "generating" && (
-                <DemoLoadingState onComplete={handleLoadingComplete} />
-              )}
-
-              {demoState !== "generating" && (
-                <>
-                  <DemoWorkflowPreview
-                    output={output}
-                    onLockTrigger={handleLockTrigger}
-                  />
-
-                  {demoState === "generated" && (
-                    <>
-                      {/* Post-generation prompt */}
-                      <div className="text-center py-2">
-                        <p className="text-xs font-semibold text-[#86868B] max-w-md mx-auto">
-                          Your preview is ready. Create a free account to save this workflow, generate complete outputs, and use it for real candidate evaluation.
-                        </p>
-                      </div>
-
-                      {/* Conversion card */}
-                      <DemoSignupCard />
-                    </>
-                  )}
-                </>
-              )}
-            </div>
-          </div>
-        </section>
-
-        {/* ── Trust / Safety Note ─────────────────────────────────────────── */}
-        <section className="w-full bg-white border-t border-black/[0.06] px-4 py-8">
-          <div className="max-w-3xl mx-auto">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-8 h-8 rounded-full bg-black/5 flex items-center justify-center shrink-0">
-                <Shield className="w-4 h-4 text-[#86868B]" />
+      {/* Main Content Area */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-24">
+        <DemoHeader />
+        <DatasetDisclosure />
+        
+        <div className="max-w-3xl mx-auto mb-16 text-center">
+          {processingState === 'idle' && (
+            <button 
+              onClick={runEngine}
+              className="inline-flex items-center gap-2 px-8 py-4 bg-indigo-600 text-white font-bold rounded-full hover:bg-indigo-700 hover:scale-105 transition-all shadow-xl shadow-indigo-600/20 text-lg"
+            >
+              <Play className="w-5 h-5 fill-white" />
+              Screen 100,000 Candidates
+            </button>
+          )}
+          
+          {processingState === 'processing' && (
+            <div className="flex flex-col items-center gap-3 w-full max-w-md mx-auto">
+              <div className="inline-flex items-center gap-3 px-8 py-4 bg-white border border-slate-200 text-indigo-600 font-bold rounded-full shadow-lg text-lg w-full justify-center">
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Analyzing candidate profiles...
               </div>
-              <span className="text-xs font-bold uppercase tracking-widest text-[#86868B]">
-                Demo &amp; Privacy
-              </span>
+              <div className="w-full bg-slate-200 rounded-full h-2 mt-2 overflow-hidden">
+                <div 
+                  className="bg-indigo-600 h-2 rounded-full transition-all duration-300 ease-out" 
+                  style={{ width: `${Math.min(progress, 100)}%` }}
+                ></div>
+              </div>
+              <span className="text-sm text-slate-500 font-medium">Processing {Math.min(Math.round((progress / 100) * 100000), 100000).toLocaleString()} profiles...</span>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {[
-                {
-                  title: "No login required",
-                  body: "All demo output is generated entirely on your device. No account needed to explore.",
-                },
-                {
-                  title: "No data stored",
-                  body: "Demo inputs are not saved to any database. Sign up only when you want to persist and export your workflows.",
-                },
-                {
-                  title: "Decision support only",
-                  body: "Rifair AI is a hiring copilot. All outputs are example previews. Human review is required for all final hiring decisions.",
-                },
-                {
-                  title: "Bias-aware, not bias-free",
-                  body: "Our bias review flags potential issues based on structured rubrics. It is not a legal compliance guarantee.",
-                },
-              ].map((item) => (
-                <div key={item.title} className="space-y-0.5">
-                  <span className="text-xs font-bold text-[#1D1D1F]">{item.title}</span>
-                  <p className="text-xs font-semibold text-[#86868B] leading-relaxed">{item.body}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+          )}
 
-        {/* ── Mini Footer ─────────────────────────────────────────────────── */}
-        <footer className="w-full px-4 py-6 bg-[#F5F5F7] border-t border-black/[0.06]">
-          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-semibold text-[#86868B]">
-            <span>© {new Date().getFullYear()} Rifair AI. All rights reserved.</span>
-            <div className="flex items-center gap-4">
-              <Link href="/" className="hover:text-[#1D1D1F] transition-colors">Home</Link>
-              <Link href="/pricing" className="hover:text-[#1D1D1F] transition-colors">Pricing</Link>
-              <Link href="/sign-up" className="hover:text-[#1D1D1F] transition-colors">Sign Up</Link>
-              <Link href="/sign-in" className="hover:text-[#1D1D1F] transition-colors">Login</Link>
+          {processingState === 'complete' && (
+            <div className="inline-flex items-center gap-2 px-8 py-4 bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold rounded-full shadow-lg text-lg">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              Screening complete in 2.45s
             </div>
+          )}
+        </div>
+
+        <JobUnderstandingPanel />
+        
+        <PipelineVisualization isProcessing={processingState === 'processing'} />
+        
+        {processingState === 'complete' && (
+          <div className="animate-in fade-in slide-in-from-bottom-10 duration-700 fill-mode-backwards">
+            <CandidateLeaderboard candidates={candidates} />
+            <RankingMethodology />
+            <HoneypotDetection />
+            <ScaleAndArchitecture />
+            <SubmissionOutput />
           </div>
-        </footer>
+        )}
       </main>
-
-      {/* Locked Feature Modal */}
-      <DemoLockedFeatureModal
-        isOpen={lockedFeatureModal.open}
-        onClose={() => setLockedFeatureModal({ open: false, feature: "" })}
-        featureName={lockedFeatureModal.feature}
-      />
     </div>
   );
 }
