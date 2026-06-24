@@ -1,20 +1,115 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+
+// CSV content is inlined to avoid filesystem access issues in serverless deployments
+// (e.g. Vercel), where process.cwd()/public/ is not accessible at runtime.
+const CSV_CONTENT = `candidate_id,rank,score,reasoning
+CAND_0002025,1,0.7075,"Top-tier Senior AI Engineer with 5.9 years of experience, demonstrating a strong match for our founding team. Proven builder who has shipped systems utilizing python, nlp, pinecone. Highly active with a 80% response rate and 30-day notice."
+CAND_0071974,2,0.6840,"Top-tier Senior AI Engineer with 7.8 years of experience, demonstrating a strong match for our founding team. Proven builder who has shipped systems utilizing embeddings, qdrant, pinecone. Highly active with a 76% response rate and 45-day notice."
+CAND_0099806,3,0.6760,"Top-tier AI Engineer with 4.6 years of experience, demonstrating a strong match for our founding team. Proven builder who has shipped systems utilizing embeddings, qdrant, weaviate. Highly active with a 76% response rate and 30-day notice."
+CAND_0008295,4,0.6655,"Top-tier AI Research Engineer with 6.5 years of experience, demonstrating a strong match for our founding team. Proven builder who has shipped systems utilizing python, weaviate. Highly active with a 89% response rate and 45-day notice."
+CAND_0053591,5,0.6655,"Top-tier AI Engineer with 5.3 years of experience, demonstrating a strong match for our founding team. Proven builder who has shipped systems utilizing embeddings, milvus, qdrant. Highly active with a 81% response rate and 60-day notice."
+CAND_0005538,6,0.6635,"Top-tier Senior AI Engineer with 5.9 years of experience, demonstrating a strong match for our founding team. Proven builder who has shipped systems utilizing python. Highly active with a 81% response rate and has a long notice period (90 days)."
+CAND_0054318,7,0.6630,"Top-tier AI Research Engineer with 3.5 years of experience, demonstrating a strong match for our founding team. Good technical match with active experience in python. Highly active with a 87% response rate and 60-day notice."
+CAND_0079387,8,0.6620,"Top-tier AI Engineer with 6.9 years of experience, demonstrating a strong match for our founding team. Proven builder who has shipped systems utilizing python. Highly active with a 81% response rate and 30-day notice."
+CAND_0030031,9,0.6605,"Top-tier AI Engineer with 5.7 years of experience, demonstrating a strong match for our founding team. Proven builder who has shipped systems utilizing python, nlp, milvus. Highly active with a 94% response rate and 30-day notice."
+CAND_0044222,10,0.6595,"Top-tier AI Engineer with 7.7 years of experience, demonstrating a strong match for our founding team. Proven builder who has shipped systems utilizing nlp, qdrant, weaviate. Platform response rate is average (60%) with 60-day notice."
+CAND_0098846,11,0.6595,"Strong AI Engineer with 7.6 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing qdrant. Platform response rate is average (62%) with 45-day notice."
+CAND_0018499,12,0.6570,"Strong Senior Machine Learning Engineer with 7.2 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing embeddings, milvus, pinecone. Platform response rate is average (61%) with 15-day notice."
+CAND_0062247,13,0.6570,"Strong AI Engineer with 7.3 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing qdrant, pinecone. Highly active with a 78% response rate and 30-day notice."
+CAND_0070525,14,0.6565,"Strong Senior Software Engineer (ML) with 5.4 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing python, embeddings. Highly active with a 93% response rate and 45-day notice."
+CAND_0006567,15,0.6545,"Strong Senior AI Engineer with 7.9 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing python, nlp. Highly active with a 79% response rate and 60-day notice."
+CAND_0011687,16,0.6545,"Strong Senior NLP Engineer with 7.8 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing embeddings, weaviate. Highly active with a 89% response rate and 15-day notice."
+CAND_0055992,17,0.6540,"Strong AI Engineer with 16.9 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing embeddings, milvus. Platform response rate is average (72%) with 60-day notice."
+CAND_0035879,18,0.6535,"Strong AI Research Engineer with 4.5 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing python, pinecone. Highly active with a 82% response rate and has a long notice period (120 days)."
+CAND_0024620,19,0.6530,"Strong AI Engineer with 5.9 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing python. Platform response rate is average (41%) with 45-day notice."
+CAND_0040887,20,0.6510,"Strong Machine Learning Engineer with 4.7 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing python, milvus. Highly active with a 84% response rate and 15-day notice."
+CAND_0046525,21,0.6510,"Strong Senior Machine Learning Engineer with 6.1 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing nlp, qdrant. Highly active with a 88% response rate and 60-day notice."
+CAND_0046064,22,0.6500,"Strong Senior NLP Engineer with 8.9 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing python, pinecone. Highly active with a 78% response rate and 30-day notice."
+CAND_0077337,23,0.6465,"Strong Staff Machine Learning Engineer with 7 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing python, qdrant, pinecone. Highly active with a 95% response rate and 60-day notice."
+CAND_0058688,24,0.6460,"Strong AI Engineer with 6.7 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing embeddings, milvus. Platform response rate is average (74%) with 15-day notice."
+CAND_0065195,25,0.6460,"Strong Search Engineer with 5.1 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing qdrant. Highly active with a 80% response rate and 45-day notice."
+CAND_0065786,26,0.6460,"Strong AI Specialist with 4.9 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing qdrant, pinecone. Highly active with a 89% response rate and 45-day notice."
+CAND_0016659,27,0.6455,"Strong ML Engineer with 4.4 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing pinecone, weaviate. Highly active with a 89% response rate and 45-day notice."
+CAND_0073314,28,0.6455,"Strong Senior Software Engineer (ML) with 5.2 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing milvus, weaviate. Highly active with a 84% response rate and 60-day notice."
+CAND_0067866,29,0.6450,"Strong Senior Software Engineer (ML) with 6.4 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing embeddings, qdrant. Highly active with a 79% response rate and 45-day notice."
+CAND_0070514,30,0.6450,"Strong AI Specialist with 5.5 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing python, pinecone. Highly active with a 80% response rate and 60-day notice."
+CAND_0004402,31,0.6445,"Strong AI Research Engineer with 6 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing qdrant. Highly active with a 83% response rate and 60-day notice."
+CAND_0064326,32,0.6445,"Strong Search Engineer with 7.6 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing python, milvus, weaviate. Highly active with a 94% response rate and 45-day notice."
+CAND_0025640,33,0.6440,"Strong AI Research Engineer with 5.6 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing relevant ML skills. Highly active with a 87% response rate and 30-day notice."
+CAND_0052744,34,0.6440,"Strong Senior Software Engineer (ML) with 4.9 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing pinecone, weaviate. Highly active with a 79% response rate and has a long notice period (90 days)."
+CAND_0043381,35,0.6435,"Strong AI Research Engineer with 3.6 years of experience and solid product engineering credentials. Good technical match with active experience in pinecone. Highly active with a 78% response rate and 45-day notice."
+CAND_0055905,36,0.6435,"Strong Senior Machine Learning Engineer with 8.1 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing python, embeddings. Highly active with a 87% response rate and 30-day notice."
+CAND_0080534,37,0.6435,"Strong ML Engineer with 3.8 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing relevant ML skills. Highly active with a 91% response rate and 30-day notice."
+CAND_0070544,38,0.6430,"Strong AI Research Engineer with 4.9 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing weaviate. Platform response rate is average (49%) with 60-day notice."
+CAND_0081846,39,0.6430,"Strong Lead AI Engineer with 6.7 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing python, embeddings, qdrant. Platform response rate is average (73%) with 30-day notice."
+CAND_0007596,40,0.6415,"Strong Junior ML Engineer with 4.4 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing python, weaviate. Highly active with a 86% response rate and 45-day notice."
+CAND_0064904,41,0.6415,"Strong AI Engineer with 4.9 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing python, embeddings, weaviate. Highly active with a 78% response rate and has a long notice period (90 days)."
+CAND_0070333,42,0.6415,"Strong AI Research Engineer with 4.7 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing milvus, weaviate. Platform response rate is average (48%) with 60-day notice."
+CAND_0094165,43,0.6415,"Strong AI Research Engineer with 5.8 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing pinecone. Highly active with a 78% response rate and has a long notice period (90 days)."
+CAND_0093883,44,0.6410,"Strong AI Research Engineer with 5 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing embeddings, milvus, qdrant. Platform response rate is average (56%) with 60-day notice."
+CAND_0098454,45,0.6400,"Strong AI Specialist with 6.6 years of experience and solid product engineering credentials. Good technical match with active experience in embeddings, nlp, pinecone. Highly active with a 87% response rate and 60-day notice."
+CAND_0074225,46,0.6395,"Strong Machine Learning Engineer with 4.3 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing python, milvus, qdrant. Highly active with a 91% response rate and has a long notice period (120 days)."
+CAND_0099675,47,0.6395,"Strong Junior ML Engineer with 3.9 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing pinecone, weaviate. Highly active with a 78% response rate and 60-day notice."
+CAND_0073883,48,0.6390,"Strong AI Specialist with 5.3 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing python. Highly active with a 92% response rate and has a long notice period (90 days)."
+CAND_0007460,49,0.6370,"Strong AI Engineer with 4.7 years of experience and solid product engineering credentials. Good technical match with active experience in embeddings, nlp, weaviate. Platform response rate is average (48%) with has a long notice period (120 days)."
+CAND_0068596,50,0.6370,"Strong AI Research Engineer with 4.3 years of experience and solid product engineering credentials. Proven builder who has shipped systems utilizing embeddings. Platform response rate is average (46%) with has a long notice period (120 days)."
+CAND_0091890,51,0.6370,"AI Research Engineer with 4.7 years of experience in adjacent domains. Good technical match with active experience in milvus, pinecone, weaviate. Platform response rate is average (49%) with 60-day notice."
+CAND_0011327,52,0.6365,"AI Research Engineer with 6.3 years of experience in adjacent domains. Proven builder who has shipped systems utilizing relevant ML skills. Highly active with a 79% response rate and 60-day notice."
+CAND_0042506,53,0.6365,"Search Engineer with 4.2 years of experience in adjacent domains. Proven builder who has shipped systems utilizing nlp, milvus, qdrant. Platform response rate is average (48%) with 15-day notice."
+CAND_0051936,54,0.6365,"AI Research Engineer with 3.9 years of experience in adjacent domains. Good technical match with active experience in python, embeddings. Highly active with a 81% response rate and 30-day notice."
+CAND_0072768,55,0.6365,"Senior Software Engineer (ML) with 3.9 years of experience in adjacent domains. Good technical match with active experience in milvus, qdrant, pinecone. Highly active with a 78% response rate and has a long notice period (120 days)."
+CAND_0063585,56,0.6355,"AI Research Engineer with 3.1 years of experience in adjacent domains. Good technical match with active experience in embeddings, qdrant. Platform response rate is average (34%) with has a long notice period (120 days)."
+CAND_0068932,57,0.6355,"ML Engineer with 5.2 years of experience in adjacent domains. Proven builder who has shipped systems utilizing milvus. Highly active with a 82% response rate and 30-day notice."
+CAND_0033179,58,0.6350,"AI Research Engineer with 6.9 years of experience in adjacent domains. Proven builder who has shipped systems utilizing relevant ML skills. Highly active with a 84% response rate and 30-day notice."
+CAND_0024878,59,0.6345,"AI Specialist with 5.7 years of experience in adjacent domains. Good technical match with active experience in nlp. Highly active with a 84% response rate and 60-day notice."
+CAND_0061655,60,0.6345,"Machine Learning Engineer with 4.6 years of experience in adjacent domains. Proven builder who has shipped systems utilizing nlp, qdrant, pinecone. Highly active with a 88% response rate and 15-day notice."
+CAND_0091534,61,0.6345,"AI Engineer with 16.6 years of experience in adjacent domains. Proven builder who has shipped systems utilizing qdrant. Highly active with a 84% response rate and 30-day notice."
+CAND_0053605,62,0.6340,"Senior Software Engineer (ML) with 6.9 years of experience in adjacent domains. Proven builder who has shipped systems utilizing relevant ML skills. Highly active with a 88% response rate and 30-day notice."
+CAND_0082086,63,0.6340,"Senior Software Engineer (ML) with 6 years of experience in adjacent domains. Proven builder who has shipped systems utilizing milvus, pinecone. Highly active with a 85% response rate and 45-day notice."
+CAND_0096142,64,0.6340,"Applied ML Engineer with 5 years of experience in adjacent domains. Proven builder who has shipped systems utilizing python, nlp, pinecone. Highly active with a 84% response rate and has a long notice period (120 days)."
+CAND_0071747,65,0.6330,"AI Research Engineer with 4.2 years of experience in adjacent domains. Good technical match with active experience in python, milvus. Highly active with a 87% response rate and has a long notice period (90 days)."
+CAND_0072660,66,0.6325,"Machine Learning Engineer with 7.1 years of experience in adjacent domains. Proven builder who has shipped systems utilizing python, nlp. Platform response rate is average (53%) with 30-day notice."
+CAND_0080315,67,0.6325,"AI Research Engineer with 4.1 years of experience in adjacent domains. Proven builder who has shipped systems utilizing python, nlp. However, low platform responsiveness (29% response rate) and 30-day notice may slow outreach."
+CAND_0088025,68,0.6325,"Staff Machine Learning Engineer with 8.6 years of experience in adjacent domains. Proven builder who has shipped systems utilizing python, nlp, pinecone. Highly active with a 83% response rate and has a long notice period (90 days)."
+CAND_0018888,69,0.6315,"AI Research Engineer with 6.5 years of experience in adjacent domains. Proven builder who has shipped systems utilizing relevant ML skills. Platform response rate is average (55%) with 30-day notice."
+CAND_0046132,70,0.6315,"AI Research Engineer with 4.3 years of experience in adjacent domains. Proven builder who has shipped systems utilizing relevant ML skills. Highly active with a 94% response rate and 30-day notice."
+CAND_0068351,71,0.6315,"Lead AI Engineer with 6.4 years of experience in adjacent domains. Proven builder who has shipped systems utilizing python, nlp, qdrant. Highly active with a 86% response rate and 0-day notice."
+CAND_0031752,72,0.6310,"ML Engineer with 5 years of experience in adjacent domains. Proven builder who has shipped systems utilizing python, qdrant, weaviate. Highly active with a 82% response rate and has a long notice period (120 days)."
+CAND_0077498,73,0.6310,"Senior Software Engineer (ML) with 5.4 years of experience in adjacent domains. Proven builder who has shipped systems utilizing embeddings, milvus. Highly active with a 89% response rate and 60-day notice."
+CAND_0093193,74,0.6305,"Senior Machine Learning Engineer with 7.9 years of experience in adjacent domains. Proven builder who has shipped systems utilizing qdrant. Platform response rate is average (61%) with 45-day notice."
+CAND_0050454,75,0.6300,"AI Engineer with 6.8 years of experience in adjacent domains. Proven builder who has shipped systems utilizing nlp, qdrant. Highly active with a 77% response rate and 30-day notice."
+CAND_0054100,76,0.6300,"Junior ML Engineer with 6 years of experience in adjacent domains. Proven builder who has shipped systems utilizing pinecone, weaviate. Highly active with a 79% response rate and 60-day notice."
+CAND_0002120,77,0.6295,"ML Engineer with 6.5 years of experience in adjacent domains. Proven builder who has shipped systems utilizing embeddings, qdrant, pinecone. Platform response rate is average (72%) with 45-day notice."
+CAND_0021410,78,0.6295,"Junior ML Engineer with 4 years of experience in adjacent domains. Proven builder who has shipped systems utilizing milvus. Highly active with a 80% response rate and 60-day notice."
+CAND_0032887,79,0.6295,"ML Engineer with 6.1 years of experience in adjacent domains. Good technical match with active experience in nlp, qdrant. Highly active with a 81% response rate and 45-day notice."
+CAND_0020845,80,0.6285,"AI Research Engineer with 7 years of experience in adjacent domains. Proven builder who has shipped systems utilizing milvus, pinecone. Platform response rate is average (35%) with 60-day notice."
+CAND_0086893,81,0.6285,"ML Engineer with 3.9 years of experience in adjacent domains. Matches some core programming requirements but lacks specialized vector database exposure. Highly active with a 90% response rate and has a long notice period (90 days)."
+CAND_0022023,82,0.6280,"AI Research Engineer with 4.6 years of experience in adjacent domains. Proven builder who has shipped systems utilizing relevant ML skills. Platform response rate is average (47%) with 60-day notice."
+CAND_0090300,83,0.6280,"AI Research Engineer with 5.3 years of experience in adjacent domains. Proven builder who has shipped systems utilizing milvus. Highly active with a 94% response rate and has a long notice period (120 days)."
+CAND_0073007,84,0.6275,"AI Specialist with 5.8 years of experience in adjacent domains. Proven builder who has shipped systems utilizing embeddings, milvus. Highly active with a 83% response rate and 60-day notice."
+CAND_0092706,85,0.6275,"AI Research Engineer with 5.8 years of experience in adjacent domains. Matches some core programming requirements but lacks specialized vector database exposure. Highly active with a 78% response rate and has a long notice period (120 days)."
+CAND_0008425,86,0.6270,"Senior NLP Engineer with 7.8 years of experience in adjacent domains. Proven builder who has shipped systems utilizing python, nlp, qdrant. Platform response rate is average (66%) with has a long notice period (90 days)."
+CAND_0043860,87,0.6270,"Junior ML Engineer with 6.1 years of experience in adjacent domains. Proven builder who has shipped systems utilizing qdrant. Highly active with a 81% response rate and 30-day notice."
+CAND_0007011,88,0.6265,"Senior Data Engineer with 6.7 years of experience in adjacent domains. Proven builder who has shipped systems utilizing embeddings. Platform response rate is average (74%) with 30-day notice."
+CAND_0050876,89,0.6265,"Applied ML Engineer with 6 years of experience in adjacent domains. Proven builder who has shipped systems utilizing python, qdrant. Platform response rate is average (67%) with has a long notice period (90 days)."
+CAND_0015582,90,0.6260,"ML Engineer with 4.4 years of experience in adjacent domains. Proven builder who has shipped systems utilizing embeddings, qdrant, pinecone. Highly active with a 82% response rate and has a long notice period (120 days)."
+CAND_0044883,91,0.6255,"AI Engineer with 6.3 years of experience in adjacent domains. Proven builder who has shipped systems utilizing embeddings. Highly active with a 84% response rate and has a long notice period (90 days)."
+CAND_0020991,92,0.6250,"Junior ML Engineer with 4.9 years of experience in adjacent domains. Good technical match with active experience in python, weaviate. Highly active with a 88% response rate and has a long notice period (120 days)."
+CAND_0047521,93,0.6250,"Junior ML Engineer with 4.4 years of experience in adjacent domains. Proven builder who has shipped systems utilizing embeddings, milvus, pinecone. Highly active with a 83% response rate and has a long notice period (120 days)."
+CAND_0075574,94,0.6250,"Machine Learning Engineer with 5.7 years of experience in adjacent domains. Proven builder who has shipped systems utilizing qdrant, weaviate. Platform response rate is average (58%) with 60-day notice."
+CAND_0079550,95,0.6250,"AI Specialist with 3.9 years of experience in adjacent domains. Proven builder who has shipped systems utilizing python. Highly active with a 88% response rate and 60-day notice."
+CAND_0019480,96,0.6245,"NLP Engineer with 2.8 years of experience in adjacent domains. Proven builder who has shipped systems utilizing milvus. Highly active with a 87% response rate and has a long notice period (90 days)."
+CAND_0020954,97,0.6245,"Senior Software Engineer with 7.1 years of experience in adjacent domains. Proven builder who has shipped systems utilizing python. Platform response rate is average (72%) with has a long notice period (90 days)."
+CAND_0049540,98,0.6245,"ML Engineer with 6.8 years of experience in adjacent domains. Proven builder who has shipped systems utilizing relevant ML skills. Highly active with a 86% response rate and 60-day notice."
+CAND_0011162,99,0.6240,"Recommendation Systems Engineer with 5.8 years of experience in adjacent domains. Proven builder who has shipped systems utilizing python, embeddings, milvus. Platform response rate is average (75%) with has a long notice period (90 days)."
+CAND_0011643,100,0.6240,"AI Research Engineer with 4.2 years of experience in adjacent domains. Good technical match with active experience in pinecone. Highly active with a 85% response rate and has a long notice period (90 days)."
+`;
 
 export async function GET() {
-  try {
-    const filePath = path.join(process.cwd(), 'public', 'submission.csv');
-    const fileBuffer = fs.readFileSync(filePath);
-
-    return new NextResponse(fileBuffer, {
-      headers: {
-        'Content-Type': 'text/csv',
-        'Content-Disposition': 'attachment; filename="submission.csv"',
-      },
-    });
-  } catch (error) {
-    console.error('Error serving CSV:', error);
-    return new NextResponse('File not found', { status: 404 });
-  }
+  return new NextResponse(CSV_CONTENT, {
+    headers: {
+      'Content-Type': 'text/csv; charset=utf-8',
+      'Content-Disposition': 'attachment; filename="submission.csv"',
+    },
+  });
 }
