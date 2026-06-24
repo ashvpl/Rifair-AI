@@ -268,7 +268,7 @@ export function CandidateDetailsDrawer({ candidate, onClose }: { candidate: Cand
                       <div className="flex justify-between items-center text-sm">
                         <span className="text-slate-600">Honeypot Risk</span>
                         <span className={`text-xs px-2 py-1 rounded-md font-bold ${
-                          candidate.authenticity.honeypotRisk === 'Verified' || candidate.authenticity.honeypotRisk === 'Low' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'
+                          candidate.authenticity.honeypotRisk === 'Verified' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'
                         }`}>{candidate.authenticity.honeypotRisk}</span>
                       </div>
                     </div>
