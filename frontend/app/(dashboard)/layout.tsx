@@ -33,6 +33,9 @@ export default async function DashboardLayout({
 
       <div className="flex flex-col flex-1 relative min-w-0 transition-all overflow-hidden">
         <Header />
+        <div className="bg-red-500 text-white text-center py-2 px-4 text-sm font-medium w-full z-50">
+          Server is under maintainance, Services are currently unavailable, see you soon
+        </div>
         <PlanExpiryBanner />
 
         <main className="flex-1 overflow-y-auto">
